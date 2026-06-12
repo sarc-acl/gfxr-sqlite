@@ -1,0 +1,6 @@
+# Build output (cmake / scripts/build.py)
+out/
+
+# Python bytecode (from scripts/)
+__pycache__/
+*.pyc

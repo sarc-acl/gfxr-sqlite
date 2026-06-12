@@ -24,44 +24,64 @@ The resulting database exposes Vulkan API events, command buffers, descriptors, 
     -   macOS: bundled in `external/gfxreconstruct/external/precompiled/macos`
     -   Windows: bundled in `external/gfxreconstruct/external/precompiled/win64`
 
-### Clone with submodules
+### One-step build (recommended)
 
-The nested `external/gfxreconstruct` submodule is marked `update = none` so it isn't pulled by default — this avoids forcing parent projects (such as [Sokatoa](https://github.com/android-graphics/sokatoa)) to clone a second copy of gfxreconstruct. For standalone builds you need to opt in:
+The repo ships with a top-level build script that handles submodule init, builds gfxreconstruct, and builds gfxr-sqlite end-to-end:
 
 ```bash
 git clone https://github.com/sarc-acl/gfxr-sqlite.git
 cd gfxr-sqlite
-git submodule update --init external/gfxreconstruct
-git -C external/gfxreconstruct submodule update --init --recursive
+python3 scripts/build.py
 ```
 
-### Build gfxreconstruct
+That's it — the script:
 
-gfxr-sqlite links against gfxreconstruct's pre-built libraries, so build it first:
+1.  Initializes the nested `external/gfxreconstruct` submodule (overriding the `update = none` set in `.gitmodules`).
+2.  Builds gfxreconstruct via [scripts/build_dependencies.py](scripts/build_dependencies.py) with the same flags Sokatoa uses (no OpenXR, no D3D12, hidden symbol visibility).
+3.  Configures and builds the gfxr-sqlite CMake project.
+
+Options:
 
 ```bash
-cd external/gfxreconstruct
-python3 scripts/build.py -c release \
-  --skip-check-code-style --skip-tests --skip-d3d12-support \
-  --cmake-extra=GFXRECON_ENABLE_OPENXR=OFF \
-  --cmake-extra=CMAKE_CXX_VISIBILITY_PRESET=hidden
-cd ../..
+python3 scripts/build.py debug         # debug build (default is release)
+python3 scripts/build.py --clean       # clean rebuild (deps + project)
+python3 scripts/build.py --skip-deps   # skip the gfxreconstruct rebuild
 ```
 
-(For a debug build, use `-c debug`. Output lands in `external/gfxreconstruct/build` or `dbuild` respectively.)
-
-### Configure + build
+If you only need to (re-)build the gfxreconstruct dependency:
 
 ```bash
+python3 scripts/build_dependencies.py [release|debug] [--clean]
+```
+
+Artifacts land under `out/build/` (or `out/dbuild/` for debug):
+
+-   `gfxr-sqlite` (or `Release/gfxr-sqlite.exe` on MSVC) — the CLI
+-   `libgfxr-db-library.a` (or `gfxr-db-library.lib`) — the static library
+-   `gfxr-db-test` — the native test executable
+
+### Manual build
+
+If you'd rather drive each step yourself (or you already have a built gfxreconstruct elsewhere on disk), the manual flow is:
+
+```bash
+# 1. Init the nested gfxreconstruct submodule (the `-c` flag overrides update=none).
+git -c submodule.external/gfxreconstruct.update=checkout \
+    submodule update --init --recursive external/gfxreconstruct
+
+# 2. Build gfxreconstruct.
+( cd external/gfxreconstruct && \
+  python3 scripts/build.py -c release \
+    --skip-check-code-style --skip-tests --skip-d3d12-support \
+    --cmake-extra=GFXRECON_ENABLE_OPENXR=OFF \
+    --cmake-extra=CMAKE_CXX_VISIBILITY_PRESET=hidden )
+
+# 3. Configure + build gfxr-sqlite.
 cmake -S . -B out/build -DCMAKE_BUILD_TYPE=Release
 cmake --build out/build --config Release --parallel
 ```
 
-Artifacts:
-
--   `out/build/gfxr-sqlite` (or `out/build/Release/gfxr-sqlite.exe` on MSVC) — the CLI
--   `out/build/libgfxr-db-library.a` (or `gfxr-db-library.lib`) — the static library
--   `out/build/gfxr-db-test` — the native test executable
+To reuse an existing gfxreconstruct checkout (instead of the nested submodule), pass `-DGFXR_SQLITE_GFXR_PATH=/path/to/gfxreconstruct` to the cmake configure step and skip step 1+2.
 
 ## Running the CLI
 
