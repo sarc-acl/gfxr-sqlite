@@ -1,0 +1,8 @@
+[submodule "external/gfxreconstruct"]
+	path = external/gfxreconstruct
+	url = https://github.com/LunarG/gfxreconstruct.git
+	# Skipped by default: only needed for true standalone builds of gfxr-sqlite
+	# (not when consumed from Sokatoa, which uses its own gfxreconstruct).
+	# Standalone users: init explicitly with
+	#   git submodule update --init external/gfxreconstruct
+	update = none
