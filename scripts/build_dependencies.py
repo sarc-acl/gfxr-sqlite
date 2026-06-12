@@ -64,9 +64,12 @@ def ensure_gfxreconstruct_initialized() -> None:
         cwd=PROJECT_ROOT)
 
 
-def build_gfxreconstruct(build_type: str, clean: bool) -> None:
-    """Build gfxreconstruct via its bundled scripts/build.py."""
-    print(f'Building gfxreconstruct ({build_type})')
+def build_gfxreconstruct(build_type: str, clean: bool, parallel: int) -> None:
+    """Build gfxreconstruct via its bundled scripts/build.py.
+
+    parallel: number of compilation jobs (0 = use all available cores).
+    """
+    print(f'Building gfxreconstruct ({build_type}, -j={parallel})')
 
     arch = platform.uname().machine
     if arch in ('x86_64', 'AMD64'):
@@ -75,7 +78,8 @@ def build_gfxreconstruct(build_type: str, clean: bool) -> None:
         arch = 'universal'
 
     args = [sys.executable, 'scripts/build.py', '-c', build_type,
-            '--skip-check-code-style', '--skip-tests', '--skip-d3d12-support', '-j=0',
+            '--skip-check-code-style', '--skip-tests', '--skip-d3d12-support',
+            f'-j={parallel}',
             '--cmake-extra=GFXRECON_ENABLE_OPENXR=OFF',
             '--cmake-extra=CMAKE_CXX_VISIBILITY_PRESET=hidden']
 
@@ -91,6 +95,13 @@ def build_gfxreconstruct(build_type: str, clean: bool) -> None:
     run(args, cwd=GFXR_PATH)
 
 
+def add_parallel_arg(parser: argparse.ArgumentParser) -> None:
+    """Add the shared --parallel / -j argument (used by both build.py and this script)."""
+    parser.add_argument('--parallel', '-j', type=int, default=0,
+                        help='Number of compilation jobs to run in parallel '
+                             '(0 = use all available cores, default: 0)')
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -101,11 +112,12 @@ def main() -> None:
                         help='Clean before building')
     parser.add_argument('--no-init', action='store_true',
                         help='Skip submodule initialization (assume it is already set up)')
+    add_parallel_arg(parser)
     args = parser.parse_args()
 
     if not args.no_init:
         ensure_gfxreconstruct_initialized()
-    build_gfxreconstruct(args.build_type, args.clean)
+    build_gfxreconstruct(args.build_type, args.clean, args.parallel)
 
 
 if __name__ == '__main__':

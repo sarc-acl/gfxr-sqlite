@@ -44,8 +44,11 @@ BUILD_TYPE_RELEASE = build_dependencies.BUILD_TYPE_RELEASE
 BUILD_TYPE_DEBUG = build_dependencies.BUILD_TYPE_DEBUG
 
 
-def build_gfxr_sqlite(build_type: str, clean: bool) -> Path:
-    """Configure and build the gfxr-sqlite CMake project. Returns the build dir."""
+def build_gfxr_sqlite(build_type: str, clean: bool, parallel: int) -> Path:
+    """Configure and build the gfxr-sqlite CMake project. Returns the build dir.
+
+    parallel: number of compilation jobs (0 = use all available cores).
+    """
     if build_type == BUILD_TYPE_RELEASE:
         cmake_config = 'Release'
         build_subdir = 'build'
@@ -62,8 +65,14 @@ def build_gfxr_sqlite(build_type: str, clean: bool) -> Path:
     build_dependencies.run(
         ['cmake', '-S', str(PROJECT_ROOT), '-B', str(build_dir),
          f'-DCMAKE_BUILD_TYPE={cmake_config}'])
-    build_dependencies.run(
-        ['cmake', '--build', str(build_dir), '--config', cmake_config, '--parallel'])
+
+    # cmake's --parallel with no value uses all cores; with a value uses that many.
+    cmake_build = ['cmake', '--build', str(build_dir), '--config', cmake_config]
+    if parallel == 0:
+        cmake_build += ['--parallel']
+    else:
+        cmake_build += ['--parallel', str(parallel)]
+    build_dependencies.run(cmake_build)
     return build_dir
 
 
@@ -77,13 +86,14 @@ def main() -> None:
                         help='Clean before building (both deps and gfxr-sqlite)')
     parser.add_argument('--skip-deps', action='store_true',
                         help='Skip the dependency build (assume gfxreconstruct is already built)')
+    build_dependencies.add_parallel_arg(parser)
     args = parser.parse_args()
 
     if not args.skip_deps:
         build_dependencies.ensure_gfxreconstruct_initialized()
-        build_dependencies.build_gfxreconstruct(args.build_type, args.clean)
+        build_dependencies.build_gfxreconstruct(args.build_type, args.clean, args.parallel)
 
-    build_dir = build_gfxr_sqlite(args.build_type, args.clean)
+    build_dir = build_gfxr_sqlite(args.build_type, args.clean, args.parallel)
     print(f'\nBuild complete. Artifacts in {build_dir}')
 
 

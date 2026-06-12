@@ -36,22 +36,24 @@ python3 scripts/build.py
 
 That's it — the script:
 
-1.  Initializes the nested `external/gfxreconstruct` submodule (overriding the `update = none` set in `.gitmodules`).
-2.  Builds gfxreconstruct via [scripts/build_dependencies.py](scripts/build_dependencies.py) with the same flags Sokatoa uses (no OpenXR, no D3D12, hidden symbol visibility).
-3.  Configures and builds the gfxr-sqlite CMake project.
+1. Initializes the nested `external/gfxreconstruct` submodule (overriding the `update = none` set in `.gitmodules`).
+2. Builds gfxreconstruct via [scripts/build_dependencies.py](scripts/build_dependencies.py) with the same flags Sokatoa uses (no OpenXR, no D3D12, hidden symbol visibility).
+3. Configures and builds the gfxr-sqlite CMake project.
 
 Options:
 
 ```bash
-python3 scripts/build.py debug         # debug build (default is release)
-python3 scripts/build.py --clean       # clean rebuild (deps + project)
-python3 scripts/build.py --skip-deps   # skip the gfxreconstruct rebuild
+python3 scripts/build.py debug              # debug build (default is release)
+python3 scripts/build.py --clean            # clean rebuild (deps + project)
+python3 scripts/build.py --skip-deps        # skip the gfxreconstruct rebuild
+python3 scripts/build.py -j 8               # limit parallel compile jobs to 8
+                                            # (default 0 = all cores)
 ```
 
 If you only need to (re-)build the gfxreconstruct dependency:
 
 ```bash
-python3 scripts/build_dependencies.py [release|debug] [--clean]
+python3 scripts/build_dependencies.py [release|debug] [--clean] [-j N]
 ```
 
 Artifacts land under `out/build/` (or `out/dbuild/` for debug):
