@@ -37,11 +37,15 @@ static std::filesystem::path getTestResourcesFolder()
         {
             return testResources;
         }
-        if (!path.has_parent_path())
+        // Detect root by checking that parent_path() actually reduces the path.
+        // `has_parent_path()` returns true even at filesystem roots on Windows,
+        // which would otherwise spin this loop forever.
+        auto parent = path.parent_path();
+        if (parent == path)
         {
-            throw std::runtime_error("No parent path");
+            throw std::runtime_error("test-resources folder not found in any parent of " + binPath);
         }
-        path = path.parent_path();
+        path = parent;
     }
 }
 
