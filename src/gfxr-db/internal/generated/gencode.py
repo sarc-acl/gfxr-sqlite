@@ -79,8 +79,6 @@ def end_timer(timeit, msg):
 # JSON files for customizing code generation
 default_blacklists = 'blacklists.json'
 default_platform_types = 'platform_types.json'
-default_replay_overrides = 'replay_overrides.json'
-default_capture_overrides = 'capture_overrides.json'
 
 
 def _getExtraVulkanHeaders(extraHeadersDir):
@@ -143,8 +141,6 @@ def make_gen_opts(args):
     # JSON configuration files
     blacklists = os.path.join(args.configs, default_blacklists)
     platform_types = os.path.join(args.configs, default_platform_types)
-    replay_overrides = os.path.join(args.configs, default_replay_overrides)
-    capture_overrides = os.path.join(args.configs, default_capture_overrides)
 
     # Copyright text prefixing all headers (list of strings).
     prefix_strings = [
@@ -402,6 +398,9 @@ if __name__ == '__main__':
     )
     parser.add_argument('-time', action='store_true', help='Enable timing')
     parser.add_argument(
+        '-validate', action='store_true', help='Enable group validation'
+    )
+    parser.add_argument(
         '-o',
         action='store',
         dest='directory',
@@ -450,6 +449,9 @@ if __name__ == '__main__':
 
     reg = Registry(gen, options)
 
+    ## @note We parse vk.xml to an in-memory element tree and then extract the info we need
+    ## from that into the Registry object once per output file we generate rather than once
+    ## per run of the top-level generation script.
     start_timer(args.time)
     tree = etree.parse(args.registry)
     gen.VIDEO_TREE = etree.parse(args.video)
@@ -474,6 +476,9 @@ if __name__ == '__main__':
     start_timer(args.time)
     reg.loadElementTree(tree)
     end_timer(args.time, '* Time to parse ElementTree =')
+    
+    if (args.validate):
+        reg.validateGroups()
 
     if (args.dump):
         write('* Dumping registry to regdump.txt', file=sys.stderr)
