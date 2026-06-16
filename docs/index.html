@@ -154,6 +154,106 @@
     }
     .info-body li { margin: 0.25rem 0; }
 
+    /* SQL query widget */
+    .query-card {
+      margin-top: 1.5rem;
+      background: #fff;
+      border: 1px solid #e3e6ea;
+      border-left: 4px solid #1971c2;
+      border-radius: 8px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04),
+                  0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .query-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 5.5rem;
+      resize: vertical;
+      padding: 0.65rem 0.8rem;
+      font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #222;
+      background: #fbfcfd;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    .query-textarea:focus {
+      outline: none;
+      border-color: #1971c2;
+      box-shadow: 0 0 0 2px rgba(25, 113, 194, 0.15);
+    }
+    .query-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .query-run-btn {
+      padding: 0.55rem 1.25rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: #fff;
+      background: #1971c2;
+      border: 1px solid #1971c2;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .query-run-btn:hover:not(:disabled) { background: #155a9c; border-color: #155a9c; }
+    .query-run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .query-hint {
+      font-size: 0.85rem;
+      color: #777;
+    }
+    .query-error {
+      margin-top: 0.9rem;
+      padding: 0.6rem 0.8rem;
+      font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, monospace;
+      font-size: 0.85rem;
+      color: #842029;
+      background: #fbe9eb;
+      border: 1px solid #f0c2c7;
+      border-radius: 6px;
+      white-space: pre-wrap;
+    }
+    .query-result {
+      margin-top: 1rem;
+      max-height: 420px;
+      overflow: auto;
+      border: 1px solid #e3e6ea;
+      border-radius: 6px;
+    }
+    .query-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.85rem;
+      font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, monospace;
+    }
+    .query-table th, .query-table td {
+      border: 1px solid #e3e6ea;
+      padding: 0.4rem 0.65rem;
+      text-align: left;
+      vertical-align: top;
+      white-space: pre-wrap;
+    }
+    .query-table th {
+      position: sticky;
+      top: 0;
+      background: #eef3f8;
+      color: #1a1a1a;
+      font-weight: 600;
+      z-index: 1;
+    }
+    .query-table tbody tr:nth-child(even) { background: #fafbfc; }
+    .query-table td.null-cell { color: #aaa; font-style: italic; }
+    .query-rowcount {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
     @media (max-width: 800px) {
       .viewer-section { flex-direction: column; height: auto; }
       .viewer { height: 65vh; }
@@ -182,6 +282,10 @@
        zoom at 10%; svg-pan-zoom has no such limit, so very large diagrams
        (e.g. GFXRDatabase at 17716x14722) fit cleanly. -->
   <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+  <!-- sql.js: SQLite compiled to WebAssembly. Exposes window.initSqlJs. Opens the
+       sibling demo.sqlite entirely in the browser (in-memory copy), so visitor
+       queries run client-side and can never alter the committed file. -->
+  <script src="https://cdn.jsdelivr.net/npm/sql.js@1.12.0/dist/sql-wasm.js"></script>
 </head>
 <body>
   <main class="page">
@@ -382,6 +486,134 @@
       return new XMLSerializer().serializeToString(svgEl);
     };
 
+    // ---- SQL query widget ------------------------------------------------
+    // The exported demo database, committed next to this file.
+    const DB_FILE = "demo.sqlite";
+    const SQLJS_VERSION = "1.12.0";
+    const DEFAULT_QUERY = "SELECT * FROM apiEvents;";
+
+    // Lazily initialize the sql.js engine + open demo.sqlite. Cached on first call
+    // so the schema viewer pays nothing at page load and repeat queries are instant.
+    let dbPromise = null;
+    const getDb = () => {
+      if (!dbPromise) {
+        dbPromise = (async () => {
+          const SQL = await window.initSqlJs({
+            locateFile: (f) =>
+              `https://cdn.jsdelivr.net/npm/sql.js@${SQLJS_VERSION}/dist/${f}`,
+          });
+          const res = await fetch(`./${DB_FILE}`, { cache: "no-cache" });
+          if (!res.ok) throw new Error(`Failed to load ${DB_FILE}: ${res.status}`);
+          const buf = await res.arrayBuffer();
+          return new SQL.Database(new Uint8Array(buf));
+        })().catch((e) => {
+          dbPromise = null; // allow a retry on the next run
+          throw e;
+        });
+      }
+      return dbPromise;
+    };
+
+    // Run SQL via the prepared-statement API so column names are available even
+    // when zero rows match (db.exec() returns [] in that case, losing columns).
+    // Multiple statements are supported; the last result-producing one is shown.
+    const runQuery = (db, sql) => {
+      let last = null;
+      const it = db.iterateStatements(sql);
+      for (const stmt of it) {
+        const columns = stmt.getColumnNames();
+        const rows = [];
+        while (stmt.step()) rows.push(stmt.get());
+        if (columns.length > 0) last = { columns, rows };
+      }
+      return last; // null => no result-producing statement (e.g. a bare CREATE)
+    };
+
+    const QueryWidget = () => {
+      const [sql, setSql] = React.useState(DEFAULT_QUERY);
+      const [running, setRunning] = React.useState(false);
+      const [result, setResult] = React.useState(null);
+      const [error, setError] = React.useState(null);
+
+      const onRun = async () => {
+        setRunning(true);
+        setError(null);
+        try {
+          const db = await getDb();
+          setResult(runQuery(db, sql));
+        } catch (e) {
+          console.error(e);
+          setResult(null);
+          setError(e.message ?? String(e));
+        } finally {
+          setRunning(false);
+        }
+      };
+
+      const onKeyDown = (e) => {
+        // Ctrl/Cmd+Enter runs the query.
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+          e.preventDefault();
+          if (!running) onRun();
+        }
+      };
+
+      return h("section", { className: "query-card" },
+        h("div", { className: "info-eyebrow" }, "Try it"),
+        h("h2", { className: "info-title" }, "Query a demo database"),
+        h("p", { className: "info-summary" },
+          "Run read-only SQL against a sample GFXR database, right in your browser."),
+        h("p", { style: { color: "#3a3a3a", margin: "0 0 0.9rem" } },
+          "Powered by SQLite compiled to WebAssembly. The database is loaded into ",
+          "an in-memory copy on first run, so anything you type stays on your machine ",
+          "and a page refresh restores it."),
+        h("textarea", {
+          className: "query-textarea",
+          value: sql,
+          spellCheck: false,
+          onChange: (e) => setSql(e.target.value),
+          onKeyDown,
+          "aria-label": "SQL query",
+        }),
+        h("div", { className: "query-controls" },
+          h("button", {
+            type: "button",
+            className: "query-run-btn",
+            onClick: onRun,
+            disabled: running,
+          }, running ? "Running..." : "Run query"),
+          h("span", { className: "query-hint" }, "Ctrl/Cmd + Enter to run")
+        ),
+        error && h("div", { className: "query-error" }, error),
+        result && h(React.Fragment, null,
+          h("div", { className: "query-result" },
+            h("table", { className: "query-table" },
+              h("thead", null,
+                h("tr", null,
+                  ...result.columns.map((c, i) => h("th", { key: i }, c))
+                )
+              ),
+              h("tbody", null,
+                ...result.rows.map((row, ri) =>
+                  h("tr", { key: ri },
+                    ...row.map((cell, ci) =>
+                      cell === null
+                        ? h("td", { key: ci, className: "null-cell" }, "NULL")
+                        : h("td", { key: ci }, String(cell))
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          h("div", { className: "query-rowcount" },
+            result.rows.length === 0
+              ? `Query returned 0 rows (${result.columns.length} column${result.columns.length === 1 ? "" : "s"}).`
+              : `${result.rows.length} row${result.rows.length === 1 ? "" : "s"}.`)
+        )
+      );
+    };
+
     const App = () => {
       const [currentPath, setCurrentPath] = React.useState(FILES[0].path);
       const [status, setStatus] = React.useState("loading"); // loading | ready | error
@@ -506,7 +738,8 @@
           h("div", { className: "info-filename" }, current.path),
           current.summary && h("p", { className: "info-summary" }, current.summary),
           h("div", { className: "info-body" }, ...current.description())
-        )
+        ),
+        h(QueryWidget)
       );
     };
 

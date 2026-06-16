@@ -8,7 +8,13 @@ Hosted at: `https://sarc-acl.github.io/gfxr-sqlite/`
 
 `index.html` loads React + `@excalidraw/excalidraw@0.18.1` from `esm.sh` via an ESM importmap, fetches the sibling `.excalidraw` JSON, and renders it with `viewModeEnabled` -- panning and zooming work, editing is disabled.
 
+Below the diagram there is a **SQL query widget**: `index.html` loads `sql.js@1.12.0` (SQLite compiled to WebAssembly) from a CDN, fetches the sibling `demo.sqlite` into an in-memory copy on first use, and runs read-only queries entirely client-side. Queries use the prepared-statement API so column names are shown even when a query returns zero rows. Nothing is sent to a server, and a page refresh restores the original database.
+
 No build step. No `node_modules`. Just static files served by GitHub Pages.
+
+## The demo database
+
+`demo.sqlite` is a small exported GFXR database committed next to `index.html`. The **entire file downloads to the visitor's browser**, so keep it small -- ideally a few MB or less, and well under GitHub's 50 MB warning / 100 MB hard limit. To refresh it, replace `demo.sqlite` with a new export, commit, and push.
 
 ## Run locally
 
