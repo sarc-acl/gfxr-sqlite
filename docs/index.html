@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GFXR to SQLite Database Schema Viewer</title>
+  <style>
+    :root { color-scheme: light dark; }
+    html, body { margin: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      color: #222;
+      background: #fafafa;
+    }
+    .page { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .page h1 { margin: 0 0 0.5rem; font-size: 1.75rem; }
+    .page p  { margin: 0.5rem 0; color: #444; }
+
+    /* Layout: viewer on the left, button sidebar on the right. */
+    .viewer-section {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      height: 75vh;
+      min-height: 480px;
+    }
+    .viewer {
+      flex: 1;
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .svg-stage {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    .svg-stage:active { cursor: grabbing; }
+    .svg-stage > svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .status-overlay {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0.75rem 1rem;
+      color: #666;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #e3e6ea;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+    .zoom-readout {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: #555;
+      font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, monospace;
+      pointer-events: none;
+    }
+    .sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .sidebar-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #888;
+      padding: 0 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .diagram-btn {
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      text-align: left;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      color: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .diagram-btn:hover { background: #f0f4f8; border-color: #bbb; }
+    .diagram-btn.active {
+      background: #1971c2;
+      color: #fff;
+      border-color: #1971c2;
+    }
+    .diagram-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .sidebar-divider {
+      height: 1px;
+      background: #ddd;
+      margin: 0.5rem 0.25rem;
+    }
+
+    /* Info card under the diagram */
+    .info-card {
+      margin-top: 1.5rem;
+      background: #fff;
+      border: 1px solid #e3e6ea;
+      border-left: 4px solid #1971c2;
+      border-radius: 8px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04),
+                  0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .info-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1971c2;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .info-title {
+      margin: 0 0 0.25rem;
+      font-size: 1.35rem;
+      color: #1a1a1a;
+    }
+    .info-filename {
+      font-family: ui-monospace, SFMono-Regular, "Cascadia Code", Consolas, monospace;
+      font-size: 0.82rem;
+      color: #888;
+      margin-bottom: 1rem;
+    }
+    .info-summary {
+      font-size: 1.05rem;
+      color: #333;
+      margin: 0 0 0.9rem;
+      font-weight: 500;
+    }
+    .info-body p {
+      margin: 0.5rem 0;
+      color: #3a3a3a;
+    }
+    .info-body ul {
+      margin: 0.5rem 0;
+      padding-left: 1.25rem;
+      color: #3a3a3a;
+    }
+    .info-body li { margin: 0.25rem 0; }
+
+    @media (max-width: 800px) {
+      .viewer-section { flex-direction: column; height: auto; }
+      .viewer { height: 65vh; }
+      .sidebar { width: auto; flex-direction: row; flex-wrap: wrap; }
+      .diagram-btn { flex: 1 1 auto; }
+    }
+  </style>
+  <script>
+    // MUST be set before the Excalidraw module loads, or fonts/icons 404
+    // (exportToSvg uses the same font/icon assets).
+    window.EXCALIDRAW_ASSET_PATH =
+      "https://esm.sh/@excalidraw/excalidraw@0.18.1/dist/prod/";
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "react":             "https://esm.sh/react@19.0.0",
+      "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+      "react-dom":         "https://esm.sh/react-dom@19.0.0",
+      "react-dom/client":  "https://esm.sh/react-dom@19.0.0/client"
+    }
+  }
+  </script>
+  <!-- svg-pan-zoom: UMD, exposes window.svgPanZoom. Drives pan/zoom on the SVG
+       that Excalidraw's exportToSvg produces. Excalidraw's own viewer clamps
+       zoom at 10%; svg-pan-zoom has no such limit, so very large diagrams
+       (e.g. GFXRDatabase at 17716x14722) fit cleanly. -->
+  <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+</head>
+<body>
+  <main class="page">
+    <h1>GFXR to SQLite Database Schema Viewer</h1>
+    <p>
+      An interactive, read-only view of the GFXR-to-SQLite database schema.
+      Use mouse wheel to zoom, click-and-drag to pan, and the "Fit to view"
+      button to reset.
+    </p>
+    <p>
+      Pick a diagram from the right-hand panel. To edit, open the underlying
+      <code>.excalidraw</code> file in <a href="https://excalidraw.com">Excalidraw</a>
+      and replace the version in this repo.
+    </p>
+    <div id="app"><div class="status-overlay">Loading viewer...</div></div>
+  </main>
+  <script type="module">
+    import * as ExcalidrawLib from
+      "https://esm.sh/@excalidraw/excalidraw@0.18.1/dist/prod/index.js?external=react,react-dom";
+    import React from "react";
+    import { createRoot } from "react-dom/client";
+
+    const h = React.createElement;
+
+    const FILES = [
+      {
+        label: "Database Overview",
+        path:  "GFXRDatabase.excalidraw",
+        summary: "The full GFXR-to-SQLite schema and the relationships between every table.",
+        description: () => [
+          h("p", { key: 1 },
+            "A comprehensive view of every table in the GFXR database, ",
+            "their columns, and the foreign-key relationships that tie them ",
+            "together. Use this diagram as the canonical reference when ",
+            "writing queries, designing ETL steps, or onboarding to the ",
+            "data model."),
+          h("p", { key: 2 },
+            "Includes capture metadata, frame/draw/dispatch records, ",
+            "command buffers, resource lifetimes, and the descriptor / ",
+            "binding state tables."),
+        ],
+      },
+      {
+        label: "Core GFXR Data",
+        path:  "GFXRCoreDataTables.excalidraw",
+        summary: "The core data tables that anchor everything else in the schema.",
+        description: () => [
+          h("p", { key: 1 },
+            "A focused subset of the database showing the core entities that ",
+            "the rest of the schema hangs off of. Start here when learning ",
+            "the data model -- once these are understood, the auxiliary tables ",
+            "become straightforward."),
+          h("p", { key: 2 },
+            "Typically the place to look first when answering ",
+            "\"what are the primary keys and how do records correlate ",
+            "across captures?\""),
+        ],
+      },
+      {
+        label: "Debug Utils/Markers",
+        path:  "DebugUtilsTables.excalidraw",
+        summary: "The data tables used to track debug marker and debug utils extensions.",
+        description: () => [
+          h("p", { key: 1 },
+            "A focused subset of the database showing debug names, tags, and labels ",
+            "tracking for both the debug marker and debug utils extensions."),
+          h("p", { key: 2 },
+            "Some notes on binary blobs not being stored in the gfxr sqlite db."),
+        ],
+      },
+      {
+        label: "Command Tree Relevant Data",
+        path:  "CommandTreeRelevantTables.excalidraw",
+        summary: "Tables that participate in command-tree traversal and analysis.",
+        description: () => [
+          h("p", { key: 1 },
+            "The slice of the schema relevant to command-tree work: the ",
+            "tables that describe commands, draws, dispatches, state groups, ",
+            "and the parent/child links between them."),
+          h("p", { key: 2 },
+            "Reference for command-tree visualization, traversal queries, ",
+            "and any analysis that needs to walk from a capture down through ",
+            "individual draw calls."),
+        ],
+      },
+      {
+        label: "Vulkan Enum Types",
+        path:  "VulkanEnumTypeTables.excalidraw",
+        summary: "Tables that enumerate and decode Vulkan enum values used throughout the schema.",
+        description: () => [
+          h("p", { key: 1 },
+            "The slice of the schema that captures Vulkan enum types and their ",
+            "values, providing the lookup tables used to decode the numeric ",
+            "enum fields stored elsewhere in the database."),
+          h("p", { key: 2 },
+            "Reference for translating raw enum values into human-readable ",
+            "Vulkan constants when writing queries or reports."),
+        ],
+      },
+      {
+        label: "Pipeline State",
+        path:  "PipelineStateTables.excalidraw",
+        summary: "Tables that describe pipeline objects and their static configuration.",
+        description: () => [
+          h("p", { key: 1 },
+            "The tables that record graphics and compute pipeline static state configuration: ",
+            "shader stages, fixed-function configuration, and the parameters ",
+            "fixed at pipeline-creation time."),
+          h("p", { key: 2 },
+            "Reference for correlating draws and dispatches with the pipeline ",
+            "state that was bound when they executed."),
+        ],
+      },
+      {
+        label: "Lifecycle Tracking",
+        path:  "LifecycleTrackingTables.excalidraw",
+        summary: "Tables that track the creation, use, and destruction of resources.",
+        description: () => [
+          h("p", { key: 1 },
+            "The slice of the schema concerned with object lifetimes: when ",
+            "handles are created, how they are used over the course of a ",
+            "capture, and when they are destroyed."),
+          h("p", { key: 2 },
+            "Reference for lifetime analysis, leak detection, and use-after-free ",
+            "investigations across a capture."),
+        ],
+      },
+      {
+        label: "Relevant Command Tracking",
+        path:  "RelevantCommandTrackingTables.excalidraw",
+        summary: "Tables that track the commands relevant to a given analysis.",
+        description: () => [
+          h("p", { key: 1 },
+            "The slice of the schema that record commands are relevant to track ",
+            "which are not typical draw/dispatch operations but still need to be ", 
+            "displayed in the command tree."),
+          h("p", { key: 2 },
+            "Reference for analyzing transfer and other relevant command ",
+            "investigations across a capture."),
+        ],
+      },
+      {
+        label: "Acceleration Structure Build Tracking",
+        path:  "AccelerationStructureBuildTrackingTables.excalidraw",
+        summary: "Tables that track ray-tracing acceleration structure builds.",
+        description: () => [
+          h("p", { key: 1 },
+            "The slice of the schema dedicated to acceleration structure ",
+            "build/copy operations: including their inputs, and the resulting ",
+            "structures used by ray-tracing workloads."),
+          h("p", { key: 2 },
+            "Reference for analyzing acceleration structure construction and ",
+            "its relationship to ray-tracing draws and dispatches."),
+        ],
+      },
+      {
+        label: "Draw/Dispatch State Tracking",
+        path:  "DrawDispatchStateTracking.excalidraw",
+        summary: "Tables that track the state bound at each draw and dispatch.",
+        description: () => [
+          h("p", { key: 1 },
+            "The tables that capture the state in effect at the moment each ",
+            "draw or dispatch executes: bound pipelines, descriptor sets, ",
+            "vertex/index buffers, and other dynamic state."),
+          h("p", { key: 2 },
+            "Reference for reconstructing the full GPU state for any given ",
+            "draw or dispatch call."),
+        ],
+      },
+    ];
+
+    const fetchScene = async (path) => {
+      // cache: "no-cache" forces revalidation so edits to the .excalidraw
+      // file are picked up on hard reload. Unchanged files return 304.
+      const res = await fetch(`./${path}`, { cache: "no-cache" });
+      if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`);
+      const json = await res.json();
+      // collaborators must be a Map (or absent); raw .excalidraw exports sometimes
+      // ship it as [], which crashes Excalidraw internals.
+      const { collaborators, ...safeAppState } = json.appState ?? {};
+      return {
+        elements: (json.elements ?? []).filter((e) => !e.isDeleted),
+        appState: {
+          ...safeAppState,
+          viewBackgroundColor: safeAppState.viewBackgroundColor ?? "#ffffff",
+          exportBackground: true,
+          exportEmbedScene: false,
+        },
+        files: json.files ?? null,
+      };
+    };
+
+    const exportSceneToSvgString = async (scene) => {
+      const svgEl = await ExcalidrawLib.exportToSvg({
+        elements: scene.elements,
+        appState: scene.appState,
+        files: scene.files,
+        exportPadding: 20,
+      });
+      return new XMLSerializer().serializeToString(svgEl);
+    };
+
+    const App = () => {
+      const [currentPath, setCurrentPath] = React.useState(FILES[0].path);
+      const [status, setStatus] = React.useState("loading"); // loading | ready | error
+      const [errorMsg, setErrorMsg] = React.useState(null);
+      const [zoomPct, setZoomPct] = React.useState(100);
+
+      const stageRef    = React.useRef(null);
+      const panZoomRef  = React.useRef(null);
+      const svgCacheRef = React.useRef(new Map()); // path -> serialized SVG string
+
+      // Load + render the selected diagram.
+      React.useEffect(() => {
+        let cancelled = false;
+        setStatus("loading");
+        setErrorMsg(null);
+
+        // Tear down any existing pan-zoom instance and clear the stage.
+        if (panZoomRef.current) {
+          try { panZoomRef.current.destroy(); } catch (_) {}
+          panZoomRef.current = null;
+        }
+        if (stageRef.current) stageRef.current.innerHTML = "";
+
+        const mount = async () => {
+          try {
+            let svgString = svgCacheRef.current.get(currentPath);
+            if (!svgString) {
+              const scene = await fetchScene(currentPath);
+              if (cancelled) return;
+              svgString = await exportSceneToSvgString(scene);
+              if (cancelled) return;
+              svgCacheRef.current.set(currentPath, svgString);
+            }
+            if (!stageRef.current) return;
+
+            // Parse fresh each mount -- svg-pan-zoom mutates the SVG (adds
+            // a viewport <g>, applies transforms).
+            const doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
+            const svg = doc.documentElement;
+            // exportToSvg sets fixed pixel width/height; swap to 100% so the
+            // SVG fills the stage. The viewBox preserves the diagram's aspect.
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.style.display = "block";
+
+            stageRef.current.appendChild(svg);
+
+            const pz = window.svgPanZoom(svg, {
+              zoomEnabled: true,
+              controlIconsEnabled: false,
+              fit: true,
+              center: true,
+              minZoom: 0.02,
+              maxZoom: 50,
+              zoomScaleSensitivity: 0.3,
+              dblClickZoomEnabled: false,
+              onZoom: (z) => setZoomPct(Math.round(z * 100)),
+            });
+            panZoomRef.current = pz;
+            setZoomPct(Math.round(pz.getZoom() * 100));
+            setStatus("ready");
+          } catch (e) {
+            if (cancelled) return;
+            console.error(e);
+            setErrorMsg(e.message ?? String(e));
+            setStatus("error");
+          }
+        };
+        mount();
+
+        return () => { cancelled = true; };
+      }, [currentPath]);
+
+      // Keep pan-zoom's viewport sized correctly when the window resizes.
+      React.useEffect(() => {
+        const onResize = () => panZoomRef.current?.resize?.();
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+      }, []);
+
+      const fitToView = () => {
+        const pz = panZoomRef.current;
+        if (!pz) return;
+        pz.resize();
+        pz.fit();
+        pz.center();
+      };
+
+      const current = FILES.find((f) => f.path === currentPath) ?? FILES[0];
+
+      return h(React.Fragment, null,
+        h("div", { className: "viewer-section" },
+          h("div", { className: "viewer" },
+            h("div", { ref: stageRef, className: "svg-stage" }),
+            status === "loading" && h("div", { className: "status-overlay" }, "Loading diagram..."),
+            status === "error"   && h("div", { className: "status-overlay" }, `Error: ${errorMsg}`),
+            status === "ready"   && h("div", { className: "zoom-readout" }, `${zoomPct}%`)
+          ),
+          h("nav", { className: "sidebar", "aria-label": "Diagrams" },
+            h("div", { className: "sidebar-label" }, "Diagrams"),
+            ...FILES.map((f) =>
+              h("button", {
+                key: f.path,
+                type: "button",
+                className: "diagram-btn" + (f.path === currentPath ? " active" : ""),
+                onClick: () => setCurrentPath(f.path),
+                "aria-pressed": f.path === currentPath,
+              }, f.label)
+            ),
+            h("div", { className: "sidebar-divider" }),
+            h("button", {
+              type: "button",
+              className: "diagram-btn",
+              onClick: fitToView,
+              disabled: status !== "ready",
+            }, "Fit to view")
+          )
+        ),
+        h("section", { className: "info-card", "aria-live": "polite" },
+          h("div", { className: "info-eyebrow" }, "About this diagram"),
+          h("h2", { className: "info-title" }, current.label),
+          h("div", { className: "info-filename" }, current.path),
+          current.summary && h("p", { className: "info-summary" }, current.summary),
+          h("div", { className: "info-body" }, ...current.description())
+        )
+      );
+    };
+
+    createRoot(document.getElementById("app")).render(h(App));
+  </script>
+</body>
+</html>
