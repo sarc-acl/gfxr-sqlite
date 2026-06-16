@@ -288,10 +288,6 @@
         {
           "id": "g2vrg03PmX5LbLvcfm7ED",
           "type": "arrow"
-        },
-        {
-          "id": "snp2LJ83vHF3739NY51zf",
-          "type": "arrow"
         }
       ],
       "updated": 1781636997445,
@@ -11924,8 +11920,8 @@
     },
     {
       "type": "arrow",
-      "version": 6940,
-      "versionNonce": 466889330,
+      "version": 6958,
+      "versionNonce": 1914809999,
       "isDeleted": false,
       "id": "7ld4ospV5AADGHfXqda1Q",
       "fillStyle": "solid",
@@ -11938,25 +11934,25 @@
       "y": 1278.3833309741208,
       "strokeColor": "#9c36b5",
       "backgroundColor": "transparent",
-      "width": 61.49522000773936,
+      "width": 54.82728868742879,
       "height": 370.84924408890583,
       "seed": 1431681394,
       "groupIds": [],
       "frameId": null,
       "roundness": null,
       "boundElements": [],
-      "updated": 1781638475328,
+      "updated": 1781642184912,
       "link": null,
       "locked": false,
       "startBinding": {
-        "elementId": "3SJbKAfSE1Z-ZyHBCYTQC",
-        "focus": 1.6003142476308831,
-        "gap": 14
+        "elementId": "owC79KpwkHYC9FRtXqt4Q",
+        "focus": 0.7723862789561386,
+        "gap": 8.179431472691249
       },
       "endBinding": {
-        "elementId": "tTeq6-VqJLA4EfJWJcKQi",
-        "focus": 0,
-        "gap": 14
+        "elementId": "cfOktTj-jtCqeJ5IJHbcY",
+        "focus": 0.9136273929230176,
+        "gap": 2.2253643708136224
       },
       "lastCommittedPoint": null,
       "startArrowhead": null,
@@ -11975,8 +11971,8 @@
           -370.84924408890583
         ],
         [
-          8.14495783634311,
-          -331.987669796658
+          1.477026516032538,
+          -370.84924408890583
         ]
       ],
       "index": "b2j"
@@ -12359,12 +12355,7 @@
       ],
       "frameId": null,
       "roundness": null,
-      "boundElements": [
-        {
-          "id": "snp2LJ83vHF3739NY51zf",
-          "type": "arrow"
-        }
-      ],
+      "boundElements": [],
       "updated": 1781636997445,
       "link": null,
       "locked": false,
@@ -20105,12 +20096,7 @@
       ],
       "frameId": null,
       "roundness": null,
-      "boundElements": [
-        {
-          "id": "snp2LJ83vHF3739NY51zf",
-          "type": "arrow"
-        }
-      ],
+      "boundElements": [],
       "updated": 1781636997445,
       "link": null,
       "locked": false,
