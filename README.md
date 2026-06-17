@@ -8,9 +8,9 @@ The resulting database exposes Vulkan API events, command buffers, descriptors, 
 
 | Target              | Type       | Purpose                                                                                  |
 | ------------------- | ---------- | ---------------------------------------------------------------------------------------- |
-| `gfxr-db-library`   | static lib | Core decoder. Embeds SQLite. Links against gfxreconstruct's `decode`/`format`/`util`.    |
+| `gfxr-sqlite-library`   | static lib | Core decoder. Embeds SQLite. Links against gfxreconstruct's `decode`/`format`/`util`.    |
 | `gfxr-sqlite`       | executable | CLI wrapper that converts a single `.gfxr` file to a `.sqlite3` file on disk.            |
-| `gfxr-db-test`      | executable | Native C++ test for the library.                                                         |
+| `gfxr-sqlite-test`      | executable | Native C++ test for the library.                                                         |
 
 ## Building standalone
 
@@ -59,8 +59,8 @@ python3 scripts/build_dependencies.py [release|debug] [--clean] [-j N]
 Artifacts land under `out/build/` (or `out/dbuild/` for debug):
 
 -   `gfxr-sqlite` (or `Release/gfxr-sqlite.exe` on MSVC) — the CLI
--   `libgfxr-db-library.a` (or `gfxr-db-library.lib`) — the static library
--   `gfxr-db-test` — the native test executable
+-   `libgfxr-sqlite-library.a` (or `gfxr-sqlite-library.lib`) — the static library
+-   `gfxr-sqlite-test` — the native test executable
 
 ### Manual build
 
@@ -208,7 +208,7 @@ ORDER BY idx;
 | -------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | `GFXR_SQLITE_GFXR_PATH`          | `<this-dir>/external/gfxreconstruct`        | Path to a gfxreconstruct source tree (root). Override to reuse a parent project's copy.       |
 | `GFXR_SQLITE_BUILD_EXECUTABLE`   | `ON` standalone / `OFF` as subdirectory     | Build the `gfxr-sqlite` CLI executable.                                                       |
-| `GFXR_SQLITE_BUILD_TEST`         | `ON` standalone / `OFF` as subdirectory     | Build the `gfxr-db-test` test executable.                                                     |
+| `GFXR_SQLITE_BUILD_TEST`         | `ON` standalone / `OFF` as subdirectory     | Build the `gfxr-sqlite-test` test executable.                                                     |
 
 ### Example: parent CMake project
 
@@ -222,10 +222,10 @@ set(GFXR_SQLITE_BUILD_TEST OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/gfxr-sqlite)
 
 add_library(my_consumer ...)
-target_link_libraries(my_consumer PRIVATE gfxr-db-library)
+target_link_libraries(my_consumer PRIVATE gfxr-sqlite-library)
 ```
 
-`gfxr-db-library` exports its public include directories (the `gfxr-db/includes` headers, plus gfxreconstruct framework + Vulkan-Headers paths). Consumers get them automatically by linking.
+`gfxr-sqlite-library` exports its public include directories (the `gfxr-db/includes` headers, plus gfxreconstruct framework + Vulkan-Headers paths). Consumers get them automatically by linking.
 
 ### Public headers
 

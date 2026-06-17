@@ -18,7 +18,7 @@
 This is the top-level standalone build entry point: it ensures the gfxreconstruct
 dependency is built (via build_dependencies.py), then configures and builds the
 gfxr-sqlite CMake project, producing the gfxr-sqlite CLI executable, the
-gfxr-db-library static library, and the gfxr-db-test test executable.
+gfxr-sqlite-library static library, and the gfxr-sqlite-test test executable.
 
 Typical usage:
 
