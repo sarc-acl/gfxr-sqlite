@@ -112,7 +112,7 @@ def build_gfxreconstruct(build_type: str, clean: bool, parallel: int) -> None:
         args += ['--cmake-extra=CMAKE_CXX_FLAGS_INIT=/utf-8']
 
     if platform.system() == 'Darwin':
-        args += ['--cmake-extra', 'CMAKE_OSX_DEPLOYMENT_TARGET=11.0']
+        args += ['--cmake-extra', 'CMAKE_OSX_DEPLOYMENT_TARGET=13.3']
 
     if clean:
         run(args + ['--clean'], cwd=GFXR_PATH)
