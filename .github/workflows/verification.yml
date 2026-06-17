@@ -57,7 +57,7 @@ jobs:
         run: |
           set -e
           if [ "$RUNNER_OS" == "Windows" ]; then
-            out/build/Release/gfxr-db-test.exe
+            out/build/Release/gfxr-sqlite-test.exe
           else
-            out/build/gfxr-db-test
+            out/build/gfxr-sqlite-test
           fi
