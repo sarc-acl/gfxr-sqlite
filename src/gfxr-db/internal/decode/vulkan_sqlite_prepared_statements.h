@@ -95,7 +95,12 @@ struct VulkanSqlitePreparedStatements
     // Advanced statements (originally from VulkanSqliteConsumerExt)
     SqliteStatement instanceInsertStatement;
     SqliteStatement instanceEnabledLayerInsertStatement;
+    SqliteStatement instanceEnabledLayerSettingInsertStatement;
+    SqliteStatement instanceEnabledLayerSettingValueInsertStatement;
     SqliteStatement instanceEnabledExtensionInsertStatement;
+    SqliteStatement instanceValidationEnabledFeatureInsertStatement;
+    SqliteStatement instanceValidationDisabledFeatureInsertStatement;
+    SqliteStatement instanceValidationDisabledCheckInsertStatement;
     SqliteStatement deviceInsertStatement;
     SqliteStatement deviceEnabledLayerInsertStatement;
     SqliteStatement deviceEnabledExtensionInsertStatement;
@@ -1001,8 +1006,17 @@ struct VulkanSqlitePreparedStatements
         const uint32_t engineVersion,
         const uint32_t apiVersion
     );
-    void InsertInstanceEnabledLayer(const int64_t instanceId, const std::string_view layerName);
+    int64_t InsertInstanceEnabledLayer(const int64_t instanceId, const std::string_view layerName);
+    int64_t InsertInstanceEnabledLayerSetting(
+        const int64_t instanceEnabledLayerId, const std::string_view name, const int64_t type
+    );
+    void InsertInstanceEnabledLayerSettingValue(
+        const int64_t instanceEnabledLayerSettingId, const int64_t idx, const std::string_view value
+    );
     void InsertInstanceEnabledExtension(const int64_t instanceId, const std::string_view extensionName);
+    void InsertInstanceValidationEnabledFeature(const int64_t instanceId, const int64_t feature);
+    void InsertInstanceValidationDisabledFeature(const int64_t instanceId, const int64_t feature);
+    void InsertInstanceValidationDisabledCheck(const int64_t instanceId, const int64_t check);
 
     int64_t InsertDevice(
         const uint64_t apiEventId, const format::HandleId device, const std::optional<int64_t> physicalDevice

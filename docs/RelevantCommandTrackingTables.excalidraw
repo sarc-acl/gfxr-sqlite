@@ -76,13 +76,13 @@
     },
     {
       "type": "rectangle",
-      "version": 5028,
-      "versionNonce": 961565765,
+      "version": 5029,
+      "versionNonce": 1291887221,
       "isDeleted": false,
       "id": "ZmAEgVxURJpFwp-lUNnEl",
       "fillStyle": "solid",
       "strokeWidth": 2,
-      "strokeStyle": "dotted",
+      "strokeStyle": "dashed",
       "roughness": 0,
       "opacity": 100,
       "angle": 0,
@@ -102,7 +102,7 @@
           "type": "text"
         }
       ],
-      "updated": 1781636922185,
+      "updated": 1781726489806,
       "link": null,
       "locked": false,
       "index": "a2"

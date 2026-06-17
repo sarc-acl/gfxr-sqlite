@@ -152,6 +152,10 @@ struct VulkanSqliteConsumerContext final
 
     int64_t currentInstanceId = 0;
     std::map<int64_t, int64_t> instanceHandleToId;
+    
+    int64_t currentInstanceEnabledLayerId = 0;
+
+    int64_t currentInstanceEnabledLayerSettingId = 0;
 
     int64_t currentSurfaceId = 0;
     std::map<int64_t, int64_t> surfaceHandleToId;

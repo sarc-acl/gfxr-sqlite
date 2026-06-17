@@ -191,10 +191,40 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
 {
     PrepareStatement(db, "INSERT INTO instances VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);", &instanceInsertStatement);
 
-    PrepareStatement(db, "INSERT INTO instanceEnabledLayers VALUES (?, ?);", &instanceEnabledLayerInsertStatement);
+    PrepareStatement(db, "INSERT INTO instanceEnabledLayers VALUES (?, ?, ?);", &instanceEnabledLayerInsertStatement);
+
+    PrepareStatement(
+        db,
+        "INSERT INTO instanceEnabledLayerSettings VALUES (?, ?, ?, ?);",
+        &instanceEnabledLayerSettingInsertStatement
+    );
+
+    PrepareStatement(
+        db,
+        "INSERT INTO instanceEnabledLayerSettingValues VALUES (?, ?, ?);",
+        &instanceEnabledLayerSettingValueInsertStatement
+    );
 
     PrepareStatement(
         db, "INSERT INTO instanceEnabledExtensions VALUES (?, ?);", &instanceEnabledExtensionInsertStatement
+    );
+
+    PrepareStatement(
+        db,
+        "INSERT INTO instanceValidationEnabledFeatures VALUES (?, ?);",
+        &instanceValidationEnabledFeatureInsertStatement
+    );
+
+    PrepareStatement(
+        db,
+        "INSERT INTO instanceValidationDisabledFeatures VALUES (?, ?);",
+        &instanceValidationDisabledFeatureInsertStatement
+    );
+
+    PrepareStatement(
+        db,
+        "INSERT INTO instanceValidationDisabledChecks VALUES (?, ?);",
+        &instanceValidationDisabledCheckInsertStatement
     );
 
     PrepareStatement(db, "INSERT INTO devices VALUES (?, ?, ?, ?, NULL);", &deviceInsertStatement);
@@ -1380,15 +1410,53 @@ int64_t VulkanSqlitePreparedStatements::InsertInstance(
     return id;
 }
 
-void VulkanSqlitePreparedStatements::InsertInstanceEnabledLayer(
+int64_t VulkanSqlitePreparedStatements::InsertInstanceEnabledLayer(
     const int64_t instanceId, const std::string_view layerName
 )
 {
+    auto id = ++context->currentInstanceEnabledLayerId;
     auto& statement = instanceEnabledLayerInsertStatement;
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(instanceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(id)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(instanceId)));
     GFXRECON_SQLITE_CHECK(
-        db, sqlite3_bind_text64(statement, 2, layerName.data(), layerName.size(), SQLITE_STATIC, SQLITE_UTF8)
+        db, sqlite3_bind_text64(statement, 3, layerName.data(), layerName.size(), SQLITE_STATIC, SQLITE_UTF8)
+    );
+
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+    return id;
+}
+
+int64_t VulkanSqlitePreparedStatements::InsertInstanceEnabledLayerSetting(
+    const int64_t instanceEnabledLayerId, const std::string_view name, const int64_t type
+)
+{
+    auto id = ++context->currentInstanceEnabledLayerSettingId;
+    auto& statement = instanceEnabledLayerSettingInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(id)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(instanceEnabledLayerId)));
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_text64(statement, 3, name.data(), name.size(), SQLITE_STATIC, SQLITE_UTF8)
+    );
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(type)));
+
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+    return id;
+}
+
+void VulkanSqlitePreparedStatements::InsertInstanceEnabledLayerSettingValue(
+    const int64_t instanceEnabledLayerSettingId, const int64_t idx, const std::string_view value
+)
+{
+    auto& statement = instanceEnabledLayerSettingValueInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(instanceEnabledLayerSettingId))
+    );
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(idx)));
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_text64(statement, 3, value.data(), value.size(), SQLITE_STATIC, SQLITE_UTF8)
     );
 
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
@@ -1404,6 +1472,42 @@ void VulkanSqlitePreparedStatements::InsertInstanceEnabledExtension(
     GFXRECON_SQLITE_CHECK(
         db, sqlite3_bind_text64(statement, 2, extensionName.data(), extensionName.size(), SQLITE_STATIC, SQLITE_UTF8)
     );
+
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertInstanceValidationEnabledFeature(
+    const int64_t instanceId, const int64_t feature
+)
+{
+    auto& statement = instanceValidationEnabledFeatureInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(instanceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(feature)));
+
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertInstanceValidationDisabledFeature(
+    const int64_t instanceId, const int64_t feature
+)
+{
+    auto& statement = instanceValidationDisabledFeatureInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(instanceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(feature)));
+
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertInstanceValidationDisabledCheck(
+    const int64_t instanceId, const int64_t check
+)
+{
+    auto& statement = instanceValidationDisabledCheckInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(instanceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(check)));
 
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
