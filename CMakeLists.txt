@@ -41,7 +41,7 @@ set(GFXR_SQLITE_GFXR_PATH "${CMAKE_CURRENT_LIST_DIR}/external/gfxreconstruct"
     CACHE PATH "Path to the gfxreconstruct sources used by gfxr-sqlite")
 
 option(GFXR_SQLITE_BUILD_EXECUTABLE "Build the standalone gfxr-sqlite CLI executable" ${GFXR_SQLITE_IS_TOP_LEVEL})
-option(GFXR_SQLITE_BUILD_TEST "Build the gfxr-db-test native test executable" ${GFXR_SQLITE_IS_TOP_LEVEL})
+option(GFXR_SQLITE_BUILD_TEST "Build the gfxr-sqlite-test native test executable" ${GFXR_SQLITE_IS_TOP_LEVEL})
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_C_VISIBILITY_PRESET hidden)
@@ -56,18 +56,18 @@ set(GFXR_DB_SRC_PATH "${CMAKE_CURRENT_LIST_DIR}/src/gfxr-db")
 set(GFXR_TOOLS_SRC_PATH "${CMAKE_CURRENT_LIST_DIR}/src/tools")
 
 # -----------------------------------------------------------------------------
-# gfxr-db-library: the core static library that decodes .gfxr -> SQLite.
+# gfxr-sqlite-library: the core static library that decodes .gfxr -> SQLite.
 # -----------------------------------------------------------------------------
-add_library(gfxr-db-library STATIC "")
+add_library(gfxr-sqlite-library STATIC "")
 
 # Enabling PIC as consumers may place the static library into a shared library
 # (e.g. Sokatoa's gfxr-consumer NAPI addon).
-set_property(TARGET gfxr-db-library PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET gfxr-sqlite-library PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-target_compile_features(gfxr-db-library PUBLIC cxx_std_20)
+target_compile_features(gfxr-sqlite-library PUBLIC cxx_std_20)
 
 if (MSVC)
-    set_property(TARGET gfxr-db-library PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<IF:$<CONFIG:DEBUG>,Debug,>DLL")
+    set_property(TARGET gfxr-sqlite-library PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<IF:$<CONFIG:DEBUG>,Debug,>DLL")
 
     set(PRECOMPILED_ARCH "64")
     if (CMAKE_SIZEOF_VOID_P EQUAL 4)
@@ -77,10 +77,10 @@ if (MSVC)
     list(APPEND CMAKE_PREFIX_PATH
         "${GFXR_PATH}/external/precompiled/win${PRECOMPILED_ARCH}")
 
-    target_compile_options(gfxr-db-library PUBLIC /W4 /wd4100 /wd4127 /wd4505)
-    target_compile_definitions(gfxr-db-library PUBLIC _CRT_SECURE_NO_WARNINGS)
+    target_compile_options(gfxr-sqlite-library PUBLIC /W4 /wd4100 /wd4127 /wd4505)
+    target_compile_definitions(gfxr-sqlite-library PUBLIC _CRT_SECURE_NO_WARNINGS)
 else ()
-    target_compile_options(gfxr-db-library PUBLIC -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function)
+    target_compile_options(gfxr-sqlite-library PUBLIC -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function)
 endif ()
 
 if (APPLE)
@@ -89,12 +89,12 @@ if (APPLE)
 endif ()
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(gfxr-db-library PUBLIC -Wno-gnu-zero-variadic-macro-arguments)
+    target_compile_options(gfxr-sqlite-library PUBLIC -Wno-gnu-zero-variadic-macro-arguments)
 endif ()
 
-target_compile_definitions(gfxr-db-library PUBLIC SQLITE_USE_URI=1)
+target_compile_definitions(gfxr-sqlite-library PUBLIC SQLITE_USE_URI=1)
 # Multi-threaded mode. A single connection must not be used concurrently.
-target_compile_definitions(gfxr-db-library PUBLIC SQLITE_THREADSAFE=2)
+target_compile_definitions(gfxr-sqlite-library PUBLIC SQLITE_THREADSAFE=2)
 
 find_package(LZ4)
 find_package(ZLIB)
@@ -134,7 +134,7 @@ if (MSVC)
     target_compile_options(platform_specific INTERFACE /MP)
 endif ()
 
-target_sources(gfxr-db-library
+target_sources(gfxr-sqlite-library
     PRIVATE
         ${GFXR_DB_SRC_PATH}/internal/create_db_helper.cpp
         ${GFXR_DB_SRC_PATH}/internal/gfxr_db_manager.cpp
@@ -157,9 +157,9 @@ target_sources(gfxr-db-library
 if (MSVC)
     # Force inclusion of "gfxrecon_disable_popup_result" variable in linking.
     if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-        target_link_options(gfxr-db-library PUBLIC "LINKER:/Include:_gfxrecon_disable_popup_result")
+        target_link_options(gfxr-sqlite-library PUBLIC "LINKER:/Include:_gfxrecon_disable_popup_result")
     else ()
-        target_link_options(gfxr-db-library PUBLIC "LINKER:/Include:gfxrecon_disable_popup_result")
+        target_link_options(gfxr-sqlite-library PUBLIC "LINKER:/Include:gfxrecon_disable_popup_result")
     endif ()
 endif ()
 
@@ -174,7 +174,7 @@ endif ()
 # GFXR uses dbuild for debug builds, build for release builds.
 set(GFXR_PATH_BUILD "${GFXR_PATH}/$<IF:$<CONFIG:DEBUG>,dbuild,build>")
 
-target_include_directories(gfxr-db-library PUBLIC
+target_include_directories(gfxr-sqlite-library PUBLIC
     ${GFXR_PATH}
     ${GFXR_PATH_BUILD}/${BUILD_DIR}/x64/cmake_output
     ${GFXR_PATH}/tools
@@ -187,12 +187,12 @@ target_include_directories(gfxr-db-library PUBLIC
 )
 
 if (APPLE)
-    target_include_directories(gfxr-db-library PUBLIC ${GFXR_PATH_BUILD}/${BUILD_DIR}/universal/cmake_output)
+    target_include_directories(gfxr-sqlite-library PUBLIC ${GFXR_PATH_BUILD}/${BUILD_DIR}/universal/cmake_output)
 endif ()
 
-target_compile_definitions(gfxr-db-library PUBLIC VK_NO_PROTOTYPES VK_ENABLE_BETA_EXTENSIONS)
+target_compile_definitions(gfxr-sqlite-library PUBLIC VK_NO_PROTOTYPES VK_ENABLE_BETA_EXTENSIONS)
 # Define PROJECT_VERSION_HEADER_FILE macro for gfxreconstruct version header
-target_compile_definitions(gfxr-db-library PRIVATE PROJECT_VERSION_HEADER_FILE="project_version_$<CONFIG>.h")
+target_compile_definitions(gfxr-sqlite-library PRIVATE PROJECT_VERSION_HEADER_FILE="project_version_$<CONFIG>.h")
 
 if (MSVC)
     set(GFXR_OUTPUT_SUBFOLDER "$<IF:$<CONFIG:DEBUG>,Debug,Release>")
@@ -202,14 +202,14 @@ endif ()
 
 set(GFXR_BUILD_DIR ${GFXR_PATH_BUILD}/${BUILD_DIR})
 
-target_link_directories(gfxr-db-library PUBLIC
+target_link_directories(gfxr-sqlite-library PUBLIC
     ${GFXR_BUILD_DIR}/x64/cmake_output/framework/decode/${GFXR_OUTPUT_SUBFOLDER}
     ${GFXR_BUILD_DIR}/x64/cmake_output/framework/graphics/${GFXR_OUTPUT_SUBFOLDER}
     ${GFXR_BUILD_DIR}/x64/cmake_output/framework/format/${GFXR_OUTPUT_SUBFOLDER}
     ${GFXR_BUILD_DIR}/x64/cmake_output/framework/util/${GFXR_OUTPUT_SUBFOLDER}
     ${GFXR_BUILD_DIR}/x64/cmake_output/${GFXR_OUTPUT_SUBFOLDER})
 if (APPLE)
-    target_link_directories(gfxr-db-library PUBLIC
+    target_link_directories(gfxr-sqlite-library PUBLIC
         ${GFXR_BUILD_DIR}/universal/cmake_output/framework/decode/${GFXR_OUTPUT_SUBFOLDER}
         ${GFXR_BUILD_DIR}/universal/cmake_output/framework/graphics/${GFXR_OUTPUT_SUBFOLDER}
         ${GFXR_BUILD_DIR}/universal/cmake_output/framework/format/${GFXR_OUTPUT_SUBFOLDER}
@@ -217,13 +217,13 @@ if (APPLE)
         ${GFXR_BUILD_DIR}/universal/cmake_output/${GFXR_OUTPUT_SUBFOLDER})
 endif ()
 
-target_link_libraries(gfxr-db-library
+target_link_libraries(gfxr-sqlite-library
     gfxrecon_graphics gfxrecon_decode gfxrecon_format gfxrecon_util project_version
     platform_specific
     $<$<BOOL:${WIN32}>:version.lib>
     LZ4::LZ4 ZLIB::ZLIB)
 if (TARGET ZSTD::ZSTD)
-    target_link_libraries(gfxr-db-library ZSTD::ZSTD)
+    target_link_libraries(gfxr-sqlite-library ZSTD::ZSTD)
 endif ()
 
 # -----------------------------------------------------------------------------
@@ -234,18 +234,18 @@ if (GFXR_SQLITE_BUILD_EXECUTABLE)
     if (MSVC)
         set_property(TARGET gfxr-sqlite PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<IF:$<CONFIG:DEBUG>,Debug,>DLL")
     endif ()
-    target_link_libraries(gfxr-sqlite PRIVATE gfxr-db-library)
+    target_link_libraries(gfxr-sqlite PRIVATE gfxr-sqlite-library)
 endif ()
 
 # -----------------------------------------------------------------------------
-# gfxr-db-test: native test executable for the library.
+# gfxr-sqlite-test: native test executable for the library.
 # -----------------------------------------------------------------------------
 if (GFXR_SQLITE_BUILD_TEST)
-    add_executable(gfxr-db-test
+    add_executable(gfxr-sqlite-test
         ${GFXR_DB_SRC_PATH}/internal/native_gfxr_consumer_test.cpp
         ${GFXR_DB_SRC_PATH}/internal/executable_path.cpp)
     if (MSVC)
-        set_property(TARGET gfxr-db-test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<IF:$<CONFIG:DEBUG>,Debug,>DLL")
+        set_property(TARGET gfxr-sqlite-test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<IF:$<CONFIG:DEBUG>,Debug,>DLL")
     endif ()
-    target_link_libraries(gfxr-db-test PRIVATE gfxr-db-library)
+    target_link_libraries(gfxr-sqlite-test PRIVATE gfxr-sqlite-library)
 endif ()

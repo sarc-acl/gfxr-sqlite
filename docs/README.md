@@ -21,7 +21,7 @@ No build step. No `node_modules`. Just static files served by GitHub Pages.
 Opening `index.html` via `file://` will fail -- browsers block `fetch()` from `file://` origins. Serve the folder over HTTP instead:
 
 ```powershell
-cd gfxr-db-pages
+cd docs
 python -m http.server 8080
 # then open http://localhost:8080/
 ```
