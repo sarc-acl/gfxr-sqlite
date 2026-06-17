@@ -46,12 +46,6 @@ jobs:
         shell: bash
         run: python3 scripts/build.py
 
-      - name: List build artifacts
-        shell: bash
-        run: |
-          echo "Contents of out/build:"
-          ls -R out/build || true
-
       - name: Unit tests
         shell: bash
         run: |
