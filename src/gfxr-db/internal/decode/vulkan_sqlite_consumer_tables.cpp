@@ -127,9 +127,30 @@ static void CreateVulkanInstanceTables(sqlite3* db)
     ExecSQL(
         db,
         "CREATE TABLE instanceEnabledLayers("
+        "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   instanceId INT NOT NULL,"
         "   name TEXT NOT NULL,"
         "   FOREIGN KEY(instanceId) REFERENCES instances(id)) STRICT;"
+    );
+    
+    ExecSQL(
+        db,
+        "CREATE TABLE instanceEnabledLayerSettings("
+        "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
+        "   instanceEnabledLayerId INT NOT NULL,"
+        "   name TEXT NOT NULL,"
+        "   type INT NOT NULL,"
+        "   FOREIGN KEY(instanceEnabledLayerId) REFERENCES instanceEnabledLayers(id),"
+        "   FOREIGN KEY(type) REFERENCES VkLayerSettingTypeEXT(value)) STRICT;"
+    );
+    
+    ExecSQL(
+        db,
+        "CREATE TABLE instanceEnabledLayerSettingValues("
+        "   instanceEnabledLayerSettingId INT NOT NULL,"
+        "   idx INT NOT NULL,"
+        "   value TEXT NOT NULL,"
+        "   FOREIGN KEY(instanceEnabledLayerSettingId) REFERENCES instanceEnabledLayerSettings(id)) STRICT;"
     );
 
     ExecSQL(
@@ -138,6 +159,33 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   instanceId INT NOT NULL,"
         "   name TEXT NOT NULL,"
         "   FOREIGN KEY(instanceId) REFERENCES instances(id)) STRICT;"
+    );
+    
+    ExecSQL(
+        db,
+        "CREATE TABLE instanceValidationEnabledFeatures("
+        "   instanceId INT NOT NULL,"
+        "   feature INT NOT NULL,"
+        "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
+        "   FOREIGN KEY(feature) REFERENCES VkValidationFeatureEnableEXT) STRICT;"
+    );
+    
+    ExecSQL(
+        db,
+        "CREATE TABLE instanceValidationDisabledFeatures("
+        "   instanceId INT NOT NULL,"
+        "   feature INT NOT NULL,"
+        "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
+        "   FOREIGN KEY(feature) REFERENCES VkValidationFeatureDisableEXT) STRICT;"
+    );
+    
+    ExecSQL(
+        db,
+        "CREATE TABLE instanceValidationDisabledChecks("
+        "   instanceId INT NOT NULL,"
+        "   validationCheck INT NOT NULL,"
+        "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
+        "   FOREIGN KEY(validationCheck) REFERENCES VkValidationCheckEXT) STRICT;"
     );
 
     ExecSQL(

@@ -36,7 +36,9 @@
 #include <unordered_map>
 #include <optional>
 #include <sstream>
+#include <string>
 #include <cstdint>
+#include <cstring>
 
 // Add the GFXR ID in the log message.
 // Example output:
@@ -640,6 +642,22 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
     uint32_t engineVersion = 0u;
     uint32_t apiVersion = 0u;
 
+    bool layerSettingsValid = false;
+    const Decoded_VkLayerSettingEXT* layerSettings = nullptr;
+    uint64_t layerSettingsCount = 0;
+
+    bool enabledValidationFeaturesValid = false;
+    const VkValidationFeatureEnableEXT* enabledValidationFeatures = nullptr;
+    uint64_t enabledValidationFeaturesCount = 0;
+
+    bool disabledValidationFeaturesValid = false;
+    const VkValidationFeatureDisableEXT* disabledValidationFeatures = nullptr;
+    uint64_t disabledValidationFeaturesCount = 0;
+
+    bool disabledValidationChecksValid = false;
+    const VkValidationCheckEXT* disabledValidationChecks = nullptr;
+    uint64_t disabledValidationChecksCount = 0;
+
     auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
     if (!createInfoValid)
     {
@@ -650,7 +668,43 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
     }
     else
     {
-        LogUnsupportedPNext(createInfo->pNext);
+        auto pnext = createInfo->pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkLayerSettingsCreateInfoEXT>())
+            {
+                const auto* pLayerSettingsCreateInfoExt =
+                    reinterpret_cast<const Decoded_VkLayerSettingsCreateInfoEXT*>(header);
+                std::tie(layerSettingsValid, layerSettings, layerSettingsCount) =
+                    GetMetaStructArray(pLayerSettingsCreateInfoExt->pSettings);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkValidationFeaturesEXT>())
+            {
+                const auto* pValidationFeaturesExt =
+                    reinterpret_cast<const Decoded_VkValidationFeaturesEXT*>(header);
+                std::tie(
+                    enabledValidationFeaturesValid, enabledValidationFeatures, enabledValidationFeaturesCount
+                ) = GetPointerArray(&pValidationFeaturesExt->pEnabledValidationFeatures);
+                std::tie(
+                    disabledValidationFeaturesValid, disabledValidationFeatures, disabledValidationFeaturesCount
+                ) = GetPointerArray(&pValidationFeaturesExt->pDisabledValidationFeatures);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkValidationFlagsEXT>())
+            {
+                const auto* pValidationFlagsExt =
+                    reinterpret_cast<const Decoded_VkValidationFlagsEXT*>(header);
+                std::tie(
+                    disabledValidationChecksValid, disabledValidationChecks, disabledValidationChecksCount
+                ) = GetPointerArray(&pValidationFlagsExt->pDisabledValidationChecks);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
 
         flags = createInfo->decoded_value->flags;
         auto applicationInfo = createInfo->decoded_value->pApplicationInfo;
@@ -689,7 +743,76 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
         {
             for (size_t i = 0; i < layerNamesCount; ++i)
             {
-                statements.InsertInstanceEnabledLayer(instanceId, layerNames[i]);
+                auto enabledLayerId = statements.InsertInstanceEnabledLayer(instanceId, layerNames[i]);
+                if (layerSettingsValid)
+                {
+                    for (size_t j = 0; j < layerSettingsCount; ++j)
+                    {
+                        const VkLayerSettingEXT* setting = layerSettings[j].decoded_value;
+                        if (setting == nullptr)
+                        {
+                            continue;
+                        }
+
+                        // Only associate a setting with this layer if its layer name matches.
+                        if (setting->pLayerName == nullptr || layerNames[i] == nullptr ||
+                            std::strcmp(setting->pLayerName, layerNames[i]) != 0)
+                        {
+                            continue;
+                        }
+
+                        auto settingName = setting->pSettingName != nullptr ? setting->pSettingName : "";
+                        auto settingId = statements.InsertInstanceEnabledLayerSetting(
+                            enabledLayerId, settingName, static_cast<int64_t>(setting->type)
+                        );
+
+                        if (setting->pValues == nullptr)
+                        {
+                            continue;
+                        }
+
+                        // Convert each value to text per the setting's type and store it.
+                        for (uint32_t k = 0; k < setting->valueCount; ++k)
+                        {
+                            std::string value;
+                            switch (setting->type)
+                            {
+                                case VK_LAYER_SETTING_TYPE_BOOL32_EXT:
+                                case VK_LAYER_SETTING_TYPE_UINT32_EXT:
+                                    value = std::to_string(static_cast<const uint32_t*>(setting->pValues)[k]);
+                                    break;
+                                case VK_LAYER_SETTING_TYPE_INT32_EXT:
+                                    value = std::to_string(static_cast<const int32_t*>(setting->pValues)[k]);
+                                    break;
+                                case VK_LAYER_SETTING_TYPE_INT64_EXT:
+                                    value = std::to_string(static_cast<const int64_t*>(setting->pValues)[k]);
+                                    break;
+                                case VK_LAYER_SETTING_TYPE_UINT64_EXT:
+                                    value = std::to_string(static_cast<const uint64_t*>(setting->pValues)[k]);
+                                    break;
+                                case VK_LAYER_SETTING_TYPE_FLOAT32_EXT:
+                                    value = std::to_string(static_cast<const float*>(setting->pValues)[k]);
+                                    break;
+                                case VK_LAYER_SETTING_TYPE_FLOAT64_EXT:
+                                    value = std::to_string(static_cast<const double*>(setting->pValues)[k]);
+                                    break;
+                                case VK_LAYER_SETTING_TYPE_STRING_EXT:
+                                {
+                                    const char* str = static_cast<const char* const*>(setting->pValues)[k];
+                                    value = str != nullptr ? str : "";
+                                    break;
+                                }
+                                case VK_LAYER_SETTING_TYPE_MAX_ENUM_EXT:
+                                default:
+                                    continue;
+                            }
+
+                            statements.InsertInstanceEnabledLayerSettingValue(
+                                settingId, static_cast<int64_t>(k), value
+                            );
+                        }
+                    }
+                }
             }
         }
         auto [extensionNamesValid, extensionNames, extensionNamesCount] =
@@ -699,6 +822,36 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
             for (size_t i = 0; i < extensionNamesCount; ++i)
             {
                 statements.InsertInstanceEnabledExtension(instanceId, extensionNames[i]);
+            }
+        }
+
+        if (enabledValidationFeaturesValid)
+        {
+            for (size_t i = 0; i < enabledValidationFeaturesCount; ++i)
+            {
+                statements.InsertInstanceValidationEnabledFeature(
+                    instanceId, static_cast<int64_t>(enabledValidationFeatures[i])
+                );
+            }
+        }
+
+        if (disabledValidationFeaturesValid)
+        {
+            for (size_t i = 0; i < disabledValidationFeaturesCount; ++i)
+            {
+                statements.InsertInstanceValidationDisabledFeature(
+                    instanceId, static_cast<int64_t>(disabledValidationFeatures[i])
+                );
+            }
+        }
+
+        if (disabledValidationChecksValid)
+        {
+            for (size_t i = 0; i < disabledValidationChecksCount; ++i)
+            {
+                statements.InsertInstanceValidationDisabledCheck(
+                    instanceId, static_cast<int64_t>(disabledValidationChecks[i])
+                );
             }
         }
     }

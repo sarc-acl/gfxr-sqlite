@@ -5,13 +5,13 @@
   "elements": [
     {
       "type": "rectangle",
-      "version": 4521,
-      "versionNonce": 839994230,
+      "version": 4522,
+      "versionNonce": 1934998261,
       "isDeleted": false,
       "id": "bgRoZgXM84A5EsIEClLra",
       "fillStyle": "solid",
       "strokeWidth": 2,
-      "strokeStyle": "dotted",
+      "strokeStyle": "dashed",
       "roughness": 0,
       "opacity": 100,
       "angle": 0,
@@ -31,7 +31,7 @@
           "type": "text"
         }
       ],
-      "updated": 1781641848529,
+      "updated": 1781726521678,
       "link": null,
       "locked": false,
       "index": "a0"
@@ -2234,7 +2234,7 @@
       "strokeColor": "#1e1e1e",
       "backgroundColor": "transparent",
       "width": 515.9433943812928,
-      "height": 238.49082900497086,
+      "height": 238.4908290049709,
       "seed": 2145959269,
       "groupIds": [],
       "frameId": null,

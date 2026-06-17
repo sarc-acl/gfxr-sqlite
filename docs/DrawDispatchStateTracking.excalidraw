@@ -5,13 +5,13 @@
   "elements": [
     {
       "type": "rectangle",
-      "version": 4193,
-      "versionNonce": 1522776338,
+      "version": 4194,
+      "versionNonce": 1747836111,
       "isDeleted": false,
       "id": "u_QlQO8V50mjxY-IVcvc5",
       "fillStyle": "solid",
       "strokeWidth": 2,
-      "strokeStyle": "dotted",
+      "strokeStyle": "dashed",
       "roughness": 0,
       "opacity": 100,
       "angle": 0,
@@ -31,7 +31,7 @@
           "type": "text"
         }
       ],
-      "updated": 1781641638377,
+      "updated": 1781726504004,
       "link": null,
       "locked": false,
       "index": "a0"

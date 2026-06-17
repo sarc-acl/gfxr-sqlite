@@ -48,6 +48,36 @@ def run(args: list, *, cwd: Path | None = None) -> None:
         raise SystemExit(f'\nCommand failed with exit code {result.returncode}: {" ".join(map(str, args))}\n')
 
 
+def target_arch() -> str:
+    """Architecture component of gfxreconstruct's build output path."""
+    arch = platform.uname().machine
+    if arch in ('x86_64', 'AMD64'):
+        arch = 'x64'
+    if platform.system() == 'Darwin':
+        arch = 'universal'
+    return arch
+
+
+def platform_dir() -> str:
+    """Platform component of gfxreconstruct's build output path (matches CMakeLists.txt)."""
+    system = platform.system()
+    if system == 'Windows':
+        return 'windows'
+    if system == 'Darwin':
+        return 'darwin'
+    return 'linux'
+
+
+def gfxreconstruct_cmake_output_dir(build_type: str) -> Path:
+    """Directory holding gfxreconstruct's build output for the given config.
+
+    Mirrors the paths gfxr-sqlite's CMakeLists.txt includes/links against:
+    gfxreconstruct uses 'dbuild' for debug and 'build' for release.
+    """
+    subdir = 'dbuild' if build_type == BUILD_TYPE_DEBUG else 'build'
+    return GFXR_PATH.joinpath(subdir, platform_dir(), target_arch(), 'cmake_output')
+
+
 def ensure_gfxreconstruct_initialized() -> None:
     """Initialize the nested gfxreconstruct submodule (overrides update=none).
 
@@ -70,12 +100,6 @@ def build_gfxreconstruct(build_type: str, clean: bool, parallel: int) -> None:
     parallel: number of compilation jobs (0 = use all available cores).
     """
     print(f'Building gfxreconstruct ({build_type}, -j={parallel})')
-
-    arch = platform.uname().machine
-    if arch in ('x86_64', 'AMD64'):
-        arch = 'x64'
-    if platform.system() == 'Darwin':
-        arch = 'universal'
 
     args = [sys.executable, 'scripts/build.py', '-c', build_type,
             '--skip-check-code-style', '--skip-tests', '--skip-d3d12-support',
