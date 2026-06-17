@@ -1,0 +1,57 @@
+name: Verification Build
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  pull_request:
+    branches: [main]
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch: # lets us manually trigger builds from a branch (the only way to test changes to this file)
+
+# cancel any running workflows for the same PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number}}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: ${{ matrix.os }}, Node.js v${{ matrix.node }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, ubuntu-22.04, macos-15] # github hosted runners
+        node: ["20.19.0"]
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.9' # this version is cached on windows-2022 and macos-14 so it will be faster to install
+
+      - name: Build
+        shell: bash
+        run: python3 scripts/build.py
+
+      - name: Unit tests
+        shell: bash
+        run: |
+          set -e
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            ./out/build/Release/gfxr-db-test.exe
+          else
+            ./out/build/gfxr-db-test
+          fi
