@@ -20,13 +20,12 @@ concurrency:
 
 jobs:
   build:
-    name: ${{ matrix.os }}, Node.js v${{ matrix.node }}
+    name: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [windows-2022, ubuntu-22.04, macos-15] # github hosted runners
-        node: ["20.19.0"]
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
