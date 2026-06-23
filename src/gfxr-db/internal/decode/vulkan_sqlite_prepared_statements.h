@@ -155,6 +155,7 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement stateDynamicPatchControlPointInsertStatement;
     SqliteStatement stateDynamicPrimitiveRestartEnableInsertStatement;
     SqliteStatement imageInsertStatement;
+    SqliteStatement imageViewFormatInsertStatement;
     SqliteStatement imageViewInsertStatement;
     SqliteStatement samplerInsertStatement;
     SqliteStatement swapchainInsertStatement;
@@ -1602,6 +1603,8 @@ struct VulkanSqlitePreparedStatements
         const std::optional<int64_t> externalFormat,
         const uint64_t apiEventId
     );
+
+    void InsertImageViewFormat(const int64_t imageId, const int64_t viewFormat);
 
     void InsertImageView(
         const format::HandleId view,

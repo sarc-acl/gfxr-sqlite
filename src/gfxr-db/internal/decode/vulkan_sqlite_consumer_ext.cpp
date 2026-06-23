@@ -7144,6 +7144,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
 
     std::optional<int64_t> externalFormat = std::nullopt;
 
+    bool viewFormatsValid = false;
+    const VkFormat* viewFormats = nullptr;
+    uint64_t viewFormatsCount = 0;
+
     auto pnext = createInfo->pNext;
     while (pnext != nullptr)
     {
@@ -7155,6 +7159,12 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
             {
                 externalFormat = static_cast<int64_t>(pExternalFormat->decoded_value->externalFormat);
             }
+        }
+        else if (*header->sType == gfxrecon::util::GetSType<VkImageFormatListCreateInfo>())
+        {
+            const auto* pImageFormatList = reinterpret_cast<const Decoded_VkImageFormatListCreateInfo*>(header);
+            std::tie(viewFormatsValid, viewFormats, viewFormatsCount) =
+                GetPointerArray(&pImageFormatList->pViewFormats);
         }
         else
         {
@@ -7182,6 +7192,17 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
         externalFormat,
         this->block_index_
     );
+
+    if (viewFormatsValid)
+    {
+        if (auto imageId = context.GetImageId(image))
+        {
+            for (size_t i = 0; i < viewFormatsCount; ++i)
+            {
+                statements.InsertImageViewFormat(*imageId, static_cast<int64_t>(viewFormats[i]));
+            }
+        }
+    }
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyImage(

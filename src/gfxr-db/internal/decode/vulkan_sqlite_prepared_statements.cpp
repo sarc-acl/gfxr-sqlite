@@ -440,6 +440,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         "INSERT INTO images VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &imageInsertStatement
     );
+    PrepareStatement(db, "INSERT INTO imageViewFormats VALUES (?, ?);", &imageViewFormatInsertStatement);
     PrepareStatement(
         db,
         "INSERT INTO imageViews VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
@@ -4166,6 +4167,16 @@ void VulkanSqlitePreparedStatements::InsertImage(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(initialLayout)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 17, externalFormat));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertImageViewFormat(const int64_t imageId, const int64_t viewFormat)
+{
+    auto& statement = imageViewFormatInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(imageId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(viewFormat)));
+
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
