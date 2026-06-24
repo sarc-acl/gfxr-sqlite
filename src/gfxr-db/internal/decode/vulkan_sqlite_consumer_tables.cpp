@@ -132,7 +132,7 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   name TEXT NOT NULL,"
         "   FOREIGN KEY(instanceId) REFERENCES instances(id)) STRICT;"
     );
-    
+
     ExecSQL(
         db,
         "CREATE TABLE instanceEnabledLayerSettings("
@@ -143,7 +143,7 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   FOREIGN KEY(instanceEnabledLayerId) REFERENCES instanceEnabledLayers(id),"
         "   FOREIGN KEY(type) REFERENCES VkLayerSettingTypeEXT(value)) STRICT;"
     );
-    
+
     ExecSQL(
         db,
         "CREATE TABLE instanceEnabledLayerSettingValues("
@@ -160,7 +160,7 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   name TEXT NOT NULL,"
         "   FOREIGN KEY(instanceId) REFERENCES instances(id)) STRICT;"
     );
-    
+
     ExecSQL(
         db,
         "CREATE TABLE instanceValidationEnabledFeatures("
@@ -169,7 +169,7 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
         "   FOREIGN KEY(feature) REFERENCES VkValidationFeatureEnableEXT) STRICT;"
     );
-    
+
     ExecSQL(
         db,
         "CREATE TABLE instanceValidationDisabledFeatures("
@@ -178,7 +178,7 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
         "   FOREIGN KEY(feature) REFERENCES VkValidationFeatureDisableEXT) STRICT;"
     );
-    
+
     ExecSQL(
         db,
         "CREATE TABLE instanceValidationDisabledChecks("
@@ -1285,7 +1285,6 @@ static void CreateDataGraphPipelineTables(sqlite3* db)
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
-
 }
 
 static void CreateRaytracingPipelineTables(sqlite3* db)
@@ -1422,6 +1421,7 @@ static void CreateBufferTables(sqlite3* db)
         "   sharing INT NOT NULL,"
         "   initialLayout INT NOT NULL,"
         "   externalFormat INT,"
+        "   externalMemoryHandleTypes INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(deviceId) REFERENCES devices(id),"
@@ -1433,6 +1433,15 @@ static void CreateBufferTables(sqlite3* db)
         "   FOREIGN KEY(initialLayout) REFERENCES VkImageLayout(value),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE imageViewFormats("
+        "   imageId INT NOT NULL,"
+        "   viewFormat INT NOT NULL,"
+        "   FOREIGN KEY(imageId) REFERENCES images(id),"
+        "   FOREIGN KEY(viewFormat) REFERENCES VkFormat(value)) STRICT;"
     );
 
     ExecSQL(
