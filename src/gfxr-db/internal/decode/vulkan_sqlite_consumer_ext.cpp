@@ -681,22 +681,17 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
             }
             else if (*header->sType == gfxrecon::util::GetSType<VkValidationFeaturesEXT>())
             {
-                const auto* pValidationFeaturesExt =
-                    reinterpret_cast<const Decoded_VkValidationFeaturesEXT*>(header);
-                std::tie(
-                    enabledValidationFeaturesValid, enabledValidationFeatures, enabledValidationFeaturesCount
-                ) = GetPointerArray(&pValidationFeaturesExt->pEnabledValidationFeatures);
-                std::tie(
-                    disabledValidationFeaturesValid, disabledValidationFeatures, disabledValidationFeaturesCount
-                ) = GetPointerArray(&pValidationFeaturesExt->pDisabledValidationFeatures);
+                const auto* pValidationFeaturesExt = reinterpret_cast<const Decoded_VkValidationFeaturesEXT*>(header);
+                std::tie(enabledValidationFeaturesValid, enabledValidationFeatures, enabledValidationFeaturesCount) =
+                    GetPointerArray(&pValidationFeaturesExt->pEnabledValidationFeatures);
+                std::tie(disabledValidationFeaturesValid, disabledValidationFeatures, disabledValidationFeaturesCount) =
+                    GetPointerArray(&pValidationFeaturesExt->pDisabledValidationFeatures);
             }
             else if (*header->sType == gfxrecon::util::GetSType<VkValidationFlagsEXT>())
             {
-                const auto* pValidationFlagsExt =
-                    reinterpret_cast<const Decoded_VkValidationFlagsEXT*>(header);
-                std::tie(
-                    disabledValidationChecksValid, disabledValidationChecks, disabledValidationChecksCount
-                ) = GetPointerArray(&pValidationFlagsExt->pDisabledValidationChecks);
+                const auto* pValidationFlagsExt = reinterpret_cast<const Decoded_VkValidationFlagsEXT*>(header);
+                std::tie(disabledValidationChecksValid, disabledValidationChecks, disabledValidationChecksCount) =
+                    GetPointerArray(&pValidationFlagsExt->pDisabledValidationChecks);
             }
             else
             {
@@ -3036,7 +3031,7 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelinePreRasterizationShaderState(int64_t
         // ProcessGraphicsPipelineFragmentShaderState.
         std::ostringstream pipelineStagesSql;
         pipelineStagesSql << "INSERT INTO pipelineStages SELECT " << pipelineId
-                          << ", stageIndex, flags, stage, shaderModule, entryPointName "
+                          << ", idx, flags, stage, shaderModule, entryPointName "
                           << "FROM pipelineStages WHERE pipelineId = " << libraryPipelineId
                           << " AND stage != " << VK_SHADER_STAGE_FRAGMENT_BIT << ";";
         ExecSQL(context.db, pipelineStagesSql.str().c_str());
@@ -3874,8 +3869,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
         //
         // TODO:
         // https://registry.khronos.org/vulkan/specs/latest/man/html/VkGraphicsPipelineCreateInfo.html#VUID-VkGraphicsPipelineCreateInfo-pRasterizationState-09039
-        // claims that multisample state is also queuePresentId in pre-rasterization shader state, but this may be a mistake
-        // in the spec: https://github.com/KhronosGroup/Vulkan-Docs/issues/2498
+        // claims that multisample state is also queuePresentId in pre-rasterization shader state, but this may be a
+        // mistake in the spec: https://github.com/KhronosGroup/Vulkan-Docs/issues/2498
         if ((graphicsLibraryFlags & VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT) ||
             (graphicsLibraryFlags & VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT))
         {
@@ -10142,21 +10137,25 @@ void VulkanSqliteConsumerExt::Process_vkCmdDispatchDataGraphARM(
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
         GFXRECON_SQLITE_LOG_WARNING(
-            "Failed to insert data graph dispatch recording, failed to find command buffer recording for handle %" PRIi64,
+            "Failed to insert data graph dispatch recording, failed to find command buffer recording for handle "
+            "%" PRIi64,
             commandBuffer
         );
         return;
     }
 
     auto sessionId = context.GetDataGraphPipelineSessionId(session, /*allowNull=*/true);
-    auto cmdDataGraphDispatchRecordingId =
-        statements.InsertCmdDataGraphDispatchRecording(this->block_index_, sessionId, commandBufferRecordingIter->second);
+    auto cmdDataGraphDispatchRecordingId = statements.InsertCmdDataGraphDispatchRecording(
+        this->block_index_, sessionId, commandBufferRecordingIter->second
+    );
 
     // TODO: Expose dispatch info flags in dispatch recording info
     auto [dispatchInfoValid, dispatchInfo] = GetMetaStructPointer(pDispatchInfo);
     if (dispatchInfoValid && dispatchInfo)
     {
-        statements.InsertCmdDataGraphDispatchRecordingInfo(cmdDataGraphDispatchRecordingId, dispatchInfo->decoded_value->flags);
+        statements.InsertCmdDataGraphDispatchRecordingInfo(
+            cmdDataGraphDispatchRecordingId, dispatchInfo->decoded_value->flags
+        );
     }
 
     context.InvalidateDynamicStates(commandBufferRecordingIter->second, VK_PIPELINE_BIND_POINT_DATA_GRAPH_ARM, {});

@@ -1,13 +1,13 @@
 ---
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: BlockIndent
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignEscapedNewlines: true
 AlignOperands: false
 AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: true
-AllowShortFunctionsOnASingleLine: Inline
 AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: true
@@ -15,29 +15,32 @@ BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Custom
 BraceWrapping:
-  AfterCaseLabel: true
-  AfterClass: true
-  AfterControlStatement: true
-  AfterEnum: true
-  AfterExternBlock: true
-  AfterFunction: true
-  AfterNamespace: true
-  AfterStruct: true
-  AfterUnion: true
-  BeforeCatch: true
-  BeforeElse: true
-  SplitEmptyFunction: false
-  SplitEmptyRecord: false
-  SplitEmptyNamespace: false
+    AfterCaseLabel: true
+    AfterClass: true
+    AfterControlStatement: true
+    AfterEnum: true
+    AfterExternBlock: true
+    AfterFunction: true
+    AfterNamespace: true
+    AfterStruct: true
+    AfterUnion: true
+    BeforeCatch: true
+    BeforeElse: true
+    SplitEmptyFunction: false
+    SplitEmptyRecord: false
+    SplitEmptyNamespace: false
 BreakConstructorInitializers: AfterColon
-# Not supported in 6
-#BreakInheritanceList: BeforeColon
+BreakInheritanceList: BeforeColon
 Cpp11BracedListStyle: false
 ColumnLimit: 120
 IndentCaseLabels: true
 IndentWidth: 4
+NamespaceIndentation: All
 PointerAlignment: Left
 ReflowComments: true
 SortIncludes: false
 SpaceAfterTemplateKeyword: true
 SpaceBeforeParens: ControlStatements
+PenaltyReturnTypeOnItsOwnLine: 200
+PenaltyBreakScopeResolution: 400
+InsertBraces: true
