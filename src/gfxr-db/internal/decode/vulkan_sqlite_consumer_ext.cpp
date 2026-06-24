@@ -7138,6 +7138,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
     }
 
     std::optional<int64_t> externalFormat = std::nullopt;
+    std::optional<int64_t> externalMemoryHandleTypes = std::nullopt;
 
     bool viewFormatsValid = false;
     const VkFormat* viewFormats = nullptr;
@@ -7160,6 +7161,12 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
             const auto* pImageFormatList = reinterpret_cast<const Decoded_VkImageFormatListCreateInfo*>(header);
             std::tie(viewFormatsValid, viewFormats, viewFormatsCount) =
                 GetPointerArray(&pImageFormatList->pViewFormats);
+        }
+        else if (*header->sType == gfxrecon::util::GetSType<VkExternalMemoryImageCreateInfo>())
+        {
+            const auto* pExternalMemory = reinterpret_cast<const Decoded_VkExternalMemoryImageCreateInfo*>(header);
+            externalMemoryHandleTypes =
+                static_cast<int64_t>(pExternalMemory->decoded_value->handleTypes);
         }
         else
         {
@@ -7185,6 +7192,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
         ci.sharingMode,
         ci.initialLayout,
         externalFormat,
+        externalMemoryHandleTypes,
         this->block_index_
     );
 

@@ -1421,6 +1421,7 @@ static void CreateBufferTables(sqlite3* db)
         "   sharing INT NOT NULL,"
         "   initialLayout INT NOT NULL,"
         "   externalFormat INT,"
+        "   externalMemoryHandleTypes INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(deviceId) REFERENCES devices(id),"

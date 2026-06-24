@@ -1601,6 +1601,7 @@ struct VulkanSqlitePreparedStatements
         const VkSharingMode sharing,
         const VkImageLayout initialLayout,
         const std::optional<int64_t> externalFormat,
+        const std::optional<int64_t> externalMemoryHandleTypes,
         const uint64_t apiEventId
     );
 
