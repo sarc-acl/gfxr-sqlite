@@ -3031,7 +3031,7 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelinePreRasterizationShaderState(int64_t
         // ProcessGraphicsPipelineFragmentShaderState.
         std::ostringstream pipelineStagesSql;
         pipelineStagesSql << "INSERT INTO pipelineStages SELECT " << pipelineId
-                          << ", idx, flags, stage, shaderModule, entryPointName "
+                          << ", idx, flags, stage, shaderModuleId, entryPointName "
                           << "FROM pipelineStages WHERE pipelineId = " << libraryPipelineId
                           << " AND stage != " << VK_SHADER_STAGE_FRAGMENT_BIT << ";";
         ExecSQL(context.db, pipelineStagesSql.str().c_str());
@@ -3232,7 +3232,7 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelineFragmentShaderState(
         // shader, so num_pre_rasterization_shaders will be used for exactly one shader here.
         std::ostringstream pipelineStageSql;
         pipelineStageSql << "INSERT INTO pipelineStages SELECT " << pipelineId << ", " << num_pre_rasterization_shaders
-                         << ", flags, stage, shaderModule, entryPointName "
+                         << ", flags, stage, shaderModuleId, entryPointName "
                          << "FROM pipelineStages WHERE pipelineId = " << libraryPipelineId
                          << " AND stage = " << VK_SHADER_STAGE_FRAGMENT_BIT << ";";
         ExecSQL(context.db, pipelineStageSql.str().c_str());
