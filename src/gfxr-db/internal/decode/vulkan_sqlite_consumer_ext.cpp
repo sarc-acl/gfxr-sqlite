@@ -7430,13 +7430,41 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         return;
     }
 
-    LogUnsupportedPNext(createInfo->pNext);
+    // The image view's usage is normally inherited from the parent image, but a VkImageViewUsageCreateInfo in the
+    // pNext chain can override it with a (typically narrower) subset. Leave the column NULL when absent so the UI
+    // reflects "inherited from image" rather than a misleading explicit value.
+    std::optional<int64_t> usage = std::nullopt;
+
+    auto pnext = createInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkImageViewUsageCreateInfo>())
+        {
+            const auto* pUsage = reinterpret_cast<const Decoded_VkImageViewUsageCreateInfo*>(header);
+            usage = static_cast<int64_t>(pUsage->decoded_value->usage);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+        pnext = header->pNext;
+    }
 
     auto& ci = *createInfo->decoded_value;
     auto imageId = context.GetImageId(createInfo->image);
 
     statements.InsertImageView(
-        view, device, ci.flags, imageId, ci.viewType, ci.format, ci.components, ci.subresourceRange, this->block_index_
+        view,
+        device,
+        ci.flags,
+        imageId,
+        ci.viewType,
+        ci.format,
+        ci.components,
+        ci.subresourceRange,
+        usage,
+        this->block_index_
     );
 }
 

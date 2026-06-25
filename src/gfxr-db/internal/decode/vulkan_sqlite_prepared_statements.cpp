@@ -443,7 +443,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(db, "INSERT INTO imageViewFormats VALUES (?, ?);", &imageViewFormatInsertStatement);
     PrepareStatement(
         db,
-        "INSERT INTO imageViews VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
+        "INSERT INTO imageViews VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &imageViewInsertStatement
     );
     PrepareStatement(
@@ -4191,6 +4191,7 @@ void VulkanSqlitePreparedStatements::InsertImageView(
     const VkFormat format,
     const VkComponentMapping& components,
     const VkImageSubresourceRange& srRange,
+    const std::optional<int64_t> usage,
     const uint64_t apiEventId
 )
 {
@@ -4217,7 +4218,8 @@ void VulkanSqlitePreparedStatements::InsertImageView(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 14, static_cast<sqlite_int64>(srRange.levelCount)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 15, static_cast<sqlite_int64>(srRange.baseArrayLayer)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(srRange.layerCount)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 17, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 17, usage));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 

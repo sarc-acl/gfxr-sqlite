@@ -1467,6 +1467,7 @@ static void CreateBufferTables(sqlite3* db)
         "   subresourceRangeLevelCount INT NOT NULL,"
         "   subresourceRangeBaseLayer INT NOT NULL,"
         "   subresourceRangeLayerCount INT NOT NULL,"
+        "   usage INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(deviceId) REFERENCES devices(id),"

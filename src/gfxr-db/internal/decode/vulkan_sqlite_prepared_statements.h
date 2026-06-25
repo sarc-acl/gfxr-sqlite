@@ -1628,6 +1628,7 @@ struct VulkanSqlitePreparedStatements
         const VkFormat format,
         const VkComponentMapping& components,
         const VkImageSubresourceRange& srRange,
+        const std::optional<int64_t> usage,
         const uint64_t apiEventId
     );
 
