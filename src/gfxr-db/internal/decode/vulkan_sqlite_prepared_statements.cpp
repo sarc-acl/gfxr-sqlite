@@ -1016,7 +1016,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(
         db, "INSERT INTO shaderModules VALUES (?, ?, ?, ?, ?, NULL);", &shaderModuleWithStringHandleInsertStatement
     );
-    PrepareStatement(db, "INSERT INTO pipelineStages VALUES (?, ?, ?, ?, ?, ?);", &pipelineStageInsertStatement);
+    PrepareStatement(db, "INSERT INTO pipelineStages VALUES (?, ?, ?, ?, ?, ?, ?, ?);", &pipelineStageInsertStatement);
 
     PrepareStatement(db, "INSERT INTO validationCaches VALUES (?, ?, ?, ?, ?, NULL);", &validationCacheInsertStatement);
     PrepareStatement(db, "INSERT INTO pipelineCaches VALUES (?, ?, ?, ?, ?, ?, NULL);", &pipelineCacheInsertStatement);
@@ -1173,22 +1173,22 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
 
     PrepareStatement(
         db,
-        "INSERT INTO pipelines VALUES (?, ?, 'Graphics', ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
+        "INSERT INTO pipelines VALUES (?, ?, 'Graphics', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &pipelineGraphicsInsertStatement
     );
     PrepareStatement(
         db,
-        "INSERT INTO pipelines VALUES (?, ?, 'Compute', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, NULL);",
+        "INSERT INTO pipelines VALUES (?, ?, 'Compute', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, NULL);",
         &pipelineComputeInsertStatement
     );
     PrepareStatement(
         db,
-        "INSERT INTO pipelines VALUES (?, ?, 'Ray Tracing (NV)', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, NULL);",
+        "INSERT INTO pipelines VALUES (?, ?, 'Ray Tracing (NV)', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, NULL);",
         &pipelineRayTracingNVInsertStatement
     );
     PrepareStatement(
         db,
-        "INSERT INTO pipelines VALUES (?, ?, 'Ray Tracing', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, NULL);",
+        "INSERT INTO pipelines VALUES (?, ?, 'Ray Tracing', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, NULL);",
         &pipelineRayTracingInsertStatement
     );
     PrepareStatement(
@@ -1212,7 +1212,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
 
     PrepareStatement(
         db,
-        "INSERT INTO pipelines VALUES (?, ?, 'Data Graph', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, NULL);",
+        "INSERT INTO pipelines VALUES (?, ?, 'Data Graph', ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, NULL);",
         &pipelineDataGraphInsertStatement
     );
     PrepareStatement(db, "INSERT INTO dataGraphPipelineInfos VALUES (?, ?);", &dataGraphPipelineInfoInsertStatement);
@@ -5537,7 +5537,9 @@ void VulkanSqlitePreparedStatements::InsertPipelineStage(
     const uint32_t flags,
     const uint32_t stage,
     const std::optional<int64_t> shaderModule,
-    const std::string_view entryPointName
+    const std::string_view entryPointName,
+    const std::optional<int64_t> feedbackFlags,
+    const std::optional<int64_t> createDuration
 )
 {
     auto& statement = pipelineStageInsertStatement;
@@ -5550,6 +5552,8 @@ void VulkanSqlitePreparedStatements::InsertPipelineStage(
     GFXRECON_SQLITE_CHECK(
         db, sqlite3_bind_text64(statement, 6, entryPointName.data(), entryPointName.size(), SQLITE_STATIC, SQLITE_UTF8)
     );
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, feedbackFlags));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, createDuration));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
@@ -6139,6 +6143,8 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineGraphics(
     const std::optional<int64_t> viewMask,
     const std::optional<int64_t> depthAttachmentFormat,
     const std::optional<int64_t> stencilAttachmentFormat,
+    const std::optional<int64_t> feedbackFlags,
+    const std::optional<int64_t> createDuration,
     const uint64_t apiEventId
 )
 {
@@ -6156,7 +6162,9 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineGraphics(
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, viewMask));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 9, depthAttachmentFormat));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 10, stencilAttachmentFormat));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 11, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 11, feedbackFlags));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 12, createDuration));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 13, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return pipelineId;
 }
@@ -6167,6 +6175,8 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineCompute(
     const uint32_t flags,
     const std::optional<int64_t> basePipelineId,
     const std::optional<int64_t> pipelineLayout,
+    const std::optional<int64_t> feedbackFlags,
+    const std::optional<int64_t> createDuration,
     const uint64_t apiEventId
 )
 {
@@ -6180,7 +6190,9 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineCompute(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, basePipelineId));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, pipelineLayout));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, feedbackFlags));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, createDuration));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return pipelineId;
 }
@@ -6191,6 +6203,8 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineRayTracingNV(
     const uint32_t flags,
     const std::optional<int64_t> basePipelineId,
     const std::optional<int64_t> pipelineLayout,
+    const std::optional<int64_t> feedbackFlags,
+    const std::optional<int64_t> createDuration,
     const uint64_t apiEventId
 )
 {
@@ -6204,7 +6218,9 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineRayTracingNV(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, basePipelineId));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, pipelineLayout));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, feedbackFlags));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, createDuration));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return pipelineId;
 }
@@ -6215,6 +6231,8 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineRayTracing(
     const uint32_t flags,
     const std::optional<int64_t> basePipelineId,
     const std::optional<int64_t> pipelineLayout,
+    const std::optional<int64_t> feedbackFlags,
+    const std::optional<int64_t> createDuration,
     const uint64_t apiEventId
 )
 {
@@ -6228,7 +6246,9 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineRayTracing(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, basePipelineId));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, pipelineLayout));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, feedbackFlags));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, createDuration));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return pipelineId;
 }
@@ -6302,6 +6322,8 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineDataGraph(
     const uint64_t flags,
     const std::optional<int64_t> basePipeline,
     const std::optional<int64_t> pipelineLayout,
+    const std::optional<int64_t> feedbackFlags,
+    const std::optional<int64_t> createDuration,
     const uint64_t apiEventId
 )
 {
@@ -6315,7 +6337,9 @@ int64_t VulkanSqlitePreparedStatements::InsertPipelineDataGraph(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, basePipeline));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, pipelineLayout));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, feedbackFlags));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, createDuration));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return pipelineId;
 }
