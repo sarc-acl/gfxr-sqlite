@@ -2789,7 +2789,8 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelinePreRasterizationShaderState(
     std::optional<int64_t> deviceId,
     const Decoded_VkGraphicsPipelineCreateInfo& createInfo,
     int64_t pipelineId,
-    int64_t pipelineHandle
+    int64_t pipelineHandle,
+    const PipelineCreationFeedback& feedback
 )
 {
     GraphicsPipelinePreRasterizationShaderState result;
@@ -2889,8 +2890,15 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelinePreRasterizationShaderState(
             // stage is at what stageIndex, other than uniqueness (VUID-VkGraphicsPipelineCreateInfo-stage-06897).
             if (stage.decoded_value->stage != VK_SHADER_STAGE_FRAGMENT_BIT)
             {
+                auto [stageFeedbackFlags, stageCreateDuration] = GetStageCreationFeedback(feedback, stageIndex);
                 ProcessPipelineShaderStageCreateInfo(
-                    deviceId, pipelineId, pipelineHandle, stages[stageIndex], result.numShaderStages
+                    deviceId,
+                    pipelineId,
+                    pipelineHandle,
+                    stages[stageIndex],
+                    result.numShaderStages,
+                    stageFeedbackFlags,
+                    stageCreateDuration
                 );
                 result.numShaderStages++;
             }
@@ -3031,7 +3039,7 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelinePreRasterizationShaderState(int64_t
         // ProcessGraphicsPipelineFragmentShaderState.
         std::ostringstream pipelineStagesSql;
         pipelineStagesSql << "INSERT INTO pipelineStages SELECT " << pipelineId
-                          << ", idx, flags, stage, shaderModuleId, entryPointName "
+                          << ", idx, flags, stage, shaderModuleId, entryPointName, feedbackFlags, createDuration "
                           << "FROM pipelineStages WHERE pipelineId = " << libraryPipelineId
                           << " AND stage != " << VK_SHADER_STAGE_FRAGMENT_BIT << ";";
         ExecSQL(context.db, pipelineStagesSql.str().c_str());
@@ -3050,7 +3058,8 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineFragmentShaderState(
     const Decoded_VkGraphicsPipelineCreateInfo& createInfo,
     int64_t pipelineId,
     int64_t pipelineHandle,
-    size_t num_pre_rasterization_shaders
+    size_t num_pre_rasterization_shaders,
+    const PipelineCreationFeedback& feedback
 )
 {
     GraphicsPipelineFragmentShaderState result;
@@ -3123,12 +3132,15 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineFragmentShaderState(
             // stage is at what stageIndex, other than uniqueness (VUID-VkGraphicsPipelineCreateInfo-stage-06897).
             if (stage.decoded_value->stage == VK_SHADER_STAGE_FRAGMENT_BIT)
             {
+                auto [stageFeedbackFlags, stageCreateDuration] = GetStageCreationFeedback(feedback, stageIndex);
                 ProcessPipelineShaderStageCreateInfo(
                     deviceId,
                     pipelineId,
                     pipelineHandle,
                     stages[stageIndex],
-                    num_pre_rasterization_shaders + result.numShaderStages
+                    num_pre_rasterization_shaders + result.numShaderStages,
+                    stageFeedbackFlags,
+                    stageCreateDuration
                 );
                 result.numShaderStages++;
             }
@@ -3232,7 +3244,7 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelineFragmentShaderState(
         // shader, so num_pre_rasterization_shaders will be used for exactly one shader here.
         std::ostringstream pipelineStageSql;
         pipelineStageSql << "INSERT INTO pipelineStages SELECT " << pipelineId << ", " << num_pre_rasterization_shaders
-                         << ", flags, stage, shaderModuleId, entryPointName "
+                         << ", flags, stage, shaderModuleId, entryPointName, feedbackFlags, createDuration "
                          << "FROM pipelineStages WHERE pipelineId = " << libraryPipelineId
                          << " AND stage = " << VK_SHADER_STAGE_FRAGMENT_BIT << ";";
         ExecSQL(context.db, pipelineStageSql.str().c_str());
@@ -3476,12 +3488,65 @@ std::optional<int64_t> VulkanSqliteConsumerExt::CopyGraphicsPipelineMultisampleS
     }
 }
 
+VulkanSqliteConsumerExt::PipelineCreationFeedback
+VulkanSqliteConsumerExt::ReadPipelineCreationFeedback(
+    const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo
+)
+{
+    PipelineCreationFeedback feedback;
+    if (feedbackCreateInfo == nullptr)
+    {
+        return feedback;
+    }
+
+    // Per the spec, a VkPipelineCreationFeedback only carries meaningful flags/duration when its
+    // VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT is set; otherwise the values (commonly 0) are undefined and we
+    // leave the columns NULL rather than storing a misleading 0.
+    auto [pipelineFeedbackValid, pipelineFeedback] =
+        GetMetaStructPointer(feedbackCreateInfo->pPipelineCreationFeedback);
+    if (pipelineFeedbackValid && pipelineFeedback->decoded_value != nullptr &&
+        (pipelineFeedback->decoded_value->flags & VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT) != 0)
+    {
+        feedback.pipelineFlags = static_cast<int64_t>(pipelineFeedback->decoded_value->flags);
+        feedback.pipelineDuration = static_cast<int64_t>(pipelineFeedback->decoded_value->duration);
+    }
+
+    auto [stageFeedbacksValid, stageFeedbacks, stageFeedbackCount] =
+        GetMetaStructArray(feedbackCreateInfo->pPipelineStageCreationFeedbacks);
+    if (stageFeedbacksValid)
+    {
+        feedback.stageFeedbacks = stageFeedbacks;
+        feedback.stageFeedbackCount = stageFeedbackCount;
+    }
+
+    return feedback;
+}
+
+std::pair<std::optional<int64_t>, std::optional<int64_t>>
+VulkanSqliteConsumerExt::GetStageCreationFeedback(const PipelineCreationFeedback& feedback, size_t stageIndex)
+{
+    if (feedback.stageFeedbacks == nullptr || stageIndex >= feedback.stageFeedbackCount)
+    {
+        return { std::nullopt, std::nullopt };
+    }
+    const auto* stageFeedback = feedback.stageFeedbacks[stageIndex].decoded_value;
+    // Only treat the stage feedback as present when VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT is set; otherwise
+    // the flags/duration are undefined (often 0) and the columns should remain NULL.
+    if (stageFeedback == nullptr || (stageFeedback->flags & VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT) == 0)
+    {
+        return { std::nullopt, std::nullopt };
+    }
+    return { static_cast<int64_t>(stageFeedback->flags), static_cast<int64_t>(stageFeedback->duration) };
+}
+
 void VulkanSqliteConsumerExt::ProcessPipelineShaderStageCreateInfo(
     std::optional<int64_t> deviceId,
     int64_t pipelineId,
     int64_t pipelineHandle,
     const Decoded_VkPipelineShaderStageCreateInfo& stage,
-    size_t stageIndex
+    size_t stageIndex,
+    std::optional<int64_t> feedbackFlags,
+    std::optional<int64_t> createDuration
 )
 {
     auto pnext = stage.pNext;
@@ -3552,7 +3617,9 @@ void VulkanSqliteConsumerExt::ProcessPipelineShaderStageCreateInfo(
     auto flags = stage.decoded_value->flags;
     auto stageFlag = stage.decoded_value->stage;
     auto entryPointName = stage.pName.GetPointer();
-    statements.InsertPipelineStage(pipelineId, stageIndex, flags, stageFlag, shaderModule, entryPointName);
+    statements.InsertPipelineStage(
+        pipelineId, stageIndex, flags, stageFlag, shaderModule, entryPointName, feedbackFlags, createDuration
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
@@ -3598,6 +3665,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
         auto pnext = createInfo.pNext;
         std::optional<VkGraphicsPipelineLibraryFlagsEXT> graphicsLibraryFlagsOptional = std::nullopt;
         const Decoded_VkPipelineRenderingCreateInfo* pipelineRenderingCreateInfo = nullptr;
+        const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo = nullptr;
         format::HandleId* libraryHandles = nullptr;
         uint64_t libraryCount = 0;
         while (pnext != nullptr)
@@ -3629,6 +3697,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
             {
                 pipelineRenderingCreateInfo = reinterpret_cast<const Decoded_VkPipelineRenderingCreateInfo*>(header);
             }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPipelineCreationFeedbackCreateInfo>())
+            {
+                feedbackCreateInfo = reinterpret_cast<const Decoded_VkPipelineCreationFeedbackCreateInfo*>(header);
+            }
             else
             {
                 LogUnsupportedPNext(*header->sType);
@@ -3636,6 +3708,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
 
             pnext = header->pNext;
         }
+
+        auto feedback = ReadPipelineCreationFeedback(feedbackCreateInfo);
 
         auto pipelineFlags = createInfo.decoded_value->flags;
 
@@ -3754,6 +3828,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
                                               : std::nullopt,
             stencilAttachmentFormat.has_value() ? std::make_optional<int64_t>(stencilAttachmentFormat.value())
                                                 : std::nullopt,
+            feedback.pipelineFlags,
+            feedback.pipelineDuration,
             this->block_index_
         );
 
@@ -3807,8 +3883,9 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
         }
         if (graphicsLibraryFlags & VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT)
         {
-            preRasterizationShaderState =
-                ProcessGraphicsPipelinePreRasterizationShaderState(deviceId, createInfo, pipelineId, pipelineHandle);
+            preRasterizationShaderState = ProcessGraphicsPipelinePreRasterizationShaderState(
+                deviceId, createInfo, pipelineId, pipelineHandle, feedback
+            );
         }
         else
         {
@@ -3827,7 +3904,12 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
         if (graphicsLibraryFlags & VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT)
         {
             fragmentShaderState = ProcessGraphicsPipelineFragmentShaderState(
-                deviceId, createInfo, pipelineId, pipelineHandle, preRasterizationShaderState.numShaderStages
+                deviceId,
+                createInfo,
+                pipelineId,
+                pipelineHandle,
+                preRasterizationShaderState.numShaderStages,
+                feedback
             );
         }
         else
@@ -3957,6 +4039,24 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
 
         auto pipelineFlags = createInfo.decoded_value->flags;
 
+        const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo = nullptr;
+        auto pnext = createInfo.pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineCreationFeedbackCreateInfo>())
+            {
+                feedbackCreateInfo = reinterpret_cast<const Decoded_VkPipelineCreationFeedbackCreateInfo*>(header);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
+        auto feedback = ReadPipelineCreationFeedback(feedbackCreateInfo);
+
         std::optional<int64_t> basePipelineId = std::nullopt;
         if (pipelineFlags & VK_PIPELINE_CREATE_DERIVATIVE_BIT)
         {
@@ -4033,7 +4133,14 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
         auto pipelineHandle = ToInt64(pipeline);
         auto deviceId = context.GetDeviceId(device);
         auto pipelineId = statements.InsertPipelineCompute(
-            pipelineHandle, deviceId, pipelineFlags, basePipelineId, pipelineLayout, this->block_index_
+            pipelineHandle,
+            deviceId,
+            pipelineFlags,
+            basePipelineId,
+            pipelineLayout,
+            feedback.pipelineFlags,
+            feedback.pipelineDuration,
+            this->block_index_
         );
 
         statements.InsertComputePipelineInfo(pipelineId);
@@ -4052,7 +4159,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
         }
         else
         {
-            ProcessPipelineShaderStageCreateInfo(deviceId, pipelineId, pipelineHandle, *stageInfo, 0);
+            auto [stageFeedbackFlags, stageCreateDuration] = GetStageCreationFeedback(feedback, 0);
+            ProcessPipelineShaderStageCreateInfo(
+                deviceId, pipelineId, pipelineHandle, *stageInfo, 0, stageFeedbackFlags, stageCreateDuration
+            );
         }
     }
 }
@@ -4098,6 +4208,24 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
         auto& createInfo = createInfos[i];
 
         auto pipelineFlags = createInfo.decoded_value->flags;
+
+        const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo = nullptr;
+        auto pnext = createInfo.pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineCreationFeedbackCreateInfo>())
+            {
+                feedbackCreateInfo = reinterpret_cast<const Decoded_VkPipelineCreationFeedbackCreateInfo*>(header);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
+        auto feedback = ReadPipelineCreationFeedback(feedbackCreateInfo);
 
         std::optional<int64_t> basePipelineId = std::nullopt;
         if (pipelineFlags & VK_PIPELINE_CREATE_DERIVATIVE_BIT)
@@ -4175,7 +4303,14 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
         auto pipelineHandle = ToInt64(pipeline);
         auto deviceId = context.GetDeviceId(device);
         auto pipelineId = statements.InsertPipelineRayTracingNV(
-            pipelineHandle, deviceId, pipelineFlags, basePipelineId, pipelineLayout, this->block_index_
+            pipelineHandle,
+            deviceId,
+            pipelineFlags,
+            basePipelineId,
+            pipelineLayout,
+            feedback.pipelineFlags,
+            feedback.pipelineDuration,
+            this->block_index_
         );
 
         auto maxRecursionDepth = createInfo.decoded_value->maxRecursionDepth;
@@ -4196,8 +4331,15 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
         {
             for (size_t stageIndex = 0; stageIndex < stageCount; ++stageIndex)
             {
+                auto [stageFeedbackFlags, stageCreateDuration] = GetStageCreationFeedback(feedback, stageIndex);
                 ProcessPipelineShaderStageCreateInfo(
-                    deviceId, pipelineId, pipelineHandle, stageInfos[stageIndex], stageIndex
+                    deviceId,
+                    pipelineId,
+                    pipelineHandle,
+                    stageInfos[stageIndex],
+                    stageIndex,
+                    stageFeedbackFlags,
+                    stageCreateDuration
                 );
             }
         }
@@ -4254,6 +4396,24 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
         auto& createInfo = createInfos[i];
 
         auto pipelineFlags = createInfo.decoded_value->flags;
+
+        const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo = nullptr;
+        auto pnext = createInfo.pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineCreationFeedbackCreateInfo>())
+            {
+                feedbackCreateInfo = reinterpret_cast<const Decoded_VkPipelineCreationFeedbackCreateInfo*>(header);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
+        auto feedback = ReadPipelineCreationFeedback(feedbackCreateInfo);
 
         std::optional<int64_t> basePipelineId = std::nullopt;
         if (pipelineFlags & VK_PIPELINE_CREATE_DERIVATIVE_BIT)
@@ -4331,7 +4491,14 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
         auto pipelineHandle = ToInt64(pipeline);
         auto deviceId = context.GetDeviceId(device);
         auto pipelineId = statements.InsertPipelineRayTracing(
-            pipelineHandle, deviceId, pipelineFlags, basePipelineId, pipelineLayout, this->block_index_
+            pipelineHandle,
+            deviceId,
+            pipelineFlags,
+            basePipelineId,
+            pipelineLayout,
+            feedback.pipelineFlags,
+            feedback.pipelineDuration,
+            this->block_index_
         );
 
         auto [stagesValid, stageInfos, stageCount] = GetMetaStructArray(createInfo.pStages);
@@ -4349,8 +4516,15 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
         {
             for (size_t stageIndex = 0; stageIndex < stageCount; ++stageIndex)
             {
+                auto [stageFeedbackFlags, stageCreateDuration] = GetStageCreationFeedback(feedback, stageIndex);
                 ProcessPipelineShaderStageCreateInfo(
-                    deviceId, pipelineId, pipelineHandle, stageInfos[stageIndex], stageIndex
+                    deviceId,
+                    pipelineId,
+                    pipelineHandle,
+                    stageInfos[stageIndex],
+                    stageIndex,
+                    stageFeedbackFlags,
+                    stageCreateDuration
                 );
             }
         }
@@ -7256,13 +7430,41 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         return;
     }
 
-    LogUnsupportedPNext(createInfo->pNext);
+    // The image view's usage is normally inherited from the parent image, but a VkImageViewUsageCreateInfo in the
+    // pNext chain can override it with a (typically narrower) subset. Leave the column NULL when absent so the UI
+    // reflects "inherited from image" rather than a misleading explicit value.
+    std::optional<int64_t> usage = std::nullopt;
+
+    auto pnext = createInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkImageViewUsageCreateInfo>())
+        {
+            const auto* pUsage = reinterpret_cast<const Decoded_VkImageViewUsageCreateInfo*>(header);
+            usage = static_cast<int64_t>(pUsage->decoded_value->usage);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+        pnext = header->pNext;
+    }
 
     auto& ci = *createInfo->decoded_value;
     auto imageId = context.GetImageId(createInfo->image);
 
     statements.InsertImageView(
-        view, device, ci.flags, imageId, ci.viewType, ci.format, ci.components, ci.subresourceRange, this->block_index_
+        view,
+        device,
+        ci.flags,
+        imageId,
+        ci.viewType,
+        ci.format,
+        ci.components,
+        ci.subresourceRange,
+        usage,
+        this->block_index_
     );
 }
 
@@ -10031,6 +10233,24 @@ void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelinesARM(
 
         auto pipelineFlags = createInfo.decoded_value->flags;
 
+        const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo = nullptr;
+        auto pnext = createInfo.pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineCreationFeedbackCreateInfo>())
+            {
+                feedbackCreateInfo = reinterpret_cast<const Decoded_VkPipelineCreationFeedbackCreateInfo*>(header);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
+        auto feedback = ReadPipelineCreationFeedback(feedbackCreateInfo);
+
         // DataGraph pipelines do not support pipeline derivatives
         const std::optional<int64_t> basePipeline = std::nullopt;
 
@@ -10039,7 +10259,14 @@ void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelinesARM(
         auto pipeline = pipelines[i];
         auto pipelineHandle = ToInt64(pipeline);
         auto pipelineId = statements.InsertPipelineDataGraph(
-            pipelineHandle, deviceId, pipelineFlags, basePipeline, pipelineLayout, this->block_index_
+            pipelineHandle,
+            deviceId,
+            pipelineFlags,
+            basePipeline,
+            pipelineLayout,
+            feedback.pipelineFlags,
+            feedback.pipelineDuration,
+            this->block_index_
         );
 
         auto infoId = statements.InsertDataGraphPipelineInfo(pipelineId);

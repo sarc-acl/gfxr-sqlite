@@ -1686,6 +1686,30 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         format::HandleId pipelineHandle, size_t libraryCount, const format::HandleId* libraryHandles
     );
 
+    // Holds VkPipelineCreationFeedbackCreateInfo data extracted from a pipeline create info pNext chain.
+    // pipelineFlags/pipelineDuration are the pipeline-level feedback; stageFeedbacks/stageFeedbackCount are
+    // the per-stage feedback array, indexed by the original Vk*PipelineCreateInfo::pStages index. These are
+    // only populated when the feedback struct is present in the pNext chain; otherwise the optionals are empty
+    // and the corresponding database columns are written as NULL.
+    struct PipelineCreationFeedback
+    {
+        std::optional<int64_t> pipelineFlags;
+        std::optional<int64_t> pipelineDuration;
+        const Decoded_VkPipelineCreationFeedback* stageFeedbacks = nullptr;
+        uint64_t stageFeedbackCount = 0;
+    };
+
+    // Extracts the pipeline-level and per-stage feedback from a (possibly null) feedback create info struct.
+    // Callers locate the struct while walking the pipeline create info pNext chain.
+    PipelineCreationFeedback ReadPipelineCreationFeedback(
+        const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo
+    );
+
+    // Returns {feedbackFlags, createDuration} for the stage at the given original pStages index, or
+    // {nullopt, nullopt} when no feedback is available for that stage.
+    static std::pair<std::optional<int64_t>, std::optional<int64_t>>
+    GetStageCreationFeedback(const PipelineCreationFeedback& feedback, size_t stageIndex);
+
     void ProcessPipelineDynamicStateCreateInfo(
         const StructPointerDecoder<Decoded_VkPipelineDynamicStateCreateInfo>* createInfo,
         int64_t pipelineId,
@@ -1703,7 +1727,8 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         std::optional<int64_t> deviceId,
         const Decoded_VkGraphicsPipelineCreateInfo& createInfo,
         int64_t pipelineId,
-        int64_t pipelineHandle
+        int64_t pipelineHandle,
+        const PipelineCreationFeedback& feedback
     );
     GraphicsPipelinePreRasterizationShaderState CopyGraphicsPipelinePreRasterizationShaderState(
         int64_t pipelineId, int64_t libraryPipelineId
@@ -1713,7 +1738,8 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         const Decoded_VkGraphicsPipelineCreateInfo& createInfo,
         int64_t pipelineId,
         int64_t pipelineHandle,
-        size_t num_pre_rasterization_shaders
+        size_t num_pre_rasterization_shaders,
+        const PipelineCreationFeedback& feedback
     );
     GraphicsPipelineFragmentShaderState CopyGraphicsPipelineFragmentShaderState(
         int64_t pipelineId, int64_t libraryPipelineId, size_t num_pre_rasterization_shaders
@@ -1736,7 +1762,9 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         int64_t pipelineId,
         int64_t pipelineHandle,
         const Decoded_VkPipelineShaderStageCreateInfo& createInfo,
-        size_t stageIndex
+        size_t stageIndex,
+        std::optional<int64_t> feedbackFlags,
+        std::optional<int64_t> createDuration
     );
 
     // implemented in generated_vulkan_process_features.cpp

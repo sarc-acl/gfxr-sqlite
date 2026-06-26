@@ -580,7 +580,9 @@ struct VulkanSqlitePreparedStatements
         const uint32_t flags,
         const uint32_t stage,
         const std::optional<int64_t> shaderModule,
-        const std::string_view entryPointName
+        const std::string_view entryPointName,
+        const std::optional<int64_t> feedbackFlags,
+        const std::optional<int64_t> createDuration
     );
 
     void InsertValidationCache(
@@ -770,6 +772,8 @@ struct VulkanSqlitePreparedStatements
         const std::optional<int64_t> viewMask,
         const std::optional<int64_t> depthAttachmentFormat,
         const std::optional<int64_t> stencilAttachmentFormat,
+        const std::optional<int64_t> feedbackFlags,
+        const std::optional<int64_t> createDuration,
         const uint64_t apiEventId
     );
     int64_t InsertPipelineCompute(
@@ -778,6 +782,8 @@ struct VulkanSqlitePreparedStatements
         const uint32_t flags,
         const std::optional<int64_t> basePipelineId,
         const std::optional<int64_t> pipelineLayout,
+        const std::optional<int64_t> feedbackFlags,
+        const std::optional<int64_t> createDuration,
         const uint64_t apiEventId
     );
     int64_t InsertPipelineRayTracingNV(
@@ -786,6 +792,8 @@ struct VulkanSqlitePreparedStatements
         const uint32_t flags,
         const std::optional<int64_t> basePipelineId,
         const std::optional<int64_t> pipelineLayout,
+        const std::optional<int64_t> feedbackFlags,
+        const std::optional<int64_t> createDuration,
         const uint64_t apiEventId
     );
     int64_t InsertPipelineRayTracing(
@@ -794,6 +802,8 @@ struct VulkanSqlitePreparedStatements
         const uint32_t flags,
         const std::optional<int64_t> basePipelineId,
         const std::optional<int64_t> pipelineLayout,
+        const std::optional<int64_t> feedbackFlags,
+        const std::optional<int64_t> createDuration,
         const uint64_t apiEventId
     );
     void InsertPipelineColorAttachmentFormat(
@@ -820,6 +830,8 @@ struct VulkanSqlitePreparedStatements
         const uint64_t flags,
         const std::optional<int64_t> basePipeline,
         const std::optional<int64_t> pipelineLayout,
+        const std::optional<int64_t> feedbackFlags,
+        const std::optional<int64_t> createDuration,
         const uint64_t apiEventId
     );
     int64_t InsertDataGraphPipelineInfo(const int64_t pipelineId);
@@ -1616,6 +1628,7 @@ struct VulkanSqlitePreparedStatements
         const VkFormat format,
         const VkComponentMapping& components,
         const VkImageSubresourceRange& srRange,
+        const std::optional<int64_t> usage,
         const uint64_t apiEventId
     );
 
