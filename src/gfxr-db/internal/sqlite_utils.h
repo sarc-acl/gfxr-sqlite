@@ -274,8 +274,11 @@ inline void ExecSQL(sqlite3* db, const char* sql)
     }
 }
 
-typedef std::vector<std::variant<std::string, double, sqlite3_int64, std::nullptr_t>> SQLRowData;
-typedef std::vector<SQLRowData> SQLResults;
+using SQLData = std::variant<std::string, double, sqlite3_int64, std::nullptr_t>;
+using SQLRowData = std::vector<SQLData>;
+using SQLResults = std::vector<SQLRowData>;
+
+inline const SQLData NullPtr{ nullptr };
 
 [[nodiscard]] inline SQLResults ExecSQLWithResult(sqlite3* db, const char* sql)
 {
@@ -299,7 +302,7 @@ typedef std::vector<SQLRowData> SQLResults;
                 auto colType = sqlite3_column_type(stmt, i);
                 if (colType == SQLITE_NULL)
                 {
-                    columns.push_back(nullptr);
+                    columns.push_back(NullPtr);
                 }
                 else if (colType == SQLITE_BLOB)
                 {
