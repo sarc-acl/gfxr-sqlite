@@ -251,6 +251,18 @@ inline int BindOptInt64(sqlite3_stmt* statement, int index, std::optional<int64_
     }
 }
 
+inline int BindOptDouble(sqlite3_stmt* statement, int index, std::optional<double> value)
+{
+    if (value.has_value())
+    {
+        return sqlite3_bind_double(statement, index, value.value());
+    }
+    else
+    {
+        return sqlite3_bind_null(statement, index);
+    }
+}
+
 [[nodiscard]] inline std::string ValueOrNull(std::optional<int64_t> value)
 {
     if (value.has_value())

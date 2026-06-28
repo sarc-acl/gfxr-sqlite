@@ -313,6 +313,7 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement tessellationStateInsertStatement;
     SqliteStatement tessellationStateFromLibraryInsertStatement;
     SqliteStatement viewportStateInsertStatement;
+    SqliteStatement viewportStateFromLibraryInsertStatement;
     SqliteStatement viewportStateViewportInsertStatement;
     SqliteStatement viewportStateViewportFromLibraryInsertStatement;
     SqliteStatement viewportStateScissorInsertStatement;
@@ -666,7 +667,14 @@ struct VulkanSqlitePreparedStatements
     int64_t InsertInputAssemblyStateFromLibrary(const int64_t pipelineId, const int64_t sourceStateId);
     int64_t InsertTessellationState(const int64_t pipelineId, const uint32_t patchControlPoints);
     int64_t InsertTessellationStateFromLibrary(const int64_t pipelineId, const int64_t sourceStateId);
-    int64_t InsertViewportState(const int64_t pipelineId);
+    int64_t InsertViewportState(
+        const int64_t pipelineId,
+        const uint32_t depthClipNegativeToOne,
+        const uint32_t depthClampMode,
+        const std::optional<float> minDepthClamp,
+        const std::optional<float> maxDepthClamp
+    );
+    int64_t InsertViewportStateFromLibrary(const int64_t pipelineId, const int64_t sourceStateId);
     void InsertViewportStateViewport(
         const int64_t stateId,
         const uint64_t viewportIndex,

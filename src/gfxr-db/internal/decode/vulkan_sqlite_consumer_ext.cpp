@@ -2809,9 +2809,50 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelinePreRasterizationShaderState(
     auto [viewportStateStateInfoValid, viewportStateInfo] = GetMetaStructPointer(createInfo.pViewportState);
     if (viewportStateStateInfoValid)
     {
-        LogUnsupportedPNext(viewportStateInfo->pNext);
+        // These viewport depth-clip / depth-clamp settings are only present when their respective extension
+        // structs are chained onto the viewport state's pNext. Defaults match the Vulkan spec when absent:
+        // negativeOneToOne defaults to VK_FALSE and depthClampMode to VK_DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT (0).
+        // The depth clamp range is optional even when the clamp control struct is present, so its min/max stay
+        // null unless pDepthClampRange is set.
+        VkBool32 depthClipNegativeToOne = VK_FALSE;
+        VkDepthClampModeEXT depthClampMode = VK_DEPTH_CLAMP_MODE_VIEWPORT_RANGE_EXT;
+        std::optional<float> minDepthClamp = std::nullopt;
+        std::optional<float> maxDepthClamp = std::nullopt;
 
-        auto viewportStateId = statements.InsertViewportState(pipelineId);
+        auto viewportPNext = viewportStateInfo->pNext;
+        while (viewportPNext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(viewportPNext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineViewportDepthClipControlCreateInfoEXT>())
+            {
+                depthClipNegativeToOne =
+                    reinterpret_cast<const Decoded_VkPipelineViewportDepthClipControlCreateInfoEXT*>(header)
+                        ->decoded_value->negativeOneToOne;
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPipelineViewportDepthClampControlCreateInfoEXT>())
+            {
+                const auto* clampInfo =
+                    reinterpret_cast<const Decoded_VkPipelineViewportDepthClampControlCreateInfoEXT*>(header);
+                depthClampMode = clampInfo->decoded_value->depthClampMode;
+
+                auto [clampRangeValid, clampRange] = GetMetaStructPointer(clampInfo->pDepthClampRange);
+                if (clampRangeValid)
+                {
+                    minDepthClamp = clampRange->decoded_value->minDepthClamp;
+                    maxDepthClamp = clampRange->decoded_value->maxDepthClamp;
+                }
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            viewportPNext = header->pNext;
+        }
+
+        auto viewportStateId = statements.InsertViewportState(
+            pipelineId, depthClipNegativeToOne, depthClampMode, minDepthClamp, maxDepthClamp
+        );
 
         result.viewportStateId = viewportStateId;
 
@@ -3010,7 +3051,8 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelinePreRasterizationShaderState(int64_t
     // We need to do a deep copy, as the existing entries in these tables refer to the original pipeline library
     if (libraryState.viewportStateId.has_value())
     {
-        auto viewportStateId = statements.InsertViewportState(pipelineId);
+        auto viewportStateId =
+            statements.InsertViewportStateFromLibrary(pipelineId, libraryState.viewportStateId.value());
 
         statements.InsertViewportStateViewportFromLibrary(viewportStateId, libraryState.viewportStateId.value());
         statements.InsertViewportStateScissorFromLibrary(viewportStateId, libraryState.viewportStateId.value());

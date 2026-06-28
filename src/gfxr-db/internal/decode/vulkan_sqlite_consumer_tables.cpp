@@ -1159,7 +1159,12 @@ static void CreateGraphicsPipelineTables(sqlite3* db)
         "CREATE TABLE viewportStates("
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   pipelineId INT NOT NULL,"
-        "   FOREIGN KEY(pipelineId) REFERENCES pipelines(id)) STRICT;"
+        "   depthClipNegativeToOne INT NOT NULL,"
+        "   depthClampMode INT NOT NULL,"
+        "   minDepthClamp REAL,"
+        "   maxDepthClamp REAL,"
+        "   FOREIGN KEY(pipelineId) REFERENCES pipelines(id),"
+        "   FOREIGN KEY(depthClampMode) REFERENCES VkDepthClampModeEXT(value)) STRICT;"
     );
 
     ExecSQL(

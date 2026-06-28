@@ -1078,7 +1078,14 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         " FROM tessellationStates WHERE id = ?;",
         &tessellationStateFromLibraryInsertStatement
     );
-    PrepareStatement(db, "INSERT INTO viewportStates VALUES (?, ?);", &viewportStateInsertStatement);
+    PrepareStatement(db, "INSERT INTO viewportStates VALUES (?, ?, ?, ?, ?, ?);", &viewportStateInsertStatement);
+    PrepareStatement(
+        db,
+        "INSERT INTO viewportStates"
+        " SELECT ?, ?, depthClipNegativeToOne, depthClampMode, minDepthClamp, maxDepthClamp"
+        " FROM viewportStates WHERE id = ?;",
+        &viewportStateFromLibraryInsertStatement
+    );
     PrepareStatement(
         db, "INSERT INTO viewportStateViewports VALUES (?, ?, ?, ?, ?, ?, ?, ?);", &viewportStateViewportInsertStatement
     );
@@ -5852,13 +5859,47 @@ int64_t VulkanSqlitePreparedStatements::InsertTessellationStateFromLibrary(
     return stateId;
 }
 
-int64_t VulkanSqlitePreparedStatements::InsertViewportState(const int64_t pipelineId)
+int64_t VulkanSqlitePreparedStatements::InsertViewportState(
+    const int64_t pipelineId,
+    const uint32_t depthClipNegativeToOne,
+    const uint32_t depthClampMode,
+    const std::optional<float> minDepthClamp,
+    const std::optional<float> maxDepthClamp
+)
 {
     auto stateId = ++context->currentViewportStateId;
     auto& statement = viewportStateInsertStatement;
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(stateId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(pipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(depthClipNegativeToOne)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(depthClampMode)));
+    GFXRECON_SQLITE_CHECK(
+        db,
+        BindOptDouble(
+            statement, 5, minDepthClamp.has_value() ? std::optional<double>(minDepthClamp.value()) : std::nullopt
+        )
+    );
+    GFXRECON_SQLITE_CHECK(
+        db,
+        BindOptDouble(
+            statement, 6, maxDepthClamp.has_value() ? std::optional<double>(maxDepthClamp.value()) : std::nullopt
+        )
+    );
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+    return stateId;
+}
+
+int64_t VulkanSqlitePreparedStatements::InsertViewportStateFromLibrary(
+    const int64_t pipelineId, const int64_t sourceStateId
+)
+{
+    auto stateId = ++context->currentViewportStateId;
+    auto& statement = viewportStateFromLibraryInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(stateId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(pipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(sourceStateId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return stateId;
 }
