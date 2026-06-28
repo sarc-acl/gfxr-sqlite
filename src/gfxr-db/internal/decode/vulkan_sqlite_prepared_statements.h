@@ -706,7 +706,13 @@ struct VulkanSqlitePreparedStatements
         const float depthBiasConstantFactor,
         const float depthBiasClamp,
         const float depthBiasSlopeFactor,
-        const float lineWidth
+        const float lineWidth,
+        const uint32_t lineRasterizationMode,
+        const uint32_t stippledLineEnable,
+        const std::optional<uint32_t> lineStippleFactor,
+        const std::optional<uint32_t> lineStipplePattern,
+        const uint32_t provokingVertexMode,
+        const uint32_t rasterizationStream
     );
     int64_t InsertRasterizationStateFromLibrary(const int64_t pipelineId, const int64_t sourceStateId);
     int64_t InsertDepthStencilState(

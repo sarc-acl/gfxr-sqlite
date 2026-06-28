@@ -1106,14 +1106,15 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     );
     PrepareStatement(
         db,
-        "INSERT INTO rasterizationStates VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+        "INSERT INTO rasterizationStates VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
         &rasterizationStateInsertStatement
     );
     PrepareStatement(
         db,
         "INSERT INTO rasterizationStates SELECT ?, ?, depthClampEnable, rasterizerDiscardEnable,"
         " polygonMode, cullMode, frontFace, depthBiasEnable, depthBiasConstantFactor,"
-        " depthBiasClamp, depthBiasSlopeFactor, lineWidth"
+        " depthBiasClamp, depthBiasSlopeFactor, lineWidth, lineRasterizationMode, stippledLineEnabled,"
+        " lineStippleFactor, lineStipplePattern, provokingVertexMode, rasterizationStream"
         " FROM rasterizationStates WHERE id = ?;",
         &rasterizationStateFromLibraryInsertStatement
     );
@@ -5981,7 +5982,13 @@ int64_t VulkanSqlitePreparedStatements::InsertRasterizationState(
     const float depthBiasConstantFactor,
     const float depthBiasClamp,
     const float depthBiasSlopeFactor,
-    const float lineWidth
+    const float lineWidth,
+    const uint32_t lineRasterizationMode,
+    const uint32_t stippledLineEnable,
+    const std::optional<uint32_t> lineStippleFactor,
+    const std::optional<uint32_t> lineStipplePattern,
+    const uint32_t provokingVertexMode,
+    const uint32_t rasterizationStream
 )
 {
     auto stateId = ++context->currentRasterizationStateId;
@@ -5999,6 +6006,26 @@ int64_t VulkanSqlitePreparedStatements::InsertRasterizationState(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 10, static_cast<double>(depthBiasClamp)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 11, static_cast<double>(depthBiasSlopeFactor)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 12, static_cast<double>(lineWidth)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 13, static_cast<sqlite_int64>(lineRasterizationMode)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 14, static_cast<sqlite_int64>(stippledLineEnable)));
+    GFXRECON_SQLITE_CHECK(
+        db,
+        BindOptInt64(
+            statement,
+            15,
+            lineStippleFactor.has_value() ? std::optional<int64_t>(lineStippleFactor.value()) : std::nullopt
+        )
+    );
+    GFXRECON_SQLITE_CHECK(
+        db,
+        BindOptInt64(
+            statement,
+            16,
+            lineStipplePattern.has_value() ? std::optional<int64_t>(lineStipplePattern.value()) : std::nullopt
+        )
+    );
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 17, static_cast<sqlite_int64>(provokingVertexMode)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(rasterizationStream)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return stateId;
 }
