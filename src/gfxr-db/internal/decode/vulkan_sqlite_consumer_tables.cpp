@@ -1146,12 +1146,21 @@ static void CreateGraphicsPipelineTables(sqlite3* db)
         "   depthBiasClamp REAL NOT NULL,"
         "   depthBiasSlopeFactor REAL NOT NULL,"
         "   lineWidth REAL NOT NULL,"
+        "   lineRasterizationMode INT NOT NULL,"
+        "   stippledLineEnabled INT NOT NULL,"
+        "   lineStippleFactor INT,"
+        "   lineStipplePattern INT,"
+        "   provokingVertexMode INT NOT NULL,"
+        "   rasterizationStream INT NOT NULL,"
         "   FOREIGN KEY(pipelineId) REFERENCES pipelines(id),"
         "   FOREIGN KEY(depthClampEnable) REFERENCES VkBool32(value),"
         "   FOREIGN KEY(rasterizerDiscardEnable) REFERENCES VkBool32(value),"
         "   FOREIGN KEY(polygonMode) REFERENCES VkPolygonMode(value),"
         "   FOREIGN KEY(frontFace) REFERENCES VkFrontFace(value),"
-        "   FOREIGN KEY(depthBiasEnable) REFERENCES VkBool32(value)) STRICT;"
+        "   FOREIGN KEY(depthBiasEnable) REFERENCES VkBool32(value),"
+        "   FOREIGN KEY(lineRasterizationMode) REFERENCES VkLineRasterizationMode(value),"
+        "   FOREIGN KEY(stippledLineEnabled) REFERENCES VkBool32(value),"
+        "   FOREIGN KEY(provokingVertexMode) REFERENCES VkProvokingVertexModeEXT(value)) STRICT;"
     );
 
     ExecSQL(

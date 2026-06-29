@@ -2890,8 +2890,6 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelinePreRasterizationShaderState(
     auto [rasterizationStateInfoValid, rasterizationStateInfo] = GetMetaStructPointer(createInfo.pRasterizationState);
     if (rasterizationStateInfoValid)
     {
-        LogUnsupportedPNext(rasterizationStateInfo->pNext);
-
         auto depthClampEnable = rasterizationStateInfo->decoded_value->depthClampEnable;
         auto rasterizationDiscardEnable = rasterizationStateInfo->decoded_value->rasterizerDiscardEnable;
         auto polygonMode = rasterizationStateInfo->decoded_value->polygonMode;
@@ -2902,6 +2900,52 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelinePreRasterizationShaderState(
         auto depthBiasClamp = rasterizationStateInfo->decoded_value->depthBiasClamp;
         auto depthBiasSlopeFactor = rasterizationStateInfo->decoded_value->depthBiasSlopeFactor;
         auto lineWidth = rasterizationStateInfo->decoded_value->lineWidth;
+
+        // These line / provoking-vertex / stream settings are only present when their respective extension
+        // structs are chained onto the rasterization state's pNext. Defaults match the Vulkan spec when absent:
+        // lineRasterizationMode defaults to VK_LINE_RASTERIZATION_MODE_DEFAULT (0) and stippledLineEnable to
+        // VK_FALSE, with the stipple factor / pattern left null; provokingVertexMode defaults to
+        // VK_PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT (0) and rasterizationStream to 0.
+        VkLineRasterizationMode lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_DEFAULT;
+        VkBool32 stippledLineEnable = VK_FALSE;
+        std::optional<uint32_t> lineStippleFactor = std::nullopt;
+        std::optional<uint32_t> lineStipplePattern = std::nullopt;
+        VkProvokingVertexModeEXT provokingVertexMode = VK_PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT;
+        uint32_t rasterizationStream = 0;
+
+        auto rasterizationPNext = rasterizationStateInfo->pNext;
+        while (rasterizationPNext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(rasterizationPNext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineRasterizationLineStateCreateInfo>())
+            {
+                const auto* lineInfo =
+                    reinterpret_cast<const Decoded_VkPipelineRasterizationLineStateCreateInfo*>(header);
+                lineRasterizationMode = lineInfo->decoded_value->lineRasterizationMode;
+                stippledLineEnable = lineInfo->decoded_value->stippledLineEnable;
+                lineStippleFactor = lineInfo->decoded_value->lineStippleFactor;
+                lineStipplePattern = lineInfo->decoded_value->lineStipplePattern;
+            }
+            else if (*header->sType
+                     == gfxrecon::util::GetSType<VkPipelineRasterizationProvokingVertexStateCreateInfoEXT>())
+            {
+                provokingVertexMode =
+                    reinterpret_cast<const Decoded_VkPipelineRasterizationProvokingVertexStateCreateInfoEXT*>(header)
+                        ->decoded_value->provokingVertexMode;
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPipelineRasterizationStateStreamCreateInfoEXT>())
+            {
+                rasterizationStream =
+                    reinterpret_cast<const Decoded_VkPipelineRasterizationStateStreamCreateInfoEXT*>(header)
+                        ->decoded_value->rasterizationStream;
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            rasterizationPNext = header->pNext;
+        }
 
         auto rasterizationStateId = statements.InsertRasterizationState(
             pipelineId,
@@ -2914,7 +2958,13 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelinePreRasterizationShaderState(
             depthBiasConstantFactor,
             depthBiasClamp,
             depthBiasSlopeFactor,
-            lineWidth
+            lineWidth,
+            lineRasterizationMode,
+            stippledLineEnable,
+            lineStippleFactor,
+            lineStipplePattern,
+            provokingVertexMode,
+            rasterizationStream
         );
 
         result.rasterizationStateId = rasterizationStateId;
