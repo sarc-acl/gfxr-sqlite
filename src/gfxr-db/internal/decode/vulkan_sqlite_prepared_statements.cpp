@@ -225,7 +225,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         &instanceValidationDisabledCheckInsertStatement
     );
 
-    PrepareStatement(db, "INSERT INTO devices VALUES (?, ?, ?, ?, NULL);", &deviceInsertStatement);
+    PrepareStatement(db, "INSERT INTO devices VALUES (?, ?, ?, ?, ?, NULL);", &deviceInsertStatement);
 
     PrepareStatement(db, "INSERT INTO deviceEnabledLayers VALUES (?, ?);", &deviceEnabledLayerInsertStatement);
 
@@ -1527,7 +1527,10 @@ void VulkanSqlitePreparedStatements::InsertInstanceValidationDisabledCheck(
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertDevice(
-    const uint64_t apiEventId, const format::HandleId device, std::optional<int64_t> physical_device
+    const uint64_t apiEventId,
+    const format::HandleId device,
+    std::optional<int64_t> physical_device,
+    const int64_t overallocationBehavior
 )
 {
     auto deviceHandle = ToInt64(device);
@@ -1538,7 +1541,8 @@ int64_t VulkanSqlitePreparedStatements::InsertDevice(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(deviceId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(deviceHandle)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, physical_device));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(overallocationBehavior)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(apiEventId)));
 
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 

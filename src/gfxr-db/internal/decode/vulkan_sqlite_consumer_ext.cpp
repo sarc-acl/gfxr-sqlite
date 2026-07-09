@@ -933,12 +933,19 @@ void VulkanSqliteConsumerExt::Process_vkCreateDevice(
 
     auto deviceHandle = ToInt64(device);
     auto physicalDeviceId = context.GetPhysicalDeviceId(physicalDevice);
-    auto deviceId = statements.InsertDevice(this->block_index_, device, physicalDeviceId);
     std::vector<std::string_view> enabledFeatureNames;
 
     auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
     if (!createInfoValid)
     {
+        // insert the device regardless, we just warn that the info mappings are invalid
+        statements.InsertDevice(
+            this->block_index_,
+            device,
+            physicalDeviceId,
+            static_cast<int64_t>(VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD)
+        );
+
         if (returnValue == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create device info mappings, invalid pCreateInfo struct");
@@ -947,6 +954,22 @@ void VulkanSqliteConsumerExt::Process_vkCreateDevice(
     }
     else
     {
+        // we don't explicitly walk the pNext chain here since we will pass it to the
+        // ProcessVkDeviceCreateInfoPNext function below, but we need to look for
+        // some specific structs that might exist in the chain that are not feature structs
+        auto overallocationBehavior = VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD;
+        const auto* overallocationCreateInfo =
+            GetPNextMetaStruct<Decoded_VkDeviceMemoryOverallocationCreateInfoAMD>(createInfo->pNext);
+        if (overallocationCreateInfo != nullptr)
+        {
+            overallocationBehavior = overallocationCreateInfo->decoded_value->overallocationBehavior;
+        }
+
+        auto deviceId = statements.InsertDevice(
+            this->block_index_, device, physicalDeviceId, static_cast<int64_t>(overallocationBehavior)
+        );
+
+        // collect device feature names, they can either be in the enabledFeatures or in pNext structures
         auto [enabledFeaturesValid, enabledFeatures] = GetMetaStructPointer(createInfo->pEnabledFeatures);
         if (enabledFeaturesValid)
         {

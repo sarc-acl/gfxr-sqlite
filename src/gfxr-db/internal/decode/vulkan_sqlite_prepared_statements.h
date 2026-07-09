@@ -1052,7 +1052,10 @@ struct VulkanSqlitePreparedStatements
     void InsertInstanceValidationDisabledCheck(const int64_t instanceId, const int64_t check);
 
     int64_t InsertDevice(
-        const uint64_t apiEventId, const format::HandleId device, const std::optional<int64_t> physicalDevice
+        const uint64_t apiEventId,
+        const format::HandleId device,
+        const std::optional<int64_t> physicalDevice,
+        const int64_t overallocationBehavior
     );
     void InsertDeviceEnabledLayer(const int64_t deviceId, const std::string_view layerName);
     void InsertDeviceEnabledExtension(const int64_t deviceId, const std::string_view extensionName);
