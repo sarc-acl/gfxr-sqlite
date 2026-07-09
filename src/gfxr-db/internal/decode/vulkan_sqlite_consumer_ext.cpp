@@ -1471,7 +1471,26 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         return;
     }
 
-    LogUnsupportedPNext(presentInfo->pNext);
+    const HandlePointerDecoder<VkFence>* pFences = nullptr;
+
+    auto pnext = presentInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkSwapchainPresentFenceInfoKHR>())
+        {
+            const auto* fenceInfo = reinterpret_cast<const Decoded_VkSwapchainPresentFenceInfoKHR*>(header);
+            pFences = &fenceInfo->pFences;
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+
+        pnext = header->pNext;
+    }
+
+    auto [fencesValid, fences, fencesCount] = GetHandleArray(pFences);
 
     auto [semaphoreWaitsValid, semaphoreWaits, semaphoreWaitsCount] = GetHandleArray(&presentInfo->pWaitSemaphores);
     if (semaphoreWaitsValid)
@@ -1493,7 +1512,12 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
             auto swapchain = swapchains[i];
             auto swapchainId = context.GetSwapchainId(swapchain, true);
             auto imageIndex = imageIndices[i];
-            statements.InsertQueuePresentSwapchain(presentId, swapchainId, imageIndex);
+            std::optional<int64_t> fenceId = std::nullopt;
+            if (fencesValid && i < fencesCount)
+            {
+                fenceId = context.GetFenceId(fences[i], true);
+            }
+            statements.InsertQueuePresentSwapchain(presentId, swapchainId, imageIndex, fenceId);
         }
     }
 }

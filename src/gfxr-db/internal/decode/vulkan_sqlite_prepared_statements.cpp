@@ -926,7 +926,9 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(
         db, "INSERT INTO queuePresentSemaphoreWaits VALUES (?, ?, ?);", &queuePresentSemaphoreWaitInsertStatement
     );
-    PrepareStatement(db, "INSERT INTO queuePresentSwapchains VALUES (?, ?, ?);", &queuePresentSwapchainInsertStatement);
+    PrepareStatement(
+        db, "INSERT INTO queuePresentSwapchains VALUES (?, ?, ?, ?);", &queuePresentSwapchainInsertStatement
+    );
 
     PrepareStatement(
         db, "INSERT INTO debugReportCallbacks VALUES (?, ?, ?, ?, NULL);", &debugReportCallbackInsertStatement
@@ -3765,7 +3767,10 @@ void VulkanSqlitePreparedStatements::InsertQueuePresentSemaphoreWait(
 }
 
 void VulkanSqlitePreparedStatements::InsertQueuePresentSwapchain(
-    const int64_t presentId, const std::optional<int64_t> swapchainId, uint32_t imageIndex
+    const int64_t presentId,
+    const std::optional<int64_t> swapchainId,
+    uint32_t imageIndex,
+    const std::optional<int64_t> fenceId
 )
 {
     auto& statement = queuePresentSwapchainInsertStatement;
@@ -3773,6 +3778,7 @@ void VulkanSqlitePreparedStatements::InsertQueuePresentSwapchain(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(presentId)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 2, swapchainId));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(imageIndex)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 4, fenceId));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 

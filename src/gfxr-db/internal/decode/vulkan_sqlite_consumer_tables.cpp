@@ -315,7 +315,9 @@ static void CreateQueuePresentTables(sqlite3* db)
         "   queuePresentId INT NOT NULL,"
         "   swapchainId INT,"
         "   imageIndex INT NOT NULL,"
+        "   fenceId INT,"
         "   FOREIGN KEY(queuePresentId) REFERENCES queuePresents(id),"
+        "   FOREIGN KEY(fenceId) REFERENCES fences(id),"
         "   FOREIGN KEY(swapchainId) REFERENCES swapchains(id)) STRICT;"
     );
 }
