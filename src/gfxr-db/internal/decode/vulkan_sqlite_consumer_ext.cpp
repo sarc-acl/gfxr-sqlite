@@ -1205,24 +1205,7 @@ void VulkanSqliteConsumerExt::Process_vkQueueSubmit(
     }
     for (size_t i = 0; i < submitInfoCount; ++i)
     {
-        auto queueSubmitBatchId = statements.InsertQueueSubmitBatch(queueSubmitId, i);
-
         auto& submitInfo = submitInfos[i];
-        auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&submitInfo.pCommandBuffers);
-        if (!commandBuffersValid)
-        {
-            // pCommandBuffers can be NULL when only performing pipeline synchronization
-        }
-        else
-        {
-            for (size_t j = 0; j < commandBuffersCount; ++j)
-            {
-                auto commandBuffer = commandBuffers[j];
-                auto commandBufferRecordingId = context.GetCommandBufferRecordingId(commandBuffer);
-
-                statements.InsertQueueSubmitBuffer(queueSubmitBatchId, j, commandBufferRecordingId);
-            }
-        }
 
         bool waitValuesValid = false;
         uint64_t* waitValues = nullptr;
@@ -1230,6 +1213,8 @@ void VulkanSqliteConsumerExt::Process_vkQueueSubmit(
         bool signalValuesValid = false;
         uint64_t* signalValues = nullptr;
         uint64_t signalValuesCount = 0;
+        std::optional<int64_t> firstDrawTimestamp = std::nullopt;
+        std::optional<int64_t> swapBufferTimestamp = std::nullopt;
 
         auto pnext = submitInfo.pNext;
         while (pnext != nullptr)
@@ -1244,12 +1229,39 @@ void VulkanSqliteConsumerExt::Process_vkQueueSubmit(
                 std::tie(signalValuesValid, signalValues, signalValuesCount) =
                     GetPointerArray(&pTimelineSemaphoreSubmitInfo->pSignalSemaphoreValues);
             }
+            else if (*header->sType == gfxrecon::util::GetSType<VkAmigoProfilingSubmitInfoSEC>())
+            {
+                const auto* pAmigoProfilingSubmitInfo =
+                    reinterpret_cast<const Decoded_VkAmigoProfilingSubmitInfoSEC*>(header);
+                firstDrawTimestamp = static_cast<int64_t>(pAmigoProfilingSubmitInfo->decoded_value->firstDrawTimestamp);
+                swapBufferTimestamp =
+                    static_cast<int64_t>(pAmigoProfilingSubmitInfo->decoded_value->swapBufferTimestamp);
+            }
             else
             {
                 LogUnsupportedPNext(*header->sType);
             }
 
             pnext = header->pNext;
+        }
+
+        auto queueSubmitBatchId =
+            statements.InsertQueueSubmitBatch(queueSubmitId, i, firstDrawTimestamp, swapBufferTimestamp);
+
+        auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&submitInfo.pCommandBuffers);
+        if (!commandBuffersValid)
+        {
+            // pCommandBuffers can be NULL when only performing pipeline synchronization
+        }
+        else
+        {
+            for (size_t j = 0; j < commandBuffersCount; ++j)
+            {
+                auto commandBuffer = commandBuffers[j];
+                auto commandBufferRecordingId = context.GetCommandBufferRecordingId(commandBuffer);
+
+                statements.InsertQueueSubmitBuffer(queueSubmitBatchId, j, commandBufferRecordingId);
+            }
         }
 
         auto [waitSemaphoresValid, waitSemaphores, waitSemaphoresCount] = GetHandleArray(&submitInfo.pWaitSemaphores);
@@ -1347,13 +1359,37 @@ void VulkanSqliteConsumerExt::ProcessQueueSubmit2Info(
     }
     for (size_t i = 0; i < submitInfoCount; ++i)
     {
-        auto queueSubmitBatchId = statements.InsertQueueSubmitBatch(queueSubmitId, i);
-
         // TODO: handle flags (somewhat complicated, as VkSubmitInfo doesn't have flags but instead uses
         // VkProtectedSubmitInfo in the pNext chain)
         auto& submitInfo = submitInfos[i];
 
-        LogUnsupportedPNext(submitInfo.pNext);
+        std::optional<int64_t> firstDrawTimestamp = std::nullopt;
+        std::optional<int64_t> swapBufferTimestamp = std::nullopt;
+
+        auto pnext = submitInfo.pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkAmigoProfilingSubmitInfoSEC>())
+            {
+                // Spec states this is only supported by VkSubmitInfo not VkSubmitInfo2 but adding this
+                // as a defensive no-op in the case a layer adds it anyways
+                const auto* pAmigoProfilingSubmitInfo =
+                    reinterpret_cast<const Decoded_VkAmigoProfilingSubmitInfoSEC*>(header);
+                firstDrawTimestamp = static_cast<int64_t>(pAmigoProfilingSubmitInfo->decoded_value->firstDrawTimestamp);
+                swapBufferTimestamp =
+                    static_cast<int64_t>(pAmigoProfilingSubmitInfo->decoded_value->swapBufferTimestamp);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
+
+        auto queueSubmitBatchId =
+            statements.InsertQueueSubmitBatch(queueSubmitId, i, firstDrawTimestamp, swapBufferTimestamp);
 
         auto [commandBufferInfosValid, commandBufferInfos, commandBufferInfosCount] =
             GetMetaStructArray(submitInfo.pCommandBufferInfos);
@@ -1708,7 +1744,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(
         }
         else if (*header->sType == gfxrecon::util::GetSType<VkExportSemaphoreCreateInfo>())
         {
-            const auto* pExportSemaphoreCreateInfo = reinterpret_cast<const Decoded_VkExportSemaphoreCreateInfo*>(header);
+            const auto* pExportSemaphoreCreateInfo =
+                reinterpret_cast<const Decoded_VkExportSemaphoreCreateInfo*>(header);
             handleTypes = static_cast<int64_t>(pExportSemaphoreCreateInfo->decoded_value->handleTypes);
         }
         else
@@ -2957,8 +2994,8 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelinePreRasterizationShaderState(
                 lineStippleFactor = lineInfo->decoded_value->lineStippleFactor;
                 lineStipplePattern = lineInfo->decoded_value->lineStipplePattern;
             }
-            else if (*header->sType
-                     == gfxrecon::util::GetSType<VkPipelineRasterizationProvokingVertexStateCreateInfoEXT>())
+            else if (*header->sType ==
+                     gfxrecon::util::GetSType<VkPipelineRasterizationProvokingVertexStateCreateInfoEXT>())
             {
                 provokingVertexMode =
                     reinterpret_cast<const Decoded_VkPipelineRasterizationProvokingVertexStateCreateInfoEXT*>(header)
@@ -3611,8 +3648,7 @@ std::optional<int64_t> VulkanSqliteConsumerExt::CopyGraphicsPipelineMultisampleS
     }
 }
 
-VulkanSqliteConsumerExt::PipelineCreationFeedback
-VulkanSqliteConsumerExt::ReadPipelineCreationFeedback(
+VulkanSqliteConsumerExt::PipelineCreationFeedback VulkanSqliteConsumerExt::ReadPipelineCreationFeedback(
     const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo
 )
 {
@@ -3645,8 +3681,9 @@ VulkanSqliteConsumerExt::ReadPipelineCreationFeedback(
     return feedback;
 }
 
-std::pair<std::optional<int64_t>, std::optional<int64_t>>
-VulkanSqliteConsumerExt::GetStageCreationFeedback(const PipelineCreationFeedback& feedback, size_t stageIndex)
+std::pair<std::optional<int64_t>, std::optional<int64_t>> VulkanSqliteConsumerExt::GetStageCreationFeedback(
+    const PipelineCreationFeedback& feedback, size_t stageIndex
+)
 {
     if (feedback.stageFeedbacks == nullptr || stageIndex >= feedback.stageFeedbackCount)
     {
@@ -4027,12 +4064,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
         if (graphicsLibraryFlags & VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT)
         {
             fragmentShaderState = ProcessGraphicsPipelineFragmentShaderState(
-                deviceId,
-                createInfo,
-                pipelineId,
-                pipelineHandle,
-                preRasterizationShaderState.numShaderStages,
-                feedback
+                deviceId, createInfo, pipelineId, pipelineHandle, preRasterizationShaderState.numShaderStages, feedback
             );
         }
         else
@@ -7462,8 +7494,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
         else if (*header->sType == gfxrecon::util::GetSType<VkExternalMemoryImageCreateInfo>())
         {
             const auto* pExternalMemory = reinterpret_cast<const Decoded_VkExternalMemoryImageCreateInfo*>(header);
-            externalMemoryHandleTypes =
-                static_cast<int64_t>(pExternalMemory->decoded_value->handleTypes);
+            externalMemoryHandleTypes = static_cast<int64_t>(pExternalMemory->decoded_value->handleTypes);
         }
         else
         {

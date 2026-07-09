@@ -485,7 +485,12 @@ struct VulkanSqlitePreparedStatements
         const uint64_t frame,
         const uint64_t apiEventId
     );
-    int64_t InsertQueueSubmitBatch(const int64_t queueSubmitId, const uint64_t batchIndex);
+    int64_t InsertQueueSubmitBatch(
+        const int64_t queueSubmitId,
+        const uint64_t batchIndex,
+        const std::optional<int64_t> firstDrawTimestamp,
+        const std::optional<int64_t> swapBufferTimestamp
+    );
     void InsertQueueSubmitBuffer(
         const int64_t queueSubmitBatchId,
         const uint64_t bufferIndex,

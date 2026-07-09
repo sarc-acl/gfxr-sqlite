@@ -194,9 +194,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(db, "INSERT INTO instanceEnabledLayers VALUES (?, ?, ?);", &instanceEnabledLayerInsertStatement);
 
     PrepareStatement(
-        db,
-        "INSERT INTO instanceEnabledLayerSettings VALUES (?, ?, ?, ?);",
-        &instanceEnabledLayerSettingInsertStatement
+        db, "INSERT INTO instanceEnabledLayerSettings VALUES (?, ?, ?, ?);", &instanceEnabledLayerSettingInsertStatement
     );
 
     PrepareStatement(
@@ -715,7 +713,8 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     );
     PrepareStatement(
         db,
-        "INSERT INTO transferCommandRegionImageCopies VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+        "INSERT INTO transferCommandRegionImageCopies VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+        "?, ?, "
         "?);",
         &transferCommandRegionImageCopiesInsertStatement
     );
@@ -974,7 +973,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(db, "INSERT INTO physicalDevices VALUES (?, ?, ?, ?);", &physicalDeviceInsertStatement);
     PrepareStatement(db, "INSERT INTO queues VALUES (?, ?, ?, ?, ?, ?, ?);", &queueInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmits VALUES (?, ?, ?, ?, ?);", &queueSubmitInsertStatement);
-    PrepareStatement(db, "INSERT INTO queueSubmitBatches VALUES (?, ?, ?);", &queueSubmitBatchInsertStatement);
+    PrepareStatement(db, "INSERT INTO queueSubmitBatches VALUES (?, ?, ?, ?, ?);", &queueSubmitBatchInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmitBuffers VALUES (?, ?, ?);", &queueSubmitBufferInsertStatement);
     PrepareStatement(
         db, "INSERT INTO queueSubmitSemaphoreWaits VALUES (?, ?, ?, ?, ?);", &queueSubmitSemaphoreWaitInsertStatement
@@ -1242,9 +1241,15 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         &destroyDataGraphPipelineSessionUpdateStatement
     );
     PrepareStatement(
-        db, "INSERT INTO cmdDataGraphDispatchRecordings VALUES (?, ?, ?, ?, ?);", &cmdDataGraphDispatchRecordingInsertStatement
+        db,
+        "INSERT INTO cmdDataGraphDispatchRecordings VALUES (?, ?, ?, ?, ?);",
+        &cmdDataGraphDispatchRecordingInsertStatement
     );
-    PrepareStatement(db, "INSERT INTO cmdDataGraphDispatchRecordingInfos VALUES (?, ?);", &cmdDataGraphDispatchRecordingInfoInsertStatement);
+    PrepareStatement(
+        db,
+        "INSERT INTO cmdDataGraphDispatchRecordingInfos VALUES (?, ?);",
+        &cmdDataGraphDispatchRecordingInfoInsertStatement
+    );
 
     PrepareStatement(db, "INSERT INTO displays VALUES (?, ?, ?, ?);", &displayInsertStatement);
     PrepareStatement(db, "INSERT INTO displayModes VALUES (?, ?, ?, ?, ?, ?, ?, ?);", &displayModeInsertStatement);
@@ -1447,9 +1452,7 @@ int64_t VulkanSqlitePreparedStatements::InsertInstanceEnabledLayerSetting(
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(id)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(instanceEnabledLayerId)));
-    GFXRECON_SQLITE_CHECK(
-        db, sqlite3_bind_text64(statement, 3, name.data(), name.size(), SQLITE_STATIC, SQLITE_UTF8)
-    );
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text64(statement, 3, name.data(), name.size(), SQLITE_STATIC, SQLITE_UTF8));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(type)));
 
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
@@ -1969,8 +1972,8 @@ int64_t VulkanSqlitePreparedStatements::InsertOverrideStateGroup(
                 switch (entry.stateTypeId)
                 {
                     case StateType::PIPELINE_BINDING:
-                        context->commandBufferRecordingPipelineBindings
-                            [parentCommandBufferRecordingId][static_cast<VkPipelineBindPoint>(entry.idx)] =
+                        context->commandBufferRecordingPipelineBindings[parentCommandBufferRecordingId]
+                                                                       [static_cast<VkPipelineBindPoint>(entry.idx)] =
                             entry.stateId;
                         break;
                     case StateType::SHADER_OBJECT_BINDING:
@@ -1979,22 +1982,20 @@ int64_t VulkanSqlitePreparedStatements::InsertOverrideStateGroup(
                             entry.stateId;
                         break;
                     case StateType::DESCRIPTOR_SET_BINDING:
-                        context->commandBufferRecordingDescriptorSetBindings[parentCommandBufferRecordingId]
-                                                                            [static_cast<VkPipelineBindPoint>(
-                                                                                entry.idx
-                                                                            )][entry.subIndex] = entry.stateId;
+                        context
+                            ->commandBufferRecordingDescriptorSetBindings[parentCommandBufferRecordingId]
+                                                                         [static_cast<VkPipelineBindPoint>(entry.idx)]
+                                                                         [entry.subIndex] = entry.stateId;
                         break;
                     case StateType::DESCRIPTOR_SET_PUSH:
-                        context->commandBufferRecordingDescriptorSetPushes[parentCommandBufferRecordingId]
-                                                                          [entry.idx][entry.subIndex] =
-                            entry.stateId;
+                        context->commandBufferRecordingDescriptorSetPushes[parentCommandBufferRecordingId][entry.idx]
+                                                                          [entry.subIndex] = entry.stateId;
                         break;
                     case StateType::INDEX_BUFFER_BINDING:
                         context->commandBufferRecordingIndexBindings[parentCommandBufferRecordingId] = entry.stateId;
                         break;
                     case StateType::VERTEX_BUFFER_BINDING:
-                        context
-                            ->commandBufferRecordingVertexBindings[parentCommandBufferRecordingId][entry.idx] =
+                        context->commandBufferRecordingVertexBindings[parentCommandBufferRecordingId][entry.idx] =
                             entry.stateId;
                         break;
                     case StateType::VERTEX_INPUT_BINDING_DESCRIPTION:
@@ -2003,17 +2004,14 @@ int64_t VulkanSqlitePreparedStatements::InsertOverrideStateGroup(
                         break;
                     case StateType::VERTEX_INPUT_ATTRIBUTE_DESCRIPTION:
                         context->commandBufferRecordingVertexInputAttributeDescriptions[parentCommandBufferRecordingId]
-                                                                                       [entry.idx] =
-                            entry.stateId;
+                                                                                       [entry.idx] = entry.stateId;
                         break;
                     case StateType::VIEWPORT:
-                        context
-                            ->commandBufferRecordingDynamicViewports[parentCommandBufferRecordingId][entry.idx] =
+                        context->commandBufferRecordingDynamicViewports[parentCommandBufferRecordingId][entry.idx] =
                             entry.stateId;
                         break;
                     case StateType::SCISSOR:
-                        context
-                            ->commandBufferRecordingDynamicScissors[parentCommandBufferRecordingId][entry.idx] =
+                        context->commandBufferRecordingDynamicScissors[parentCommandBufferRecordingId][entry.idx] =
                             entry.stateId;
                         break;
                     case StateType::LINE_WIDTH:
@@ -2100,8 +2098,9 @@ int64_t VulkanSqlitePreparedStatements::InsertOverrideStateGroup(
                             entry.stateId;
                         break;
                     case StateType::COLOR_WRITE_ENABLE:
-                        context->commandBufferRecordingDynamicColorWriteEnable[parentCommandBufferRecordingId]
-                                                                              [entry.idx] = entry.stateId;
+                        context
+                            ->commandBufferRecordingDynamicColorWriteEnable[parentCommandBufferRecordingId][entry.idx] =
+                            entry.stateId;
                         break;
                     case StateType::BLEND_CONSTANTS:
                         context->commandBufferRecordingDynamicBlendConstants[parentCommandBufferRecordingId] =
@@ -2154,8 +2153,7 @@ int64_t VulkanSqlitePreparedStatements::InsertSecondaryCommandBufferExecutionRec
 )
 {
     auto beginStateGroupId = InsertStateGroup(parentCommandBufferRecordingId);
-    auto endStateGroupId =
-        InsertOverrideStateGroup(parentCommandBufferRecordingId, secondaryCommandBufferRecordingId);
+    auto endStateGroupId = InsertOverrideStateGroup(parentCommandBufferRecordingId, secondaryCommandBufferRecordingId);
 
     auto secondaryCommandBufferExecutionRecording = ++context->currentSecondaryCommandBufferExecutionRecordingId;
     auto& statement = secondaryCommandBufferExecutionRecordingInsertStatement;
@@ -5230,7 +5228,12 @@ int64_t VulkanSqlitePreparedStatements::InsertQueueSubmit(
     return queueSubmitId;
 }
 
-int64_t VulkanSqlitePreparedStatements::InsertQueueSubmitBatch(const int64_t queueSubmitId, const uint64_t batchIndex)
+int64_t VulkanSqlitePreparedStatements::InsertQueueSubmitBatch(
+    const int64_t queueSubmitId,
+    const uint64_t batchIndex,
+    const std::optional<int64_t> firstDrawTimestamp,
+    const std::optional<int64_t> swapBufferTimestamp
+)
 {
     auto queueSubmitBatchId = ++context->currentQueueSubmissionBatchId;
     auto& statement = queueSubmitBatchInsertStatement;
@@ -5238,6 +5241,8 @@ int64_t VulkanSqlitePreparedStatements::InsertQueueSubmitBatch(const int64_t que
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(queueSubmitBatchId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(batchIndex)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(queueSubmitId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 4, firstDrawTimestamp));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, swapBufferTimestamp));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return queueSubmitBatchId;
 }
@@ -6490,11 +6495,15 @@ int64_t VulkanSqlitePreparedStatements::InsertCmdDataGraphDispatchRecording(
     return recordingId;
 }
 
-void VulkanSqlitePreparedStatements::InsertCmdDataGraphDispatchRecordingInfo(const int64_t cmdDataGraphDispatchRecordingId, const uint64_t flags)
+void VulkanSqlitePreparedStatements::InsertCmdDataGraphDispatchRecordingInfo(
+    const int64_t cmdDataGraphDispatchRecordingId, const uint64_t flags
+)
 {
     auto& statement = cmdDataGraphDispatchRecordingInfoInsertStatement;
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(cmdDataGraphDispatchRecordingId)));
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(cmdDataGraphDispatchRecordingId))
+    );
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(flags)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }

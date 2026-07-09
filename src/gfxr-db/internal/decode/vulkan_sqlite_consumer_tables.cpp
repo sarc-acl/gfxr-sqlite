@@ -248,6 +248,8 @@ static void CreateQueueSubmitTables(sqlite3* db)
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   idx INT NOT NULL,"
         "   queueSubmitId INT NOT NULL,"
+        "   firstDrawTimestamp INT,"
+        "   swapBufferTimestamp INT,"
         "   FOREIGN KEY(queueSubmitId) REFERENCES queueSubmits(id)) STRICT;"
     );
 
