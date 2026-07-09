@@ -1670,6 +1670,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(
 
     auto semaphoreType = VK_SEMAPHORE_TYPE_BINARY;
     uint64_t initialValue = 0;
+    std::optional<int64_t> handleTypes = std::nullopt;
 
     auto pnext = createInfo->pNext;
     while (pnext != nullptr)
@@ -1681,6 +1682,11 @@ void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(
             semaphoreType = pSemaphoreCreateInfo->decoded_value->semaphoreType;
             initialValue = pSemaphoreCreateInfo->decoded_value->initialValue;
         }
+        else if (*header->sType == gfxrecon::util::GetSType<VkExportSemaphoreCreateInfo>())
+        {
+            const auto* pExportSemaphoreCreateInfo = reinterpret_cast<const Decoded_VkExportSemaphoreCreateInfo*>(header);
+            handleTypes = static_cast<int64_t>(pExportSemaphoreCreateInfo->decoded_value->handleTypes);
+        }
         else
         {
             LogUnsupportedPNext(*header->sType);
@@ -1689,7 +1695,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(
         pnext = header->pNext;
     }
 
-    auto semaphoreId = statements.InsertSemaphore(semaphore, device, semaphoreType, initialValue, this->block_index_);
+    auto semaphoreId =
+        statements.InsertSemaphore(semaphore, device, semaphoreType, initialValue, handleTypes, this->block_index_);
 
     // This line incorrectly generates warning C26813 "Use 'bitwise and' to check if a flag is set" unless it is
     // suppressed before Vulkan headers are included. VkSemaphoreType is not a bit flag enum (it just only has members

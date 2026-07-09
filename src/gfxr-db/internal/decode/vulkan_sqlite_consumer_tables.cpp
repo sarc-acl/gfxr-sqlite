@@ -358,6 +358,7 @@ static void CreateSynchronizationTables(sqlite3* db)
         "   deviceId INT,"
         "   type INT NOT NULL,"
         "   initialValue INT,"
+        "   handleTypes INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(deviceId) REFERENCES devices(id),"

@@ -515,6 +515,7 @@ struct VulkanSqlitePreparedStatements
         const format::HandleId device,
         const uint32_t semaphoreType,
         const uint64_t initialValue,
+        const std::optional<int64_t> handleTypes,
         const uint64_t apiEventId
     );
     void InsertSemaphoreSignal(

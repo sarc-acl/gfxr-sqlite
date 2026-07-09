@@ -992,7 +992,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         "UPDATE fenceSyncScopes SET waitApiEventId = ? WHERE (fenceSyncScopes.id = ?);",
         &waitFenceSyncScopeUpdateStatement
     );
-    PrepareStatement(db, "INSERT INTO semaphores VALUES (?, ?, ?, ?, ?, ?, NULL);", &semaphoreInsertStatement);
+    PrepareStatement(db, "INSERT INTO semaphores VALUES (?, ?, ?, ?, ?, ?, ?, NULL);", &semaphoreInsertStatement);
     PrepareStatement(db, "INSERT INTO semaphoreSignals VALUES (?, ?, ?);", &semaphoreSignalInsertStatement);
     PrepareStatement(db, "INSERT INTO semaphoreWaits VALUES (?, ?, ?, ?, ?, ?);", &semaphoreWaitInsertStatement);
     PrepareStatement(db, "INSERT INTO events VALUES (?, ?, ?, ?, ?, NULL);", &eventInsertStatement);
@@ -5338,6 +5338,7 @@ int64_t VulkanSqlitePreparedStatements::InsertSemaphore(
     const format::HandleId device,
     const uint32_t semaphoreType,
     const uint64_t initialValue,
+    const std::optional<int64_t> handleTypes,
     const uint64_t apiEventId
 )
 {
@@ -5352,7 +5353,8 @@ int64_t VulkanSqlitePreparedStatements::InsertSemaphore(
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, deviceId));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(semaphoreType)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(initialValue)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, handleTypes));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return semaphoreId;
 }
