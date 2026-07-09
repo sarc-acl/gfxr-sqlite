@@ -1707,8 +1707,9 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     // Returns {feedbackFlags, createDuration} for the stage at the given original pStages index, or
     // {nullopt, nullopt} when no feedback is available for that stage.
-    static std::pair<std::optional<int64_t>, std::optional<int64_t>>
-    GetStageCreationFeedback(const PipelineCreationFeedback& feedback, size_t stageIndex);
+    static std::pair<std::optional<int64_t>, std::optional<int64_t>> GetStageCreationFeedback(
+        const PipelineCreationFeedback& feedback, size_t stageIndex
+    );
 
     void ProcessPipelineDynamicStateCreateInfo(
         const StructPointerDecoder<Decoded_VkPipelineDynamicStateCreateInfo>* createInfo,
@@ -1716,6 +1717,11 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         const std::unordered_set<VkDynamicState>& stage_states
     );
     void CopyPipelineDynamicStates(int64_t pipelineId, int64_t libraryPipelineId);
+
+    // Returns true if the pipeline's VkPipelineDynamicStateCreateInfo enables the given dynamic state.
+    bool PipelineEnablesDynamicState(
+        const StructPointerDecoder<Decoded_VkPipelineDynamicStateCreateInfo>* createInfo, VkDynamicState state
+    );
 
     GraphicsPipelineVertexInputState ProcessGraphicsPipelineVertexInputState(
         VkResult returnValue, const Decoded_VkGraphicsPipelineCreateInfo& createInfo, int64_t pipelineId

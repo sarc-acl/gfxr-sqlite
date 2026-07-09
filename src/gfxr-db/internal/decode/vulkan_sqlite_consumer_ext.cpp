@@ -2602,6 +2602,32 @@ void VulkanSqliteConsumerExt::ProcessPipelineDynamicStateCreateInfo(
     }
 }
 
+bool VulkanSqliteConsumerExt::PipelineEnablesDynamicState(
+    const StructPointerDecoder<Decoded_VkPipelineDynamicStateCreateInfo>* createInfo, VkDynamicState state
+)
+{
+    auto [dynamicStateInfoValid, dynamicStateInfo] = GetMetaStructPointer(createInfo);
+    if (!dynamicStateInfoValid)
+    {
+        return false;
+    }
+
+    auto [dynamicStatesValid, dynamicStates, dynamicStatesCount] = GetPointerArray(&dynamicStateInfo->pDynamicStates);
+    if (!dynamicStatesValid)
+    {
+        return false;
+    }
+
+    for (size_t j = 0; j < dynamicStatesCount; ++j)
+    {
+        if (dynamicStates[j] == state)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void VulkanSqliteConsumerExt::CopyPipelineDynamicStates(int64_t pipelineId, int64_t libraryPipelineId)
 {
     // We don't need to do any filtering here because a pipeline library will already be filtered down to dynamic states
@@ -2634,7 +2660,8 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineVertexInputState(
     auto [vertexInputStateInfoValid, vertexInputStateInfo] = GetMetaStructPointer(createInfo.pVertexInputState);
     if (!vertexInputStateInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (returnValue == VK_SUCCESS &&
+            !PipelineEnablesDynamicState(createInfo.pDynamicState, VK_DYNAMIC_STATE_VERTEX_INPUT_EXT))
         {
             GFXRECON_SQLITE_LOG_WARNING("Failed to create vertex input state, invalid pVertexInputState struct");
         }
@@ -3580,8 +3607,7 @@ std::optional<int64_t> VulkanSqliteConsumerExt::CopyGraphicsPipelineMultisampleS
     }
 }
 
-VulkanSqliteConsumerExt::PipelineCreationFeedback
-VulkanSqliteConsumerExt::ReadPipelineCreationFeedback(
+VulkanSqliteConsumerExt::PipelineCreationFeedback VulkanSqliteConsumerExt::ReadPipelineCreationFeedback(
     const Decoded_VkPipelineCreationFeedbackCreateInfo* feedbackCreateInfo
 )
 {
@@ -3614,8 +3640,9 @@ VulkanSqliteConsumerExt::ReadPipelineCreationFeedback(
     return feedback;
 }
 
-std::pair<std::optional<int64_t>, std::optional<int64_t>>
-VulkanSqliteConsumerExt::GetStageCreationFeedback(const PipelineCreationFeedback& feedback, size_t stageIndex)
+std::pair<std::optional<int64_t>, std::optional<int64_t>> VulkanSqliteConsumerExt::GetStageCreationFeedback(
+    const PipelineCreationFeedback& feedback, size_t stageIndex
+)
 {
     if (feedback.stageFeedbacks == nullptr || stageIndex >= feedback.stageFeedbackCount)
     {
@@ -3996,12 +4023,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
         if (graphicsLibraryFlags & VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT)
         {
             fragmentShaderState = ProcessGraphicsPipelineFragmentShaderState(
-                deviceId,
-                createInfo,
-                pipelineId,
-                pipelineHandle,
-                preRasterizationShaderState.numShaderStages,
-                feedback
+                deviceId, createInfo, pipelineId, pipelineHandle, preRasterizationShaderState.numShaderStages, feedback
             );
         }
         else
@@ -4060,9 +4082,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, shaderLibrary->second.pipelineId);
             }
-            else if (auto outputLibrary =
-                         libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
-                     outputLibrary != libraries.end())
+            else if (
+                auto outputLibrary = libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
+                outputLibrary != libraries.end()
+            )
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, outputLibrary->second.pipelineId);
             }
@@ -7431,8 +7454,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
         else if (*header->sType == gfxrecon::util::GetSType<VkExternalMemoryImageCreateInfo>())
         {
             const auto* pExternalMemory = reinterpret_cast<const Decoded_VkExternalMemoryImageCreateInfo*>(header);
-            externalMemoryHandleTypes =
-                static_cast<int64_t>(pExternalMemory->decoded_value->handleTypes);
+            externalMemoryHandleTypes = static_cast<int64_t>(pExternalMemory->decoded_value->handleTypes);
         }
         else
         {
