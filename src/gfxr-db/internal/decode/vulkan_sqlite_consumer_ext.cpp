@@ -2693,6 +2693,32 @@ void VulkanSqliteConsumerExt::ProcessPipelineDynamicStateCreateInfo(
     }
 }
 
+bool VulkanSqliteConsumerExt::PipelineEnablesDynamicState(
+    const StructPointerDecoder<Decoded_VkPipelineDynamicStateCreateInfo>* createInfo, VkDynamicState state
+)
+{
+    auto [dynamicStateInfoValid, dynamicStateInfo] = GetMetaStructPointer(createInfo);
+    if (!dynamicStateInfoValid)
+    {
+        return false;
+    }
+
+    auto [dynamicStatesValid, dynamicStates, dynamicStatesCount] = GetPointerArray(&dynamicStateInfo->pDynamicStates);
+    if (!dynamicStatesValid)
+    {
+        return false;
+    }
+
+    for (size_t j = 0; j < dynamicStatesCount; ++j)
+    {
+        if (dynamicStates[j] == state)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void VulkanSqliteConsumerExt::CopyPipelineDynamicStates(int64_t pipelineId, int64_t libraryPipelineId)
 {
     // We don't need to do any filtering here because a pipeline library will already be filtered down to dynamic states
@@ -2725,7 +2751,8 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineVertexInputState(
     auto [vertexInputStateInfoValid, vertexInputStateInfo] = GetMetaStructPointer(createInfo.pVertexInputState);
     if (!vertexInputStateInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (returnValue == VK_SUCCESS &&
+            !PipelineEnablesDynamicState(createInfo.pDynamicState, VK_DYNAMIC_STATE_VERTEX_INPUT_EXT))
         {
             GFXRECON_SQLITE_LOG_WARNING("Failed to create vertex input state, invalid pVertexInputState struct");
         }
@@ -4146,9 +4173,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, shaderLibrary->second.pipelineId);
             }
-            else if (auto outputLibrary =
-                         libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
-                     outputLibrary != libraries.end())
+            else if (
+                auto outputLibrary = libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
+                outputLibrary != libraries.end()
+            )
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, outputLibrary->second.pipelineId);
             }
