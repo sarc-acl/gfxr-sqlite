@@ -512,6 +512,16 @@ static void CreateRenderPassTables(sqlite3* db)
 
     ExecSQL(
         db,
+        "CREATE TABLE renderPassRecordingAttachments("
+        "   renderPassRecordingId INT NOT NULL,"
+        "   idx INT NOT NULL,"
+        "   imageViewId INT NOT NULL,"
+        "   FOREIGN KEY(renderPassRecordingId) REFERENCES renderPassRecordings(id),"
+        "   FOREIGN KEY(imageViewId) REFERENCES imageViews(id)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
         "CREATE TABLE renderSubpassRecordings("
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   renderPassRecordingId INT NOT NULL,"

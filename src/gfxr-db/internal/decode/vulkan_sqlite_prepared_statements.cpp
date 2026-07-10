@@ -259,6 +259,9 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(
         db, "INSERT INTO dynamicColorAttachments VALUES(?, ?, ?);", &dynamicColorAttachmentInsertStatement
     );
+    PrepareStatement(
+        db, "INSERT INTO renderPassRecordingAttachments VALUES(?, ?, ?);", &renderPassRecordingAttachmentInsertStatement
+    );
 
     PrepareStatement(db, "INSERT INTO stateIds VALUES(?, ?);", &stateIdInsertStatement);
     PrepareStatement(db, "INSERT INTO stateGroupEntries VALUES(?, ?, ?, ?, ?);", &stateGroupEntryInsertStatement);
@@ -1802,6 +1805,18 @@ void VulkanSqlitePreparedStatements::InsertRenderPassRecordingClearValues(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(clearColorId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 4, clearDepth));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(clearStencil)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertRenderPassRecordingAttachment(
+    const int64_t renderPassRecordingId, const uint64_t idx, const int64_t imageViewId
+)
+{
+    auto& statement = renderPassRecordingAttachmentInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassRecordingId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(idx)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(imageViewId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 

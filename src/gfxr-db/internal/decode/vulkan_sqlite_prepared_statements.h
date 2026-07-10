@@ -111,6 +111,7 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement unionColorInsertStatement;
     SqliteStatement renderingAttachmentInsertStatement;
     SqliteStatement dynamicColorAttachmentInsertStatement;
+    SqliteStatement renderPassRecordingAttachmentInsertStatement;
     SqliteStatement stateIdInsertStatement;
     SqliteStatement stateGroupEntryInsertStatement;
     SqliteStatement statePipelineBindingInsertStatement;
@@ -1121,6 +1122,9 @@ struct VulkanSqlitePreparedStatements
         const int64_t clearColorId,
         const float clearDepth,
         const uint32_t clearStencil
+    );
+    void InsertRenderPassRecordingAttachment(
+        const int64_t renderPassRecordingId, const uint64_t idx, const int64_t imageViewId
     );
     void InsertRenderSubpassRecording(
         const uint64_t apiEventId, const int64_t renderPassRecordingId, const uint32_t contents
