@@ -111,6 +111,7 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement unionColorInsertStatement;
     SqliteStatement renderingAttachmentInsertStatement;
     SqliteStatement dynamicColorAttachmentInsertStatement;
+    SqliteStatement renderPassRecordingAttachmentInsertStatement;
     SqliteStatement stateIdInsertStatement;
     SqliteStatement stateGroupEntryInsertStatement;
     SqliteStatement statePipelineBindingInsertStatement;
@@ -485,7 +486,12 @@ struct VulkanSqlitePreparedStatements
         const uint64_t frame,
         const uint64_t apiEventId
     );
-    int64_t InsertQueueSubmitBatch(const int64_t queueSubmitId, const uint64_t batchIndex);
+    int64_t InsertQueueSubmitBatch(
+        const int64_t queueSubmitId,
+        const uint64_t batchIndex,
+        const std::optional<int64_t> firstDrawTimestamp,
+        const std::optional<int64_t> swapBufferTimestamp
+    );
     void InsertQueueSubmitBuffer(
         const int64_t queueSubmitBatchId,
         const uint64_t bufferIndex,
@@ -515,6 +521,7 @@ struct VulkanSqlitePreparedStatements
         const format::HandleId device,
         const uint32_t semaphoreType,
         const uint64_t initialValue,
+        const std::optional<int64_t> handleTypes,
         const uint64_t apiEventId
     );
     void InsertSemaphoreSignal(
@@ -1046,7 +1053,10 @@ struct VulkanSqlitePreparedStatements
     void InsertInstanceValidationDisabledCheck(const int64_t instanceId, const int64_t check);
 
     int64_t InsertDevice(
-        const uint64_t apiEventId, const format::HandleId device, const std::optional<int64_t> physicalDevice
+        const uint64_t apiEventId,
+        const format::HandleId device,
+        const std::optional<int64_t> physicalDevice,
+        const int64_t overallocationBehavior
     );
     void InsertDeviceEnabledLayer(const int64_t deviceId, const std::string_view layerName);
     void InsertDeviceEnabledExtension(const int64_t deviceId, const std::string_view extensionName);
@@ -1112,6 +1122,9 @@ struct VulkanSqlitePreparedStatements
         const int64_t clearColorId,
         const float clearDepth,
         const uint32_t clearStencil
+    );
+    void InsertRenderPassRecordingAttachment(
+        const int64_t renderPassRecordingId, const uint64_t idx, const int64_t imageViewId
     );
     void InsertRenderSubpassRecording(
         const uint64_t apiEventId, const int64_t renderPassRecordingId, const uint32_t contents
@@ -1488,7 +1501,10 @@ struct VulkanSqlitePreparedStatements
         const int64_t presentId, const size_t waitIndex, const std::optional<int64_t> semaphoreId
     );
     void InsertQueuePresentSwapchain(
-        const int64_t presentId, const std::optional<int64_t> swapchainId, const uint32_t imageIndex
+        const int64_t presentId,
+        const std::optional<int64_t> swapchainId,
+        const uint32_t imageIndex,
+        const std::optional<int64_t> fenceId
     );
 
     int64_t InsertRenderPass(

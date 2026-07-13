@@ -180,9 +180,11 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   handle INT NOT NULL,"
         "   physicalDeviceId INT,"
+        "   overallocationBehavior INT NOT NULL,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(physicalDeviceId) REFERENCES physicalDevices(id),"
+        "   FOREIGN KEY(overallocationBehavior) REFERENCES VkMemoryOverallocationBehaviorAMD(value),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
@@ -506,6 +508,16 @@ static void CreateRenderPassTables(sqlite3* db)
         "   clearStencil INT,"
         "   FOREIGN KEY(renderPassRecordingId) REFERENCES renderPassRecordings(id),"
         "   FOREIGN KEY(clearColorId) REFERENCES unionColors(id)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE renderPassRecordingAttachments("
+        "   renderPassRecordingId INT NOT NULL,"
+        "   idx INT NOT NULL,"
+        "   imageViewId INT NOT NULL,"
+        "   FOREIGN KEY(renderPassRecordingId) REFERENCES renderPassRecordings(id),"
+        "   FOREIGN KEY(imageViewId) REFERENCES imageViews(id)) STRICT;"
     );
 
     ExecSQL(

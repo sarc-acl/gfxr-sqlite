@@ -4642,7 +4642,23 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass(
         return;
     }
 
-    LogUnsupportedPNext(beginInfo->pNext);
+    const Decoded_VkRenderPassAttachmentBeginInfo* attachmentBeginInfo = nullptr;
+
+    auto pnext = beginInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkRenderPassAttachmentBeginInfo>())
+        {
+            attachmentBeginInfo = reinterpret_cast<const Decoded_VkRenderPassAttachmentBeginInfo*>(header);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+
+        pnext = header->pNext;
+    }
 
     std::optional<int64_t> renderPassId = context.GetRenderPassId(beginInfo->renderPass, true);
     std::optional<int64_t> framebufferId = context.GetFramebufferId(beginInfo->framebuffer);
@@ -4683,6 +4699,21 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass(
 
             statements.InsertRenderPassRecordingClearValues(renderPassRecordingId, i, clearColorId, clearDS.depth, clearDS.stencil);
 
+        }
+    }
+
+    if (attachmentBeginInfo != nullptr)
+    {
+        auto [attachmentsValid, attachments, attachmentsCount] = GetHandleArray(&attachmentBeginInfo->pAttachments);
+        if (attachmentsValid)
+        {
+            for (size_t i = 0; i < attachmentsCount; ++i) {
+                auto imageViewId = context.GetImageViewId(attachments[i]);
+                if (imageViewId.has_value())
+                {
+                    statements.InsertRenderPassRecordingAttachment(renderPassRecordingId, i, imageViewId.value());
+                }
+            }
         }
     }
 
@@ -5837,7 +5868,23 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2(
         return;
     }
 
-    LogUnsupportedPNext(beginInfo->pNext);
+    const Decoded_VkRenderPassAttachmentBeginInfo* attachmentBeginInfo = nullptr;
+
+    auto pnext = beginInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkRenderPassAttachmentBeginInfo>())
+        {
+            attachmentBeginInfo = reinterpret_cast<const Decoded_VkRenderPassAttachmentBeginInfo*>(header);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+
+        pnext = header->pNext;
+    }
 
     std::optional<int64_t> renderPassId = context.GetRenderPassId(beginInfo->renderPass, true);
     std::optional<int64_t> framebufferId = context.GetFramebufferId(beginInfo->framebuffer);
@@ -5878,6 +5925,21 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2(
 
             statements.InsertRenderPassRecordingClearValues(renderPassRecordingId, i, clearColorId, clearDS.depth, clearDS.stencil);
 
+        }
+    }
+
+    if (attachmentBeginInfo != nullptr)
+    {
+        auto [attachmentsValid, attachments, attachmentsCount] = GetHandleArray(&attachmentBeginInfo->pAttachments);
+        if (attachmentsValid)
+        {
+            for (size_t i = 0; i < attachmentsCount; ++i) {
+                auto imageViewId = context.GetImageViewId(attachments[i]);
+                if (imageViewId.has_value())
+                {
+                    statements.InsertRenderPassRecordingAttachment(renderPassRecordingId, i, imageViewId.value());
+                }
+            }
         }
     }
 
@@ -9431,7 +9493,23 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2KHR(
         return;
     }
 
-    LogUnsupportedPNext(beginInfo->pNext);
+    const Decoded_VkRenderPassAttachmentBeginInfo* attachmentBeginInfo = nullptr;
+
+    auto pnext = beginInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkRenderPassAttachmentBeginInfo>())
+        {
+            attachmentBeginInfo = reinterpret_cast<const Decoded_VkRenderPassAttachmentBeginInfo*>(header);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+
+        pnext = header->pNext;
+    }
 
     std::optional<int64_t> renderPassId = context.GetRenderPassId(beginInfo->renderPass, true);
     std::optional<int64_t> framebufferId = context.GetFramebufferId(beginInfo->framebuffer);
@@ -9472,6 +9550,21 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2KHR(
 
             statements.InsertRenderPassRecordingClearValues(renderPassRecordingId, i, clearColorId, clearDS.depth, clearDS.stencil);
 
+        }
+    }
+
+    if (attachmentBeginInfo != nullptr)
+    {
+        auto [attachmentsValid, attachments, attachmentsCount] = GetHandleArray(&attachmentBeginInfo->pAttachments);
+        if (attachmentsValid)
+        {
+            for (size_t i = 0; i < attachmentsCount; ++i) {
+                auto imageViewId = context.GetImageViewId(attachments[i]);
+                if (imageViewId.has_value())
+                {
+                    statements.InsertRenderPassRecordingAttachment(renderPassRecordingId, i, imageViewId.value());
+                }
+            }
         }
     }
 
