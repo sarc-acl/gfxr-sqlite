@@ -2873,7 +2873,28 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineVertexInputState(
     }
     else
     {
-        LogUnsupportedPNext(vertexInputStateInfo->pNext);
+        bool vertexBindingDivisorsValid = false;
+        const Decoded_VkVertexInputBindingDivisorDescription* vertexBindingDivisors = nullptr;
+        uint64_t vertexBindingDivisorsCount = 0;
+
+        auto pnext = vertexInputStateInfo->pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineVertexInputDivisorStateCreateInfo>())
+            {
+                const auto* divisorStateInfo =
+                    reinterpret_cast<const Decoded_VkPipelineVertexInputDivisorStateCreateInfo*>(header);
+                std::tie(vertexBindingDivisorsValid, vertexBindingDivisors, vertexBindingDivisorsCount) =
+                    GetMetaStructArray(divisorStateInfo->pVertexBindingDivisors);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
 
         auto vertexInputStateId = statements.InsertVertexInputState(pipelineId);
 
@@ -2889,7 +2910,15 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineVertexInputState(
                 auto binding = bindingDescription.decoded_value->binding;
                 auto stride = bindingDescription.decoded_value->stride;
                 auto inputRate = bindingDescription.decoded_value->inputRate;
-                uint32_t divisor = 1; // to support dynamic state overrides
+
+                // Defaults to 1 (no divisor override) when VkPipelineVertexInputDivisorStateCreateInfo is absent
+                // from the pNext chain, or doesn't cover this binding index.
+                uint32_t divisor = 1;
+                if (vertexBindingDivisorsValid && j < vertexBindingDivisorsCount)
+                {
+                    divisor = vertexBindingDivisors[j].decoded_value->divisor;
+                }
+
                 statements.InsertVertexInputStateBindingDescription(
                     vertexInputStateId, binding, stride, inputRate, divisor
                 );
