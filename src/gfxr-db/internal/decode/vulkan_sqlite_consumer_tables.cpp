@@ -296,9 +296,25 @@ static void CreateQueuePresentTables(sqlite3* db)
         "   queueId INT NOT NULL,"
         "   frameId INT NOT NULL,"
         "   apiEventId INT NOT NULL,"
+        "   persistent INT NOT NULL,"
         "   FOREIGN KEY(queueId) REFERENCES queues(id),"
         "   FOREIGN KEY(frameId) REFERENCES frames(id),"
         "   FOREIGN KEY(apiEventId) REFERENCES apiEvents(id)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE queuePresentRects("
+        "   queuePresentId INT NOT NULL,"
+        "   srcX INT NOT NULL,"
+        "   srcY INT NOT NULL,"
+        "   srcWidth INT NOT NULL,"
+        "   srcHeight INT NOT NULL,"
+        "   dstX INT NOT NULL,"
+        "   dstY INT NOT NULL,"
+        "   dstWidth INT NOT NULL,"
+        "   dstHeight INT NOT NULL,"
+        "   FOREIGN KEY(queuePresentId) REFERENCES queuePresents(id)) STRICT;"
     );
 
     ExecSQL(
@@ -314,13 +330,31 @@ static void CreateQueuePresentTables(sqlite3* db)
     ExecSQL(
         db,
         "CREATE TABLE queuePresentSwapchains("
+        "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   queuePresentId INT NOT NULL,"
         "   swapchainId INT,"
         "   imageIndex INT NOT NULL,"
         "   fenceId INT,"
+        "   vulkanPresentId INT,"
+        "   googlePresentId INT,"
+        "   desiredPresentTime INT,"
+        "   presentMode INT,"
         "   FOREIGN KEY(queuePresentId) REFERENCES queuePresents(id),"
         "   FOREIGN KEY(fenceId) REFERENCES fences(id),"
+        "   FOREIGN KEY(presentMode) REFERENCES VkPresentModeKHR(value),"
         "   FOREIGN KEY(swapchainId) REFERENCES swapchains(id)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE queuePresentSwapchainRegions("
+        "   queuePresentSwapchainId INT NOT NULL,"
+        "   x INT NOT NULL,"
+        "   y INT NOT NULL,"
+        "   width INT NOT NULL,"
+        "   height INT NOT NULL,"
+        "   layer INT NOT NULL,"
+        "   FOREIGN KEY(queuePresentSwapchainId) REFERENCES queuePresentSwapchains(id)) STRICT;"
     );
 }
 

@@ -1518,9 +1518,59 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         return;
     }
 
-    auto presentId = statements.InsertQueuePresent(queueIter->second, context.currentFrame, this->block_index_);
-
     auto [presentInfoValid, presentInfo] = GetMetaStructPointer(pPresentInfo);
+
+    const HandlePointerDecoder<VkFence>* pFences = nullptr;
+    const Decoded_VkDisplayPresentInfoKHR* displayPresentInfo = nullptr;
+    const Decoded_VkPresentIdKHR* presentIdInfo = nullptr;
+    const Decoded_VkPresentTimesInfoGOOGLE* presentTimesInfo = nullptr;
+    const Decoded_VkSwapchainPresentModeInfoKHR* presentModeInfo = nullptr;
+    const Decoded_VkPresentRegionsKHR* presentRegionsInfo = nullptr;
+
+    if (presentInfoValid)
+    {
+        auto pnext = presentInfo->pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkSwapchainPresentFenceInfoKHR>())
+            {
+                const auto* fenceInfo = reinterpret_cast<const Decoded_VkSwapchainPresentFenceInfoKHR*>(header);
+                pFences = &fenceInfo->pFences;
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkDisplayPresentInfoKHR>())
+            {
+                displayPresentInfo = reinterpret_cast<const Decoded_VkDisplayPresentInfoKHR*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPresentIdKHR>())
+            {
+                presentIdInfo = reinterpret_cast<const Decoded_VkPresentIdKHR*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPresentTimesInfoGOOGLE>())
+            {
+                presentTimesInfo = reinterpret_cast<const Decoded_VkPresentTimesInfoGOOGLE*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkSwapchainPresentModeInfoKHR>())
+            {
+                presentModeInfo = reinterpret_cast<const Decoded_VkSwapchainPresentModeInfoKHR*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPresentRegionsKHR>())
+            {
+                presentRegionsInfo = reinterpret_cast<const Decoded_VkPresentRegionsKHR*>(header);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
+    }
+
+    bool persistent = displayPresentInfo != nullptr && displayPresentInfo->decoded_value->persistent == VK_TRUE;
+    auto presentId =
+        statements.InsertQueuePresent(queueIter->second, context.currentFrame, this->block_index_, persistent);
+
     if (!presentInfoValid)
     {
         if (returnValue == VK_SUCCESS)
@@ -1530,23 +1580,21 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         return;
     }
 
-    const HandlePointerDecoder<VkFence>* pFences = nullptr;
-
-    auto pnext = presentInfo->pNext;
-    while (pnext != nullptr)
+    if (displayPresentInfo != nullptr)
     {
-        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
-        if (*header->sType == gfxrecon::util::GetSType<VkSwapchainPresentFenceInfoKHR>())
-        {
-            const auto* fenceInfo = reinterpret_cast<const Decoded_VkSwapchainPresentFenceInfoKHR*>(header);
-            pFences = &fenceInfo->pFences;
-        }
-        else
-        {
-            LogUnsupportedPNext(*header->sType);
-        }
-
-        pnext = header->pNext;
+        const auto& srcRect = displayPresentInfo->decoded_value->srcRect;
+        const auto& dstRect = displayPresentInfo->decoded_value->dstRect;
+        statements.InsertQueuePresentRect(
+            presentId,
+            srcRect.offset.x,
+            srcRect.offset.y,
+            srcRect.extent.width,
+            srcRect.extent.height,
+            dstRect.offset.x,
+            dstRect.offset.y,
+            dstRect.extent.width,
+            dstRect.extent.height
+        );
     }
 
     auto [fencesValid, fences, fencesCount] = GetHandleArray(pFences);
@@ -1562,11 +1610,25 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         }
     }
 
+    auto [presentIdsValid, presentIds, presentIdsCount] =
+        presentIdInfo != nullptr ? GetPointerArray(&presentIdInfo->pPresentIds)
+                                  : PointerArray<uint64_t>(false, nullptr, 0);
+
+    auto [presentTimesValid, presentTimes, presentTimesCount] =
+        GetMetaStructArray(presentTimesInfo != nullptr ? presentTimesInfo->pTimes : nullptr);
+
+    auto [presentModesValid, presentModes, presentModesCount] =
+        presentModeInfo != nullptr ? GetPointerArray(&presentModeInfo->pPresentModes)
+                                    : PointerArray<VkPresentModeKHR>(false, nullptr, 0);
+
+    auto [presentRegionsValid, presentRegions, presentRegionsCount] =
+        GetMetaStructArray(presentRegionsInfo != nullptr ? presentRegionsInfo->pRegions : nullptr);
+
     auto [swapchainsValid, swapchains, swapchainsCount] = GetHandleArray(&presentInfo->pSwapchains);
-    auto imageIndices = presentInfo->pImageIndices.GetPointer();
-    if (swapchainsValid && imageIndices != nullptr)
+    auto [imageIndicesValid, imageIndices, imageIndicesCount] = GetPointerArray(&presentInfo->pImageIndices);
+    if (swapchainsValid && imageIndicesValid)
     {
-        for (size_t i = 0; i < swapchainsCount; ++i)
+        for (size_t i = 0; i < swapchainsCount && i < imageIndicesCount; ++i)
         {
             auto swapchain = swapchains[i];
             auto swapchainId = context.GetSwapchainId(swapchain, true);
@@ -1576,7 +1638,59 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
             {
                 fenceId = context.GetFenceId(fences[i], true);
             }
-            statements.InsertQueuePresentSwapchain(presentId, swapchainId, imageIndex, fenceId);
+
+            std::optional<int64_t> vulkanPresentId = std::nullopt;
+            if (presentIdsValid && i < presentIdsCount)
+            {
+                vulkanPresentId = static_cast<int64_t>(presentIds[i]);
+            }
+
+            std::optional<int64_t> googlePresentId = std::nullopt;
+            std::optional<int64_t> desiredPresentTime = std::nullopt;
+            if (presentTimesValid && i < presentTimesCount)
+            {
+                const auto& presentTime = presentTimes[i];
+                googlePresentId = static_cast<int64_t>(presentTime.decoded_value->presentID);
+                desiredPresentTime = static_cast<int64_t>(presentTime.decoded_value->desiredPresentTime);
+            }
+
+            std::optional<int64_t> presentMode = std::nullopt;
+            if (presentModesValid && i < presentModesCount)
+            {
+                presentMode = static_cast<int64_t>(presentModes[i]);
+            }
+
+            auto queuePresentSwapchainId = statements.InsertQueuePresentSwapchain(
+                presentId,
+                swapchainId,
+                imageIndex,
+                fenceId,
+                vulkanPresentId,
+                googlePresentId,
+                desiredPresentTime,
+                presentMode
+            );
+
+            if (presentRegionsValid && i < presentRegionsCount)
+            {
+                const auto& region = presentRegions[i];
+                auto [rectsValid, rects, rectsCount] = GetMetaStructArray(region.pRectangles);
+                if (rectsValid)
+                {
+                    for (size_t j = 0; j < rectsCount; ++j)
+                    {
+                        const auto& rect = rects[j];
+                        statements.InsertQueuePresentSwapchainRegion(
+                            queuePresentSwapchainId,
+                            rect.decoded_value->offset.x,
+                            rect.decoded_value->offset.y,
+                            rect.decoded_value->extent.width,
+                            rect.decoded_value->extent.height,
+                            rect.decoded_value->layer
+                        );
+                    }
+                }
+            }
         }
     }
 }

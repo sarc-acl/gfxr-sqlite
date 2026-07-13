@@ -255,8 +255,10 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement renderSubpassSetAttachmentReferencePreserveUpdateStatement;
     SqliteStatement renderSubpassDependenciesInsertStatement;
     SqliteStatement queuePresentInsertStatement;
+    SqliteStatement queuePresentRectInsertStatement;
     SqliteStatement queuePresentSemaphoreWaitInsertStatement;
     SqliteStatement queuePresentSwapchainInsertStatement;
+    SqliteStatement queuePresentSwapchainRegionInsertStatement;
     SqliteStatement debugReportCallbackInsertStatement;
     SqliteStatement debugMessengerInsertStatement;
     SqliteStatement debugNameInsertStatement;
@@ -1496,15 +1498,40 @@ struct VulkanSqlitePreparedStatements
         const uint64_t apiEventId, const int64_t commandBufferRecordingId, const bool enable
     );
 
-    int64_t InsertQueuePresent(const int64_t queueId, const int64_t frame, const int64_t apiEventId);
+    int64_t InsertQueuePresent(
+        const int64_t queueId, const int64_t frame, const int64_t apiEventId, const bool persistent
+    );
+    void InsertQueuePresentRect(
+        const int64_t presentId,
+        const int32_t srcX,
+        const int32_t srcY,
+        const uint32_t srcWidth,
+        const uint32_t srcHeight,
+        const int32_t dstX,
+        const int32_t dstY,
+        const uint32_t dstWidth,
+        const uint32_t dstHeight
+    );
     void InsertQueuePresentSemaphoreWait(
         const int64_t presentId, const size_t waitIndex, const std::optional<int64_t> semaphoreId
     );
-    void InsertQueuePresentSwapchain(
+    int64_t InsertQueuePresentSwapchain(
         const int64_t presentId,
         const std::optional<int64_t> swapchainId,
         const uint32_t imageIndex,
-        const std::optional<int64_t> fenceId
+        const std::optional<int64_t> fenceId,
+        const std::optional<int64_t> vulkanPresentId,
+        const std::optional<int64_t> googlePresentId,
+        const std::optional<int64_t> desiredPresentTime,
+        const std::optional<int64_t> presentMode
+    );
+    void InsertQueuePresentSwapchainRegion(
+        const int64_t queuePresentSwapchainId,
+        const int32_t x,
+        const int32_t y,
+        const uint32_t width,
+        const uint32_t height,
+        const uint32_t layer
     );
 
     int64_t InsertRenderPass(
