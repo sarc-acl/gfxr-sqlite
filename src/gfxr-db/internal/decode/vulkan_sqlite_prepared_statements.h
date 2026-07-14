@@ -1517,6 +1517,7 @@ struct VulkanSqlitePreparedStatements
     );
     int64_t InsertQueuePresentSwapchain(
         const int64_t presentId,
+        const uint32_t idx,
         const std::optional<int64_t> swapchainId,
         const uint32_t imageIndex,
         const std::optional<int64_t> fenceId,

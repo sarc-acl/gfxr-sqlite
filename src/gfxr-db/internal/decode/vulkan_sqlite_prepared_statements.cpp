@@ -933,7 +933,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     );
     PrepareStatement(
         db,
-        "INSERT INTO queuePresentSwapchains VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);",
+        "INSERT INTO queuePresentSwapchains VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
         &queuePresentSwapchainInsertStatement
     );
     PrepareStatement(
@@ -3822,6 +3822,7 @@ void VulkanSqlitePreparedStatements::InsertQueuePresentSemaphoreWait(
 
 int64_t VulkanSqlitePreparedStatements::InsertQueuePresentSwapchain(
     const int64_t presentId,
+    const uint32_t idx,
     const std::optional<int64_t> swapchainId,
     uint32_t imageIndex,
     const std::optional<int64_t> fenceId,
@@ -3837,13 +3838,14 @@ int64_t VulkanSqlitePreparedStatements::InsertQueuePresentSwapchain(
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(queuePresentSwapchainId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(presentId)));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, swapchainId));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(imageIndex)));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, fenceId));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, vulkanPresentId));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, googlePresentId));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, desiredPresentTime));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 9, presentMode));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(idx)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 4, swapchainId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(imageIndex)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, fenceId));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, vulkanPresentId));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, googlePresentId));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 9, desiredPresentTime));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 10, presentMode));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return queuePresentSwapchainId;
 }

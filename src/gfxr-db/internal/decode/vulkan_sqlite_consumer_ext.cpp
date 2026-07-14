@@ -1662,6 +1662,7 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
 
             auto queuePresentSwapchainId = statements.InsertQueuePresentSwapchain(
                 presentId,
+                static_cast<uint32_t>(i),
                 swapchainId,
                 imageIndex,
                 fenceId,

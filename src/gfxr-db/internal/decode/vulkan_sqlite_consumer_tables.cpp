@@ -332,6 +332,7 @@ static void CreateQueuePresentTables(sqlite3* db)
         "CREATE TABLE queuePresentSwapchains("
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   queuePresentId INT NOT NULL,"
+        "   idx INT NOT NULL,"
         "   swapchainId INT,"
         "   imageIndex INT NOT NULL,"
         "   fenceId INT,"
