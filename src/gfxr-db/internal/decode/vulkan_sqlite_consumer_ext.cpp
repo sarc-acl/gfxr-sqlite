@@ -1733,11 +1733,28 @@ void VulkanSqliteConsumerExt::Process_vkCreateFence(
         return;
     }
 
-    LogUnsupportedPNext(createInfo->pNext);
+    std::optional<int64_t> handleTypes = std::nullopt;
+
+    auto pnext = createInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkExportFenceCreateInfo>())
+        {
+            const auto* pExportFenceCreateInfo = reinterpret_cast<const Decoded_VkExportFenceCreateInfo*>(header);
+            handleTypes = static_cast<int64_t>(pExportFenceCreateInfo->decoded_value->handleTypes);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+
+        pnext = header->pNext;
+    }
 
     auto flags = createInfo->decoded_value->flags;
 
-    auto fenceId = statements.InsertFence(fence, device, flags, this->block_index_);
+    auto fenceId = statements.InsertFence(fence, device, flags, handleTypes, this->block_index_);
 
     statements.InsertFenceSyncScope(ToInt64(fence), fenceId, this->block_index_);
 }

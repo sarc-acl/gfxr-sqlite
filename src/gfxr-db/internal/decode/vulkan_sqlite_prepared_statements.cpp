@@ -994,7 +994,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(
         db, "INSERT INTO queueSubmitSemaphoreSignals VALUES (?, ?, ?, ?);", &queueSubmitSemaphoreSignalInsertStatement
     );
-    PrepareStatement(db, "INSERT INTO fences VALUES (?, ?, ?, ?, ?, NULL);", &fenceInsertStatement);
+    PrepareStatement(db, "INSERT INTO fences VALUES (?, ?, ?, ?, ?, ?, NULL);", &fenceInsertStatement);
     PrepareStatement(db, "INSERT INTO fenceSyncScopes VALUES (?, ?, ?, NULL, NULL);", &fenceSyncScopeInsertStatement);
     PrepareStatement(
         db,
@@ -5390,7 +5390,11 @@ void VulkanSqlitePreparedStatements::InsertQueueSubmitSemaphoreSignal(
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertFence(
-    const format::HandleId fence, const format::HandleId device, const uint32_t flags, const uint64_t apiEventId
+    const format::HandleId fence,
+    const format::HandleId device,
+    const uint32_t flags,
+    const std::optional<int64_t> handleTypes,
+    const uint64_t apiEventId
 )
 {
     auto fenceHandle = ToInt64(fence);
@@ -5403,7 +5407,8 @@ int64_t VulkanSqlitePreparedStatements::InsertFence(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(fenceHandle)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, deviceId));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, handleTypes));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return fenceId;
 }

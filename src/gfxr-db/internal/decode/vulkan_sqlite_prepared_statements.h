@@ -513,7 +513,11 @@ struct VulkanSqlitePreparedStatements
         const std::optional<int64_t> semaphoreId
     );
     int64_t InsertFence(
-        const format::HandleId fence, const format::HandleId device, const uint32_t flags, const uint64_t apiEventId
+        const format::HandleId fence,
+        const format::HandleId device,
+        const uint32_t flags,
+        const std::optional<int64_t> handleTypes,
+        const uint64_t apiEventId
     );
     void InsertFenceSyncScope(const int64_t fenceHandle, const int64_t fenceId, const uint64_t apiEventId);
     void ResetFenceSyncScope(const int64_t instanceId, const uint64_t apiEventId);
