@@ -1522,6 +1522,7 @@ static void CreateBufferTables(sqlite3* db)
         "   subresourceRangeBaseLayer INT NOT NULL,"
         "   subresourceRangeLayerCount INT NOT NULL,"
         "   usage INT,"
+        "   samplerYcbcrConversionId INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(deviceId) REFERENCES devices(id),"
@@ -1531,6 +1532,7 @@ static void CreateBufferTables(sqlite3* db)
         "   FOREIGN KEY(componentG) REFERENCES VkComponentSwizzle(value),"
         "   FOREIGN KEY(componentB) REFERENCES VkComponentSwizzle(value),"
         "   FOREIGN KEY(componentA) REFERENCES VkComponentSwizzle(value),"
+        "   FOREIGN KEY(samplerYcbcrConversionId) REFERENCES samplerYcbcrConversions(id),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
@@ -1557,6 +1559,7 @@ static void CreateBufferTables(sqlite3* db)
         "   maxLod REAL NOT NULL,"
         "   borderColor INT,"
         "   unnormalizedCoordinates INT NOT NULL,"
+        "   samplerYcbcrConversionId INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(deviceId) REFERENCES devices(id),"
@@ -1571,6 +1574,7 @@ static void CreateBufferTables(sqlite3* db)
         "   FOREIGN KEY(compareOp) REFERENCES VkCompareOp(value),"
         "   FOREIGN KEY(borderColor) REFERENCES VkBorderColor(value),"
         "   FOREIGN KEY(unnormalizedCoordinates) REFERENCES VkBool32(value),"
+        "   FOREIGN KEY(samplerYcbcrConversionId) REFERENCES samplerYcbcrConversions(id),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );

@@ -444,12 +444,12 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(db, "INSERT INTO imageViewFormats VALUES (?, ?);", &imageViewFormatInsertStatement);
     PrepareStatement(
         db,
-        "INSERT INTO imageViews VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
+        "INSERT INTO imageViews VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &imageViewInsertStatement
     );
     PrepareStatement(
         db,
-        "INSERT INTO samplers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
+        "INSERT INTO samplers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &samplerInsertStatement
     );
     PrepareStatement(
@@ -4294,6 +4294,7 @@ void VulkanSqlitePreparedStatements::InsertImageView(
     const VkComponentMapping& components,
     const VkImageSubresourceRange& srRange,
     const std::optional<int64_t> usage,
+    const std::optional<int64_t> samplerYcbcrConversionId,
     const uint64_t apiEventId
 )
 {
@@ -4321,7 +4322,8 @@ void VulkanSqlitePreparedStatements::InsertImageView(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 15, static_cast<sqlite_int64>(srRange.baseArrayLayer)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(srRange.layerCount)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 17, usage));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 18, samplerYcbcrConversionId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 19, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
@@ -4344,6 +4346,7 @@ void VulkanSqlitePreparedStatements::InsertSampler(
     const float maxLod,
     const std::optional<int64_t> borderColor,
     const VkBool32 unnormalizedCoordinates,
+    const std::optional<int64_t> samplerYcbcrConversionId,
     const uint64_t apiEventId
 )
 {
@@ -4373,7 +4376,8 @@ void VulkanSqlitePreparedStatements::InsertSampler(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 17, maxLod));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 18, borderColor));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 19, static_cast<sqlite_int64>(unnormalizedCoordinates)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 20, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 20, samplerYcbcrConversionId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 21, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 

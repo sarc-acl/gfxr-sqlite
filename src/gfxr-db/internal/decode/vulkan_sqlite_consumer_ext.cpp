@@ -7783,6 +7783,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
     // pNext chain can override it with a (typically narrower) subset. Leave the column NULL when absent so the UI
     // reflects "inherited from image" rather than a misleading explicit value.
     std::optional<int64_t> usage = std::nullopt;
+    std::optional<int64_t> samplerYcbcrConversionId = std::nullopt;
 
     auto pnext = createInfo->pNext;
     while (pnext != nullptr)
@@ -7792,6 +7793,11 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         {
             const auto* pUsage = reinterpret_cast<const Decoded_VkImageViewUsageCreateInfo*>(header);
             usage = static_cast<int64_t>(pUsage->decoded_value->usage);
+        }
+        else if (*header->sType == gfxrecon::util::GetSType<VkSamplerYcbcrConversionInfo>())
+        {
+            const auto* pYcbcrInfo = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionInfo*>(header);
+            samplerYcbcrConversionId = context.GetSamplerYcbcrConversionId(pYcbcrInfo->conversion);
         }
         else
         {
@@ -7813,6 +7819,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         ci.components,
         ci.subresourceRange,
         usage,
+        samplerYcbcrConversionId,
         this->block_index_
     );
 }
@@ -7865,7 +7872,23 @@ void VulkanSqliteConsumerExt::Process_vkCreateSampler(
         return;
     }
 
-    LogUnsupportedPNext(createInfo->pNext);
+    std::optional<int64_t> samplerYcbcrConversionId = std::nullopt;
+
+    auto pnext = createInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkSamplerYcbcrConversionInfo>())
+        {
+            const auto* pYcbcrInfo = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionInfo*>(header);
+            samplerYcbcrConversionId = context.GetSamplerYcbcrConversionId(pYcbcrInfo->conversion);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+        pnext = header->pNext;
+    }
 
     auto& ci = *createInfo->decoded_value;
 
@@ -7899,6 +7922,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSampler(
         ci.maxLod,
         borderColor,
         ci.unnormalizedCoordinates,
+        samplerYcbcrConversionId,
         this->block_index_
     );
 }

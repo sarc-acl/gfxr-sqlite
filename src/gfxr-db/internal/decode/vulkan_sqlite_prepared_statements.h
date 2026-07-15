@@ -1687,6 +1687,7 @@ struct VulkanSqlitePreparedStatements
         const VkComponentMapping& components,
         const VkImageSubresourceRange& srRange,
         const std::optional<int64_t> usage,
+        const std::optional<int64_t> samplerYcbcrConversionId,
         const uint64_t apiEventId
     );
 
@@ -1709,6 +1710,7 @@ struct VulkanSqlitePreparedStatements
         const float maxLod,
         const std::optional<int64_t> borderColor,
         const VkBool32 unnormalizedCoordinates,
+        const std::optional<int64_t> samplerYcbcrConversionId,
         const uint64_t apiEventId
     );
 

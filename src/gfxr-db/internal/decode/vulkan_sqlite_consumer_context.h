@@ -784,6 +784,13 @@ struct VulkanSqliteConsumerContext final
         return GetId(image, samplerHandleToId, "sampler", allowNull);
     }
 
+    std::optional<int64_t> GetSamplerYcbcrConversionId(
+        format::HandleId samplerYcbcrConversion, bool allowNull = false
+    ) const
+    {
+        return GetId(samplerYcbcrConversion, samplerYcbcrConversionHandleToId, "sampler ycbcr conversion", allowNull);
+    }
+
     std::optional<int64_t> GetAccelerationStructureId(
         format::HandleId accelerationStructure, bool allowNull = false
     ) const
