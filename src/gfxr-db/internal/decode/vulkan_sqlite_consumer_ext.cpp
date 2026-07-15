@@ -693,7 +693,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
                 std::tie(disabledValidationChecksValid, disabledValidationChecks, disabledValidationChecksCount) =
                     GetPointerArray(&pValidationFlagsExt->pDisabledValidationChecks);
             }
-            else if (*header->sType == gfxrecon::util::GetSType(VkDebugUtilsMessengerCreateInfoEXT))
+            else if (*header->sType == gfxrecon::util::GetSType<VkDebugUtilsMessengerCreateInfoEXT>())
             {
                 // No current reason to track this information as the callback is only valid for the
                 // duration of the VkCreateInstance call, just skip it so we don't warn about it
@@ -7788,6 +7788,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
     // reflects "inherited from image" rather than a misleading explicit value.
     std::optional<int64_t> usage = std::nullopt;
     std::optional<int64_t> samplerYcbcrConversionId = std::nullopt;
+    std::optional<int64_t> astcDecodeMode = std::nullopt;
 
     auto pnext = createInfo->pNext;
     while (pnext != nullptr)
@@ -7802,6 +7803,11 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         {
             const auto* pYcbcrInfo = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionInfo*>(header);
             samplerYcbcrConversionId = context.GetSamplerYcbcrConversionId(pYcbcrInfo->conversion);
+        }
+        else if (*header->sType == gfxrecon::util::GetSType<VkImageViewASTCDecodeModeEXT>())
+        {
+            const auto* pAstcDecodeMode = reinterpret_cast<const Decoded_VkImageViewASTCDecodeModeEXT*>(header);
+            astcDecodeMode = static_cast<int64_t>(pAstcDecodeMode->decoded_value->decodeMode);
         }
         else
         {
@@ -7824,6 +7830,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         ci.subresourceRange,
         usage,
         samplerYcbcrConversionId,
+        astcDecodeMode,
         this->block_index_
     );
 }

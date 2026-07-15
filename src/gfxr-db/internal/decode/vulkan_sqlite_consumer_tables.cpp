@@ -1523,6 +1523,7 @@ static void CreateBufferTables(sqlite3* db)
         "   subresourceRangeLayerCount INT NOT NULL,"
         "   usage INT,"
         "   samplerYcbcrConversionId INT,"
+        "   astcDecodeMode INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
         "   FOREIGN KEY(deviceId) REFERENCES devices(id),"
@@ -1533,6 +1534,7 @@ static void CreateBufferTables(sqlite3* db)
         "   FOREIGN KEY(componentB) REFERENCES VkComponentSwizzle(value),"
         "   FOREIGN KEY(componentA) REFERENCES VkComponentSwizzle(value),"
         "   FOREIGN KEY(samplerYcbcrConversionId) REFERENCES samplerYcbcrConversions(id),"
+        "   FOREIGN KEY(astcDecodeMode) REFERENCES VkFormat(value),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );

@@ -1688,6 +1688,7 @@ struct VulkanSqlitePreparedStatements
         const VkImageSubresourceRange& srRange,
         const std::optional<int64_t> usage,
         const std::optional<int64_t> samplerYcbcrConversionId,
+        const std::optional<int64_t> astcDecodeMode,
         const uint64_t apiEventId
     );
 
