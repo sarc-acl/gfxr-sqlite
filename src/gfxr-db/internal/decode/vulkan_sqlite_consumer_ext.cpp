@@ -693,6 +693,11 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
                 std::tie(disabledValidationChecksValid, disabledValidationChecks, disabledValidationChecksCount) =
                     GetPointerArray(&pValidationFlagsExt->pDisabledValidationChecks);
             }
+            else if (*header->sType == gfxrecon::util::GetSType(VkDebugUtilsMessengerCreateInfoEXT))
+            {
+                // No current reason to track this information as the callback is only valid for the
+                // duration of the VkCreateInstance call, just skip it so we don't warn about it
+            }
             else
             {
                 LogUnsupportedPNext(*header->sType);
@@ -1610,16 +1615,16 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         }
     }
 
-    auto [presentIdsValid, presentIds, presentIdsCount] =
-        presentIdInfo != nullptr ? GetPointerArray(&presentIdInfo->pPresentIds)
-                                  : PointerArray<uint64_t>(false, nullptr, 0);
+    auto [presentIdsValid, presentIds, presentIdsCount] = presentIdInfo != nullptr
+        ? GetPointerArray(&presentIdInfo->pPresentIds)
+        : PointerArray<uint64_t>(false, nullptr, 0);
 
     auto [presentTimesValid, presentTimes, presentTimesCount] =
         GetMetaStructArray(presentTimesInfo != nullptr ? presentTimesInfo->pTimes : nullptr);
 
-    auto [presentModesValid, presentModes, presentModesCount] =
-        presentModeInfo != nullptr ? GetPointerArray(&presentModeInfo->pPresentModes)
-                                    : PointerArray<VkPresentModeKHR>(false, nullptr, 0);
+    auto [presentModesValid, presentModes, presentModesCount] = presentModeInfo != nullptr
+        ? GetPointerArray(&presentModeInfo->pPresentModes)
+        : PointerArray<VkPresentModeKHR>(false, nullptr, 0);
 
     auto [presentRegionsValid, presentRegions, presentRegionsCount] =
         GetMetaStructArray(presentRegionsInfo != nullptr ? presentRegionsInfo->pRegions : nullptr);
@@ -4317,10 +4322,9 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, shaderLibrary->second.pipelineId);
             }
-            else if (
-                auto outputLibrary = libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
-                outputLibrary != libraries.end()
-            )
+            else if (auto outputLibrary =
+                         libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
+                     outputLibrary != libraries.end())
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, outputLibrary->second.pipelineId);
             }
