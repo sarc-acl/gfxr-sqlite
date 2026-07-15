@@ -698,6 +698,11 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
                 // No current reason to track this information as the callback is only valid for the
                 // duration of the VkCreateInstance call, just skip it so we don't warn about it
             }
+            else if (*header->sType == gfxrecon::util::GetSType<VkDebugReportCallbackCreateInfoEXT>())
+            {
+                // No current reason to track this information as the callback is only valid for the
+                // duration of the VkCreateInstance call, just skip it so we don't warn about it
+            }
             else
             {
                 LogUnsupportedPNext(*header->sType);
