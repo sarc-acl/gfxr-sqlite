@@ -447,6 +447,7 @@ struct VulkanSqliteConsumerContext final
     int64_t currentQueueSubmissionId = 0;
     int64_t currentQueueSubmissionBatchId = 0;
     int64_t currentQueuePresentId = 0;
+    int64_t currentQueuePresentSwapchainId = 0;
 
     int64_t currentFramebufferId = 0;
     std::map<int64_t, int64_t> framebufferHandleToId;
@@ -781,6 +782,13 @@ struct VulkanSqliteConsumerContext final
     std::optional<int64_t> GetSamplerId(format::HandleId image, bool allowNull = false) const
     {
         return GetId(image, samplerHandleToId, "sampler", allowNull);
+    }
+
+    std::optional<int64_t> GetSamplerYcbcrConversionId(
+        format::HandleId samplerYcbcrConversion, bool allowNull = false
+    ) const
+    {
+        return GetId(samplerYcbcrConversion, samplerYcbcrConversionHandleToId, "sampler ycbcr conversion", allowNull);
     }
 
     std::optional<int64_t> GetAccelerationStructureId(

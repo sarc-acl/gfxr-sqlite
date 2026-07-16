@@ -693,6 +693,16 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
                 std::tie(disabledValidationChecksValid, disabledValidationChecks, disabledValidationChecksCount) =
                     GetPointerArray(&pValidationFlagsExt->pDisabledValidationChecks);
             }
+            else if (*header->sType == gfxrecon::util::GetSType<VkDebugUtilsMessengerCreateInfoEXT>())
+            {
+                // No current reason to track this information as the callback is only valid for the
+                // duration of the VkCreateInstance call, just skip it so we don't warn about it
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkDebugReportCallbackCreateInfoEXT>())
+            {
+                // No current reason to track this information as the callback is only valid for the
+                // duration of the VkCreateInstance call, just skip it so we don't warn about it
+            }
             else
             {
                 LogUnsupportedPNext(*header->sType);
@@ -1518,9 +1528,59 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         return;
     }
 
-    auto presentId = statements.InsertQueuePresent(queueIter->second, context.currentFrame, this->block_index_);
-
     auto [presentInfoValid, presentInfo] = GetMetaStructPointer(pPresentInfo);
+
+    const HandlePointerDecoder<VkFence>* pFences = nullptr;
+    const Decoded_VkDisplayPresentInfoKHR* displayPresentInfo = nullptr;
+    const Decoded_VkPresentIdKHR* presentIdInfo = nullptr;
+    const Decoded_VkPresentTimesInfoGOOGLE* presentTimesInfo = nullptr;
+    const Decoded_VkSwapchainPresentModeInfoKHR* presentModeInfo = nullptr;
+    const Decoded_VkPresentRegionsKHR* presentRegionsInfo = nullptr;
+
+    if (presentInfoValid)
+    {
+        auto pnext = presentInfo->pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkSwapchainPresentFenceInfoKHR>())
+            {
+                const auto* fenceInfo = reinterpret_cast<const Decoded_VkSwapchainPresentFenceInfoKHR*>(header);
+                pFences = &fenceInfo->pFences;
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkDisplayPresentInfoKHR>())
+            {
+                displayPresentInfo = reinterpret_cast<const Decoded_VkDisplayPresentInfoKHR*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPresentIdKHR>())
+            {
+                presentIdInfo = reinterpret_cast<const Decoded_VkPresentIdKHR*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPresentTimesInfoGOOGLE>())
+            {
+                presentTimesInfo = reinterpret_cast<const Decoded_VkPresentTimesInfoGOOGLE*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkSwapchainPresentModeInfoKHR>())
+            {
+                presentModeInfo = reinterpret_cast<const Decoded_VkSwapchainPresentModeInfoKHR*>(header);
+            }
+            else if (*header->sType == gfxrecon::util::GetSType<VkPresentRegionsKHR>())
+            {
+                presentRegionsInfo = reinterpret_cast<const Decoded_VkPresentRegionsKHR*>(header);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
+    }
+
+    bool persistent = displayPresentInfo != nullptr && displayPresentInfo->decoded_value->persistent == VK_TRUE;
+    auto presentId =
+        statements.InsertQueuePresent(queueIter->second, context.currentFrame, this->block_index_, persistent);
+
     if (!presentInfoValid)
     {
         if (returnValue == VK_SUCCESS)
@@ -1530,23 +1590,21 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         return;
     }
 
-    const HandlePointerDecoder<VkFence>* pFences = nullptr;
-
-    auto pnext = presentInfo->pNext;
-    while (pnext != nullptr)
+    if (displayPresentInfo != nullptr)
     {
-        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
-        if (*header->sType == gfxrecon::util::GetSType<VkSwapchainPresentFenceInfoKHR>())
-        {
-            const auto* fenceInfo = reinterpret_cast<const Decoded_VkSwapchainPresentFenceInfoKHR*>(header);
-            pFences = &fenceInfo->pFences;
-        }
-        else
-        {
-            LogUnsupportedPNext(*header->sType);
-        }
-
-        pnext = header->pNext;
+        const auto& srcRect = displayPresentInfo->decoded_value->srcRect;
+        const auto& dstRect = displayPresentInfo->decoded_value->dstRect;
+        statements.InsertQueuePresentRect(
+            presentId,
+            srcRect.offset.x,
+            srcRect.offset.y,
+            srcRect.extent.width,
+            srcRect.extent.height,
+            dstRect.offset.x,
+            dstRect.offset.y,
+            dstRect.extent.width,
+            dstRect.extent.height
+        );
     }
 
     auto [fencesValid, fences, fencesCount] = GetHandleArray(pFences);
@@ -1562,11 +1620,25 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
         }
     }
 
+    auto [presentIdsValid, presentIds, presentIdsCount] = presentIdInfo != nullptr
+        ? GetPointerArray(&presentIdInfo->pPresentIds)
+        : PointerArray<uint64_t>(false, nullptr, 0);
+
+    auto [presentTimesValid, presentTimes, presentTimesCount] =
+        GetMetaStructArray(presentTimesInfo != nullptr ? presentTimesInfo->pTimes : nullptr);
+
+    auto [presentModesValid, presentModes, presentModesCount] = presentModeInfo != nullptr
+        ? GetPointerArray(&presentModeInfo->pPresentModes)
+        : PointerArray<VkPresentModeKHR>(false, nullptr, 0);
+
+    auto [presentRegionsValid, presentRegions, presentRegionsCount] =
+        GetMetaStructArray(presentRegionsInfo != nullptr ? presentRegionsInfo->pRegions : nullptr);
+
     auto [swapchainsValid, swapchains, swapchainsCount] = GetHandleArray(&presentInfo->pSwapchains);
-    auto imageIndices = presentInfo->pImageIndices.GetPointer();
-    if (swapchainsValid && imageIndices != nullptr)
+    auto [imageIndicesValid, imageIndices, imageIndicesCount] = GetPointerArray(&presentInfo->pImageIndices);
+    if (swapchainsValid && imageIndicesValid)
     {
-        for (size_t i = 0; i < swapchainsCount; ++i)
+        for (size_t i = 0; i < swapchainsCount && i < imageIndicesCount; ++i)
         {
             auto swapchain = swapchains[i];
             auto swapchainId = context.GetSwapchainId(swapchain, true);
@@ -1576,7 +1648,60 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
             {
                 fenceId = context.GetFenceId(fences[i], true);
             }
-            statements.InsertQueuePresentSwapchain(presentId, swapchainId, imageIndex, fenceId);
+
+            std::optional<int64_t> vulkanPresentId = std::nullopt;
+            if (presentIdsValid && i < presentIdsCount)
+            {
+                vulkanPresentId = static_cast<int64_t>(presentIds[i]);
+            }
+
+            std::optional<int64_t> googlePresentId = std::nullopt;
+            std::optional<int64_t> desiredPresentTime = std::nullopt;
+            if (presentTimesValid && i < presentTimesCount)
+            {
+                const auto& presentTime = presentTimes[i];
+                googlePresentId = static_cast<int64_t>(presentTime.decoded_value->presentID);
+                desiredPresentTime = static_cast<int64_t>(presentTime.decoded_value->desiredPresentTime);
+            }
+
+            std::optional<int64_t> presentMode = std::nullopt;
+            if (presentModesValid && i < presentModesCount)
+            {
+                presentMode = static_cast<int64_t>(presentModes[i]);
+            }
+
+            auto queuePresentSwapchainId = statements.InsertQueuePresentSwapchain(
+                presentId,
+                static_cast<uint32_t>(i),
+                swapchainId,
+                imageIndex,
+                fenceId,
+                vulkanPresentId,
+                googlePresentId,
+                desiredPresentTime,
+                presentMode
+            );
+
+            if (presentRegionsValid && i < presentRegionsCount)
+            {
+                const auto& region = presentRegions[i];
+                auto [rectsValid, rects, rectsCount] = GetMetaStructArray(region.pRectangles);
+                if (rectsValid)
+                {
+                    for (size_t j = 0; j < rectsCount; ++j)
+                    {
+                        const auto& rect = rects[j];
+                        statements.InsertQueuePresentSwapchainRegion(
+                            queuePresentSwapchainId,
+                            rect.decoded_value->offset.x,
+                            rect.decoded_value->offset.y,
+                            rect.decoded_value->extent.width,
+                            rect.decoded_value->extent.height,
+                            rect.decoded_value->layer
+                        );
+                    }
+                }
+            }
         }
     }
 }
@@ -1613,11 +1738,28 @@ void VulkanSqliteConsumerExt::Process_vkCreateFence(
         return;
     }
 
-    LogUnsupportedPNext(createInfo->pNext);
+    std::optional<int64_t> handleTypes = std::nullopt;
+
+    auto pnext = createInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkExportFenceCreateInfo>())
+        {
+            const auto* pExportFenceCreateInfo = reinterpret_cast<const Decoded_VkExportFenceCreateInfo*>(header);
+            handleTypes = static_cast<int64_t>(pExportFenceCreateInfo->decoded_value->handleTypes);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+
+        pnext = header->pNext;
+    }
 
     auto flags = createInfo->decoded_value->flags;
 
-    auto fenceId = statements.InsertFence(fence, device, flags, this->block_index_);
+    auto fenceId = statements.InsertFence(fence, device, flags, handleTypes, this->block_index_);
 
     statements.InsertFenceSyncScope(ToInt64(fence), fenceId, this->block_index_);
 }
@@ -2759,7 +2901,28 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineVertexInputState(
     }
     else
     {
-        LogUnsupportedPNext(vertexInputStateInfo->pNext);
+        bool vertexBindingDivisorsValid = false;
+        const Decoded_VkVertexInputBindingDivisorDescription* vertexBindingDivisors = nullptr;
+        uint64_t vertexBindingDivisorsCount = 0;
+
+        auto pnext = vertexInputStateInfo->pNext;
+        while (pnext != nullptr)
+        {
+            auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+            if (*header->sType == gfxrecon::util::GetSType<VkPipelineVertexInputDivisorStateCreateInfo>())
+            {
+                const auto* divisorStateInfo =
+                    reinterpret_cast<const Decoded_VkPipelineVertexInputDivisorStateCreateInfo*>(header);
+                std::tie(vertexBindingDivisorsValid, vertexBindingDivisors, vertexBindingDivisorsCount) =
+                    GetMetaStructArray(divisorStateInfo->pVertexBindingDivisors);
+            }
+            else
+            {
+                LogUnsupportedPNext(*header->sType);
+            }
+
+            pnext = header->pNext;
+        }
 
         auto vertexInputStateId = statements.InsertVertexInputState(pipelineId);
 
@@ -2775,7 +2938,15 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineVertexInputState(
                 auto binding = bindingDescription.decoded_value->binding;
                 auto stride = bindingDescription.decoded_value->stride;
                 auto inputRate = bindingDescription.decoded_value->inputRate;
-                uint32_t divisor = 1; // to support dynamic state overrides
+
+                // Defaults to 1 (no divisor override) when VkPipelineVertexInputDivisorStateCreateInfo is absent
+                // from the pNext chain, or doesn't cover this binding index.
+                uint32_t divisor = 1;
+                if (vertexBindingDivisorsValid && j < vertexBindingDivisorsCount)
+                {
+                    divisor = vertexBindingDivisors[j].decoded_value->divisor;
+                }
+
                 statements.InsertVertexInputStateBindingDescription(
                     vertexInputStateId, binding, stride, inputRate, divisor
                 );
@@ -4173,10 +4344,9 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, shaderLibrary->second.pipelineId);
             }
-            else if (
-                auto outputLibrary = libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
-                outputLibrary != libraries.end()
-            )
+            else if (auto outputLibrary =
+                         libraries.find(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT);
+                     outputLibrary != libraries.end())
             {
                 multisampleStateId = CopyGraphicsPipelineMultisampleState(pipelineId, outputLibrary->second.pipelineId);
             }
@@ -7639,6 +7809,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
     // pNext chain can override it with a (typically narrower) subset. Leave the column NULL when absent so the UI
     // reflects "inherited from image" rather than a misleading explicit value.
     std::optional<int64_t> usage = std::nullopt;
+    std::optional<int64_t> samplerYcbcrConversionId = std::nullopt;
+    std::optional<int64_t> astcDecodeMode = std::nullopt;
 
     auto pnext = createInfo->pNext;
     while (pnext != nullptr)
@@ -7648,6 +7820,16 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         {
             const auto* pUsage = reinterpret_cast<const Decoded_VkImageViewUsageCreateInfo*>(header);
             usage = static_cast<int64_t>(pUsage->decoded_value->usage);
+        }
+        else if (*header->sType == gfxrecon::util::GetSType<VkSamplerYcbcrConversionInfo>())
+        {
+            const auto* pYcbcrInfo = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionInfo*>(header);
+            samplerYcbcrConversionId = context.GetSamplerYcbcrConversionId(pYcbcrInfo->conversion);
+        }
+        else if (*header->sType == gfxrecon::util::GetSType<VkImageViewASTCDecodeModeEXT>())
+        {
+            const auto* pAstcDecodeMode = reinterpret_cast<const Decoded_VkImageViewASTCDecodeModeEXT*>(header);
+            astcDecodeMode = static_cast<int64_t>(pAstcDecodeMode->decoded_value->decodeMode);
         }
         else
         {
@@ -7669,6 +7851,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
         ci.components,
         ci.subresourceRange,
         usage,
+        samplerYcbcrConversionId,
+        astcDecodeMode,
         this->block_index_
     );
 }
@@ -7721,7 +7905,23 @@ void VulkanSqliteConsumerExt::Process_vkCreateSampler(
         return;
     }
 
-    LogUnsupportedPNext(createInfo->pNext);
+    std::optional<int64_t> samplerYcbcrConversionId = std::nullopt;
+
+    auto pnext = createInfo->pNext;
+    while (pnext != nullptr)
+    {
+        auto header = reinterpret_cast<const VulkanMetaStructHeader*>(pnext->GetMetaStructPointer());
+        if (*header->sType == gfxrecon::util::GetSType<VkSamplerYcbcrConversionInfo>())
+        {
+            const auto* pYcbcrInfo = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionInfo*>(header);
+            samplerYcbcrConversionId = context.GetSamplerYcbcrConversionId(pYcbcrInfo->conversion);
+        }
+        else
+        {
+            LogUnsupportedPNext(*header->sType);
+        }
+        pnext = header->pNext;
+    }
 
     auto& ci = *createInfo->decoded_value;
 
@@ -7755,6 +7955,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSampler(
         ci.maxLod,
         borderColor,
         ci.unnormalizedCoordinates,
+        samplerYcbcrConversionId,
         this->block_index_
     );
 }

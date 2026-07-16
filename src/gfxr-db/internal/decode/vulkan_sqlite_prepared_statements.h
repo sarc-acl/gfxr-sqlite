@@ -255,8 +255,10 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement renderSubpassSetAttachmentReferencePreserveUpdateStatement;
     SqliteStatement renderSubpassDependenciesInsertStatement;
     SqliteStatement queuePresentInsertStatement;
+    SqliteStatement queuePresentRectInsertStatement;
     SqliteStatement queuePresentSemaphoreWaitInsertStatement;
     SqliteStatement queuePresentSwapchainInsertStatement;
+    SqliteStatement queuePresentSwapchainRegionInsertStatement;
     SqliteStatement debugReportCallbackInsertStatement;
     SqliteStatement debugMessengerInsertStatement;
     SqliteStatement debugNameInsertStatement;
@@ -511,7 +513,11 @@ struct VulkanSqlitePreparedStatements
         const std::optional<int64_t> semaphoreId
     );
     int64_t InsertFence(
-        const format::HandleId fence, const format::HandleId device, const uint32_t flags, const uint64_t apiEventId
+        const format::HandleId fence,
+        const format::HandleId device,
+        const uint32_t flags,
+        const std::optional<int64_t> handleTypes,
+        const uint64_t apiEventId
     );
     void InsertFenceSyncScope(const int64_t fenceHandle, const int64_t fenceId, const uint64_t apiEventId);
     void ResetFenceSyncScope(const int64_t instanceId, const uint64_t apiEventId);
@@ -1496,15 +1502,41 @@ struct VulkanSqlitePreparedStatements
         const uint64_t apiEventId, const int64_t commandBufferRecordingId, const bool enable
     );
 
-    int64_t InsertQueuePresent(const int64_t queueId, const int64_t frame, const int64_t apiEventId);
+    int64_t InsertQueuePresent(
+        const int64_t queueId, const int64_t frame, const int64_t apiEventId, const bool persistent
+    );
+    void InsertQueuePresentRect(
+        const int64_t presentId,
+        const int32_t srcX,
+        const int32_t srcY,
+        const uint32_t srcWidth,
+        const uint32_t srcHeight,
+        const int32_t dstX,
+        const int32_t dstY,
+        const uint32_t dstWidth,
+        const uint32_t dstHeight
+    );
     void InsertQueuePresentSemaphoreWait(
         const int64_t presentId, const size_t waitIndex, const std::optional<int64_t> semaphoreId
     );
-    void InsertQueuePresentSwapchain(
+    int64_t InsertQueuePresentSwapchain(
         const int64_t presentId,
+        const uint32_t idx,
         const std::optional<int64_t> swapchainId,
         const uint32_t imageIndex,
-        const std::optional<int64_t> fenceId
+        const std::optional<int64_t> fenceId,
+        const std::optional<int64_t> vulkanPresentId,
+        const std::optional<int64_t> googlePresentId,
+        const std::optional<int64_t> desiredPresentTime,
+        const std::optional<int64_t> presentMode
+    );
+    void InsertQueuePresentSwapchainRegion(
+        const int64_t queuePresentSwapchainId,
+        const int32_t x,
+        const int32_t y,
+        const uint32_t width,
+        const uint32_t height,
+        const uint32_t layer
     );
 
     int64_t InsertRenderPass(
@@ -1659,6 +1691,8 @@ struct VulkanSqlitePreparedStatements
         const VkComponentMapping& components,
         const VkImageSubresourceRange& srRange,
         const std::optional<int64_t> usage,
+        const std::optional<int64_t> samplerYcbcrConversionId,
+        const std::optional<int64_t> astcDecodeMode,
         const uint64_t apiEventId
     );
 
@@ -1681,6 +1715,7 @@ struct VulkanSqlitePreparedStatements
         const float maxLod,
         const std::optional<int64_t> borderColor,
         const VkBool32 unnormalizedCoordinates,
+        const std::optional<int64_t> samplerYcbcrConversionId,
         const uint64_t apiEventId
     );
 

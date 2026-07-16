@@ -444,12 +444,12 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(db, "INSERT INTO imageViewFormats VALUES (?, ?);", &imageViewFormatInsertStatement);
     PrepareStatement(
         db,
-        "INSERT INTO imageViews VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
+        "INSERT INTO imageViews VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &imageViewInsertStatement
     );
     PrepareStatement(
         db,
-        "INSERT INTO samplers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
+        "INSERT INTO samplers VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &samplerInsertStatement
     );
     PrepareStatement(
@@ -924,12 +924,22 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         &renderSubpassSetAttachmentReferencePreserveUpdateStatement
     );
 
-    PrepareStatement(db, "INSERT INTO queuePresents VALUES (?, ?, ?, ?);", &queuePresentInsertStatement);
+    PrepareStatement(db, "INSERT INTO queuePresents VALUES (?, ?, ?, ?, ?);", &queuePresentInsertStatement);
+    PrepareStatement(
+        db, "INSERT INTO queuePresentRects VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", &queuePresentRectInsertStatement
+    );
     PrepareStatement(
         db, "INSERT INTO queuePresentSemaphoreWaits VALUES (?, ?, ?);", &queuePresentSemaphoreWaitInsertStatement
     );
     PrepareStatement(
-        db, "INSERT INTO queuePresentSwapchains VALUES (?, ?, ?, ?);", &queuePresentSwapchainInsertStatement
+        db,
+        "INSERT INTO queuePresentSwapchains VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+        &queuePresentSwapchainInsertStatement
+    );
+    PrepareStatement(
+        db,
+        "INSERT INTO queuePresentSwapchainRegions VALUES (?, ?, ?, ?, ?, ?);",
+        &queuePresentSwapchainRegionInsertStatement
     );
 
     PrepareStatement(
@@ -984,7 +994,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(
         db, "INSERT INTO queueSubmitSemaphoreSignals VALUES (?, ?, ?, ?);", &queueSubmitSemaphoreSignalInsertStatement
     );
-    PrepareStatement(db, "INSERT INTO fences VALUES (?, ?, ?, ?, ?, NULL);", &fenceInsertStatement);
+    PrepareStatement(db, "INSERT INTO fences VALUES (?, ?, ?, ?, ?, ?, NULL);", &fenceInsertStatement);
     PrepareStatement(db, "INSERT INTO fenceSyncScopes VALUES (?, ?, ?, NULL, NULL);", &fenceSyncScopeInsertStatement);
     PrepareStatement(
         db,
@@ -3756,7 +3766,7 @@ int64_t VulkanSqlitePreparedStatements::InsertStateDynamicPrimitiveRestartEnable
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertQueuePresent(
-    int64_t queueId, const int64_t frame, const int64_t apiEventId
+    int64_t queueId, const int64_t frame, const int64_t apiEventId, const bool persistent
 )
 {
     auto presentId = ++context->currentQueuePresentId;
@@ -3767,8 +3777,35 @@ int64_t VulkanSqlitePreparedStatements::InsertQueuePresent(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(queueId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(frame)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(persistent ? 1 : 0)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return presentId;
+}
+
+void VulkanSqlitePreparedStatements::InsertQueuePresentRect(
+    const int64_t presentId,
+    const int32_t srcX,
+    const int32_t srcY,
+    const uint32_t srcWidth,
+    const uint32_t srcHeight,
+    const int32_t dstX,
+    const int32_t dstY,
+    const uint32_t dstWidth,
+    const uint32_t dstHeight
+)
+{
+    auto& statement = queuePresentRectInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(presentId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(srcX)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(srcY)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(srcWidth)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(srcHeight)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(dstX)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(dstY)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(dstWidth)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(dstHeight)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
 void VulkanSqlitePreparedStatements::InsertQueuePresentSemaphoreWait(
@@ -3783,19 +3820,53 @@ void VulkanSqlitePreparedStatements::InsertQueuePresentSemaphoreWait(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
-void VulkanSqlitePreparedStatements::InsertQueuePresentSwapchain(
+int64_t VulkanSqlitePreparedStatements::InsertQueuePresentSwapchain(
     const int64_t presentId,
+    const uint32_t idx,
     const std::optional<int64_t> swapchainId,
     uint32_t imageIndex,
-    const std::optional<int64_t> fenceId
+    const std::optional<int64_t> fenceId,
+    const std::optional<int64_t> vulkanPresentId,
+    const std::optional<int64_t> googlePresentId,
+    const std::optional<int64_t> desiredPresentTime,
+    const std::optional<int64_t> presentMode
 )
 {
+    auto queuePresentSwapchainId = ++context->currentQueuePresentSwapchainId;
+
     auto& statement = queuePresentSwapchainInsertStatement;
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(presentId)));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 2, swapchainId));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(imageIndex)));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 4, fenceId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(queuePresentSwapchainId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(presentId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(idx)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 4, swapchainId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(imageIndex)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 6, fenceId));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, vulkanPresentId));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 8, googlePresentId));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 9, desiredPresentTime));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 10, presentMode));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+    return queuePresentSwapchainId;
+}
+
+void VulkanSqlitePreparedStatements::InsertQueuePresentSwapchainRegion(
+    const int64_t queuePresentSwapchainId,
+    const int32_t x,
+    const int32_t y,
+    const uint32_t width,
+    const uint32_t height,
+    const uint32_t layer
+)
+{
+    auto& statement = queuePresentSwapchainRegionInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(queuePresentSwapchainId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(x)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(y)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(width)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(height)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(layer)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
@@ -4223,6 +4294,8 @@ void VulkanSqlitePreparedStatements::InsertImageView(
     const VkComponentMapping& components,
     const VkImageSubresourceRange& srRange,
     const std::optional<int64_t> usage,
+    const std::optional<int64_t> samplerYcbcrConversionId,
+    const std::optional<int64_t> astcDecodeMode,
     const uint64_t apiEventId
 )
 {
@@ -4250,7 +4323,9 @@ void VulkanSqlitePreparedStatements::InsertImageView(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 15, static_cast<sqlite_int64>(srRange.baseArrayLayer)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(srRange.layerCount)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 17, usage));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 18, samplerYcbcrConversionId));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 19, astcDecodeMode));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 20, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
@@ -4273,6 +4348,7 @@ void VulkanSqlitePreparedStatements::InsertSampler(
     const float maxLod,
     const std::optional<int64_t> borderColor,
     const VkBool32 unnormalizedCoordinates,
+    const std::optional<int64_t> samplerYcbcrConversionId,
     const uint64_t apiEventId
 )
 {
@@ -4302,7 +4378,8 @@ void VulkanSqlitePreparedStatements::InsertSampler(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 17, maxLod));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 18, borderColor));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 19, static_cast<sqlite_int64>(unnormalizedCoordinates)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 20, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 20, samplerYcbcrConversionId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 21, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
@@ -5313,7 +5390,11 @@ void VulkanSqlitePreparedStatements::InsertQueueSubmitSemaphoreSignal(
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertFence(
-    const format::HandleId fence, const format::HandleId device, const uint32_t flags, const uint64_t apiEventId
+    const format::HandleId fence,
+    const format::HandleId device,
+    const uint32_t flags,
+    const std::optional<int64_t> handleTypes,
+    const uint64_t apiEventId
 )
 {
     auto fenceHandle = ToInt64(fence);
@@ -5326,7 +5407,8 @@ int64_t VulkanSqlitePreparedStatements::InsertFence(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(fenceHandle)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, deviceId));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 5, handleTypes));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return fenceId;
 }
