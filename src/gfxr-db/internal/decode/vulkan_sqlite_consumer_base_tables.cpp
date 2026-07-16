@@ -17,6 +17,7 @@
 #include "vulkan_sqlite_consumer_base_tables.h"
 
 #include "sqlite_utils.h"
+#include "version.h"
 #include "generated/generated_vulkan_enum_to_sqlite.h"
 
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
@@ -25,6 +26,13 @@ using namespace util::platform;
 
 static void CreateCoreDataTables(sqlite3* db)
 {
+    ExecSQL(
+        db,
+        "CREATE TABLE dbSchemaVersion("
+        "   version TEXT UNIQUE NOT NULL PRIMARY KEY) WITHOUT ROWID, STRICT;"
+        "INSERT INTO dbSchemaVersion(version) VALUES('" GFXR_DB_VERSION_STRING "');"
+    );
+
     ExecSQL(
         db,
         "CREATE TABLE metaData("
