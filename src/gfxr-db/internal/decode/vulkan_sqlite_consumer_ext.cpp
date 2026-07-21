@@ -48,15 +48,15 @@
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
 
-#define CREATE_COMMAND_BUFFER_INSTANCE_ID()                                                                    \
-    auto commandBufferRecordingIdOpt = context.GetCommandBufferRecordingId(commandBuffer);                     \
-    if (!commandBufferRecordingIdOpt)                                                                          \
-    {                                                                                                          \
-        LOG_CMD_WARNING(                                                                                       \
-            "Null command buffer recording not allowed for command buffer with handle %" PRIu64, commandBuffer \
-        );                                                                                                     \
-        return;                                                                                                \
-    }                                                                                                          \
+#define CREATE_COMMAND_BUFFER_INSTANCE_ID()                                                                          \
+    auto commandBufferRecordingIdOpt = context.GetCommandBufferRecordingId(args.commandBuffer);                     \
+    if (!commandBufferRecordingIdOpt)                                                                                \
+    {                                                                                                                \
+        LOG_CMD_WARNING(                                                                                             \
+            "Null command buffer recording not allowed for command buffer with handle %" PRIu64, args.commandBuffer \
+        );                                                                                                           \
+        return;                                                                                                      \
+    }                                                                                                                \
     auto commandBufferRecordingId = commandBufferRecordingIdOpt.value()
 
 // Requires prior call to CREATE_COMMAND_BUFFER_INSTANCE_ID().
@@ -66,7 +66,7 @@ GFXRECON_BEGIN_NAMESPACE(decode)
     std::optional<int64_t> renderSubpassRecordingId = std::nullopt;                                                  \
     std::optional<int64_t> dynamicRenderPassRecordingId = std::nullopt;                                              \
     {                                                                                                                \
-        auto _rpIter = context.commandBufferHandleToRenderPassRecordingIdStack.find(ToInt64(commandBuffer));         \
+        auto _rpIter = context.commandBufferHandleToRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));    \
         if (_rpIter != context.commandBufferHandleToRenderPassRecordingIdStack.end() && !_rpIter->second.empty())    \
         {                                                                                                            \
             auto _rpTop = _rpIter->second.top();                                                                     \
@@ -77,7 +77,7 @@ GFXRECON_BEGIN_NAMESPACE(decode)
                 renderSubpassRecordingId = _subpassIter->second;                                                     \
             }                                                                                                        \
         }                                                                                                            \
-        auto _drpIter = context.commandBufferHandleToDynamicRenderPassRecordingIdStack.find(ToInt64(commandBuffer)); \
+        auto _drpIter = context.commandBufferHandleToDynamicRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer)); \
         if (_drpIter != context.commandBufferHandleToDynamicRenderPassRecordingIdStack.end() &&                      \
             !_drpIter->second.empty())                                                                               \
         {                                                                                                            \
@@ -98,18 +98,16 @@ VulkanSqliteConsumerExt::VulkanSqliteConsumerExt(sqlite3* db) : VulkanSqliteCons
 
 void VulkanSqliteConsumerExt::Process_vkSetDebugUtilsObjectNameEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDebugUtilsObjectNameInfoEXT>* pNameInfo
+    args::SetDebugUtilsObjectNameEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkSetDebugUtilsObjectNameEXT(call_info, returnValue, device, pNameInfo);
+    VulkanSqliteConsumer::Process_vkSetDebugUtilsObjectNameEXT(call_info, args);
 
-    auto [nameInfoValid, nameInfo] = GetMetaStructPointer(pNameInfo);
+    auto [nameInfoValid, nameInfo] = GetMetaStructPointer(&args.pNameInfo);
     if (!nameInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to set debug object name, invalid pNameInfo struct");
         }
@@ -122,24 +120,22 @@ void VulkanSqliteConsumerExt::Process_vkSetDebugUtilsObjectNameEXT(
     auto objectType = nameInfo->decoded_value->objectType;
     std::string objectName = nameInfo->decoded_value->pObjectName ? nameInfo->decoded_value->pObjectName : "";
     statements.InsertDebugName(
-        objectName, objectHandle, static_cast<int64_t>(objectType), std::nullopt, device, this->block_index_
+        objectName, objectHandle, static_cast<int64_t>(objectType), std::nullopt, args.device, this->block_index_
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkSetDebugUtilsObjectTagEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDebugUtilsObjectTagInfoEXT>* pTagInfo
+    args::SetDebugUtilsObjectTagEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkSetDebugUtilsObjectTagEXT(call_info, returnValue, device, pTagInfo);
+    VulkanSqliteConsumer::Process_vkSetDebugUtilsObjectTagEXT(call_info, args);
 
-    auto [tagInfoValid, tagInfo] = GetMetaStructPointer(pTagInfo);
+    auto [tagInfoValid, tagInfo] = GetMetaStructPointer(&args.pTagInfo);
     if (!tagInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to set debug object tag, invalid pTagInfo struct");
         }
@@ -154,18 +150,18 @@ void VulkanSqliteConsumerExt::Process_vkSetDebugUtilsObjectTagEXT(
     auto tagSize = tagInfo->decoded_value->tagSize;
     // TODO handle binary tag data
     statements.InsertDebugTag(
-        tagName, tagSize, objectHandle, static_cast<int64_t>(objectType), std::nullopt, device, this->block_index_
+        tagName, tagSize, objectHandle, static_cast<int64_t>(objectType), std::nullopt, args.device, this->block_index_
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkQueueBeginDebugUtilsLabelEXT(
-    const ApiCallInfo& call_info, format::HandleId queue, StructPointerDecoder<Decoded_VkDebugUtilsLabelEXT>* pLabelInfo
+    const ApiCallInfo& call_info, args::QueueBeginDebugUtilsLabelEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkQueueBeginDebugUtilsLabelEXT(call_info, queue, pLabelInfo);
+    VulkanSqliteConsumer::Process_vkQueueBeginDebugUtilsLabelEXT(call_info, args);
 
-    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(pLabelInfo);
+    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(&args.pLabelInfo);
     if (!labelInfoValid)
     {
         LOG_CMD_WARNING("Failed to begin queue debug label, invalid pLabelInfo struct");
@@ -176,18 +172,18 @@ void VulkanSqliteConsumerExt::Process_vkQueueBeginDebugUtilsLabelEXT(
 
     auto& color = labelInfo->decoded_value->color;
     std::string name = labelInfo->decoded_value->pLabelName ? labelInfo->decoded_value->pLabelName : "";
-    statements.InsertDebugLabelQueueBegin(queue, name, color, this->block_index_);
+    statements.InsertDebugLabelQueueBegin(args.queue, name, color, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkQueueEndDebugUtilsLabelEXT(const ApiCallInfo& call_info, format::HandleId queue)
+void VulkanSqliteConsumerExt::Process_vkQueueEndDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::QueueEndDebugUtilsLabelEXT& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkQueueEndDebugUtilsLabelEXT(call_info, queue);
+    VulkanSqliteConsumer::Process_vkQueueEndDebugUtilsLabelEXT(call_info, args);
 
-    auto stackIter = context.queueHandleToDebugLabelIdStack.find(ToInt64(queue));
+    auto stackIter = context.queueHandleToDebugLabelIdStack.find(ToInt64(args.queue));
     if (stackIter == context.queueHandleToDebugLabelIdStack.end() || stackIter->second.empty())
     {
-        LOG_CMD_WARNING("Failed to end queue debug label, no existing debug label for queue handle %" PRIu64, queue);
+        LOG_CMD_WARNING("Failed to end queue debug label, no existing debug label for queue handle %" PRIu64, args.queue);
         return;
     }
     statements.UpdateDebugLabelEnd(stackIter->second.top(), this->block_index_);
@@ -195,13 +191,13 @@ void VulkanSqliteConsumerExt::Process_vkQueueEndDebugUtilsLabelEXT(const ApiCall
 }
 
 void VulkanSqliteConsumerExt::Process_vkQueueInsertDebugUtilsLabelEXT(
-    const ApiCallInfo& call_info, format::HandleId queue, StructPointerDecoder<Decoded_VkDebugUtilsLabelEXT>* pLabelInfo
+    const ApiCallInfo& call_info, args::QueueInsertDebugUtilsLabelEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkQueueInsertDebugUtilsLabelEXT(call_info, queue, pLabelInfo);
+    VulkanSqliteConsumer::Process_vkQueueInsertDebugUtilsLabelEXT(call_info, args);
 
-    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(pLabelInfo);
+    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(&args.pLabelInfo);
     if (!labelInfoValid)
     {
         LOG_CMD_WARNING("Failed to insert queue debug label, invalid pLabelInfo struct");
@@ -212,19 +208,18 @@ void VulkanSqliteConsumerExt::Process_vkQueueInsertDebugUtilsLabelEXT(
 
     auto& color = labelInfo->decoded_value->color;
     std::string name = labelInfo->decoded_value->pLabelName ? labelInfo->decoded_value->pLabelName : "";
-    statements.InsertDebugLabelQueueInsert(queue, name, color, this->block_index_);
+    statements.InsertDebugLabelQueueInsert(args.queue, name, color, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBeginDebugUtilsLabelEXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkDebugUtilsLabelEXT>* pLabelInfo
+    args::CmdBeginDebugUtilsLabelEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdBeginDebugUtilsLabelEXT(call_info, commandBuffer, pLabelInfo);
+    VulkanSqliteConsumer::Process_vkCmdBeginDebugUtilsLabelEXT(call_info, args);
 
-    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(pLabelInfo);
+    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(&args.pLabelInfo);
     if (!labelInfoValid)
     {
         LOG_CMD_WARNING("Failed to begin command buffer debug label, invalid pLabelInfo struct");
@@ -251,11 +246,11 @@ void VulkanSqliteConsumerExt::Process_vkCmdBeginDebugUtilsLabelEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdEndDebugUtilsLabelEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer
+    const ApiCallInfo& call_info, args::CmdEndDebugUtilsLabelEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdEndDebugUtilsLabelEXT(call_info, commandBuffer);
+    VulkanSqliteConsumer::Process_vkCmdEndDebugUtilsLabelEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
     GET_COMMAND_BUFFER_RENDERPASS_SCOPE();
@@ -293,14 +288,13 @@ void VulkanSqliteConsumerExt::Process_vkCmdEndDebugUtilsLabelEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCmdInsertDebugUtilsLabelEXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkDebugUtilsLabelEXT>* pLabelInfo
+    args::CmdInsertDebugUtilsLabelEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdInsertDebugUtilsLabelEXT(call_info, commandBuffer, pLabelInfo);
+    VulkanSqliteConsumer::Process_vkCmdInsertDebugUtilsLabelEXT(call_info, args);
 
-    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(pLabelInfo);
+    auto [labelInfoValid, labelInfo] = GetMetaStructPointer(&args.pLabelInfo);
     if (!labelInfoValid)
     {
         LOG_CMD_WARNING("Failed to insert command buffer debug label, invalid pLabelInfo struct");
@@ -327,18 +321,16 @@ void VulkanSqliteConsumerExt::Process_vkCmdInsertDebugUtilsLabelEXT(
 
 void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectTagEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDebugMarkerObjectTagInfoEXT>* pTagInfo
+    args::DebugMarkerSetObjectTagEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDebugMarkerSetObjectTagEXT(call_info, returnValue, device, pTagInfo);
+    VulkanSqliteConsumer::Process_vkDebugMarkerSetObjectTagEXT(call_info, args);
 
-    auto [tagInfoValid, tagInfo] = GetMetaStructPointer(pTagInfo);
+    auto [tagInfoValid, tagInfo] = GetMetaStructPointer(&args.pTagInfo);
     if (!tagInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to set debug object tag, invalid pTagInfo struct");
         }
@@ -353,24 +345,22 @@ void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectTagEXT(
     auto tagSize = tagInfo->decoded_value->tagSize;
     // TODO handle binary tag data
     statements.InsertDebugTag(
-        tagName, tagSize, objectHandle, std::nullopt, static_cast<int64_t>(objectType), device, this->block_index_
+        tagName, tagSize, objectHandle, std::nullopt, static_cast<int64_t>(objectType), args.device, this->block_index_
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectNameEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDebugMarkerObjectNameInfoEXT>* pNameInfo
+    args::DebugMarkerSetObjectNameEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDebugMarkerSetObjectNameEXT(call_info, returnValue, device, pNameInfo);
+    VulkanSqliteConsumer::Process_vkDebugMarkerSetObjectNameEXT(call_info, args);
 
-    auto [nameInfoValid, nameInfo] = GetMetaStructPointer(pNameInfo);
+    auto [nameInfoValid, nameInfo] = GetMetaStructPointer(&args.pNameInfo);
     if (!nameInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to set debug object name, invalid pNameInfo struct");
         }
@@ -383,20 +373,19 @@ void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectNameEXT(
     auto objectType = nameInfo->decoded_value->objectType;
     std::string objectName = nameInfo->decoded_value->pObjectName ? nameInfo->decoded_value->pObjectName : "";
     statements.InsertDebugName(
-        objectName, objectHandle, std::nullopt, static_cast<int64_t>(objectType), device, this->block_index_
+        objectName, objectHandle, std::nullopt, static_cast<int64_t>(objectType), args.device, this->block_index_
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerBeginEXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkDebugMarkerMarkerInfoEXT>* pMarkerInfo
+    args::CmdDebugMarkerBeginEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdDebugMarkerBeginEXT(call_info, commandBuffer, pMarkerInfo);
+    VulkanSqliteConsumer::Process_vkCmdDebugMarkerBeginEXT(call_info, args);
 
-    auto [markerInfoValid, markerInfo] = GetMetaStructPointer(pMarkerInfo);
+    auto [markerInfoValid, markerInfo] = GetMetaStructPointer(&args.pMarkerInfo);
     if (!markerInfoValid)
     {
         LOG_CMD_WARNING("Failed to begin command buffer debug label, invalid pMarkerInfo struct");
@@ -422,11 +411,11 @@ void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerBeginEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerEndEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer
+    const ApiCallInfo& call_info, args::CmdDebugMarkerEndEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdDebugMarkerEndEXT(call_info, commandBuffer);
+    VulkanSqliteConsumer::Process_vkCmdDebugMarkerEndEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
     GET_COMMAND_BUFFER_RENDERPASS_SCOPE();
@@ -464,14 +453,13 @@ void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerEndEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerInsertEXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkDebugMarkerMarkerInfoEXT>* pMarkerInfo
+    args::CmdDebugMarkerInsertEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdDebugMarkerInsertEXT(call_info, commandBuffer, pMarkerInfo);
+    VulkanSqliteConsumer::Process_vkCmdDebugMarkerInsertEXT(call_info, args);
 
-    auto [markerInfoValid, markerInfo] = GetMetaStructPointer(pMarkerInfo);
+    auto [markerInfoValid, markerInfo] = GetMetaStructPointer(&args.pMarkerInfo);
     if (!markerInfoValid)
     {
         LOG_CMD_WARNING("Failed to insert command buffer debug label, invalid pMarkerInfo struct");
@@ -498,32 +486,26 @@ void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerInsertEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCreateDebugReportCallbackEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId instance,
-    StructPointerDecoder<Decoded_VkDebugReportCallbackCreateInfoEXT>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDebugReportCallbackEXT>* pCallback
+    args::CreateDebugReportCallbackEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDebugReportCallbackEXT(
-        call_info, returnValue, instance, pCreateInfo, pAllocator, pCallback
-    );
+    VulkanSqliteConsumer::Process_vkCreateDebugReportCallbackEXT(call_info, args);
 
-    auto [callbackValid, callback] = GetHandle(pCallback);
+    auto [callbackValid, callback] = GetHandle(&args.pCallback);
     if (!callbackValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create debug report callback, invalid pCallback handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create debug report callback, invalid pCreateInfo struct");
         }
@@ -541,16 +523,14 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugReportCallbackEXT(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDebugReportCallbackEXT(
     const ApiCallInfo& call_info,
-    format::HandleId instance,
-    format::HandleId callback,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyDebugReportCallbackEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDebugReportCallbackEXT(call_info, instance, callback, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyDebugReportCallbackEXT(call_info, args);
 
     if (auto id = context.ExtractId(
-            callback, context.debugReportCallbackHandleToId, "debug report callback", this->block_index_
+            args.callback, context.debugReportCallbackHandleToId, "debug report callback", this->block_index_
         ))
     {
         statements.DestroyObject(statements.destroyDebugReportCallbackUpdateStatement, this->block_index_, *id);
@@ -559,32 +539,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDebugReportCallbackEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCreateDebugUtilsMessengerEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId instance,
-    StructPointerDecoder<Decoded_VkDebugUtilsMessengerCreateInfoEXT>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDebugUtilsMessengerEXT>* pMessenger
+    args::CreateDebugUtilsMessengerEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDebugUtilsMessengerEXT(
-        call_info, returnValue, instance, pCreateInfo, pAllocator, pMessenger
-    );
+    VulkanSqliteConsumer::Process_vkCreateDebugUtilsMessengerEXT(call_info, args);
 
-    auto [messengerValid, messenger] = GetHandle(pMessenger);
+    auto [messengerValid, messenger] = GetHandle(&args.pMessenger);
     if (!messengerValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create debug messenger, invalid pMessenger handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create debug messenger, invalid pCreateInfo struct");
         }
@@ -600,15 +574,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugUtilsMessengerEXT(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDebugUtilsMessengerEXT(
     const ApiCallInfo& call_info,
-    format::HandleId instance,
-    format::HandleId messenger,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyDebugUtilsMessengerEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDebugUtilsMessengerEXT(call_info, instance, messenger, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyDebugUtilsMessengerEXT(call_info, args);
 
-    if (auto id = context.ExtractId(messenger, context.debugMessengerHandleToId, "debug messenger", this->block_index_))
+    if (auto id = context.ExtractId(args.messenger, context.debugMessengerHandleToId, "debug messenger", this->block_index_))
     {
         statements.DestroyObject(statements.destroyDebugMessengerUpdateStatement, this->block_index_, *id);
     }
@@ -616,19 +588,16 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDebugUtilsMessengerEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCreateInstance(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    StructPointerDecoder<Decoded_VkInstanceCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkInstance>* pInstance
+    args::CreateInstance& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateInstance(call_info, returnValue, pCreateInfo, pAllocator, pInstance);
+    VulkanSqliteConsumer::Process_vkCreateInstance(call_info, args);
 
-    auto [instanceValid, instance] = GetHandle(pInstance);
+    auto [instanceValid, instance] = GetHandle(&args.pInstance);
     if (!instanceValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create instance, invalid pInstance handle");
         }
@@ -658,10 +627,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
     const VkValidationCheckEXT* disabledValidationChecks = nullptr;
     uint64_t disabledValidationChecksCount = 0;
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to process instance application info, invalid pCreateInfo struct");
         }
@@ -864,14 +833,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyInstance(
     const ApiCallInfo& call_info,
-    format::HandleId instance,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyInstance& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyInstance(call_info, instance, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyInstance(call_info, args);
 
-    if (auto id = context.ExtractId(instance, context.instanceHandleToId, "instance", this->block_index_))
+    if (auto id = context.ExtractId(args.instance, context.instanceHandleToId, "instance", this->block_index_))
     {
         statements.DestroyObject(statements.destroyInstanceUpdateStatement, this->block_index_, *id);
     }
@@ -879,18 +847,13 @@ void VulkanSqliteConsumerExt::Process_vkDestroyInstance(
 
 void VulkanSqliteConsumerExt::Process_vkEnumeratePhysicalDevices(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId instance,
-    PointerDecoder<uint32_t>* pPhysicalDeviceCount,
-    HandlePointerDecoder<VkPhysicalDevice>* pPhysicalDevices
+    args::EnumeratePhysicalDevices& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkEnumeratePhysicalDevices(
-        call_info, returnValue, instance, pPhysicalDeviceCount, pPhysicalDevices
-    );
+    VulkanSqliteConsumer::Process_vkEnumeratePhysicalDevices(call_info, args);
 
-    auto [physicalDevicesValid, physicalDevices, physicalDeviceCount] = GetHandleArray(pPhysicalDevices);
+    auto [physicalDevicesValid, physicalDevices, physicalDeviceCount] = GetHandleArray(&args.pPhysicalDevices);
     if (!physicalDevicesValid)
     {
         // first call to vkEnumeratePhysicalDevices is used to query count of devices for
@@ -899,10 +862,10 @@ void VulkanSqliteConsumerExt::Process_vkEnumeratePhysicalDevices(
     }
 
     std::optional<int64_t> instanceId = std::nullopt;
-    auto instanceIter = context.instanceHandleToId.find(ToInt64(instance));
+    auto instanceIter = context.instanceHandleToId.find(ToInt64(args.instance));
     if (instanceIter == context.instanceHandleToId.end())
     {
-        LOG_CMD_WARNING("Failed to find instance for handle %" PRIu64 ", setting foreign key to NULL", instance);
+        LOG_CMD_WARNING("Failed to find instance for handle %" PRIu64 ", setting foreign key to NULL", args.instance);
     }
     else
     {
@@ -919,22 +882,16 @@ void VulkanSqliteConsumerExt::Process_vkEnumeratePhysicalDevices(
 
 void VulkanSqliteConsumerExt::Process_vkCreateDevice(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId physicalDevice,
-    StructPointerDecoder<Decoded_VkDeviceCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDevice>* pDevice
+    args::CreateDevice& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDevice(
-        call_info, returnValue, physicalDevice, pCreateInfo, pAllocator, pDevice
-    );
+    VulkanSqliteConsumer::Process_vkCreateDevice(call_info, args);
 
-    auto [handleValid, device] = GetHandle(pDevice);
+    auto [handleValid, device] = GetHandle(&args.pDevice);
     if (!handleValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create device, invalid pDevice handle");
         }
@@ -942,10 +899,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateDevice(
     }
 
     auto deviceHandle = ToInt64(device);
-    auto physicalDeviceId = context.GetPhysicalDeviceId(physicalDevice);
+    auto physicalDeviceId = context.GetPhysicalDeviceId(args.physicalDevice);
     std::vector<std::string_view> enabledFeatureNames;
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         // insert the device regardless, we just warn that the info mappings are invalid
@@ -956,7 +913,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDevice(
             static_cast<int64_t>(VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD)
         );
 
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create device info mappings, invalid pCreateInfo struct");
         }
@@ -1050,14 +1007,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateDevice(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDevice(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyDevice& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDevice(call_info, device, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyDevice(call_info, args);
 
-    if (auto id = context.ExtractId(device, context.deviceHandleToId, "device", this->block_index_))
+    if (auto id = context.ExtractId(args.device, context.deviceHandleToId, "device", this->block_index_))
     {
         statements.DestroyObject(statements.destroyDeviceUpdateStatement, this->block_index_, *id);
     }
@@ -1140,34 +1096,29 @@ void VulkanSqliteConsumerExt::ProcessQueue(
 
 void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    uint32_t queueFamilyIndex,
-    uint32_t queueIndex,
-    HandlePointerDecoder<VkQueue>* pQueue
+    args::GetDeviceQueue& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkGetDeviceQueue(call_info, device, queueFamilyIndex, queueIndex, pQueue);
+    VulkanSqliteConsumer::Process_vkGetDeviceQueue(call_info, args);
 
     // Per https://registry.khronos.org/vulkan/specs/latest/man/html/vkGetDeviceQueue.html#_description
     // Queues with different flags can share the same queue family index and queue index. vkGetDeviceQueue
     // only ever gets queues with flags set to 0.
     // Per https://registry.khronos.org/vulkan/specs/latest/man/html/VkDeviceQueueInfo2.html#_description
     // some older Vulkan drivers did not handle this correctly.
-    ProcessQueue(call_info, device, queueFamilyIndex, queueIndex, 0, pQueue);
+    ProcessQueue(call_info, args.device, args.queueFamilyIndex, args.queueIndex, 0, &args.pQueue);
 }
 
 void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue2(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDeviceQueueInfo2>* pQueueInfo,
-    HandlePointerDecoder<VkQueue>* pQueue
+    args::GetDeviceQueue2& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkGetDeviceQueue2(call_info, device, pQueueInfo, pQueue);
+    VulkanSqliteConsumer::Process_vkGetDeviceQueue2(call_info, args);
 
-    auto [queueInfoValid, queueInfo] = GetMetaStructPointer(pQueueInfo);
+    auto [queueInfoValid, queueInfo] = GetMetaStructPointer(&args.pQueueInfo);
     if (!queueInfoValid)
     {
         LOG_CMD_WARNING("Failed to create queue, invalid pQueueInfo struct");
@@ -1178,46 +1129,42 @@ void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue2(
 
     ProcessQueue(
         call_info,
-        device,
+        args.device,
         queueInfo->decoded_value->queueFamilyIndex,
         queueInfo->decoded_value->queueIndex,
         queueInfo->decoded_value->flags,
-        pQueue
+        &args.pQueue
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkQueueSubmit(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId queue,
-    uint32_t submitCount,
-    StructPointerDecoder<Decoded_VkSubmitInfo>* pSubmits,
-    format::HandleId fence
+    args::QueueSubmit& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkQueueSubmit(call_info, returnValue, queue, submitCount, pSubmits, fence);
+    VulkanSqliteConsumer::Process_vkQueueSubmit(call_info, args);
 
-    auto queueIter = context.queueHandleToId.find(ToInt64(queue));
+    auto queueIter = context.queueHandleToId.find(ToInt64(args.queue));
     if (queueIter == context.queueHandleToId.end())
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create queue submit, no queue found for handle %" PRIu64, queue);
+            LOG_CMD_WARNING("Failed to create queue submit, no queue found for handle %" PRIu64, args.queue);
         }
         return;
     }
 
     std::optional<int64_t> fenceSyncScopeId = std::nullopt;
-    if (fence != format::kNullHandleId)
+    if (args.fence != format::kNullHandleId)
     {
-        auto fenceSyncScopeIter = context.fenceHandleToSyncScopeId.find(ToInt64(fence));
+        auto fenceSyncScopeIter = context.fenceHandleToSyncScopeId.find(ToInt64(args.fence));
         if (fenceSyncScopeIter == context.fenceHandleToSyncScopeId.end())
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING(
-                    "Failed to find fence instance for handle %" PRIu64 " setting foreign key to NULL", fence
+                    "Failed to find fence instance for handle %" PRIu64 " setting foreign key to NULL", args.fence
                 );
             }
         }
@@ -1230,7 +1177,7 @@ void VulkanSqliteConsumerExt::Process_vkQueueSubmit(
     auto queueSubmitId =
         statements.InsertQueueSubmit(queueIter->second, fenceSyncScopeId, context.currentFrame, this->block_index_);
 
-    auto [submitInfosValid, submitInfos, submitInfoCount] = GetMetaStructArray(pSubmits);
+    auto [submitInfosValid, submitInfos, submitInfoCount] = GetMetaStructArray(&args.pSubmits);
     if (!submitInfosValid)
     {
         // pSubmits can be NULL when only performing pipeline synchronization
@@ -1480,55 +1427,45 @@ void VulkanSqliteConsumerExt::ProcessQueueSubmit2Info(
 
 void VulkanSqliteConsumerExt::Process_vkQueueSubmit2(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId queue,
-    uint32_t submitCount,
-    StructPointerDecoder<Decoded_VkSubmitInfo2>* pSubmits,
-    format::HandleId fence
+    args::QueueSubmit2& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkQueueSubmit2(call_info, returnValue, queue, submitCount, pSubmits, fence);
+    VulkanSqliteConsumer::Process_vkQueueSubmit2(call_info, args);
 
-    ProcessQueueSubmit2Info(call_info, returnValue, queue, submitCount, pSubmits, fence);
+    ProcessQueueSubmit2Info(call_info, args.result, args.queue, args.submitCount, &args.pSubmits, args.fence);
 }
 
 void VulkanSqliteConsumerExt::Process_vkQueueSubmit2KHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId queue,
-    uint32_t submitCount,
-    StructPointerDecoder<Decoded_VkSubmitInfo2>* pSubmits,
-    format::HandleId fence
+    args::QueueSubmit2KHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkQueueSubmit2KHR(call_info, returnValue, queue, submitCount, pSubmits, fence);
+    VulkanSqliteConsumer::Process_vkQueueSubmit2KHR(call_info, args);
 
-    ProcessQueueSubmit2Info(call_info, returnValue, queue, submitCount, pSubmits, fence);
+    ProcessQueueSubmit2Info(call_info, args.result, args.queue, args.submitCount, &args.pSubmits, args.fence);
 }
 
 void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId queue,
-    StructPointerDecoder<Decoded_VkPresentInfoKHR>* pPresentInfo
+    args::QueuePresentKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkQueuePresentKHR(call_info, returnValue, queue, pPresentInfo);
+    VulkanSqliteConsumer::Process_vkQueuePresentKHR(call_info, args);
 
-    auto queueIter = context.queueHandleToId.find(ToInt64(queue));
+    auto queueIter = context.queueHandleToId.find(ToInt64(args.queue));
     if (queueIter == context.queueHandleToId.end())
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create queue debug label, no queue found for handle %" PRIu64, queue);
+            LOG_CMD_WARNING("Failed to create queue debug label, no queue found for handle %" PRIu64, args.queue);
         }
         return;
     }
 
-    auto [presentInfoValid, presentInfo] = GetMetaStructPointer(pPresentInfo);
+    auto [presentInfoValid, presentInfo] = GetMetaStructPointer(&args.pPresentInfo);
 
     const HandlePointerDecoder<VkFence>* pFences = nullptr;
     const Decoded_VkDisplayPresentInfoKHR* displayPresentInfo = nullptr;
@@ -1583,7 +1520,7 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
 
     if (!presentInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create additional queue queuePresentId info, invalid pPresentInfo struct");
         }
@@ -1708,30 +1645,26 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
 
 void VulkanSqliteConsumerExt::Process_vkCreateFence(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkFenceCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkFence>* pFence
+    args::CreateFence& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateFence(call_info, returnValue, device, pCreateInfo, pAllocator, pFence);
+    VulkanSqliteConsumer::Process_vkCreateFence(call_info, args);
 
-    auto [fenceValid, fence] = GetHandle(pFence);
+    auto [fenceValid, fence] = GetHandle(&args.pFence);
     if (!fenceValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create fence, invalid pFence");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create fence, invalid pCreateInfo struct");
         }
@@ -1759,43 +1692,38 @@ void VulkanSqliteConsumerExt::Process_vkCreateFence(
 
     auto flags = createInfo->decoded_value->flags;
 
-    auto fenceId = statements.InsertFence(fence, device, flags, handleTypes, this->block_index_);
+    auto fenceId = statements.InsertFence(fence, args.device, flags, handleTypes, this->block_index_);
 
     statements.InsertFenceSyncScope(ToInt64(fence), fenceId, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyFence(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId fence,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyFence& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyFence(call_info, device, fence, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyFence(call_info, args);
 
-    if (auto id = context.ExtractId(fence, context.fenceHandleToId, "fence", this->block_index_))
+    if (auto id = context.ExtractId(args.fence, context.fenceHandleToId, "fence", this->block_index_))
     {
         statements.DestroyObject(statements.destroyFenceUpdateStatement, this->block_index_, *id);
-        context.ExtractId(fence, context.fenceHandleToSyncScopeId, "fence instance", this->block_index_);
+        context.ExtractId(args.fence, context.fenceHandleToSyncScopeId, "fence instance", this->block_index_);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkResetFences(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    uint32_t fenceCount,
-    HandlePointerDecoder<VkFence>* pFences
+    args::ResetFences& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkResetFences(call_info, returnValue, device, fenceCount, pFences);
+    VulkanSqliteConsumer::Process_vkResetFences(call_info, args);
 
-    auto [fencesValid, fences, fencesCount] = GetHandleArray(pFences);
+    auto [fencesValid, fences, fencesCount] = GetHandleArray(&args.pFences);
     if (!fencesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to reset fences, invalid pFences array");
         }
@@ -1814,7 +1742,7 @@ void VulkanSqliteConsumerExt::Process_vkResetFences(
 
         // create a new fence instance
         auto fenceHandle = ToInt64(fence);
-        auto fenceId = context.GetFenceId(fence, returnValue != VK_SUCCESS);
+        auto fenceId = context.GetFenceId(fence, args.result != VK_SUCCESS);
         if (!fenceId)
         {
             return;
@@ -1825,23 +1753,16 @@ void VulkanSqliteConsumerExt::Process_vkResetFences(
 
 void VulkanSqliteConsumerExt::Process_vkWaitForFences(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    uint32_t fenceCount,
-    HandlePointerDecoder<VkFence>* pFences,
-    VkBool32 waitAll,
-    uint64_t timeout
+    args::WaitForFences& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkWaitForFences(
-        call_info, returnValue, device, fenceCount, pFences, waitAll, timeout
-    );
+    VulkanSqliteConsumer::Process_vkWaitForFences(call_info, args);
 
-    auto [fencesValid, fences, fencesCount] = GetHandleArray(pFences);
+    auto [fencesValid, fences, fencesCount] = GetHandleArray(&args.pFences);
     if (!fencesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to wait for fences, invalid pFences array");
         }
@@ -1859,34 +1780,25 @@ void VulkanSqliteConsumerExt::Process_vkWaitForFences(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSemaphoreCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkSemaphore>* pSemaphore
-)
+void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(const ApiCallInfo& call_info, args::CreateSemaphore& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateSemaphore(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pSemaphore
-    );
+    VulkanSqliteConsumer::Process_vkCreateSemaphore(call_info, args);
 
-    auto [semaphoreValid, semaphore] = GetHandle(pSemaphore);
+    auto [semaphoreValid, semaphore] = GetHandle(&args.pSemaphore);
     if (!semaphoreValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create semaphore, invalid pSemaphore");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create semaphore, invalid pCreateInfo struct");
         }
@@ -1922,7 +1834,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(
     }
 
     auto semaphoreId =
-        statements.InsertSemaphore(semaphore, device, semaphoreType, initialValue, handleTypes, this->block_index_);
+        statements.InsertSemaphore(semaphore, args.device, semaphoreType, initialValue, handleTypes, this->block_index_);
 
     // This line incorrectly generates warning C26813 "Use 'bitwise and' to check if a flag is set" unless it is
     // suppressed before Vulkan headers are included. VkSemaphoreType is not a bit flag enum (it just only has members
@@ -1933,17 +1845,12 @@ void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroySemaphore(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId semaphore,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroySemaphore(const ApiCallInfo& call_info, args::DestroySemaphore& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroySemaphore(call_info, device, semaphore, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroySemaphore(call_info, args);
 
-    if (auto id = context.ExtractId(semaphore, context.semaphoreHandleToId, "semaphore", this->block_index_))
+    if (auto id = context.ExtractId(args.semaphore, context.semaphoreHandleToId, "semaphore", this->block_index_))
     {
         statements.DestroyObject(statements.destroySemaphoreUpdateStatement, this->block_index_, *id);
     }
@@ -2031,86 +1938,57 @@ void VulkanSqliteConsumerExt::Process_VkSemaphoreSignalInfo(
     statements.InsertSemaphoreSignal(semaphoreId, value, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkWaitSemaphores(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSemaphoreWaitInfo>* pWaitInfo,
-    uint64_t timeout
-)
+void VulkanSqliteConsumerExt::Process_vkWaitSemaphores(const ApiCallInfo& call_info, args::WaitSemaphores& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkWaitSemaphores(call_info, returnValue, device, pWaitInfo, timeout);
+    VulkanSqliteConsumer::Process_vkWaitSemaphores(call_info, args);
 
-    Process_VkSemaphoreWaitInfo(call_info, returnValue, device, pWaitInfo, timeout);
+    Process_VkSemaphoreWaitInfo(call_info, args.result, args.device, &args.pWaitInfo, args.timeout);
 }
 
-void VulkanSqliteConsumerExt::Process_vkSignalSemaphore(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSemaphoreSignalInfo>* pSignalInfo
-)
+void VulkanSqliteConsumerExt::Process_vkSignalSemaphore(const ApiCallInfo& call_info, args::SignalSemaphore& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkSignalSemaphore(call_info, returnValue, device, pSignalInfo);
+    VulkanSqliteConsumer::Process_vkSignalSemaphore(call_info, args);
 
-    Process_VkSemaphoreSignalInfo(call_info, returnValue, device, pSignalInfo);
+    Process_VkSemaphoreSignalInfo(call_info, args.result, args.device, &args.pSignalInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkWaitSemaphoresKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSemaphoreWaitInfo>* pWaitInfo,
-    uint64_t timeout
-)
+void VulkanSqliteConsumerExt::Process_vkWaitSemaphoresKHR(const ApiCallInfo& call_info, args::WaitSemaphoresKHR& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkWaitSemaphoresKHR(call_info, returnValue, device, pWaitInfo, timeout);
+    VulkanSqliteConsumer::Process_vkWaitSemaphoresKHR(call_info, args);
 
-    Process_VkSemaphoreWaitInfo(call_info, returnValue, device, pWaitInfo, timeout);
+    Process_VkSemaphoreWaitInfo(call_info, args.result, args.device, &args.pWaitInfo, args.timeout);
 }
 
-void VulkanSqliteConsumerExt::Process_vkSignalSemaphoreKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSemaphoreSignalInfo>* pSignalInfo
-)
+void VulkanSqliteConsumerExt::Process_vkSignalSemaphoreKHR(const ApiCallInfo& call_info, args::SignalSemaphoreKHR& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkSignalSemaphoreKHR(call_info, returnValue, device, pSignalInfo);
+    VulkanSqliteConsumer::Process_vkSignalSemaphoreKHR(call_info, args);
 
-    Process_VkSemaphoreSignalInfo(call_info, returnValue, device, pSignalInfo);
+    Process_VkSemaphoreSignalInfo(call_info, args.result, args.device, &args.pSignalInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateEvent(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkEventCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkEvent>* pEvent
-)
+void VulkanSqliteConsumerExt::Process_vkCreateEvent(const ApiCallInfo& call_info, args::CreateEvent& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateEvent(call_info, returnValue, device, pCreateInfo, pAllocator, pEvent);
+    VulkanSqliteConsumer::Process_vkCreateEvent(call_info, args);
 
-    auto [eventValid, event] = GetHandle(pEvent);
+    auto [eventValid, event] = GetHandle(&args.pEvent);
     if (!eventValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create event, invalid pEvent");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create event, invalid pCreateInfo struct");
         }
@@ -2120,53 +1998,39 @@ void VulkanSqliteConsumerExt::Process_vkCreateEvent(
     LogUnsupportedPNext(createInfo->pNext);
 
     auto flags = createInfo->decoded_value->flags;
-    statements.InsertEvent(event, device, flags, this->block_index_);
+    statements.InsertEvent(event, args.device, flags, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyEvent(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId event,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyEvent(const ApiCallInfo& call_info, args::DestroyEvent& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyEvent(call_info, device, event, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyEvent(call_info, args);
 
-    if (auto id = context.ExtractId(event, context.eventHandleToId, "event", this->block_index_))
+    if (auto id = context.ExtractId(args.event, context.eventHandleToId, "event", this->block_index_))
     {
         statements.DestroyObject(statements.destroyEventUpdateStatement, this->block_index_, *id);
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateQueryPool(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkQueryPoolCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkQueryPool>* pQueryPool
-)
+void VulkanSqliteConsumerExt::Process_vkCreateQueryPool(const ApiCallInfo& call_info, args::CreateQueryPool& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateQueryPool(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pQueryPool
-    );
+    VulkanSqliteConsumer::Process_vkCreateQueryPool(call_info, args);
 
-    auto [queryPoolValid, queryPool] = GetHandle(pQueryPool);
+    auto [queryPoolValid, queryPool] = GetHandle(&args.pQueryPool);
     if (!queryPoolValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create query pool, invalid pQueryPool");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create query pool, invalid pCreateInfo struct");
         }
@@ -2178,55 +2042,40 @@ void VulkanSqliteConsumerExt::Process_vkCreateQueryPool(
     auto& ci = *createInfo->decoded_value;
 
     statements.InsertQueryPool(
-        queryPool, device, ci.flags, ci.queryType, ci.queryCount, ci.pipelineStatistics, this->block_index_
+        queryPool, args.device, ci.flags, ci.queryType, ci.queryCount, ci.pipelineStatistics, this->block_index_
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyQueryPool(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId queryPool,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyQueryPool(const ApiCallInfo& call_info, args::DestroyQueryPool& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyQueryPool(call_info, device, queryPool, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyQueryPool(call_info, args);
 
-    if (auto id = context.ExtractId(queryPool, context.queryPoolHandleToId, "queryPool", this->block_index_))
+    if (auto id = context.ExtractId(args.queryPool, context.queryPoolHandleToId, "queryPool", this->block_index_))
     {
         statements.DestroyObject(statements.destroyQueryPoolUpdateStatement, this->block_index_, *id);
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateShadersEXT(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    uint32_t createInfoCount,
-    StructPointerDecoder<Decoded_VkShaderCreateInfoEXT>* pCreateInfos,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkShaderEXT>* pShaders
-)
+void VulkanSqliteConsumerExt::Process_vkCreateShadersEXT(const ApiCallInfo& call_info, args::CreateShadersEXT& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateShadersEXT(
-        call_info, returnValue, device, createInfoCount, pCreateInfos, pAllocator, pShaders
-    );
+    VulkanSqliteConsumer::Process_vkCreateShadersEXT(call_info, args);
 
-    auto [shadersValid, shaders, shadersCount] = GetHandleArray(pShaders);
+    auto [shadersValid, shaders, shadersCount] = GetHandleArray(&args.pShaders);
     if (!shadersValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create shader objects, invalid pShaders array");
         }
         return;
     }
 
-    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(pCreateInfos);
+    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(&args.pCreateInfos);
     if (!createInfosValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create shader objects, invalid pCreateInfos struct array");
         }
@@ -2237,7 +2086,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateShadersEXT(
     {
         if (shadersCount <= i)
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING("Failed to create shader object, invalid pShaders count");
             }
@@ -2257,13 +2106,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateShadersEXT(
 
         auto shader = shaders[i];
         auto shaderObjectId = statements.InsertShaderObject(
-            shader, device, flags, stage, nextStage, codeType, codeSize, entryPointName, this->block_index_
+            shader, args.device, flags, stage, nextStage, codeType, codeSize, entryPointName, this->block_index_
         );
 
         auto [layoutsValid, layouts, layoutsCount] = GetHandleArray(&createInfo.pSetLayouts);
         if (!layoutsValid)
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING("Failed to create shader object descriptor set layout, invalid pSetLayouts array");
             }
@@ -2283,7 +2132,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateShadersEXT(
             GetMetaStructArray(createInfo.pPushConstantRanges);
         if (!pushConstantRangesValid)
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING(
                     "Failed to create shader object push constant ranges, invalid pPushConstantRanges array"
@@ -2305,50 +2154,36 @@ void VulkanSqliteConsumerExt::Process_vkCreateShadersEXT(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyShaderEXT(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId shader,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyShaderEXT(const ApiCallInfo& call_info, args::DestroyShaderEXT& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyShaderEXT(call_info, device, shader, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyShaderEXT(call_info, args);
 
-    if (auto id = context.ExtractId(shader, context.shaderObjectHandleToId, "shader", this->block_index_))
+    if (auto id = context.ExtractId(args.shader, context.shaderObjectHandleToId, "shader", this->block_index_))
     {
         statements.DestroyObject(statements.destroyShaderObjectUpdateStatement, this->block_index_, *id);
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateShaderModule(
-    const gfxrecon::decode::ApiCallInfo& call_info,
-    VkResult returnValue,
-    gfxrecon::format::HandleId device,
-    gfxrecon::decode::StructPointerDecoder<gfxrecon::decode::Decoded_VkShaderModuleCreateInfo>* pCreateInfo,
-    gfxrecon::decode::StructPointerDecoder<gfxrecon::decode::Decoded_VkAllocationCallbacks>* pAllocator,
-    gfxrecon::decode::HandlePointerDecoder<VkShaderModule>* pShaderModule
-)
+void VulkanSqliteConsumerExt::Process_vkCreateShaderModule(const ApiCallInfo& call_info, args::CreateShaderModule& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateShaderModule(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pShaderModule
-    );
+    VulkanSqliteConsumer::Process_vkCreateShaderModule(call_info, args);
 
-    auto [shaderModuleValid, shaderModule] = GetHandle(pShaderModule);
+    auto [shaderModuleValid, shaderModule] = GetHandle(&args.pShaderModule);
     if (!shaderModuleValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create shader module, invalid pShaderModule");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create shader module, invalid pCreateInfo");
         }
@@ -2359,53 +2194,39 @@ void VulkanSqliteConsumerExt::Process_vkCreateShaderModule(
 
     auto codeSize = createInfo->decoded_value->codeSize;
 
-    statements.InsertShaderModule(shaderModule, device, codeSize, this->block_index_);
+    statements.InsertShaderModule(shaderModule, args.device, codeSize, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyShaderModule(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId shaderModule,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyShaderModule(const ApiCallInfo& call_info, args::DestroyShaderModule& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyShaderModule(call_info, device, shaderModule, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyShaderModule(call_info, args);
 
-    if (auto id = context.ExtractId(shaderModule, context.shaderModuleHandleToId, "shaderModule", this->block_index_))
+    if (auto id = context.ExtractId(args.shaderModule, context.shaderModuleHandleToId, "shaderModule", this->block_index_))
     {
         statements.DestroyObject(statements.destroyShaderModuleUpdateStatement, this->block_index_, *id);
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateValidationCacheEXT(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkValidationCacheCreateInfoEXT>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkValidationCacheEXT>* pValidationCache
-)
+void VulkanSqliteConsumerExt::Process_vkCreateValidationCacheEXT(const ApiCallInfo& call_info, args::CreateValidationCacheEXT& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateValidationCacheEXT(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pValidationCache
-    );
+    VulkanSqliteConsumer::Process_vkCreateValidationCacheEXT(call_info, args);
 
-    auto [validationCacheValid, validationCache] = GetHandle(pValidationCache);
+    auto [validationCacheValid, validationCache] = GetHandle(&args.pValidationCache);
     if (!validationCacheValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create validation cache, invalid pValidationCache");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create validation cache, invalid pCreateInfo");
         }
@@ -2416,21 +2237,16 @@ void VulkanSqliteConsumerExt::Process_vkCreateValidationCacheEXT(
 
     auto initialDataSize = createInfo->decoded_value->initialDataSize;
 
-    statements.InsertValidationCache(validationCache, device, initialDataSize, this->block_index_);
+    statements.InsertValidationCache(validationCache, args.device, initialDataSize, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyValidationCacheEXT(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId validationCache,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyValidationCacheEXT(const ApiCallInfo& call_info, args::DestroyValidationCacheEXT& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyValidationCacheEXT(call_info, device, validationCache, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyValidationCacheEXT(call_info, args);
 
     if (auto id = context.ExtractId(
-            validationCache, context.validationCacheHandleToId, "validationCache", this->block_index_
+            args.validationCache, context.validationCacheHandleToId, "validationCache", this->block_index_
         ))
     {
         statements.DestroyObject(statements.destroyValidationCacheUpdateStatement, this->block_index_, *id);
@@ -2439,32 +2255,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyValidationCacheEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCreatePipelineCache(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkPipelineCacheCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPipelineCache>* pPipelineCache
+    args::CreatePipelineCache& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreatePipelineCache(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pPipelineCache
-    );
+    VulkanSqliteConsumer::Process_vkCreatePipelineCache(call_info, args);
 
-    auto [pipelineCacheValid, pipelineCache] = GetHandle(pPipelineCache);
+    auto [pipelineCacheValid, pipelineCache] = GetHandle(&args.pPipelineCache);
     if (!pipelineCacheValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create pipeline cache, invalid pPipelineCache");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create pipeline cache, invalid pCreateInfo");
         }
@@ -2479,21 +2289,19 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineCache(
     // we may not need the cache data
     // See original vulkan_json_consumer_base.cpp handling for reference
 
-    statements.InsertPipelineCache(pipelineCache, device, ci.flags, ci.initialDataSize, this->block_index_);
+    statements.InsertPipelineCache(pipelineCache, args.device, ci.flags, ci.initialDataSize, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPipelineCache(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId pipelineCache,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyPipelineCache& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyPipelineCache(call_info, device, pipelineCache, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyPipelineCache(call_info, args);
 
     if (auto id =
-            context.ExtractId(pipelineCache, context.pipelineCacheHandleToId, "pipelineCache", this->block_index_))
+            context.ExtractId(args.pipelineCache, context.pipelineCacheHandleToId, "pipelineCache", this->block_index_))
     {
         statements.DestroyObject(statements.destroyPipelineCacheUpdateStatement, this->block_index_, *id);
     }
@@ -4005,36 +3813,28 @@ void VulkanSqliteConsumerExt::ProcessPipelineShaderStageCreateInfo(
 
 void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId pipelineCache,
-    uint32_t createInfoCount,
-    StructPointerDecoder<Decoded_VkGraphicsPipelineCreateInfo>* pCreateInfos,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPipeline>* pPipelines
+    args::CreateGraphicsPipelines& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateGraphicsPipelines(
-        call_info, returnValue, device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines
-    );
+    VulkanSqliteConsumer::Process_vkCreateGraphicsPipelines(call_info, args);
 
-    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(pPipelines);
+    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(&args.pPipelines);
     if (!pipelinesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create graphics pipeline, invalid pPipelines array");
+            LOG_CMD_WARNING("Failed to create graphics pipeline, invalid args.pPipelines array");
         }
         return;
     }
 
-    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(pCreateInfos);
+    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(&args.pCreateInfos);
     if (!createInfosValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create graphics pipeline, invalid pCreateInfos struct array");
+            LOG_CMD_WARNING("Failed to create graphics pipeline, invalid args.pCreateInfos struct array");
         }
         return;
     }
@@ -4061,7 +3861,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
                     GetHandleArray(&pLibraryCreateInfo->pLibraries);
                 if (!librariesValid)
                 {
-                    if (returnValue == VK_SUCCESS)
+                    if (args.result == VK_SUCCESS)
                     {
                         LOG_CMD_WARNING("Failed to create graphics pipeline, invalid pLibraries struct array");
                     }
@@ -4118,7 +3918,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
         std::unordered_map<VkGraphicsPipelineLibraryFlagBitsEXT, LibraryInfo> libraries =
             GetPipelineLibraryInfo(pipelines[i], libraryCount, libraryHandles);
 
-        std::optional<int64_t> basePipelineId = GetBasePipelineId(returnValue, createInfo, pipelines, i);
+        std::optional<int64_t> basePipelineId = GetBasePipelineId(args.result, createInfo, pipelines, i);
 
         // When using libraries, there are rules for when the layouts can differ; see info near
         // https://registry.khronos.org/vulkan/specs/latest/man/html/VkGraphicsPipelineCreateInfo.html#pipelines-graphics-subsets-complete
@@ -4147,7 +3947,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
             pipelineLayout = pipelineLayoutIter->second;
         }
 
-        auto deviceId = context.GetDeviceId(device);
+        auto deviceId = context.GetDeviceId(args.device);
 
         std::optional<int64_t> renderPass;
         // NOTE dynamic rendering will not have a renderPass assigned
@@ -4247,7 +4047,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
 
         if (graphicsLibraryFlags & VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT)
         {
-            vertexInputStateId = ProcessGraphicsPipelineVertexInputState(returnValue, createInfo, pipelineId);
+            vertexInputStateId = ProcessGraphicsPipelineVertexInputState(args.result, createInfo, pipelineId);
         }
         else
         {
@@ -4375,36 +4175,28 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
 
 void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId pipelineCache,
-    uint32_t createInfoCount,
-    StructPointerDecoder<Decoded_VkComputePipelineCreateInfo>* pCreateInfos,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPipeline>* pPipelines
+    args::CreateComputePipelines& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateComputePipelines(
-        call_info, returnValue, device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines
-    );
+    VulkanSqliteConsumer::Process_vkCreateComputePipelines(call_info, args);
 
-    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(pPipelines);
+    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(&args.pPipelines);
     if (!pipelinesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create compute pipeline, invalid pPipelines array");
+            LOG_CMD_WARNING("Failed to create compute pipeline, invalid args.pPipelines array");
         }
         return;
     }
 
-    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(pCreateInfos);
+    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(&args.pCreateInfos);
     if (!createInfosValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create compute pipeline, invalid pCreateInfos struct array");
+            LOG_CMD_WARNING("Failed to create compute pipeline, invalid args.pCreateInfos struct array");
         }
         return;
     }
@@ -4441,7 +4233,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
             {
                 if (createInfo.decoded_value->basePipelineIndex < 0)
                 {
-                    if (returnValue == VK_SUCCESS)
+                    if (args.result == VK_SUCCESS)
                     {
                         LOG_CMD_WARNING(
                             "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is out of range, "
@@ -4452,7 +4244,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
                 }
                 else if (static_cast<size_t>(createInfo.decoded_value->basePipelineIndex) >= i)
                 {
-                    if (returnValue == VK_SUCCESS)
+                    if (args.result == VK_SUCCESS)
                     {
                         LOG_CMD_WARNING(
                             "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is for a "
@@ -4467,7 +4259,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
                     basePipelineHandle = pipelines[createInfo.decoded_value->basePipelineIndex];
                 }
             }
-            else if (returnValue == VK_SUCCESS && createInfo.decoded_value->basePipelineIndex != -1)
+            else if (args.result == VK_SUCCESS && createInfo.decoded_value->basePipelineIndex != -1)
             {
                 LOG_CMD_WARNING(
                     "Derivative pipeline has both basePipelineHandle and basePipelineIndex "
@@ -4507,7 +4299,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
 
         auto pipeline = pipelines[i];
         auto pipelineHandle = ToInt64(pipeline);
-        auto deviceId = context.GetDeviceId(device);
+        auto deviceId = context.GetDeviceId(args.device);
         auto pipelineId = statements.InsertPipelineCompute(
             pipelineHandle,
             deviceId,
@@ -4525,7 +4317,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
         auto stageInfo = createInfo.stage;
         if (!stageInfo)
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING(
                     "Failed to create compute pipeline stage for pipeline with handle %" PRIu64 ", invalid stage info",
@@ -4545,36 +4337,28 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
 
 void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId pipelineCache,
-    uint32_t createInfoCount,
-    StructPointerDecoder<Decoded_VkRayTracingPipelineCreateInfoNV>* pCreateInfos,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPipeline>* pPipelines
+    args::CreateRayTracingPipelinesNV& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateRayTracingPipelinesNV(
-        call_info, returnValue, device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines
-    );
+    VulkanSqliteConsumer::Process_vkCreateRayTracingPipelinesNV(call_info, args);
 
-    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(pPipelines);
+    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(&args.pPipelines);
     if (!pipelinesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid pPipelines array");
+            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid args.pPipelines array");
         }
         return;
     }
 
-    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(pCreateInfos);
+    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(&args.pCreateInfos);
     if (!createInfosValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid pCreateInfos struct array");
+            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid args.pCreateInfos struct array");
         }
         return;
     }
@@ -4611,7 +4395,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
             {
                 if (createInfo.decoded_value->basePipelineIndex < 0)
                 {
-                    if (returnValue == VK_SUCCESS)
+                    if (args.result == VK_SUCCESS)
                     {
                         LOG_CMD_WARNING(
                             "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is out of range, "
@@ -4622,7 +4406,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
                 }
                 else if (static_cast<size_t>(createInfo.decoded_value->basePipelineIndex) >= i)
                 {
-                    if (returnValue == VK_SUCCESS)
+                    if (args.result == VK_SUCCESS)
                     {
                         LOG_CMD_WARNING(
                             "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is for a "
@@ -4637,7 +4421,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
                     basePipelineHandle = pipelines[createInfo.decoded_value->basePipelineIndex];
                 }
             }
-            else if (returnValue == VK_SUCCESS && createInfo.decoded_value->basePipelineIndex != -1)
+            else if (args.result == VK_SUCCESS && createInfo.decoded_value->basePipelineIndex != -1)
             {
                 LOG_CMD_WARNING(
                     "Derivative pipeline has both basePipelineHandle and basePipelineIndex "
@@ -4677,7 +4461,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
 
         auto pipeline = pipelines[i];
         auto pipelineHandle = ToInt64(pipeline);
-        auto deviceId = context.GetDeviceId(device);
+        auto deviceId = context.GetDeviceId(args.device);
         auto pipelineId = statements.InsertPipelineRayTracingNV(
             pipelineHandle,
             deviceId,
@@ -4695,7 +4479,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
         auto [stagesValid, stageInfos, stageCount] = GetMetaStructArray(createInfo.pStages);
         if (!stagesValid)
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING(
                     "Failed to create raytracing stage for pipeline with handle %" PRIu64 ", invalid pStages array",
@@ -4724,45 +4508,28 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
 
 void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId deferredOperation,
-    format::HandleId pipelineCache,
-    uint32_t createInfoCount,
-    StructPointerDecoder<Decoded_VkRayTracingPipelineCreateInfoKHR>* pCreateInfos,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPipeline>* pPipelines
+    args::CreateRayTracingPipelinesKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateRayTracingPipelinesKHR(
-        call_info,
-        returnValue,
-        device,
-        deferredOperation,
-        pipelineCache,
-        createInfoCount,
-        pCreateInfos,
-        pAllocator,
-        pPipelines
-    );
+    VulkanSqliteConsumer::Process_vkCreateRayTracingPipelinesKHR(call_info, args);
 
-    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(pPipelines);
+    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(&args.pPipelines);
     if (!pipelinesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid pPipelines array");
+            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid args.pPipelines array");
         }
         return;
     }
 
-    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(pCreateInfos);
+    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(&args.pCreateInfos);
     if (!createInfosValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid pCreateInfos struct array");
+            LOG_CMD_WARNING("Failed to create raytracing pipeline, invalid args.pCreateInfos struct array");
         }
         return;
     }
@@ -4799,7 +4566,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
             {
                 if (createInfo.decoded_value->basePipelineIndex < 0)
                 {
-                    if (returnValue == VK_SUCCESS)
+                    if (args.result == VK_SUCCESS)
                     {
                         LOG_CMD_WARNING(
                             "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is out of range, "
@@ -4810,7 +4577,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
                 }
                 else if (static_cast<size_t>(createInfo.decoded_value->basePipelineIndex) >= i)
                 {
-                    if (returnValue == VK_SUCCESS)
+                    if (args.result == VK_SUCCESS)
                     {
                         LOG_CMD_WARNING(
                             "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is for a "
@@ -4825,7 +4592,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
                     basePipelineHandle = pipelines[createInfo.decoded_value->basePipelineIndex];
                 }
             }
-            else if (returnValue == VK_SUCCESS && createInfo.decoded_value->basePipelineIndex != -1)
+            else if (args.result == VK_SUCCESS && createInfo.decoded_value->basePipelineIndex != -1)
             {
                 LOG_CMD_WARNING(
                     "Derivative pipeline has both basePipelineHandle and basePipelineIndex "
@@ -4865,7 +4632,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
 
         auto pipeline = pipelines[i];
         auto pipelineHandle = ToInt64(pipeline);
-        auto deviceId = context.GetDeviceId(device);
+        auto deviceId = context.GetDeviceId(args.device);
         auto pipelineId = statements.InsertPipelineRayTracing(
             pipelineHandle,
             deviceId,
@@ -4880,7 +4647,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
         auto [stagesValid, stageInfos, stageCount] = GetMetaStructArray(createInfo.pStages);
         if (!stagesValid)
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING(
                     "Failed to create raytracing stage for pipeline with handle %" PRIu64 ", invalid pStages array",
@@ -4973,15 +4740,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPipeline(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId pipeline,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyPipeline& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyPipeline(call_info, device, pipeline, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyPipeline(call_info, args);
 
-    if (auto id = context.ExtractId(pipeline, context.pipelineHandleToId, "pipeline", this->block_index_))
+    if (auto id = context.ExtractId(args.pipeline, context.pipelineHandleToId, "pipeline", this->block_index_))
     {
         statements.DestroyObject(statements.destroyPipelineUpdateStatement, this->block_index_, *id);
         // This applies to anonymous shader modules created during vkCreateGraphicsPipelines et al (implemented in
@@ -4994,32 +4759,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyPipeline(
 
 void VulkanSqliteConsumerExt::Process_vkCreatePipelineLayout(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkPipelineLayoutCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPipelineLayout>* pPipelineLayout
+    args::CreatePipelineLayout& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreatePipelineLayout(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pPipelineLayout
-    );
+    VulkanSqliteConsumer::Process_vkCreatePipelineLayout(call_info, args);
 
-    auto [pipelineLayoutValid, pipelineLayout] = GetHandle(pPipelineLayout);
+    auto [pipelineLayoutValid, pipelineLayout] = GetHandle(&args.pPipelineLayout);
     if (!pipelineLayoutValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create pipeline layout, invalid pPipelineLayout handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create pipeline layout info, invalid pCreateInfo");
         }
@@ -5029,7 +4788,7 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineLayout(
         auto flags = createInfo->decoded_value->flags;
 
         auto pipelineLayoutHandle = ToInt64(pipelineLayout);
-        auto deviceId = context.GetDeviceId(device);
+        auto deviceId = context.GetDeviceId(args.device);
         auto pipelineLayoutId =
             statements.InsertPipelineLayout(pipelineLayoutHandle, deviceId, flags, this->block_index_);
 
@@ -5078,16 +4837,14 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineLayout(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPipelineLayout(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId pipelineLayout,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyPipelineLayout& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyPipelineLayout(call_info, device, pipelineLayout, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyPipelineLayout(call_info, args);
 
     if (auto id =
-            context.ExtractId(pipelineLayout, context.pipelineLayoutHandleToId, "pipelineLayout", this->block_index_))
+            context.ExtractId(args.pipelineLayout, context.pipelineLayoutHandleToId, "pipelineLayout", this->block_index_))
     {
         statements.DestroyObject(statements.destroyPipelineLayoutUpdateStatement, this->block_index_, *id);
     }
@@ -5095,32 +4852,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyPipelineLayout(
 
 void VulkanSqliteConsumerExt::Process_vkCreateDescriptorSetLayout(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDescriptorSetLayoutCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDescriptorSetLayout>* pSetLayout
+    args::CreateDescriptorSetLayout& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDescriptorSetLayout(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pSetLayout
-    );
+    VulkanSqliteConsumer::Process_vkCreateDescriptorSetLayout(call_info, args);
 
-    auto [setLayoutValid, setLayout] = GetHandle(pSetLayout);
+    auto [setLayoutValid, setLayout] = GetHandle(&args.pSetLayout);
     if (!setLayoutValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create descriptor set layout, invalid pSetLayout handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create descriptor set layout info, invalid pCreateInfo");
         }
@@ -5169,7 +4920,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDescriptorSetLayout(
     auto flags = createInfo->decoded_value->flags;
 
     auto descriptorSetLayoutHandle = ToInt64(setLayout);
-    auto deviceId = context.GetDeviceId(device);
+    auto deviceId = context.GetDeviceId(args.device);
     auto descriptorSetLayoutId =
         statements.InsertDescriptorSetLayout(descriptorSetLayoutHandle, deviceId, flags, this->block_index_);
 
@@ -5199,16 +4950,14 @@ void VulkanSqliteConsumerExt::Process_vkCreateDescriptorSetLayout(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorSetLayout(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorSetLayout,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyDescriptorSetLayout& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDescriptorSetLayout(call_info, device, descriptorSetLayout, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyDescriptorSetLayout(call_info, args);
 
     if (auto id = context.ExtractId(
-            descriptorSetLayout, context.descriptorSetLayoutHandleToId, "descriptorSetLayout", this->block_index_
+            args.descriptorSetLayout, context.descriptorSetLayoutHandleToId, "descriptorSetLayout", this->block_index_
         ))
     {
         statements.DestroyObject(statements.destroyDescriptorSetLayoutUpdateStatement, this->block_index_, *id);
@@ -5218,32 +4967,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorSetLayout(
 
 void VulkanSqliteConsumerExt::Process_vkCreateDescriptorPool(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDescriptorPoolCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDescriptorPool>* pDescriptorPool
+    args::CreateDescriptorPool& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDescriptorPool(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pDescriptorPool
-    );
+    VulkanSqliteConsumer::Process_vkCreateDescriptorPool(call_info, args);
 
-    auto [poolValid, descriptorPool] = GetHandle(pDescriptorPool);
+    auto [poolValid, descriptorPool] = GetHandle(&args.pDescriptorPool);
     if (!poolValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create descriptor pool, invalid pDescriptorPool handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to set descriptor pool info, invalid pCreateInfo");
         }
@@ -5255,21 +4998,19 @@ void VulkanSqliteConsumerExt::Process_vkCreateDescriptorPool(
     auto& ci = *createInfo->decoded_value;
     // TODO: Handle poolSizeCount and pPoolSizes
 
-    statements.InsertDescriptorPool(descriptorPool, device, ci.flags, ci.maxSets, this->block_index_);
+    statements.InsertDescriptorPool(descriptorPool, args.device, ci.flags, ci.maxSets, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorPool(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorPool,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyDescriptorPool& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDescriptorPool(call_info, device, descriptorPool, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyDescriptorPool(call_info, args);
 
     if (auto id =
-            context.ExtractId(descriptorPool, context.descriptorPoolHandleToId, "descriptor pool", this->block_index_))
+            context.ExtractId(args.descriptorPool, context.descriptorPoolHandleToId, "descriptor pool", this->block_index_))
     {
         statements.DestroyObject(statements.destroyDescriptorPoolUpdateStatement, this->block_index_, *id);
         // update all un-freed associated descriptor sets as they are now implicitly freed
@@ -5279,20 +5020,17 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorPool(
 
 void VulkanSqliteConsumerExt::Process_vkResetDescriptorPool(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId descriptorPool,
-    VkDescriptorPoolResetFlags flags
+    args::ResetDescriptorPool& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkResetDescriptorPool(call_info, returnValue, device, descriptorPool, flags);
+    VulkanSqliteConsumer::Process_vkResetDescriptorPool(call_info, args);
 
-    auto descriptorPoolIter = context.descriptorPoolHandleToId.find(ToInt64(descriptorPool));
+    auto descriptorPoolIter = context.descriptorPoolHandleToId.find(ToInt64(args.descriptorPool));
     if (descriptorPoolIter == context.descriptorPoolHandleToId.end())
     {
         LOG_CMD_WARNING(
-            "Failed to reset descriptor pool, no descriptor pool found with handle %" PRIu64, descriptorPool
+            "Failed to reset descriptor pool, no descriptor pool found with handle %" PRIu64, args.descriptorPool
         );
         return;
     }
@@ -5305,31 +5043,26 @@ void VulkanSqliteConsumerExt::Process_vkResetDescriptorPool(
 
 void VulkanSqliteConsumerExt::Process_vkAllocateDescriptorSets(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDescriptorSetAllocateInfo>* pAllocateInfo,
-    HandlePointerDecoder<VkDescriptorSet>* pDescriptorSets
+    args::AllocateDescriptorSets& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkAllocateDescriptorSets(
-        call_info, returnValue, device, pAllocateInfo, pDescriptorSets
-    );
+    VulkanSqliteConsumer::Process_vkAllocateDescriptorSets(call_info, args);
 
-    auto [descriptorSetsValid, descriptorSets, descriptorSetCount] = GetHandleArray(pDescriptorSets);
+    auto [descriptorSetsValid, descriptorSets, descriptorSetCount] = GetHandleArray(&args.pDescriptorSets);
     if (!descriptorSetsValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to allocate descriptor sets, invalid pDescriptorSets");
         }
         return;
     }
 
-    auto [allocateInfoValid, allocateInfo] = GetMetaStructPointer(pAllocateInfo);
+    auto [allocateInfoValid, allocateInfo] = GetMetaStructPointer(&args.pAllocateInfo);
     if (!allocateInfo)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to allocate descriptor sets, invalid pAllocateInfo");
         }
@@ -5342,7 +5075,7 @@ void VulkanSqliteConsumerExt::Process_vkAllocateDescriptorSets(
         GetHandleArray(&allocateInfo->pSetLayouts);
     if (!descriptorSetLayoutsValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to allocate descriptor sets, invalid pSetLayouts");
         }
@@ -5350,7 +5083,7 @@ void VulkanSqliteConsumerExt::Process_vkAllocateDescriptorSets(
     }
     if (descriptorSetCount != descriptorSetLayoutCount)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING(
                 "descriptor set count does not match descriptor set layout count, using minimum of "
@@ -5387,23 +5120,17 @@ void VulkanSqliteConsumerExt::Process_vkAllocateDescriptorSets(
 
 void VulkanSqliteConsumerExt::Process_vkFreeDescriptorSets(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId descriptorPool,
-    uint32_t descriptorSetCount,
-    HandlePointerDecoder<VkDescriptorSet>* pDescriptorSets
+    args::FreeDescriptorSets& args
 )
 {
 
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkFreeDescriptorSets(
-        call_info, returnValue, device, descriptorPool, descriptorSetCount, pDescriptorSets
-    );
+    VulkanSqliteConsumer::Process_vkFreeDescriptorSets(call_info, args);
 
-    auto [descriptorSetsValid, descriptorSets, descriptorSetsCount] = GetHandleArray(pDescriptorSets);
+    auto [descriptorSetsValid, descriptorSets, descriptorSetsCount] = GetHandleArray(&args.pDescriptorSets);
     if (!descriptorSetsValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to free descriptor set, invalid pDescriptorSets");
         }
@@ -5640,67 +5367,43 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateRenderPass(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkRenderPassCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkRenderPass>* pRenderPass
+    const ApiCallInfo& call_info, args::CreateRenderPass& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateRenderPass(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pRenderPass
-    );
+    VulkanSqliteConsumer::Process_vkCreateRenderPass(call_info, args);
 
-    CreateRenderPass(returnValue, device, pCreateInfo, pRenderPass);
+    CreateRenderPass(args.result, args.device, &args.pCreateInfo, &args.pRenderPass);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateRenderPass2(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkRenderPassCreateInfo2>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkRenderPass>* pRenderPass
+    const ApiCallInfo& call_info, args::CreateRenderPass2& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateRenderPass2(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pRenderPass
-    );
+    VulkanSqliteConsumer::Process_vkCreateRenderPass2(call_info, args);
 
-    CreateRenderPass(returnValue, device, pCreateInfo, pRenderPass);
+    CreateRenderPass(args.result, args.device, &args.pCreateInfo, &args.pRenderPass);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateRenderPass2KHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkRenderPassCreateInfo2>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkRenderPass>* pRenderPass
+    const ApiCallInfo& call_info, args::CreateRenderPass2KHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateRenderPass2KHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pRenderPass
-    );
+    VulkanSqliteConsumer::Process_vkCreateRenderPass2KHR(call_info, args);
 
-    CreateRenderPass(returnValue, device, pCreateInfo, pRenderPass);
+    CreateRenderPass(args.result, args.device, &args.pCreateInfo, &args.pRenderPass);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyRenderPass(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId renderPass,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyRenderPass& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyRenderPass(call_info, device, renderPass, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyRenderPass(call_info, args);
 
-    if (auto id = context.ExtractId(renderPass, context.renderPassHandleToId, "renderPass", this->block_index_))
+    if (auto id = context.ExtractId(args.renderPass, context.renderPassHandleToId, "renderPass", this->block_index_))
     {
         statements.DestroyObject(statements.destroyRenderPassUpdateStatement, this->block_index_, *id);
     }
@@ -5753,37 +5456,23 @@ void VulkanSqliteConsumerExt::CreateSamplerYcbcrConversion(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateSamplerYcbcrConversion(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSamplerYcbcrConversionCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkSamplerYcbcrConversion>* pYcbcrConversion
+    const ApiCallInfo& call_info, args::CreateSamplerYcbcrConversion& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateSamplerYcbcrConversion(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pYcbcrConversion
-    );
+    VulkanSqliteConsumer::Process_vkCreateSamplerYcbcrConversion(call_info, args);
 
-    CreateSamplerYcbcrConversion(returnValue, device, pCreateInfo, pYcbcrConversion);
+    CreateSamplerYcbcrConversion(args.result, args.device, &args.pCreateInfo, &args.pYcbcrConversion);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateSamplerYcbcrConversionKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSamplerYcbcrConversionCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkSamplerYcbcrConversion>* pYcbcrConversion
+    const ApiCallInfo& call_info, args::CreateSamplerYcbcrConversionKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateSamplerYcbcrConversionKHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pYcbcrConversion
-    );
+    VulkanSqliteConsumer::Process_vkCreateSamplerYcbcrConversionKHR(call_info, args);
 
-    CreateSamplerYcbcrConversion(returnValue, device, pCreateInfo, pYcbcrConversion);
+    CreateSamplerYcbcrConversion(args.result, args.device, &args.pCreateInfo, &args.pYcbcrConversion);
 }
 
 void VulkanSqliteConsumerExt::DestroySamplerYcbcrConversion(format::HandleId ycbcrConversion)
@@ -5797,29 +5486,23 @@ void VulkanSqliteConsumerExt::DestroySamplerYcbcrConversion(format::HandleId ycb
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroySamplerYcbcrConversion(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId ycbcrConversion,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroySamplerYcbcrConversion& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroySamplerYcbcrConversion(call_info, device, ycbcrConversion, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroySamplerYcbcrConversion(call_info, args);
 
-    DestroySamplerYcbcrConversion(ycbcrConversion);
+    DestroySamplerYcbcrConversion(args.ycbcrConversion);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroySamplerYcbcrConversionKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId ycbcrConversion,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroySamplerYcbcrConversionKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroySamplerYcbcrConversionKHR(call_info, device, ycbcrConversion, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroySamplerYcbcrConversionKHR(call_info, args);
 
-    DestroySamplerYcbcrConversion(ycbcrConversion);
+    DestroySamplerYcbcrConversion(args.ycbcrConversion);
 }
 
 void VulkanSqliteConsumerExt::CreatePrivateDataSlot(
@@ -5855,37 +5538,23 @@ void VulkanSqliteConsumerExt::CreatePrivateDataSlot(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreatePrivateDataSlot(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkPrivateDataSlotCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPrivateDataSlot>* pPrivateDataSlot
+    const ApiCallInfo& call_info, args::CreatePrivateDataSlot& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreatePrivateDataSlot(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pPrivateDataSlot
-    );
+    VulkanSqliteConsumer::Process_vkCreatePrivateDataSlot(call_info, args);
 
-    CreatePrivateDataSlot(returnValue, device, pCreateInfo, pPrivateDataSlot);
+    CreatePrivateDataSlot(args.result, args.device, &args.pCreateInfo, &args.pPrivateDataSlot);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreatePrivateDataSlotEXT(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkPrivateDataSlotCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPrivateDataSlot>* pPrivateDataSlot
+    const ApiCallInfo& call_info, args::CreatePrivateDataSlotEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreatePrivateDataSlotEXT(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pPrivateDataSlot
-    );
+    VulkanSqliteConsumer::Process_vkCreatePrivateDataSlotEXT(call_info, args);
 
-    CreatePrivateDataSlot(returnValue, device, pCreateInfo, pPrivateDataSlot);
+    CreatePrivateDataSlot(args.result, args.device, &args.pCreateInfo, &args.pPrivateDataSlot);
 }
 
 void VulkanSqliteConsumerExt::DestroyPrivateDataSlot(format::HandleId privateDataSlot)
@@ -5899,81 +5568,58 @@ void VulkanSqliteConsumerExt::DestroyPrivateDataSlot(format::HandleId privateDat
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPrivateDataSlot(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId privateDataSlot,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyPrivateDataSlot& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyPrivateDataSlot(call_info, device, privateDataSlot, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyPrivateDataSlot(call_info, args);
 
-    DestroyPrivateDataSlot(privateDataSlot);
+    DestroyPrivateDataSlot(args.privateDataSlot);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPrivateDataSlotEXT(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId privateDataSlot,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyPrivateDataSlotEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyPrivateDataSlotEXT(call_info, device, privateDataSlot, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyPrivateDataSlotEXT(call_info, args);
 
-    DestroyPrivateDataSlot(privateDataSlot);
+    DestroyPrivateDataSlot(args.privateDataSlot);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    VkPipelineBindPoint pipelineBindPoint,
-    format::HandleId layout,
-    uint32_t firstSet,
-    uint32_t descriptorSetCount,
-    HandlePointerDecoder<VkDescriptorSet>* pDescriptorSets,
-    uint32_t dynamicOffsetCount,
-    PointerDecoder<uint32_t>* pDynamicOffsets
+    args::CmdBindDescriptorSets& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets(
-        call_info,
-        commandBuffer,
-        pipelineBindPoint,
-        layout,
-        firstSet,
-        descriptorSetCount,
-        pDescriptorSets,
-        dynamicOffsetCount,
-        pDynamicOffsets
-    );
+    VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets(call_info, args);
 
-    auto [descriptorSetsValid, descriptorSets, descriptorSetsCount] = GetHandleArray(pDescriptorSets);
+    auto [descriptorSetsValid, descriptorSets, descriptorSetsCount] = GetHandleArray(&args.pDescriptorSets);
     if (!descriptorSetsValid)
     {
         LOG_CMD_WARNING("Failed to bind descriptor sets, invalid pDescriptorSets");
         return;
     }
 
-    auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(commandBuffer));
+    auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
         LOG_CMD_WARNING(
             "Failed to bind descriptor sets, failed to find command buffer recording for command buffer with handle "
             "%" PRIi64,
-            commandBuffer
+            args.commandBuffer
         );
         return;
     }
-    auto pipelineLayoutIter = context.pipelineLayoutHandleToId.find(ToInt64(layout));
+    auto pipelineLayoutIter = context.pipelineLayoutHandleToId.find(ToInt64(args.layout));
     if (pipelineLayoutIter == context.pipelineLayoutHandleToId.end())
     {
-        LOG_CMD_WARNING("Failed to bind descriptor sets, failed to find pipeline layout with handle %" PRIi64, layout);
+        LOG_CMD_WARNING("Failed to bind descriptor sets, failed to find pipeline layout with handle %" PRIi64, args.layout);
         return;
     }
 
-    auto [dynamicOffsetValid, dynamicOffsets, dynamicOffsetsCount] = GetPointerArray(pDynamicOffsets);
+    auto [dynamicOffsetValid, dynamicOffsets, dynamicOffsetsCount] = GetPointerArray(&args.pDynamicOffsets);
     uint32_t dynamicOffsetIndex = 0;
 
     for (size_t i = 0; i < descriptorSetsCount; ++i)
@@ -5987,13 +5633,13 @@ void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
             );
             continue;
         }
-        auto setIndex = firstSet + static_cast<uint32_t>(i);
+        auto setIndex = args.firstSet + static_cast<uint32_t>(i);
 
         // we need to generate stage flags based on the pipeline bind point since that is used
         // for filtering and vkCmdBindDescriptorSets does not configure at the stage level
         // we simply gather all stages that apply to the given bind point.
         VkShaderStageFlags stageFlags = 0;
-        switch (pipelineBindPoint)
+        switch (args.pipelineBindPoint)
         {
             case VK_PIPELINE_BIND_POINT_GRAPHICS:
                 stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS | VK_SHADER_STAGE_TASK_BIT_EXT |
@@ -6012,7 +5658,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
                 break;
             default:
                 LOG_CMD_WARNING(
-                    "Failed to set descriptor set stage flags, unknown pipeline bind point %" PRIi64, pipelineBindPoint
+                    "Failed to set descriptor set stage flags, unknown pipeline bind point %" PRIi64, args.pipelineBindPoint
                 );
         }
 
@@ -6167,26 +5813,24 @@ void VulkanSqliteConsumerExt::BindDescriptorSets2(
 
 void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets2(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkBindDescriptorSetsInfo>* pBindDescriptorSetsInfo
+    args::CmdBindDescriptorSets2& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets2(call_info, commandBuffer, pBindDescriptorSetsInfo);
+    VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets2(call_info, args);
 
-    BindDescriptorSets2(commandBuffer, pBindDescriptorSetsInfo);
+    BindDescriptorSets2(args.commandBuffer, &args.pBindDescriptorSetsInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets2KHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkBindDescriptorSetsInfo>* pBindDescriptorSetsInfo
+    args::CmdBindDescriptorSets2KHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets2KHR(call_info, commandBuffer, pBindDescriptorSetsInfo);
+    VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets2KHR(call_info, args);
 
-    BindDescriptorSets2(commandBuffer, pBindDescriptorSetsInfo);
+    BindDescriptorSets2(args.commandBuffer, &args.pBindDescriptorSetsInfo);
 }
 
 void VulkanSqliteConsumerExt::CreateDescriptorUpdateTemplate(
@@ -6269,37 +5913,23 @@ void VulkanSqliteConsumerExt::CreateDescriptorUpdateTemplate(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDescriptorUpdateTemplate(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDescriptorUpdateTemplateCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDescriptorUpdateTemplate>* pDescriptorUpdateTemplate
+    const ApiCallInfo& call_info, args::CreateDescriptorUpdateTemplate& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDescriptorUpdateTemplate(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate
-    );
+    VulkanSqliteConsumer::Process_vkCreateDescriptorUpdateTemplate(call_info, args);
 
-    CreateDescriptorUpdateTemplate(returnValue, device, pCreateInfo, pDescriptorUpdateTemplate);
+    CreateDescriptorUpdateTemplate(args.result, args.device, &args.pCreateInfo, &args.pDescriptorUpdateTemplate);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDescriptorUpdateTemplateKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDescriptorUpdateTemplateCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDescriptorUpdateTemplate>* pDescriptorUpdateTemplate
+    const ApiCallInfo& call_info, args::CreateDescriptorUpdateTemplateKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDescriptorUpdateTemplateKHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate
-    );
+    VulkanSqliteConsumer::Process_vkCreateDescriptorUpdateTemplateKHR(call_info, args);
 
-    CreateDescriptorUpdateTemplate(returnValue, device, pCreateInfo, pDescriptorUpdateTemplate);
+    CreateDescriptorUpdateTemplate(args.result, args.device, &args.pCreateInfo, &args.pDescriptorUpdateTemplate);
 }
 
 void VulkanSqliteConsumerExt::DestroyDescriptorUpdateTemplate(format::HandleId descriptorUpdateTemplate)
@@ -6317,33 +5947,23 @@ void VulkanSqliteConsumerExt::DestroyDescriptorUpdateTemplate(format::HandleId d
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorUpdateTemplate(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorUpdateTemplate,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyDescriptorUpdateTemplate& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDescriptorUpdateTemplate(
-        call_info, device, descriptorUpdateTemplate, pAllocator
-    );
+    VulkanSqliteConsumer::Process_vkDestroyDescriptorUpdateTemplate(call_info, args);
 
-    DestroyDescriptorUpdateTemplate(descriptorUpdateTemplate);
+    DestroyDescriptorUpdateTemplate(args.descriptorUpdateTemplate);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorUpdateTemplateKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorUpdateTemplate,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyDescriptorUpdateTemplateKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDescriptorUpdateTemplateKHR(
-        call_info, device, descriptorUpdateTemplate, pAllocator
-    );
+    VulkanSqliteConsumer::Process_vkDestroyDescriptorUpdateTemplateKHR(call_info, args);
 
-    DestroyDescriptorUpdateTemplate(descriptorUpdateTemplate);
+    DestroyDescriptorUpdateTemplate(args.descriptorUpdateTemplate);
 }
 
 void VulkanSqliteConsumerExt::WriteDescriptorSet(
@@ -6792,28 +6412,22 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
 
 void VulkanSqliteConsumerExt::Process_vkUpdateDescriptorSets(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    uint32_t descriptorWriteCount,
-    StructPointerDecoder<Decoded_VkWriteDescriptorSet>* pDescriptorWrites,
-    uint32_t descriptorCopyCount,
-    StructPointerDecoder<Decoded_VkCopyDescriptorSet>* pDescriptorCopies
+    args::UpdateDescriptorSets& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkUpdateDescriptorSets(
-        call_info, device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies
-    );
+    VulkanSqliteConsumer::Process_vkUpdateDescriptorSets(call_info, args);
 
-    auto [descriptorWritesValid, descriptorWrites, descriptorWritesCount] = GetMetaStructArray(pDescriptorWrites);
+    auto [descriptorWritesValid, descriptorWrites, descriptorWritesCount] = GetMetaStructArray(&args.pDescriptorWrites);
     if (descriptorWritesValid)
     {
         for (size_t i = 0; i < descriptorWritesCount; ++i)
         {
-            WriteDescriptorSet(device, descriptorWrites[i]);
+            WriteDescriptorSet(args.device, descriptorWrites[i]);
         }
     }
 
-    auto [descriptorCopiesValid, descriptorCopies, descriptorCopiesCount] = GetMetaStructArray(pDescriptorCopies);
+    auto [descriptorCopiesValid, descriptorCopies, descriptorCopiesCount] = GetMetaStructArray(&args.pDescriptorCopies);
     if (descriptorCopiesValid)
     {
         for (size_t i = 0; i < descriptorCopiesCount; ++i)
@@ -7112,34 +6726,24 @@ void VulkanSqliteConsumerExt::WriteDescriptorSetWithTemplate(
 
 void VulkanSqliteConsumerExt::Process_vkUpdateDescriptorSetWithTemplate(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorSet,
-    format::HandleId descriptorUpdateTemplate,
-    DescriptorUpdateTemplateDecoder* pData
+    args::UpdateDescriptorSetWithTemplate& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkUpdateDescriptorSetWithTemplate(
-        call_info, device, descriptorSet, descriptorUpdateTemplate, pData
-    );
+    VulkanSqliteConsumer::Process_vkUpdateDescriptorSetWithTemplate(call_info, args);
 
-    WriteDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
+    WriteDescriptorSetWithTemplate(args.device, args.descriptorSet, args.descriptorUpdateTemplate, &args.pData);
 }
 
 void VulkanSqliteConsumerExt::Process_vkUpdateDescriptorSetWithTemplateKHR(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorSet,
-    format::HandleId descriptorUpdateTemplate,
-    DescriptorUpdateTemplateDecoder* pData
+    args::UpdateDescriptorSetWithTemplateKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkUpdateDescriptorSetWithTemplateKHR(
-        call_info, device, descriptorSet, descriptorUpdateTemplate, pData
-    );
+    VulkanSqliteConsumer::Process_vkUpdateDescriptorSetWithTemplateKHR(call_info, args);
 
-    WriteDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
+    WriteDescriptorSetWithTemplate(args.device, args.descriptorSet, args.descriptorUpdateTemplate, &args.pData);
 }
 
 void VulkanSqliteConsumerExt::PushDescriptorSet(
@@ -7240,54 +6844,39 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    VkPipelineBindPoint pipelineBindPoint,
-    format::HandleId layout,
-    uint32_t set,
-    uint32_t descriptorWriteCount,
-    StructPointerDecoder<Decoded_VkWriteDescriptorSet>* pDescriptorWrites
+    args::CmdPushDescriptorSet& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet(
-        call_info, commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites
-    );
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet(call_info, args);
 
     PushDescriptorSet(
-        commandBuffer, pipelineBindPoint, std::nullopt, layout, set, descriptorWriteCount, pDescriptorWrites
+        args.commandBuffer, args.pipelineBindPoint, std::nullopt, args.layout, args.set, args.descriptorWriteCount, &args.pDescriptorWrites
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetKHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    VkPipelineBindPoint pipelineBindPoint,
-    format::HandleId layout,
-    uint32_t set,
-    uint32_t descriptorWriteCount,
-    StructPointerDecoder<Decoded_VkWriteDescriptorSet>* pDescriptorWrites
+    args::CmdPushDescriptorSetKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetKHR(
-        call_info, commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites
-    );
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetKHR(call_info, args);
 
     PushDescriptorSet(
-        commandBuffer, pipelineBindPoint, std::nullopt, layout, set, descriptorWriteCount, pDescriptorWrites
+        args.commandBuffer, args.pipelineBindPoint, std::nullopt, args.layout, args.set, args.descriptorWriteCount, &args.pDescriptorWrites
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkPushDescriptorSetInfo>* pPushDescriptorSetInfo
+    args::CmdPushDescriptorSet2& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2(call_info, commandBuffer, pPushDescriptorSetInfo);
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2(call_info, args);
 
-    auto [pushDescriptorSetInfoValid, pushDescriptorSetInfo] = GetMetaStructPointer(pPushDescriptorSetInfo);
+    auto [pushDescriptorSetInfoValid, pushDescriptorSetInfo] = GetMetaStructPointer(&args.pPushDescriptorSetInfo);
     if (!pushDescriptorSetInfoValid)
     {
         LOG_CMD_WARNING("Failed to push descriptor sets, invalid pPushDescriptorSetInfo struct");
@@ -7298,7 +6887,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2(
     LogUnsupportedPNext(pushDescriptorSetInfo->pNext);
 
     PushDescriptorSet(
-        commandBuffer,
+        args.commandBuffer,
         std::nullopt,
         pushDescriptorSetInfo->decoded_value->stageFlags,
         pushDescriptorSetInfo->layout,
@@ -7310,14 +6899,13 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2(
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2KHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkPushDescriptorSetInfo>* pPushDescriptorSetInfo
+    args::CmdPushDescriptorSet2KHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2KHR(call_info, commandBuffer, pPushDescriptorSetInfo);
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2KHR(call_info, args);
 
-    auto [pushDescriptorSetInfoValid, pushDescriptorSetInfo] = GetMetaStructPointer(pPushDescriptorSetInfo);
+    auto [pushDescriptorSetInfoValid, pushDescriptorSetInfo] = GetMetaStructPointer(&args.pPushDescriptorSetInfo);
     if (!pushDescriptorSetInfoValid)
     {
         LOG_CMD_WARNING("Failed to push descriptor sets, invalid pPushDescriptorSetInfo struct");
@@ -7328,7 +6916,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2KHR(
     LogUnsupportedPNext(pushDescriptorSetInfo->pNext);
 
     PushDescriptorSet(
-        commandBuffer,
+        args.commandBuffer,
         std::nullopt,
         pushDescriptorSetInfo->decoded_value->stageFlags,
         pushDescriptorSetInfo->layout,
@@ -7426,38 +7014,15 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId descriptorUpdateTemplate,
-    format::HandleId layout,
-    uint32_t set,
-    DescriptorUpdateTemplateDecoder* pData
-)
-{
-    // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate(
-        call_info, commandBuffer, descriptorUpdateTemplate, layout, set, pData
-    );
-
-    PushDescriptorSetWithTemplate(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
-}
-
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplateKHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId descriptorUpdateTemplate,
-    format::HandleId layout,
-    uint32_t set,
-    DescriptorUpdateTemplateDecoder* pData
+    args::CmdPushDescriptorSetWithTemplateKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplateKHR(
-        call_info, commandBuffer, descriptorUpdateTemplate, layout, set, pData
-    );
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplateKHR(call_info, args);
 
-    PushDescriptorSetWithTemplate(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
+    PushDescriptorSetWithTemplate(args.commandBuffer, args.descriptorUpdateTemplate, args.layout, args.set, &args.pData);
 }
 
 void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate2(
@@ -7487,60 +7052,39 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate2(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkPushDescriptorSetWithTemplateInfo>* pPushDescriptorSetWithTemplateInfo
-)
-{
-    // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2(
-        call_info, commandBuffer, pPushDescriptorSetWithTemplateInfo
-    );
-
-    PushDescriptorSetWithTemplate2(commandBuffer, pPushDescriptorSetWithTemplateInfo);
-}
-
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkPushDescriptorSetWithTemplateInfo>* pPushDescriptorSetWithTemplateInfo
+    args::CmdPushDescriptorSetWithTemplate2KHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
-        call_info, commandBuffer, pPushDescriptorSetWithTemplateInfo
-    );
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2KHR(call_info, args);
 
-    PushDescriptorSetWithTemplate2(commandBuffer, pPushDescriptorSetWithTemplateInfo);
+    PushDescriptorSetWithTemplate2(args.commandBuffer, &args.pPushDescriptorSetWithTemplateInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateBuffer(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkBufferCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkBuffer>* pBuffer
+    args::CreateBuffer& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateBuffer(call_info, returnValue, device, pCreateInfo, pAllocator, pBuffer);
+    VulkanSqliteConsumer::Process_vkCreateBuffer(call_info, args);
 
-    auto [bufferValid, buffer] = GetHandle(pBuffer);
+    auto [bufferValid, buffer] = GetHandle(&args.pBuffer);
     if (!bufferValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create buffer, invalid pBuffer handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create buffer, invalid pCreateInfo struct");
         }
@@ -7577,20 +7121,18 @@ void VulkanSqliteConsumerExt::Process_vkCreateBuffer(
         pnext = header->pNext;
     }
 
-    statements.InsertBuffer(buffer, device, ci.flags, ci.size, ci.usage, usage2, ci.sharingMode, this->block_index_);
+    statements.InsertBuffer(buffer, args.device, ci.flags, ci.size, ci.usage, usage2, ci.sharingMode, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyBuffer(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId buffer,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyBuffer& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyBuffer(call_info, device, buffer, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyBuffer(call_info, args);
 
-    if (auto id = context.ExtractId(buffer, context.bufferHandleToId, "buffer", this->block_index_))
+    if (auto id = context.ExtractId(args.buffer, context.bufferHandleToId, "buffer", this->block_index_))
     {
         statements.DestroyObject(statements.destroyBufferUpdateStatement, this->block_index_, *id);
     }
@@ -7598,30 +7140,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyBuffer(
 
 void VulkanSqliteConsumerExt::Process_vkCreateBufferView(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkBufferViewCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkBufferView>* pView
+    args::CreateBufferView& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateBufferView(call_info, returnValue, device, pCreateInfo, pAllocator, pView);
+    VulkanSqliteConsumer::Process_vkCreateBufferView(call_info, args);
 
-    auto [viewValid, view] = GetHandle(pView);
+    auto [viewValid, view] = GetHandle(&args.pView);
     if (!viewValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create buffer view, invalid pView handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create buffer view, invalid pCreateInfo");
         }
@@ -7635,21 +7173,19 @@ void VulkanSqliteConsumerExt::Process_vkCreateBufferView(
     auto& ci = *createInfo->decoded_value;
 
     statements.InsertBufferView(
-        view, device, bufferId, ci.format, ci.offset, static_cast<int64_t>(ci.range), this->block_index_
+        view, args.device, bufferId, ci.format, ci.offset, static_cast<int64_t>(ci.range), this->block_index_
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyBufferView(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId bufferView,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyBufferView& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyBufferView(call_info, device, bufferView, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyBufferView(call_info, args);
 
-    if (auto id = context.ExtractId(bufferView, context.bufferViewHandleToId, "bufferView", this->block_index_))
+    if (auto id = context.ExtractId(args.bufferView, context.bufferViewHandleToId, "bufferView", this->block_index_))
     {
         statements.DestroyObject(statements.destroyBufferViewUpdateStatement, this->block_index_, *id);
     }
@@ -7657,30 +7193,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyBufferView(
 
 void VulkanSqliteConsumerExt::Process_vkCreateImage(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkImageCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkImage>* pImage
+    args::CreateImage& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateImage(call_info, returnValue, device, pCreateInfo, pAllocator, pImage);
+    VulkanSqliteConsumer::Process_vkCreateImage(call_info, args);
 
-    auto [imageValid, image] = GetHandle(pImage);
+    auto [imageValid, image] = GetHandle(&args.pImage);
     if (!imageValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create image, invalid pImage handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create image, invalid pCreateInfo");
         }
@@ -7728,7 +7260,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
     auto& ci = *createInfo->decoded_value;
     statements.InsertImage(
         image,
-        device,
+        args.device,
         ci.flags,
         ci.imageType,
         ci.format,
@@ -7757,48 +7289,36 @@ void VulkanSqliteConsumerExt::Process_vkCreateImage(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyImage(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId image,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyImage(const ApiCallInfo& call_info, args::DestroyImage& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyImage(call_info, device, image, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyImage(call_info, args);
 
-    if (auto id = context.ExtractId(image, context.imageHandleToId, "image", this->block_index_))
+    if (auto id = context.ExtractId(args.image, context.imageHandleToId, "image", this->block_index_))
     {
         statements.DestroyObject(statements.destroyImageUpdateStatement, this->block_index_, *id);
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateImageView(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkImageViewCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkImageView>* pView
-)
+void VulkanSqliteConsumerExt::Process_vkCreateImageView(const ApiCallInfo& call_info, args::CreateImageView& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateImageView(call_info, returnValue, device, pCreateInfo, pAllocator, pView);
+    VulkanSqliteConsumer::Process_vkCreateImageView(call_info, args);
 
-    auto [viewValid, view] = GetHandle(pView);
+    auto [viewValid, view] = GetHandle(&args.pView);
     if (!viewValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create image view, invalid pView handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create image view, invalid pCreateInfo");
         }
@@ -7843,7 +7363,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
 
     statements.InsertImageView(
         view,
-        device,
+        args.device,
         ci.flags,
         imageId,
         ci.viewType,
@@ -7857,17 +7377,12 @@ void VulkanSqliteConsumerExt::Process_vkCreateImageView(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyImageView(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId imageView,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyImageView(const ApiCallInfo& call_info, args::DestroyImageView& args)
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyImageView(call_info, device, imageView, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyImageView(call_info, args);
 
-    if (auto id = context.ExtractId(imageView, context.imageViewHandleToId, "imageView", this->block_index_))
+    if (auto id = context.ExtractId(args.imageView, context.imageViewHandleToId, "imageView", this->block_index_))
     {
         statements.DestroyObject(statements.destroyImageViewUpdateStatement, this->block_index_, *id);
     }
@@ -7875,30 +7390,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyImageView(
 
 void VulkanSqliteConsumerExt::Process_vkCreateSampler(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSamplerCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkSampler>* pSampler
+    args::CreateSampler& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateSampler(call_info, returnValue, device, pCreateInfo, pAllocator, pSampler);
+    VulkanSqliteConsumer::Process_vkCreateSampler(call_info, args);
 
-    auto [samplerValid, sampler] = GetHandle(pSampler);
+    auto [samplerValid, sampler] = GetHandle(&args.pSampler);
     if (!samplerValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create sampler, invalid pSampler handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create sampler, invalid pCreateInfo");
         }
@@ -7938,7 +7449,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSampler(
 
     statements.InsertSampler(
         sampler,
-        device,
+        args.device,
         ci.flags,
         ci.magFilter,
         ci.minFilter,
@@ -7962,15 +7473,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateSampler(
 
 void VulkanSqliteConsumerExt::Process_vkDestroySampler(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId sampler,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroySampler& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroySampler(call_info, device, sampler, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroySampler(call_info, args);
 
-    if (auto id = context.ExtractId(sampler, context.samplerHandleToId, "sampler", this->block_index_))
+    if (auto id = context.ExtractId(args.sampler, context.samplerHandleToId, "sampler", this->block_index_))
     {
         statements.DestroyObject(statements.destroySamplerUpdateStatement, this->block_index_, *id);
     }
@@ -8008,105 +7517,81 @@ void VulkanSqliteConsumerExt::GetDisplay(
 
 void VulkanSqliteConsumerExt::Process_vkGetRandROutputDisplayEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId physicalDevice,
-    uint64_t dpy,
-    size_t rrOutput,
-    HandlePointerDecoder<VkDisplayKHR>* pDisplay
+    args::GetRandROutputDisplayEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkGetRandROutputDisplayEXT(
-        call_info, returnValue, physicalDevice, dpy, rrOutput, pDisplay
-    );
+    VulkanSqliteConsumer::Process_vkGetRandROutputDisplayEXT(call_info, args);
 
-    GetDisplay(returnValue, physicalDevice, pDisplay);
+    GetDisplay(args.result, args.physicalDevice, &args.pDisplay);
 }
 
 void VulkanSqliteConsumerExt::Process_vkGetDrmDisplayEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId physicalDevice,
-    int32_t drmFd,
-    uint32_t connectorId,
-    HandlePointerDecoder<VkDisplayKHR>* display
+    args::GetDrmDisplayEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkGetDrmDisplayEXT(
-        call_info, returnValue, physicalDevice, drmFd, connectorId, display
-    );
+    VulkanSqliteConsumer::Process_vkGetDrmDisplayEXT(call_info, args);
 
-    GetDisplay(returnValue, physicalDevice, display);
+    GetDisplay(args.result, args.physicalDevice, &args.display);
 }
 
 void VulkanSqliteConsumerExt::Process_vkGetWinrtDisplayNV(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId physicalDevice,
-    uint32_t deviceRelativeId,
-    HandlePointerDecoder<VkDisplayKHR>* pDisplay
+    args::GetWinrtDisplayNV& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkGetWinrtDisplayNV(
-        call_info, returnValue, physicalDevice, deviceRelativeId, pDisplay
-    );
+    VulkanSqliteConsumer::Process_vkGetWinrtDisplayNV(call_info, args);
 
-    GetDisplay(returnValue, physicalDevice, pDisplay);
+    GetDisplay(args.result, args.physicalDevice, &args.pDisplay);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId physicalDevice,
-    format::HandleId display,
-    StructPointerDecoder<Decoded_VkDisplayModeCreateInfoKHR>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDisplayModeKHR>* pMode
+    args::CreateDisplayModeKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDisplayModeKHR(
-        call_info, returnValue, physicalDevice, display, pCreateInfo, pAllocator, pMode
-    );
+    VulkanSqliteConsumer::Process_vkCreateDisplayModeKHR(call_info, args);
 
-    auto [modeValid, mode] = GetHandle(pMode);
+    auto [modeValid, mode] = GetHandle(&args.pMode);
     if (!modeValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create display mode, invalid pMode handle");
         }
         return;
     }
 
-    auto physicalDeviceIter = context.physicalDeviceHandleToId.find(ToInt64(physicalDevice));
+    auto physicalDeviceIter = context.physicalDeviceHandleToId.find(ToInt64(args.physicalDevice));
     if (physicalDeviceIter == context.physicalDeviceHandleToId.end())
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING(
-                "Failed to create display mode, failed to find physical device with handle %" PRIu64, physicalDevice
+                "Failed to create display mode, failed to find physical device with handle %" PRIu64, args.physicalDevice
             );
         }
         return;
     }
 
-    auto displayIter = context.displayHandleToId.find(ToInt64(display));
+    auto displayIter = context.displayHandleToId.find(ToInt64(args.display));
     if (displayIter == context.displayHandleToId.end())
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
-            LOG_CMD_WARNING("Failed to create display mode,failed to find display with handle %" PRIu64, display);
+            LOG_CMD_WARNING("Failed to create display mode,failed to find display with handle %" PRIu64, args.display);
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create display mode, invalid pCreateInfo");
         }
@@ -8130,32 +7615,26 @@ void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
 
 void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkSwapchainCreateInfoKHR>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkSwapchainKHR>* pSwapchain
+    args::CreateSwapchainKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateSwapchainKHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pSwapchain
-    );
+    VulkanSqliteConsumer::Process_vkCreateSwapchainKHR(call_info, args);
 
-    auto [swapchainValid, swapchain] = GetHandle(pSwapchain);
+    auto [swapchainValid, swapchain] = GetHandle(&args.pSwapchain);
     if (!swapchainValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create swapchain, invalid pSwapchain handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create swapchain, invalid pCreateInfo");
         }
@@ -8177,7 +7656,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(
 
     statements.InsertSwapchain(
         swapchain,
-        device,
+        args.device,
         ci.flags,
         ci.minImageCount,
         ci.imageFormat,
@@ -8197,33 +7676,26 @@ void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(
 
 void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    uint32_t swapchainCount,
-    StructPointerDecoder<Decoded_VkSwapchainCreateInfoKHR>* pCreateInfos,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkSwapchainKHR>* pSwapchains
+    args::CreateSharedSwapchainsKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateSharedSwapchainsKHR(
-        call_info, returnValue, device, swapchainCount, pCreateInfos, pAllocator, pSwapchains
-    );
+    VulkanSqliteConsumer::Process_vkCreateSharedSwapchainsKHR(call_info, args);
 
-    auto [swapchainsValid, swapchains, chainsCount] = GetHandleArray(pSwapchains);
+    auto [swapchainsValid, swapchains, chainsCount] = GetHandleArray(&args.pSwapchains);
     if (!swapchainsValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create swapchain, invalid pSwapchains handle array");
         }
         return;
     }
 
-    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(pCreateInfos);
+    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(&args.pCreateInfos);
     if (!createInfosValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create swapchain, invalid pCreateInfos");
         }
@@ -8234,7 +7706,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
     {
         if (chainsCount <= i)
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING("Failed to create swapchain, invalid pSwapchains count");
             }
@@ -8270,7 +7742,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
 
         statements.InsertSwapchain(
             swapchain,
-            device,
+            args.device,
             flags,
             minImageCount,
             imageFormat,
@@ -8291,15 +7763,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
 
 void VulkanSqliteConsumerExt::Process_vkDestroySwapchainKHR(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId swapchain,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroySwapchainKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroySwapchainKHR(call_info, device, swapchain, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroySwapchainKHR(call_info, args);
 
-    if (auto id = context.ExtractId(swapchain, context.swapchainHandleToId, "swapchain", this->block_index_))
+    if (auto id = context.ExtractId(args.swapchain, context.swapchainHandleToId, "swapchain", this->block_index_))
     {
         statements.DestroyObject(statements.destroySwapchainUpdateStatement, this->block_index_, *id);
         // destroying the swapchain destroys all swapchain images
@@ -8309,22 +7779,16 @@ void VulkanSqliteConsumerExt::Process_vkDestroySwapchainKHR(
 
 void VulkanSqliteConsumerExt::Process_vkGetSwapchainImagesKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId swapchain,
-    PointerDecoder<uint32_t>* pSwapchainImageCount,
-    HandlePointerDecoder<VkImage>* pSwapchainImages
+    args::GetSwapchainImagesKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkGetSwapchainImagesKHR(
-        call_info, returnValue, device, swapchain, pSwapchainImageCount, pSwapchainImages
-    );
+    VulkanSqliteConsumer::Process_vkGetSwapchainImagesKHR(call_info, args);
 
     // we don't know how many swapchain images will be generated until the vkGetSwapchainImagesKHR call
     // so we insert them into the image table here and use the associated swapchain's create api event as
     // the create api event for the image
-    auto swapchainId = context.GetSwapchainId(swapchain);
+    auto swapchainId = context.GetSwapchainId(args.swapchain);
     if (!swapchainId)
     {
         return;
@@ -8332,7 +7796,7 @@ void VulkanSqliteConsumerExt::Process_vkGetSwapchainImagesKHR(
 
     // pSwapchainImages can be null for the initial query for how many images are supported by the swapchain
     // ignore any where this is the case
-    auto [swapchainImagesValid, swapchainImages, swapchainImageCount] = GetHandleArray(pSwapchainImages);
+    auto [swapchainImagesValid, swapchainImages, swapchainImageCount] = GetHandleArray(&args.pSwapchainImages);
     if (swapchainImagesValid)
     {
         for (size_t i = 0; i < swapchainImageCount; ++i)
@@ -8341,7 +7805,7 @@ void VulkanSqliteConsumerExt::Process_vkGetSwapchainImagesKHR(
             auto swapchainImage = swapchainImages[i];
             if (context.imageHandleToId.find(ToInt64(swapchainImage)) == context.imageHandleToId.end())
             {
-                statements.InsertSwapchainImage(swapchainImage, device, *swapchainId);
+                statements.InsertSwapchainImage(swapchainImage, args.device, *swapchainId);
             }
         }
     }
@@ -8349,32 +7813,24 @@ void VulkanSqliteConsumerExt::Process_vkGetSwapchainImagesKHR(
 
 void VulkanSqliteConsumerExt::Process_vkAcquireNextImageKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId swapchain,
-    uint64_t timeout,
-    format::HandleId semaphore,
-    format::HandleId fence,
-    PointerDecoder<uint32_t>* pImageIndex
+    args::AcquireNextImageKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkAcquireNextImageKHR(
-        call_info, returnValue, device, swapchain, timeout, semaphore, fence, pImageIndex
-    );
+    VulkanSqliteConsumer::Process_vkAcquireNextImageKHR(call_info, args);
 
-    auto swapchainId = context.GetSwapchainId(swapchain, true);
+    auto swapchainId = context.GetSwapchainId(args.swapchain, true);
 
     std::optional<int64_t> fenceSyncScopeId = std::nullopt;
-    if (fence != format::kNullHandleId)
+    if (args.fence != format::kNullHandleId)
     {
-        auto fenceSyncScopeIter = context.fenceHandleToSyncScopeId.find(ToInt64(fence));
+        auto fenceSyncScopeIter = context.fenceHandleToSyncScopeId.find(ToInt64(args.fence));
         if (fenceSyncScopeIter == context.fenceHandleToSyncScopeId.end())
         {
-            if (returnValue == VK_SUCCESS)
+            if (args.result == VK_SUCCESS)
             {
                 LOG_CMD_WARNING(
-                    "Failed to find fence instance for handle %" PRIu64 " setting foreign key to NULL", fence
+                    "Failed to find fence instance for handle %" PRIu64 " setting foreign key to NULL", args.fence
                 );
             }
         }
@@ -8384,7 +7840,7 @@ void VulkanSqliteConsumerExt::Process_vkAcquireNextImageKHR(
         }
     }
 
-    auto semaphoreId = context.GetSemaphoreId(semaphore);
+    auto semaphoreId = context.GetSemaphoreId(args.semaphore);
 
     statements.InsertAcquireNextImage(
         swapchainId, fenceSyncScopeId, semaphoreId, context.currentFrame, this->block_index_
@@ -8393,21 +7849,18 @@ void VulkanSqliteConsumerExt::Process_vkAcquireNextImageKHR(
 
 void VulkanSqliteConsumerExt::Process_vkAcquireNextImage2KHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkAcquireNextImageInfoKHR>* pAcquireInfo,
-    PointerDecoder<uint32_t>* pImageIndex
+    args::AcquireNextImage2KHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkAcquireNextImage2KHR(call_info, returnValue, device, pAcquireInfo, pImageIndex);
+    VulkanSqliteConsumer::Process_vkAcquireNextImage2KHR(call_info, args);
 
     std::optional<int64_t> swapchainId = std::nullopt;
     std::optional<int64_t> fenceSyncScopeId = std::nullopt;
-    auto [acquireInfoValid, acquireInfo] = GetMetaStructPointer(pAcquireInfo);
+    auto [acquireInfoValid, acquireInfo] = GetMetaStructPointer(&args.pAcquireInfo);
     if (!acquireInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Invalid pAcquireInfo for acquire next image, setting foreign keys to NULL");
         }
@@ -8423,7 +7876,7 @@ void VulkanSqliteConsumerExt::Process_vkAcquireNextImage2KHR(
             auto fenceSyncScopeIter = context.fenceHandleToSyncScopeId.find(ToInt64(acquireInfo->fence));
             if (fenceSyncScopeIter == context.fenceHandleToSyncScopeId.end())
             {
-                if (returnValue == VK_SUCCESS)
+                if (args.result == VK_SUCCESS)
                 {
                     LOG_CMD_WARNING(
                         "Failed to find fence instance for handle %" PRIu64 " setting foreign key to NULL",
@@ -8445,32 +7898,26 @@ void VulkanSqliteConsumerExt::Process_vkAcquireNextImage2KHR(
 
 void VulkanSqliteConsumerExt::Process_vkCreateFramebuffer(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkFramebufferCreateInfo>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkFramebuffer>* pFramebuffer
+    args::CreateFramebuffer& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateFramebuffer(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pFramebuffer
-    );
+    VulkanSqliteConsumer::Process_vkCreateFramebuffer(call_info, args);
 
-    auto [framebufferValid, framebuffer] = GetHandle(pFramebuffer);
+    auto [framebufferValid, framebuffer] = GetHandle(&args.pFramebuffer);
     if (!framebufferValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create framebuffer, invalid pFramebuffer handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create framebuffer, invalid pCreateInfo");
         }
@@ -8496,7 +7943,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateFramebuffer(
     }
 
     auto framebufferId = statements.InsertFramebuffer(
-        framebuffer, device, framebufferFlags, renderPassId, ci.width, ci.height, ci.layers, this->block_index_
+        framebuffer, args.device, framebufferFlags, renderPassId, ci.width, ci.height, ci.layers, this->block_index_
     );
 
     if (ci.flags & VK_FRAMEBUFFER_CREATE_IMAGELESS_BIT)
@@ -8556,15 +8003,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateFramebuffer(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyFramebuffer(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId framebuffer,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyFramebuffer& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyFramebuffer(call_info, device, framebuffer, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyFramebuffer(call_info, args);
 
-    if (auto id = context.ExtractId(framebuffer, context.framebufferHandleToId, "framebuffer", this->block_index_))
+    if (auto id = context.ExtractId(args.framebuffer, context.framebufferHandleToId, "framebuffer", this->block_index_))
     {
         statements.DestroyObject(statements.destroyFramebufferUpdateStatement, this->block_index_, *id);
     }
@@ -8572,29 +8017,18 @@ void VulkanSqliteConsumerExt::Process_vkDestroyFramebuffer(
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetVertexInputEXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t vertexBindingDescriptionCount,
-    StructPointerDecoder<Decoded_VkVertexInputBindingDescription2EXT>* pVertexBindingDescriptions,
-    uint32_t vertexAttributeDescriptionCount,
-    StructPointerDecoder<Decoded_VkVertexInputAttributeDescription2EXT>* pVertexAttributeDescriptions
+    args::CmdSetVertexInputEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetVertexInputEXT(
-        call_info,
-        commandBuffer,
-        vertexBindingDescriptionCount,
-        pVertexBindingDescriptions,
-        vertexAttributeDescriptionCount,
-        pVertexAttributeDescriptions
-    );
+    VulkanSqliteConsumer::Process_vkCmdSetVertexInputEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     // we need to clear the existing state before insertion, the vulkan spec indicates that if this command does not
     // include the description for a binding, then it is set to undefined
     context.commandBufferRecordingVertexInputBindingDescriptions[commandBufferRecordingId].clear();
-    auto [vertexBindingsValid, vertexBindings, vertexBindingsCount] = GetMetaStructArray(pVertexBindingDescriptions);
+    auto [vertexBindingsValid, vertexBindings, vertexBindingsCount] = GetMetaStructArray(&args.pVertexBindingDescriptions);
     if (vertexBindingsValid)
     {
         for (size_t i = 0; i < vertexBindingsCount; ++i)
@@ -8611,7 +8045,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetVertexInputEXT(
     }
 
     context.commandBufferRecordingVertexInputAttributeDescriptions[commandBufferRecordingId].clear();
-    auto [vertexAttrsValid, vertexAttrs, vertexAttrsCount] = GetMetaStructArray(pVertexAttributeDescriptions);
+    auto [vertexAttrsValid, vertexAttrs, vertexAttrsCount] = GetMetaStructArray(&args.pVertexAttributeDescriptions);
     if (vertexAttrsValid)
     {
         for (size_t i = 0; i < vertexAttrsCount; ++i)
@@ -8634,16 +8068,15 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetVertexInputEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocations(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkRenderingAttachmentLocationInfo>* pLocationInfo
+    args::CmdSetRenderingAttachmentLocations& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetRenderingAttachmentLocations(call_info, commandBuffer, pLocationInfo);
+    VulkanSqliteConsumer::Process_vkCmdSetRenderingAttachmentLocations(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    auto [locationInfoValid, locationInfo] = GetMetaStructPointer(pLocationInfo);
+    auto [locationInfoValid, locationInfo] = GetMetaStructPointer(&args.pLocationInfo);
     if (!locationInfoValid)
     {
         LOG_CMD_WARNING("Failed to insert dynamic rendering attachment locations, invalid pLocationInfo");
@@ -8668,16 +8101,15 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocations(
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocationsKHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkRenderingAttachmentLocationInfoKHR>* pLocationInfo
+    args::CmdSetRenderingAttachmentLocationsKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetRenderingAttachmentLocationsKHR(call_info, commandBuffer, pLocationInfo);
+    VulkanSqliteConsumer::Process_vkCmdSetRenderingAttachmentLocationsKHR(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    auto [locationInfoValid, locationInfo] = GetMetaStructPointer(pLocationInfo);
+    auto [locationInfoValid, locationInfo] = GetMetaStructPointer(&args.pLocationInfo);
     if (!locationInfoValid)
     {
         LOG_CMD_WARNING("Failed to insert dynamic rendering attachment locations, invalid pLocationInfo");
@@ -8702,18 +8134,17 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocationsKHR(
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndices(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkRenderingInputAttachmentIndexInfo>* pInputAttachmentIndexInfo
+    args::CmdSetRenderingInputAttachmentIndices& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndices(
-        call_info, commandBuffer, pInputAttachmentIndexInfo
+        call_info, args
     );
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] = GetMetaStructPointer(pInputAttachmentIndexInfo);
+    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] = GetMetaStructPointer(&args.pInputAttachmentIndexInfo);
     if (!inputAttachmentIndexInfoValid)
     {
         LOG_CMD_WARNING(
@@ -8756,18 +8187,17 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndices(
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndicesKHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkRenderingInputAttachmentIndexInfoKHR>* pInputAttachmentIndexInfo
+    args::CmdSetRenderingInputAttachmentIndicesKHR& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndicesKHR(
-        call_info, commandBuffer, pInputAttachmentIndexInfo
+        call_info, args
     );
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] = GetMetaStructPointer(pInputAttachmentIndexInfo);
+    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] = GetMetaStructPointer(&args.pInputAttachmentIndexInfo);
     if (!inputAttachmentIndexInfoValid)
     {
         LOG_CMD_WARNING(
@@ -8835,53 +8265,49 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndicesKHR
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetViewport(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t firstViewport,
-    uint32_t viewportCount,
-    StructPointerDecoder<Decoded_VkViewport>* pViewports
+    args::CmdSetViewport& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetViewport(call_info, commandBuffer, firstViewport, viewportCount, pViewports);
+    VulkanSqliteConsumer::Process_vkCmdSetViewport(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    InsertDynamicViewport(firstViewport);
+    auto* pViewports = &args.pViewports;
+    InsertDynamicViewport(args.firstViewport);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWithCount(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t viewportCount,
-    StructPointerDecoder<Decoded_VkViewport>* pViewports
+    args::CmdSetViewportWithCount& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetViewportWithCount(call_info, commandBuffer, viewportCount, pViewports);
+    VulkanSqliteConsumer::Process_vkCmdSetViewportWithCount(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     // clear previous settings as WithCount explicitly sets the whole viewport state
     context.commandBufferRecordingDynamicViewports.erase(commandBufferRecordingId);
 
+    auto* pViewports = &args.pViewports;
     InsertDynamicViewport(0);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWithCountEXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t viewportCount,
-    StructPointerDecoder<Decoded_VkViewport>* pViewports
+    args::CmdSetViewportWithCountEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetViewportWithCountEXT(call_info, commandBuffer, viewportCount, pViewports);
+    VulkanSqliteConsumer::Process_vkCmdSetViewportWithCountEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     // clear previous settings as WithCount explicitly sets the whole viewport state
     context.commandBufferRecordingDynamicViewports.erase(commandBufferRecordingId);
 
+    auto* pViewports = &args.pViewports;
     InsertDynamicViewport(0);
 }
 
@@ -8904,80 +8330,71 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWithCountEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetScissor(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t firstScissor,
-    uint32_t scissorCount,
-    StructPointerDecoder<Decoded_VkRect2D>* pScissors
+    args::CmdSetScissor& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetScissor(call_info, commandBuffer, firstScissor, scissorCount, pScissors);
+    VulkanSqliteConsumer::Process_vkCmdSetScissor(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    InsertDynamicScissor(firstScissor);
+    auto* pScissors = &args.pScissors;
+    InsertDynamicScissor(args.firstScissor);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetScissorWithCount(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t scissorCount,
-    StructPointerDecoder<Decoded_VkRect2D>* pScissors
+    args::CmdSetScissorWithCount& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetScissorWithCount(call_info, commandBuffer, scissorCount, pScissors);
+    VulkanSqliteConsumer::Process_vkCmdSetScissorWithCount(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     // clear previous settings as WithCount explicitly sets the whole scissor state
     context.commandBufferRecordingDynamicScissors.erase(commandBufferRecordingId);
 
+    auto* pScissors = &args.pScissors;
     InsertDynamicScissor(0);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetScissorWithCountEXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t scissorCount,
-    StructPointerDecoder<Decoded_VkRect2D>* pScissors
+    args::CmdSetScissorWithCountEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetScissorWithCountEXT(call_info, commandBuffer, scissorCount, pScissors);
+    VulkanSqliteConsumer::Process_vkCmdSetScissorWithCountEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     // clear previous settings as WithCount explicitly sets the whole scissor state
     context.commandBufferRecordingDynamicScissors.erase(commandBufferRecordingId);
 
+    auto* pScissors = &args.pScissors;
     InsertDynamicScissor(0);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetLineWidth(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, float lineWidth
+    const ApiCallInfo& call_info, args::CmdSetLineWidth& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetLineWidth(call_info, commandBuffer, lineWidth);
+    VulkanSqliteConsumer::Process_vkCmdSetLineWidth(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicLineWidth(this->block_index_, commandBufferRecordingId, lineWidth);
+    statements.InsertStateDynamicLineWidth(this->block_index_, commandBufferRecordingId, args.lineWidth);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    float depthBiasConstantFactor,
-    float depthBiasClamp,
-    float depthBiasSlopeFactor
+    args::CmdSetDepthBias& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthBias(
-        call_info, commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor
-    );
+    VulkanSqliteConsumer::Process_vkCmdSetDepthBias(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
@@ -8990,9 +8407,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias(
     statements.InsertStateDynamicDepthBias(
         this->block_index_,
         commandBufferRecordingId,
-        depthBiasConstantFactor,
-        depthBiasClamp,
-        depthBiasSlopeFactor,
+        args.depthBiasConstantFactor,
+        args.depthBiasClamp,
+        args.depthBiasSlopeFactor,
         depthBiasRepresentation,
         depthBiasExact
     );
@@ -9000,12 +8417,11 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias(
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias2EXT(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkDepthBiasInfoEXT>* pDepthBiasInfo
+    args::CmdSetDepthBias2EXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthBias2EXT(call_info, commandBuffer, pDepthBiasInfo);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthBias2EXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
@@ -9014,7 +8430,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias2EXT(
         VK_DEPTH_BIAS_REPRESENTATION_LEAST_REPRESENTABLE_VALUE_FORMAT_EXT;
     VkBool32 depthBiasExact = VK_FALSE;
 
-    auto [depthBiasInfoValid, depthBiasInfo] = GetMetaStructPointer(pDepthBiasInfo);
+    auto [depthBiasInfoValid, depthBiasInfo] = GetMetaStructPointer(&args.pDepthBiasInfo);
     if (depthBiasInfoValid && depthBiasInfo->pNext)
     {
         auto pnext = depthBiasInfo->pNext;
@@ -9039,9 +8455,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias2EXT(
         statements.InsertStateDynamicDepthBias(
             this->block_index_,
             commandBufferRecordingId,
-            pDepthBiasInfo->GetPointer()->depthBiasConstantFactor,
-            pDepthBiasInfo->GetPointer()->depthBiasClamp,
-            pDepthBiasInfo->GetPointer()->depthBiasSlopeFactor,
+            args.pDepthBiasInfo.GetPointer()->depthBiasConstantFactor,
+            args.pDepthBiasInfo.GetPointer()->depthBiasClamp,
+            args.pDepthBiasInfo.GetPointer()->depthBiasSlopeFactor,
             depthBiasRepresentation,
             depthBiasExact
         );
@@ -9049,468 +8465,447 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias2EXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetBlendConstants(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, PointerDecoder<float>* blendConstants
+    const ApiCallInfo& call_info, args::CmdSetBlendConstants& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetBlendConstants(call_info, commandBuffer, blendConstants);
+    VulkanSqliteConsumer::Process_vkCmdSetBlendConstants(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    GFXRECON_ASSERT(blendConstants->GetLength() == 4);
+    GFXRECON_ASSERT(args.blendConstants.GetLength() == 4);
     statements.InsertStateDynamicBlendConstants(
-        this->block_index_, commandBufferRecordingId, std::span<const float, 4>(blendConstants->GetPointer(), 4)
+        this->block_index_, commandBufferRecordingId, std::span<const float, 4>(args.blendConstants.GetPointer(), 4)
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBounds(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, float minDepthBounds, float maxDepthBounds
+    const ApiCallInfo& call_info, args::CmdSetDepthBounds& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthBounds(call_info, commandBuffer, minDepthBounds, maxDepthBounds);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthBounds(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     statements.InsertStateDynamicDepthBounds(
-        this->block_index_, commandBufferRecordingId, minDepthBounds, maxDepthBounds
+        this->block_index_, commandBufferRecordingId, args.minDepthBounds, args.maxDepthBounds
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilCompareMask(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask
+    const ApiCallInfo& call_info, args::CmdSetStencilCompareMask& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetStencilCompareMask(call_info, commandBuffer, faceMask, compareMask);
+    VulkanSqliteConsumer::Process_vkCmdSetStencilCompareMask(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    if (faceMask & VK_STENCIL_FACE_FRONT_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
-        statements.InsertStateDynamicStencilCompareMaskFront(this->block_index_, commandBufferRecordingId, compareMask);
+        statements.InsertStateDynamicStencilCompareMaskFront(this->block_index_, commandBufferRecordingId, args.compareMask);
     }
-    if (faceMask & VK_STENCIL_FACE_BACK_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
-        statements.InsertStateDynamicStencilCompareMaskBack(this->block_index_, commandBufferRecordingId, compareMask);
+        statements.InsertStateDynamicStencilCompareMaskBack(this->block_index_, commandBufferRecordingId, args.compareMask);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilWriteMask(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask
+    const ApiCallInfo& call_info, args::CmdSetStencilWriteMask& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetStencilWriteMask(call_info, commandBuffer, faceMask, writeMask);
+    VulkanSqliteConsumer::Process_vkCmdSetStencilWriteMask(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    if (faceMask & VK_STENCIL_FACE_FRONT_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
-        statements.InsertStateDynamicStencilWriteMaskFront(this->block_index_, commandBufferRecordingId, writeMask);
+        statements.InsertStateDynamicStencilWriteMaskFront(this->block_index_, commandBufferRecordingId, args.writeMask);
     }
-    if (faceMask & VK_STENCIL_FACE_BACK_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
-        statements.InsertStateDynamicStencilWriteMaskBack(this->block_index_, commandBufferRecordingId, writeMask);
+        statements.InsertStateDynamicStencilWriteMaskBack(this->block_index_, commandBufferRecordingId, args.writeMask);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilReference(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference
+    const ApiCallInfo& call_info, args::CmdSetStencilReference& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetStencilReference(call_info, commandBuffer, faceMask, reference);
+    VulkanSqliteConsumer::Process_vkCmdSetStencilReference(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    if (faceMask & VK_STENCIL_FACE_FRONT_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
-        statements.InsertStateDynamicStencilReferenceFront(this->block_index_, commandBufferRecordingId, reference);
+        statements.InsertStateDynamicStencilReferenceFront(this->block_index_, commandBufferRecordingId, args.reference);
     }
-    if (faceMask & VK_STENCIL_FACE_BACK_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
-        statements.InsertStateDynamicStencilReferenceBack(this->block_index_, commandBufferRecordingId, reference);
+        statements.InsertStateDynamicStencilReferenceBack(this->block_index_, commandBufferRecordingId, args.reference);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetCullMode(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkCullModeFlags cullMode
+    const ApiCallInfo& call_info, args::CmdSetCullMode& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetCullMode(call_info, commandBuffer, cullMode);
+    VulkanSqliteConsumer::Process_vkCmdSetCullMode(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicCullMode(this->block_index_, commandBufferRecordingId, cullMode);
+    statements.InsertStateDynamicCullMode(this->block_index_, commandBufferRecordingId, args.cullMode);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetCullModeEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkCullModeFlags cullMode
+    const ApiCallInfo& call_info, args::CmdSetCullModeEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetCullModeEXT(call_info, commandBuffer, cullMode);
+    VulkanSqliteConsumer::Process_vkCmdSetCullModeEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicCullMode(this->block_index_, commandBufferRecordingId, cullMode);
+    statements.InsertStateDynamicCullMode(this->block_index_, commandBufferRecordingId, args.cullMode);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetFrontFace(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkFrontFace frontFace
+    const ApiCallInfo& call_info, args::CmdSetFrontFace& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetFrontFace(call_info, commandBuffer, frontFace);
+    VulkanSqliteConsumer::Process_vkCmdSetFrontFace(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicFrontFace(this->block_index_, commandBufferRecordingId, frontFace);
+    statements.InsertStateDynamicFrontFace(this->block_index_, commandBufferRecordingId, args.frontFace);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetFrontFaceEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkFrontFace frontFace
+    const ApiCallInfo& call_info, args::CmdSetFrontFaceEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetFrontFaceEXT(call_info, commandBuffer, frontFace);
+    VulkanSqliteConsumer::Process_vkCmdSetFrontFaceEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicFrontFace(this->block_index_, commandBufferRecordingId, frontFace);
+    statements.InsertStateDynamicFrontFace(this->block_index_, commandBufferRecordingId, args.frontFace);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveTopology(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkPrimitiveTopology primitiveTopology
+    const ApiCallInfo& call_info, args::CmdSetPrimitiveTopology& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveTopology(call_info, commandBuffer, primitiveTopology);
+    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveTopology(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicPrimitiveTopology(this->block_index_, commandBufferRecordingId, primitiveTopology);
+    statements.InsertStateDynamicPrimitiveTopology(this->block_index_, commandBufferRecordingId, args.primitiveTopology);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveTopologyEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkPrimitiveTopology primitiveTopology
+    const ApiCallInfo& call_info, args::CmdSetPrimitiveTopologyEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveTopologyEXT(call_info, commandBuffer, primitiveTopology);
+    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveTopologyEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicPrimitiveTopology(this->block_index_, commandBufferRecordingId, primitiveTopology);
+    statements.InsertStateDynamicPrimitiveTopology(this->block_index_, commandBufferRecordingId, args.primitiveTopology);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthTestEnable(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthTestEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthTestEnable& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthTestEnable(call_info, commandBuffer, depthTestEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthTestEnable(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthTestEnable(this->block_index_, commandBufferRecordingId, depthTestEnable);
+    statements.InsertStateDynamicDepthTestEnable(this->block_index_, commandBufferRecordingId, args.depthTestEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthTestEnableEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthTestEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthTestEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthTestEnableEXT(call_info, commandBuffer, depthTestEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthTestEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthTestEnable(this->block_index_, commandBufferRecordingId, depthTestEnable);
+    statements.InsertStateDynamicDepthTestEnable(this->block_index_, commandBufferRecordingId, args.depthTestEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthWriteEnable(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthWriteEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthWriteEnable& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthWriteEnable(call_info, commandBuffer, depthWriteEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthWriteEnable(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthWriteEnable(this->block_index_, commandBufferRecordingId, depthWriteEnable);
+    statements.InsertStateDynamicDepthWriteEnable(this->block_index_, commandBufferRecordingId, args.depthWriteEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthWriteEnableEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthWriteEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthWriteEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthWriteEnableEXT(call_info, commandBuffer, depthWriteEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthWriteEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthWriteEnable(this->block_index_, commandBufferRecordingId, depthWriteEnable);
+    statements.InsertStateDynamicDepthWriteEnable(this->block_index_, commandBufferRecordingId, args.depthWriteEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthCompareOp(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkCompareOp depthCompareOp
+    const ApiCallInfo& call_info, args::CmdSetDepthCompareOp& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthCompareOp(call_info, commandBuffer, depthCompareOp);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthCompareOp(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthCompareOp(this->block_index_, commandBufferRecordingId, depthCompareOp);
+    statements.InsertStateDynamicDepthCompareOp(this->block_index_, commandBufferRecordingId, args.depthCompareOp);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthCompareOpEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkCompareOp depthCompareOp
+    const ApiCallInfo& call_info, args::CmdSetDepthCompareOpEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthCompareOpEXT(call_info, commandBuffer, depthCompareOp);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthCompareOpEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthCompareOp(this->block_index_, commandBufferRecordingId, depthCompareOp);
+    statements.InsertStateDynamicDepthCompareOp(this->block_index_, commandBufferRecordingId, args.depthCompareOp);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBoundsTestEnable(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthBoundsTestEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthBoundsTestEnable& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthBoundsTestEnable(call_info, commandBuffer, depthBoundsTestEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthBoundsTestEnable(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     statements.InsertStateDynamicDepthBoundsTestEnable(
-        this->block_index_, commandBufferRecordingId, depthBoundsTestEnable
+        this->block_index_, commandBufferRecordingId, args.depthBoundsTestEnable
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBoundsTestEnableEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthBoundsTestEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthBoundsTestEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthBoundsTestEnableEXT(call_info, commandBuffer, depthBoundsTestEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthBoundsTestEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     statements.InsertStateDynamicDepthBoundsTestEnable(
-        this->block_index_, commandBufferRecordingId, depthBoundsTestEnable
+        this->block_index_, commandBufferRecordingId, args.depthBoundsTestEnable
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilTestEnable(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 stencilTestEnable
+    const ApiCallInfo& call_info, args::CmdSetStencilTestEnable& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetStencilTestEnable(call_info, commandBuffer, stencilTestEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetStencilTestEnable(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicStencilTestEnable(this->block_index_, commandBufferRecordingId, stencilTestEnable);
+    statements.InsertStateDynamicStencilTestEnable(this->block_index_, commandBufferRecordingId, args.stencilTestEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilTestEnableEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 stencilTestEnable
+    const ApiCallInfo& call_info, args::CmdSetStencilTestEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetStencilTestEnableEXT(call_info, commandBuffer, stencilTestEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetStencilTestEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicStencilTestEnable(this->block_index_, commandBufferRecordingId, stencilTestEnable);
+    statements.InsertStateDynamicStencilTestEnable(this->block_index_, commandBufferRecordingId, args.stencilTestEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilOp(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    VkStencilFaceFlags faceMask,
-    VkStencilOp failOp,
-    VkStencilOp passOp,
-    VkStencilOp depthFailOp,
-    VkCompareOp compareOp
+    const ApiCallInfo& call_info, args::CmdSetStencilOp& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetStencilOp(
-        call_info, commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp
-    );
+    VulkanSqliteConsumer::Process_vkCmdSetStencilOp(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    if (faceMask & VK_STENCIL_FACE_FRONT_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
         statements.InsertStateDynamicStencilOpsFront(
-            this->block_index_, commandBufferRecordingId, failOp, passOp, depthFailOp, compareOp
+            this->block_index_, commandBufferRecordingId, args.failOp, args.passOp, args.depthFailOp, args.compareOp
         );
     }
-    if (faceMask & VK_STENCIL_FACE_BACK_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
         statements.InsertStateDynamicStencilOpsBack(
-            this->block_index_, commandBufferRecordingId, failOp, passOp, depthFailOp, compareOp
+            this->block_index_, commandBufferRecordingId, args.failOp, args.passOp, args.depthFailOp, args.compareOp
         );
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilOpEXT(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    VkStencilFaceFlags faceMask,
-    VkStencilOp failOp,
-    VkStencilOp passOp,
-    VkStencilOp depthFailOp,
-    VkCompareOp compareOp
+    const ApiCallInfo& call_info, args::CmdSetStencilOpEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetStencilOpEXT(
-        call_info, commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp
-    );
+    VulkanSqliteConsumer::Process_vkCmdSetStencilOpEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    if (faceMask & VK_STENCIL_FACE_FRONT_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
         statements.InsertStateDynamicStencilOpsFront(
-            this->block_index_, commandBufferRecordingId, failOp, passOp, depthFailOp, compareOp
+            this->block_index_, commandBufferRecordingId, args.failOp, args.passOp, args.depthFailOp, args.compareOp
         );
     }
-    if (faceMask & VK_STENCIL_FACE_BACK_BIT)
+    if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
         statements.InsertStateDynamicStencilOpsBack(
-            this->block_index_, commandBufferRecordingId, failOp, passOp, depthFailOp, compareOp
+            this->block_index_, commandBufferRecordingId, args.failOp, args.passOp, args.depthFailOp, args.compareOp
         );
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRasterizerDiscardEnable(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 rasterizerDiscardEnable
+    const ApiCallInfo& call_info, args::CmdSetRasterizerDiscardEnable& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetRasterizerDiscardEnable(call_info, commandBuffer, rasterizerDiscardEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetRasterizerDiscardEnable(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     statements.InsertStateDynamicRasterizerDiscardEnable(
-        this->block_index_, commandBufferRecordingId, rasterizerDiscardEnable
+        this->block_index_, commandBufferRecordingId, args.rasterizerDiscardEnable
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRasterizerDiscardEnableEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 rasterizerDiscardEnable
+    const ApiCallInfo& call_info, args::CmdSetRasterizerDiscardEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetRasterizerDiscardEnableEXT(call_info, commandBuffer, rasterizerDiscardEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetRasterizerDiscardEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     statements.InsertStateDynamicRasterizerDiscardEnable(
-        this->block_index_, commandBufferRecordingId, rasterizerDiscardEnable
+        this->block_index_, commandBufferRecordingId, args.rasterizerDiscardEnable
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBiasEnable(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthBiasEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthBiasEnable& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthBiasEnable(call_info, commandBuffer, depthBiasEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthBiasEnable(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthBiasEnable(this->block_index_, commandBufferRecordingId, depthBiasEnable);
+    statements.InsertStateDynamicDepthBiasEnable(this->block_index_, commandBufferRecordingId, args.depthBiasEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBiasEnableEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 depthBiasEnable
+    const ApiCallInfo& call_info, args::CmdSetDepthBiasEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetDepthBiasEnableEXT(call_info, commandBuffer, depthBiasEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetDepthBiasEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicDepthBiasEnable(this->block_index_, commandBufferRecordingId, depthBiasEnable);
+    statements.InsertStateDynamicDepthBiasEnable(this->block_index_, commandBufferRecordingId, args.depthBiasEnable);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveRestartEnable(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 primitiveRestartEnable
+    const ApiCallInfo& call_info, args::CmdSetPrimitiveRestartEnable& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveRestartEnable(call_info, commandBuffer, primitiveRestartEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveRestartEnable(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     statements.InsertStateDynamicPrimitiveRestartEnable(
-        this->block_index_, commandBufferRecordingId, primitiveRestartEnable
+        this->block_index_, commandBufferRecordingId, args.primitiveRestartEnable
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveRestartEnableEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 primitiveRestartEnable
+    const ApiCallInfo& call_info, args::CmdSetPrimitiveRestartEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveRestartEnableEXT(call_info, commandBuffer, primitiveRestartEnable);
+    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveRestartEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
     statements.InsertStateDynamicPrimitiveRestartEnable(
-        this->block_index_, commandBufferRecordingId, primitiveRestartEnable
+        this->block_index_, commandBufferRecordingId, args.primitiveRestartEnable
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetPatchControlPointsEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkBool32 patchControlPoints
+    const ApiCallInfo& call_info, args::CmdSetPatchControlPointsEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetPatchControlPointsEXT(call_info, commandBuffer, patchControlPoints);
+    VulkanSqliteConsumer::Process_vkCmdSetPatchControlPointsEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicPatchControlPoints(this->block_index_, commandBufferRecordingId, patchControlPoints);
+    statements.InsertStateDynamicPatchControlPoints(this->block_index_, commandBufferRecordingId, args.patchControlPoints);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetLogicOpEXT(
-    const ApiCallInfo& call_info, format::HandleId commandBuffer, VkLogicOp logicOp
+    const ApiCallInfo& call_info, args::CmdSetLogicOpEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetLogicOpEXT(call_info, commandBuffer, logicOp);
+    VulkanSqliteConsumer::Process_vkCmdSetLogicOpEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicLogicOp(this->block_index_, commandBufferRecordingId, logicOp);
+    statements.InsertStateDynamicLogicOp(this->block_index_, commandBufferRecordingId, args.logicOp);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetColorWriteEnableEXT(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t attachmentCount,
-    PointerDecoder<VkBool32>* pColorWriteEnables
+    const ApiCallInfo& call_info, args::CmdSetColorWriteEnableEXT& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetColorWriteEnableEXT(
-        call_info, commandBuffer, attachmentCount, pColorWriteEnables
-    );
+    VulkanSqliteConsumer::Process_vkCmdSetColorWriteEnableEXT(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    auto [enablesValid, enables, enablesCount] = GetPointerArray(pColorWriteEnables);
+    auto [enablesValid, enables, enablesCount] = GetPointerArray(&args.pColorWriteEnables);
     if (!enablesValid)
     {
         LOG_CMD_WARNING("Failed to insert dynamic color write enables, invalid pColorWriteEnables");
@@ -9525,33 +8920,26 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetColorWriteEnableEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateAccelerationStructureKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkAccelerationStructureCreateInfoKHR>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkAccelerationStructureKHR>* pAccelerationStructure
+    const ApiCallInfo& call_info, args::CreateAccelerationStructureKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateAccelerationStructureKHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pAccelerationStructure
-    );
+    VulkanSqliteConsumer::Process_vkCreateAccelerationStructureKHR(call_info, args);
 
-    auto [accelStrucValid, accelStruct] = GetHandle(pAccelerationStructure);
+    auto [accelStrucValid, accelStruct] = GetHandle(&args.pAccelerationStructure);
     if (!accelStrucValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create acceleration structure, invalid pAccelerationStructure handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create acceleration structure, invalid pCreateInfo");
         }
@@ -9564,7 +8952,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateAccelerationStructureKHR(
 
     statements.InsertAccelerationStructure(
         accelStruct,
-        device,
+        args.device,
         ci.createFlags,
         ci.type,
         createInfo->buffer,
@@ -9576,33 +8964,26 @@ void VulkanSqliteConsumerExt::Process_vkCreateAccelerationStructureKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateAccelerationStructureNV(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkAccelerationStructureCreateInfoNV>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkAccelerationStructureNV>* pAccelerationStructure
+    const ApiCallInfo& call_info, args::CreateAccelerationStructureNV& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateAccelerationStructureNV(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pAccelerationStructure
-    );
+    VulkanSqliteConsumer::Process_vkCreateAccelerationStructureNV(call_info, args);
 
-    auto [accelStrucValid, accelStruct] = GetHandle(pAccelerationStructure);
+    auto [accelStrucValid, accelStruct] = GetHandle(&args.pAccelerationStructure);
     if (!accelStrucValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create acceleration structure, invalid pAccelerationStructure handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create acceleration structure, invalid pCreateInfo");
         }
@@ -9614,26 +8995,21 @@ void VulkanSqliteConsumerExt::Process_vkCreateAccelerationStructureNV(
     auto& ci = *createInfo->decoded_value;
 
     statements.InsertAccelerationStructureNv(
-        accelStruct, device, ci.info.flags, ci.info.type, ci.compactedSize, ci.info.instanceCount, this->block_index_
+        accelStruct, args.device, ci.info.flags, ci.info.type, ci.compactedSize, ci.info.instanceCount, this->block_index_
     );
 
     // TODO parse geometries
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyAccelerationStructureKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId accelerationStructure,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyAccelerationStructureKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyAccelerationStructureKHR(
-        call_info, device, accelerationStructure, pAllocator
-    );
+    VulkanSqliteConsumer::Process_vkDestroyAccelerationStructureKHR(call_info, args);
 
     if (auto id = context.ExtractId(
-            accelerationStructure, context.accelerationStructureHandleToId, "accelerationStructure", this->block_index_
+            args.accelerationStructure, context.accelerationStructureHandleToId, "accelerationStructure", this->block_index_
         ))
     {
         statements.DestroyObject(statements.destroyAccelerationStructureUpdateStatement, this->block_index_, *id);
@@ -9641,19 +9017,14 @@ void VulkanSqliteConsumerExt::Process_vkDestroyAccelerationStructureKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyAccelerationStructureNV(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId accelerationStructure,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyAccelerationStructureNV& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyAccelerationStructureNV(
-        call_info, device, accelerationStructure, pAllocator
-    );
+    VulkanSqliteConsumer::Process_vkDestroyAccelerationStructureNV(call_info, args);
 
     if (auto id = context.ExtractId(
-            accelerationStructure,
+            args.accelerationStructure,
             context.accelerationStructureNvHandleToId,
             "accelerationStructure",
             this->block_index_
@@ -9804,44 +9175,17 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildRangeInfo(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkBuildAccelerationStructuresKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId deferredOperation,
-    uint32_t infoCount,
-    StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
-    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>* ppBuildRangeInfos
-)
-{
-    // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkBuildAccelerationStructuresKHR(
-        call_info, returnValue, device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos
-    );
-
-    auto buildId =
-        statements.InsertAccelerationStructureBuild(device, deferredOperation, std::nullopt, this->block_index_);
-
-    ProcessVkAccelerationStructureBuildGeometryInfo(buildId, pInfos, ppBuildRangeInfos);
-}
-
 void VulkanSqliteConsumerExt::Process_vkCmdBuildAccelerationStructuresKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t infoCount,
-    StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
-    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>* ppBuildRangeInfos
+    const ApiCallInfo& call_info, args::CmdBuildAccelerationStructuresKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdBuildAccelerationStructuresKHR(
-        call_info, commandBuffer, infoCount, pInfos, ppBuildRangeInfos
-    );
+    VulkanSqliteConsumer::Process_vkCmdBuildAccelerationStructuresKHR(call_info, args);
 
     auto buildId =
-        statements.InsertAccelerationStructureBuild(std::nullopt, std::nullopt, commandBuffer, this->block_index_);
+        statements.InsertAccelerationStructureBuild(std::nullopt, std::nullopt, args.commandBuffer, this->block_index_);
 
-    ProcessVkAccelerationStructureBuildGeometryInfo(buildId, pInfos, ppBuildRangeInfos);
+    ProcessVkAccelerationStructureBuildGeometryInfo(buildId, &args.pInfos, &args.ppBuildRangeInfos);
 }
 
 void VulkanSqliteConsumerExt::ProcessVulkanBuildAccelerationStructuresCommand(
@@ -9860,55 +9204,19 @@ void VulkanSqliteConsumerExt::ProcessVulkanBuildAccelerationStructuresCommand(
     ProcessVkAccelerationStructureBuildGeometryInfo(buildId, pInfos, ppRangeInfos);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCopyAccelerationStructureKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId deferredOperation,
-    StructPointerDecoder<Decoded_VkCopyAccelerationStructureInfoKHR>* pInfo
-)
-{
-    // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCopyAccelerationStructureKHR(
-        call_info, returnValue, device, deferredOperation, pInfo
-    );
-
-    auto [infoValid, info] = GetMetaStructPointer(pInfo);
-    if (infoValid)
-    {
-        statements.InsertAccelerationStructureCopy(
-            device,
-            deferredOperation,
-            std::nullopt,
-            info->src,
-            info->dst,
-            std::nullopt,
-            std::nullopt,
-            info->decoded_value->mode,
-            this->block_index_
-        );
-    }
-}
-
 void VulkanSqliteConsumerExt::Process_vkCopyAccelerationStructureToMemoryKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId deferredOperation,
-    StructPointerDecoder<Decoded_VkCopyAccelerationStructureToMemoryInfoKHR>* pInfo
+    const ApiCallInfo& call_info, args::CopyAccelerationStructureToMemoryKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCopyAccelerationStructureToMemoryKHR(
-        call_info, returnValue, device, deferredOperation, pInfo
-    );
+    VulkanSqliteConsumer::Process_vkCopyAccelerationStructureToMemoryKHR(call_info, args);
 
-    auto [infoValid, info] = GetMetaStructPointer(pInfo);
+    auto [infoValid, info] = GetMetaStructPointer(&args.pInfo);
     if (infoValid)
     {
         statements.InsertAccelerationStructureCopy(
-            device,
-            deferredOperation,
+            args.device,
+            args.deferredOperation,
             std::nullopt,
             info->src,
             std::nullopt,
@@ -9921,24 +9229,18 @@ void VulkanSqliteConsumerExt::Process_vkCopyAccelerationStructureToMemoryKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCopyMemoryToAccelerationStructureKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId deferredOperation,
-    StructPointerDecoder<Decoded_VkCopyMemoryToAccelerationStructureInfoKHR>* pInfo
+    const ApiCallInfo& call_info, args::CopyMemoryToAccelerationStructureKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCopyMemoryToAccelerationStructureKHR(
-        call_info, returnValue, device, deferredOperation, pInfo
-    );
+    VulkanSqliteConsumer::Process_vkCopyMemoryToAccelerationStructureKHR(call_info, args);
 
-    auto [infoValid, info] = GetMetaStructPointer(pInfo);
+    auto [infoValid, info] = GetMetaStructPointer(&args.pInfo);
     if (infoValid)
     {
         statements.InsertAccelerationStructureCopy(
-            device,
-            deferredOperation,
+            args.device,
+            args.deferredOperation,
             std::nullopt,
             std::nullopt,
             info->dst,
@@ -9951,21 +9253,19 @@ void VulkanSqliteConsumerExt::Process_vkCopyMemoryToAccelerationStructureKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyAccelerationStructureKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyAccelerationStructureInfoKHR>* pInfo
+    const ApiCallInfo& call_info, args::CmdCopyAccelerationStructureKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdCopyAccelerationStructureKHR(call_info, commandBuffer, pInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyAccelerationStructureKHR(call_info, args);
 
-    auto [infoValid, info] = GetMetaStructPointer(pInfo);
+    auto [infoValid, info] = GetMetaStructPointer(&args.pInfo);
     if (infoValid)
     {
         statements.InsertAccelerationStructureCopy(
             std::nullopt,
             std::nullopt,
-            commandBuffer,
+            args.commandBuffer,
             info->src,
             info->dst,
             std::nullopt,
@@ -9977,21 +9277,19 @@ void VulkanSqliteConsumerExt::Process_vkCmdCopyAccelerationStructureKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyAccelerationStructureToMemoryKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyAccelerationStructureToMemoryInfoKHR>* pInfo
+    const ApiCallInfo& call_info, args::CmdCopyAccelerationStructureToMemoryKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdCopyAccelerationStructureToMemoryKHR(call_info, commandBuffer, pInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyAccelerationStructureToMemoryKHR(call_info, args);
 
-    auto [infoValid, info] = GetMetaStructPointer(pInfo);
+    auto [infoValid, info] = GetMetaStructPointer(&args.pInfo);
     if (infoValid)
     {
         statements.InsertAccelerationStructureCopy(
             std::nullopt,
             std::nullopt,
-            commandBuffer,
+            args.commandBuffer,
             info->src,
             std::nullopt,
             std::nullopt,
@@ -10003,21 +9301,19 @@ void VulkanSqliteConsumerExt::Process_vkCmdCopyAccelerationStructureToMemoryKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyMemoryToAccelerationStructureKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyMemoryToAccelerationStructureInfoKHR>* pInfo
+    const ApiCallInfo& call_info, args::CmdCopyMemoryToAccelerationStructureKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdCopyMemoryToAccelerationStructureKHR(call_info, commandBuffer, pInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyMemoryToAccelerationStructureKHR(call_info, args);
 
-    auto [infoValid, info] = GetMetaStructPointer(pInfo);
+    auto [infoValid, info] = GetMetaStructPointer(&args.pInfo);
     if (infoValid)
     {
         statements.InsertAccelerationStructureCopy(
             std::nullopt,
             std::nullopt,
-            commandBuffer,
+            args.commandBuffer,
             std::nullopt,
             info->dst,
             info->decoded_value->src,
@@ -10058,65 +9354,49 @@ void VulkanSqliteConsumerExt::ProcessVulkanCopyAccelerationStructuresCommand(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDeferredOperationKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDeferredOperationKHR>* pDeferredOperation
+    const ApiCallInfo& call_info, args::CreateDeferredOperationKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreateDeferredOperationKHR(
-        call_info, returnValue, device, pAllocator, pDeferredOperation
-    );
+    VulkanSqliteConsumer::Process_vkCreateDeferredOperationKHR(call_info, args);
 
-    auto [operationValid, operation] = GetHandle(pDeferredOperation);
+    auto [operationValid, operation] = GetHandle(&args.pDeferredOperation);
     if (!operationValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create deferred operation, invalid pDeferredOperation handle");
         }
         return;
     }
 
-    statements.InsertDeferredOperation(operation, device, this->block_index_);
+    statements.InsertDeferredOperation(operation, args.device, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDeferredOperationKHR(
-    const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId operation,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    const ApiCallInfo& call_info, args::DestroyDeferredOperationKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyDeferredOperationKHR(call_info, device, operation, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyDeferredOperationKHR(call_info, args);
 
-    if (auto id = context.ExtractId(operation, context.deferredOperationHandleToId, "operation", this->block_index_))
+    if (auto id = context.ExtractId(args.operation, context.deferredOperationHandleToId, "operation", this->block_index_))
     {
         statements.DestroyObject(statements.destroyDeferredOperationUpdateStatement, this->block_index_, *id);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreatePipelineBinariesKHR(
-    const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkPipelineBinaryCreateInfoKHR>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    StructPointerDecoder<Decoded_VkPipelineBinaryHandlesInfoKHR>* pBinaries
+    const ApiCallInfo& call_info, args::CreatePipelineBinariesKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCreatePipelineBinariesKHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pBinaries
-    );
+    VulkanSqliteConsumer::Process_vkCreatePipelineBinariesKHR(call_info, args);
 
-    auto [binariesValid, binaries] = GetMetaStructPointer(pBinaries);
+    auto [binariesValid, binaries] = GetMetaStructPointer(&args.pBinaries);
     if (!binariesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create pipeline binaries, invalid pBinaries structure");
         }
@@ -10125,10 +9405,10 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineBinariesKHR(
 
     LogUnsupportedPNext(binaries->pNext);
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create pipeline binaries, invalid pCreateInfo");
         }
@@ -10161,7 +9441,7 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineBinariesKHR(
 
     // pipeline can be NULL
     std::optional<int64_t> sourcePipelineId = std::nullopt;
-    auto pipelineIter = context.pipelineHandleToId.find(ToInt64(device));
+    auto pipelineIter = context.pipelineHandleToId.find(ToInt64(args.device));
     if (pipelineIter != context.pipelineHandleToId.end())
     {
         sourcePipelineId = pipelineIter->second;
@@ -10189,23 +9469,21 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineBinariesKHR(
         }
 
         statements.InsertPipelineBinary(
-            pipelineBinary, device, keySize, dataSize, sourcePipelineId, this->block_index_
+            pipelineBinary, args.device, keySize, dataSize, sourcePipelineId, this->block_index_
         );
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPipelineBinaryKHR(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId pipelineBinary,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyPipelineBinaryKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkDestroyPipelineBinaryKHR(call_info, device, pipelineBinary, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyPipelineBinaryKHR(call_info, args);
 
     if (auto id =
-            context.ExtractId(pipelineBinary, context.pipelineBinaryHandleToId, "pipelineBinary", this->block_index_))
+            context.ExtractId(args.pipelineBinary, context.pipelineBinaryHandleToId, "pipelineBinary", this->block_index_))
     {
         statements.DestroyObject(statements.destroyPipelineBinaryUpdateStatement, this->block_index_, *id);
     }
@@ -10213,31 +9491,25 @@ void VulkanSqliteConsumerExt::Process_vkDestroyPipelineBinaryKHR(
 
 void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkVideoSessionCreateInfoKHR>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkVideoSessionKHR>* pVideoSession
+    args::CreateVideoSessionKHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCreateVideoSessionKHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pVideoSession
-    );
+    VulkanSqliteConsumer::Process_vkCreateVideoSessionKHR(call_info, args);
 
-    auto [videoSessionValid, videoSession] = GetHandle(pVideoSession);
+    auto [videoSessionValid, videoSession] = GetHandle(&args.pVideoSession);
     if (!videoSessionValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create video session, invalid pVideoSession handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create video session, invalid pCreateInfo");
         }
@@ -10251,7 +9523,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionKHR(
     auto [profileValid, profile] = GetMetaStructPointer(createInfo->pVideoProfile);
     if (!profileValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create video session, invalid pVideoProfile");
         }
@@ -10261,7 +9533,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionKHR(
     auto [stdHeaderValid, stdHeader] = GetMetaStructPointer(createInfo->pStdHeaderVersion);
     if (!stdHeaderValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create video session, invalid pStdHeaderVersion");
         }
@@ -10273,7 +9545,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionKHR(
 
     statements.InsertVideoSession(
         videoSession,
-        device,
+        args.device,
         ci.queueFamilyIndex,
         ci.flags,
         profileCi.videoCodecOperation,
@@ -10294,14 +9566,12 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionKHR(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyVideoSessionKHR(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId videoSession,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyVideoSessionKHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkDestroyVideoSessionKHR(call_info, device, videoSession, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyVideoSessionKHR(call_info, args);
 
-    if (auto id = context.ExtractId(videoSession, context.videoSessionHandleToId, "videoSession", this->block_index_))
+    if (auto id = context.ExtractId(args.videoSession, context.videoSessionHandleToId, "videoSession", this->block_index_))
     {
         statements.DestroyObject(statements.destroyVideoSessionUpdateStatement, this->block_index_, *id);
     }
@@ -10309,31 +9579,25 @@ void VulkanSqliteConsumerExt::Process_vkDestroyVideoSessionKHR(
 
 void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionParametersKHR(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkVideoSessionParametersCreateInfoKHR>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkVideoSessionParametersKHR>* pVideoSessionParameters
+    args::CreateVideoSessionParametersKHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCreateVideoSessionParametersKHR(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pVideoSessionParameters
-    );
+    VulkanSqliteConsumer::Process_vkCreateVideoSessionParametersKHR(call_info, args);
 
-    auto [paramsValid, params] = GetHandle(pVideoSessionParameters);
+    auto [paramsValid, params] = GetHandle(&args.pVideoSessionParameters);
     if (!paramsValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create video session parameters, invalid pVideoSessionParameters handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create video session parameters, invalid pCreateInfo");
         }
@@ -10347,7 +9611,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionParametersKHR(
     auto videoSessionId = context.GetVideoSessionId(createInfo->videoSession);
     if (!videoSessionId.has_value())
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING(
                 "Failed to create video session parameters, failed to find video session with handle %" PRIu64,
@@ -10359,22 +9623,18 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionParametersKHR(
 
     auto templateId = context.GetVideoSessionParametersId(createInfo->videoSessionParametersTemplate, true);
 
-    statements.InsertVideoSessionParameters(params, device, ci.flags, templateId, *videoSessionId, this->block_index_);
+    statements.InsertVideoSessionParameters(params, args.device, ci.flags, templateId, *videoSessionId, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyVideoSessionParametersKHR(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId videoSessionParameters,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyVideoSessionParametersKHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkDestroyVideoSessionParametersKHR(
-        call_info, device, videoSessionParameters, pAllocator
-    );
+    VulkanSqliteConsumer::Process_vkDestroyVideoSessionParametersKHR(call_info, args);
 
     if (auto id = context.ExtractId(
-            videoSessionParameters,
+            args.videoSessionParameters,
             context.videoSessionParametersHandleToId,
             "videoSessionParameters",
             this->block_index_
@@ -10386,31 +9646,25 @@ void VulkanSqliteConsumerExt::Process_vkDestroyVideoSessionParametersKHR(
 
 void VulkanSqliteConsumerExt::Process_vkCreateIndirectCommandsLayoutEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkIndirectCommandsLayoutCreateInfoEXT>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkIndirectCommandsLayoutEXT>* pIndirectCommandsLayout
+    args::CreateIndirectCommandsLayoutEXT& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCreateIndirectCommandsLayoutEXT(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pIndirectCommandsLayout
-    );
+    VulkanSqliteConsumer::Process_vkCreateIndirectCommandsLayoutEXT(call_info, args);
 
-    auto [layoutValid, layout] = GetHandle(pIndirectCommandsLayout);
+    auto [layoutValid, layout] = GetHandle(&args.pIndirectCommandsLayout);
     if (!layoutValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create indirect commands layout, invalid pIndirectCommandsLayout handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create indirect commands layout, invalid pCreateInfo");
         }
@@ -10427,7 +9681,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateIndirectCommandsLayoutEXT(
 
     statements.InsertIndirectCommandsLayout(
         layout,
-        device,
+        args.device,
         ci.flags,
         ci.shaderStages,
         ci.indirectStride,
@@ -10439,17 +9693,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateIndirectCommandsLayoutEXT(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyIndirectCommandsLayoutEXT(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId indirectCommandsLayout,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyIndirectCommandsLayoutEXT& args
 )
 {
-    VulkanSqliteConsumer::Process_vkDestroyIndirectCommandsLayoutEXT(
-        call_info, device, indirectCommandsLayout, pAllocator
-    );
+    VulkanSqliteConsumer::Process_vkDestroyIndirectCommandsLayoutEXT(call_info, args);
 
     if (auto id = context.ExtractId(
-            indirectCommandsLayout,
+            args.indirectCommandsLayout,
             context.indirectCommandsLayoutHandleToId,
             "indirectCommandsLayout",
             this->block_index_
@@ -10461,31 +9711,25 @@ void VulkanSqliteConsumerExt::Process_vkDestroyIndirectCommandsLayoutEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCreateMicromapEXT(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkMicromapCreateInfoEXT>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkMicromapEXT>* pMicromap
+    args::CreateMicromapEXT& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCreateMicromapEXT(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pMicromap
-    );
+    VulkanSqliteConsumer::Process_vkCreateMicromapEXT(call_info, args);
 
-    auto [micromapValid, micromap] = GetHandle(pMicromap);
+    auto [micromapValid, micromap] = GetHandle(&args.pMicromap);
     if (!micromapValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create micromap, invalid pMicromap handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create micromap, invalid pCreateInfo");
         }
@@ -10499,20 +9743,18 @@ void VulkanSqliteConsumerExt::Process_vkCreateMicromapEXT(
     auto bufferId = context.GetBufferId(createInfo->buffer, true);
 
     statements.InsertMicromap(
-        micromap, device, ci.createFlags, bufferId, ci.offset, ci.size, ci.type, ci.deviceAddress, this->block_index_
+        micromap, args.device, ci.createFlags, bufferId, ci.offset, ci.size, ci.type, ci.deviceAddress, this->block_index_
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyMicromapEXT(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId micromap,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyMicromapEXT& args
 )
 {
-    VulkanSqliteConsumer::Process_vkDestroyMicromapEXT(call_info, device, micromap, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyMicromapEXT(call_info, args);
 
-    if (auto id = context.ExtractId(micromap, context.micromapHandleToId, "micromap", this->block_index_))
+    if (auto id = context.ExtractId(args.micromap, context.micromapHandleToId, "micromap", this->block_index_))
     {
         statements.DestroyObject(statements.destroyMicromapUpdateStatement, this->block_index_, *id);
     }
@@ -10520,31 +9762,25 @@ void VulkanSqliteConsumerExt::Process_vkDestroyMicromapEXT(
 
 void VulkanSqliteConsumerExt::Process_vkCreateOpticalFlowSessionNV(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkOpticalFlowSessionCreateInfoNV>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkOpticalFlowSessionNV>* pSession
+    args::CreateOpticalFlowSessionNV& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCreateOpticalFlowSessionNV(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pSession
-    );
+    VulkanSqliteConsumer::Process_vkCreateOpticalFlowSessionNV(call_info, args);
 
-    auto [sessionValid, session] = GetHandle(pSession);
+    auto [sessionValid, session] = GetHandle(&args.pSession);
     if (!sessionValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create optical flow session, invalid pSession handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create optical flow session, invalid pCreateInfo");
         }
@@ -10557,7 +9793,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateOpticalFlowSessionNV(
 
     statements.InsertOpticalFlowSession(
         session,
-        device,
+        args.device,
         ci.width,
         ci.height,
         ci.imageFormat,
@@ -10573,15 +9809,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateOpticalFlowSessionNV(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyOpticalFlowSessionNV(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId session,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyOpticalFlowSessionNV& args
 )
 {
-    VulkanSqliteConsumer::Process_vkDestroyOpticalFlowSessionNV(call_info, device, session, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyOpticalFlowSessionNV(call_info, args);
 
     if (auto id =
-            context.ExtractId(session, context.opticalFlowSessionHandleToId, "opticalFlowSession", this->block_index_))
+            context.ExtractId(args.session, context.opticalFlowSessionHandleToId, "opticalFlowSession", this->block_index_))
     {
         statements.DestroyObject(statements.destroyOpticalFlowSessionUpdateStatement, this->block_index_, *id);
     }
@@ -10589,49 +9823,32 @@ void VulkanSqliteConsumerExt::Process_vkDestroyOpticalFlowSessionNV(
 
 void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelinesARM(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId deferredOperation,
-    format::HandleId pipelineCache,
-    uint32_t createInfoCount,
-    StructPointerDecoder<Decoded_VkDataGraphPipelineCreateInfoARM>* pCreateInfos,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkPipeline>* pPipelines
+    args::CreateDataGraphPipelinesARM& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCreateDataGraphPipelinesARM(
-        call_info,
-        returnValue,
-        device,
-        deferredOperation,
-        pipelineCache,
-        createInfoCount,
-        pCreateInfos,
-        pAllocator,
-        pPipelines
-    );
+    VulkanSqliteConsumer::Process_vkCreateDataGraphPipelinesARM(call_info, args);
 
-    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(pPipelines);
+    auto [pipelinesValid, pipelines, pipelineCount] = GetHandleArray(&args.pPipelines);
     if (!pipelinesValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create data graph pipeline, invalid pPipelines array");
         }
         return;
     }
 
-    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(pCreateInfos);
+    auto [createInfosValid, createInfos, createInfosCount] = GetMetaStructArray(&args.pCreateInfos);
     if (!createInfosValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create data graph pipeline, invalid pCreateInfos struct array");
         }
         return;
     }
 
-    auto deviceId = context.GetDeviceId(device);
+    auto deviceId = context.GetDeviceId(args.device);
 
     for (size_t i = 0; i < pipelineCount; ++i)
     {
@@ -10693,36 +9910,30 @@ void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelinesARM(
 
 void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelineSessionARM(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    StructPointerDecoder<Decoded_VkDataGraphPipelineSessionCreateInfoARM>* pCreateInfo,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator,
-    HandlePointerDecoder<VkDataGraphPipelineSessionARM>* pSession
+    args::CreateDataGraphPipelineSessionARM& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCreateDataGraphPipelineSessionARM(
-        call_info, returnValue, device, pCreateInfo, pAllocator, pSession
-    );
+    VulkanSqliteConsumer::Process_vkCreateDataGraphPipelineSessionARM(call_info, args);
 
-    if (returnValue != VK_SUCCESS)
+    if (args.result != VK_SUCCESS)
     {
         return;
     }
 
-    auto [sessionValid, session] = GetHandle(pSession);
+    auto [sessionValid, session] = GetHandle(&args.pSession);
     if (!sessionValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create data graph pipeline session, invalid session handle");
         }
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (returnValue == VK_SUCCESS)
+        if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING("Failed to create data graph pipeline session, invalid pCreateInfo");
         }
@@ -10732,7 +9943,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelineSessionARM(
     LogUnsupportedPNext(createInfo->pNext);
 
     auto& ci = *createInfo->decoded_value;
-    auto deviceId = context.GetDeviceId(device);
+    auto deviceId = context.GetDeviceId(args.device);
 
     auto pipelineIter = context.pipelineHandleToId.find(ToInt64(createInfo->dataGraphPipeline));
     if (pipelineIter == context.pipelineHandleToId.end())
@@ -10750,15 +9961,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelineSessionARM(
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDataGraphPipelineSessionARM(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId session,
-    StructPointerDecoder<Decoded_VkAllocationCallbacks>* pAllocator
+    args::DestroyDataGraphPipelineSessionARM& args
 )
 {
-    VulkanSqliteConsumer::Process_vkDestroyDataGraphPipelineSessionARM(call_info, device, session, pAllocator);
+    VulkanSqliteConsumer::Process_vkDestroyDataGraphPipelineSessionARM(call_info, args);
 
     if (auto id = context.ExtractId(
-            session, context.dataGraphPipelineSessionHandleToId, "dataGraphPipelineSession", this->block_index_
+            args.session, context.dataGraphPipelineSessionHandleToId, "dataGraphPipelineSession", this->block_index_
         ))
     {
         statements.DestroyObject(statements.destroyDataGraphPipelineSessionUpdateStatement, this->block_index_, *id);
@@ -10767,31 +9976,29 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDataGraphPipelineSessionARM(
 
 void VulkanSqliteConsumerExt::Process_vkCmdDispatchDataGraphARM(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId session,
-    StructPointerDecoder<Decoded_VkDataGraphPipelineDispatchInfoARM>* pDispatchInfo
+    args::CmdDispatchDataGraphARM& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdDispatchDataGraphARM(call_info, commandBuffer, session, pDispatchInfo);
+    VulkanSqliteConsumer::Process_vkCmdDispatchDataGraphARM(call_info, args);
 
-    auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(commandBuffer));
+    auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
         GFXRECON_SQLITE_LOG_WARNING(
             "Failed to insert data graph dispatch recording, failed to find command buffer recording for handle "
             "%" PRIi64,
-            commandBuffer
+            args.commandBuffer
         );
         return;
     }
 
-    auto sessionId = context.GetDataGraphPipelineSessionId(session, /*allowNull=*/true);
+    auto sessionId = context.GetDataGraphPipelineSessionId(args.session, /*allowNull=*/true);
     auto cmdDataGraphDispatchRecordingId = statements.InsertCmdDataGraphDispatchRecording(
         this->block_index_, sessionId, commandBufferRecordingIter->second
     );
 
     // TODO: Expose dispatch info flags in dispatch recording info
-    auto [dispatchInfoValid, dispatchInfo] = GetMetaStructPointer(pDispatchInfo);
+    auto [dispatchInfoValid, dispatchInfo] = GetMetaStructPointer(&args.pInfo);
     if (dispatchInfoValid && dispatchInfo)
     {
         statements.InsertCmdDataGraphDispatchRecordingInfo(
@@ -10807,18 +10014,11 @@ void VulkanSqliteConsumerExt::Process_vkCmdDispatchDataGraphARM(
 //////// these calls
 void VulkanSqliteConsumerExt::Process_vkCmdBuildAccelerationStructuresIndirectKHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t infoCount,
-    StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
-    PointerDecoder<VkDeviceAddress>* pIndirectDeviceAddresses,
-    PointerDecoder<uint32_t>* pIndirectStrides,
-    PointerDecoder<uint32_t*>* ppMaxPrimitiveCounts
+    args::CmdBuildAccelerationStructuresIndirectKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdBuildAccelerationStructuresIndirectKHR(
-        call_info, commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts
-    );
+    VulkanSqliteConsumer::Process_vkCmdBuildAccelerationStructuresIndirectKHR(call_info, args);
 
     /*
     // TODO need to figure out how to pack the custom structs into the db
@@ -10827,17 +10027,17 @@ void VulkanSqliteConsumerExt::Process_vkCmdBuildAccelerationStructuresIndirectKH
     &function)
                         {
         auto& args = function[NameArgs()];
-        HandleToJson(args["commandBuffer"], commandBuffer, json_options_);
-        FieldToJson(args["infoCount"], infoCount, json_options_);
-        FieldToJson(args["pInfos"], pInfos, json_options_);
-        FieldToJson(args["pIndirectDeviceAddresses"], pIndirectDeviceAddresses, json_options_);
-        FieldToJson(args["pIndirectStrides"], pIndirectStrides, json_options_);
+        HandleToJson(args["commandBuffer"], args.commandBuffer, json_options_);
+        FieldToJson(args["infoCount"], args.infoCount, json_options_);
+        FieldToJson(args["pInfos"], &args.pInfos, json_options_);
+        FieldToJson(args["pIndirectDeviceAddresses"], &args.pIndirectDeviceAddresses, json_options_);
+        FieldToJson(args["pIndirectStrides"], &args.pIndirectStrides, json_options_);
 
-        auto infos                     = pInfos ? pInfos->GetPointer() : nullptr;
-        auto max_primitive_counts      = ppMaxPrimitiveCounts ? ppMaxPrimitiveCounts->GetPointer() : nullptr;
+        auto infos                     = args.pInfos ? args.pInfos->GetPointer() : nullptr;
+        auto max_primitive_counts      = args.ppMaxPrimitiveCounts ? args.ppMaxPrimitiveCounts->GetPointer() : nullptr;
         auto max_primitive_counts_json = args["ppMaxPrimitiveCounts"];
 
-        for (uint32_t i = 0; i < infoCount; ++i)
+        for (uint32_t i = 0; i < args.infoCount; ++i)
         {
             auto element = max_primitive_counts_json[i];
             FieldToJson(max_primitive_counts_json[i], max_primitive_counts[i], infos[i].geometryCount,
@@ -10847,17 +10047,11 @@ void VulkanSqliteConsumerExt::Process_vkCmdBuildAccelerationStructuresIndirectKH
 
 void VulkanSqliteConsumerExt::Process_vkGetPipelineCacheData(
     const ApiCallInfo& call_info,
-    VkResult returnValue,
-    format::HandleId device,
-    format::HandleId pipelineCache,
-    PointerDecoder<size_t>* pDataSize,
-    PointerDecoder<uint8_t>* pData
+    args::GetPipelineCacheData& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkGetPipelineCacheData(
-        call_info, returnValue, device, pipelineCache, pDataSize, pData
-    );
+    VulkanSqliteConsumer::Process_vkGetPipelineCacheData(call_info, args);
 
     /*
     // TODO need to figure out what to do with this
@@ -10897,18 +10091,11 @@ void VulkanSqliteConsumerExt::Process_vkGetPipelineCacheData(
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushConstants(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId layout,
-    VkShaderStageFlags stageFlags,
-    uint32_t offset,
-    uint32_t size,
-    PointerDecoder<uint8_t>* pValues
+    args::CmdPushConstants& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdPushConstants(
-        call_info, commandBuffer, layout, stageFlags, offset, size, pValues
-    );
+    VulkanSqliteConsumer::Process_vkCmdPushConstants(call_info, args);
 
     // TODO need to figure out how to pack the custom structs into the db
     // May want to update existing push constants values or have table of
@@ -11529,223 +10716,152 @@ void VulkanSqliteConsumerExt::ProcessTransferCommandResolve2(
 
 // Transfer command implementations
 void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId srcBuffer,
-    format::HandleId dstBuffer,
-    uint32_t regionCount,
-    StructPointerDecoder<Decoded_VkBufferCopy>* pRegions
+    const ApiCallInfo& call_info, args::CmdCopyBuffer& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyBuffer(
-        call_info, commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions
-    );
-    ProcessTransferCommandBufferCopy(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
+    VulkanSqliteConsumer::Process_vkCmdCopyBuffer(call_info, args);
+    ProcessTransferCommandBufferCopy(args.commandBuffer, args.srcBuffer, args.dstBuffer, args.regionCount, &args.pRegions);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer2(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyBufferInfo2>* pCopyBufferInfo
+    const ApiCallInfo& call_info, args::CmdCopyBuffer2& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyBuffer2(call_info, commandBuffer, pCopyBufferInfo);
-    ProcessTransferCommandBufferCopy2(commandBuffer, pCopyBufferInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyBuffer2(call_info, args);
+    ProcessTransferCommandBufferCopy2(args.commandBuffer, &args.pCopyBufferInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer2KHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyBufferInfo2>* pCopyBufferInfo
+    const ApiCallInfo& call_info, args::CmdCopyBuffer2KHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyBuffer2KHR(call_info, commandBuffer, pCopyBufferInfo);
-    ProcessTransferCommandBufferCopy2(commandBuffer, pCopyBufferInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyBuffer2KHR(call_info, args);
+    ProcessTransferCommandBufferCopy2(args.commandBuffer, &args.pCopyBufferInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyImage(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId srcImage,
-    VkImageLayout srcImageLayout,
-    format::HandleId dstImage,
-    VkImageLayout dstImageLayout,
-    uint32_t regionCount,
-    StructPointerDecoder<Decoded_VkImageCopy>* pRegions
+    const ApiCallInfo& call_info, args::CmdCopyImage& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyImage(
-        call_info, commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions
-    );
+    VulkanSqliteConsumer::Process_vkCmdCopyImage(call_info, args);
     ProcessTransferCommandImageCopy(
-        commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions
+        args.commandBuffer, args.srcImage, args.srcImageLayout, args.dstImage, args.dstImageLayout, args.regionCount, &args.pRegions
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyImage2(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyImageInfo2>* pCopyImageInfo
+    const ApiCallInfo& call_info, args::CmdCopyImage2& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyImage2(call_info, commandBuffer, pCopyImageInfo);
-    ProcessTransferCommandImageCopy2(commandBuffer, pCopyImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyImage2(call_info, args);
+    ProcessTransferCommandImageCopy2(args.commandBuffer, &args.pCopyImageInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyImage2KHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyImageInfo2>* pCopyImageInfo
+    const ApiCallInfo& call_info, args::CmdCopyImage2KHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyImage2KHR(call_info, commandBuffer, pCopyImageInfo);
-    ProcessTransferCommandImageCopy2(commandBuffer, pCopyImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyImage2KHR(call_info, args);
+    ProcessTransferCommandImageCopy2(args.commandBuffer, &args.pCopyImageInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyBufferToImage(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId srcBuffer,
-    format::HandleId dstImage,
-    VkImageLayout dstImageLayout,
-    uint32_t regionCount,
-    StructPointerDecoder<Decoded_VkBufferImageCopy>* pRegions
+    const ApiCallInfo& call_info, args::CmdCopyBufferToImage& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage(
-        call_info, commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions
-    );
-    ProcessTransferCommandBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
+    VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage(call_info, args);
+    ProcessTransferCommandBufferToImage(args.commandBuffer, args.srcBuffer, args.dstImage, args.dstImageLayout, args.regionCount, &args.pRegions);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyBufferToImage2(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyBufferToImageInfo2>* pCopyBufferToImageInfo
+    const ApiCallInfo& call_info, args::CmdCopyBufferToImage2& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage2(call_info, commandBuffer, pCopyBufferToImageInfo);
-    ProcessTransferCommandBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage2(call_info, args);
+    ProcessTransferCommandBufferToImage2(args.commandBuffer, &args.pCopyBufferToImageInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyBufferToImage2KHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyBufferToImageInfo2>* pCopyBufferToImageInfo
+    const ApiCallInfo& call_info, args::CmdCopyBufferToImage2KHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage2KHR(call_info, commandBuffer, pCopyBufferToImageInfo);
-    ProcessTransferCommandBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage2KHR(call_info, args);
+    ProcessTransferCommandBufferToImage2(args.commandBuffer, &args.pCopyBufferToImageInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyImageToBuffer(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId srcImage,
-    VkImageLayout srcImageLayout,
-    format::HandleId dstBuffer,
-    uint32_t regionCount,
-    StructPointerDecoder<Decoded_VkBufferImageCopy>* pRegions
+    const ApiCallInfo& call_info, args::CmdCopyImageToBuffer& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer(
-        call_info, commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions
-    );
-    ProcessTransferCommandImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
+    VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer(call_info, args);
+    ProcessTransferCommandImageToBuffer(args.commandBuffer, args.srcImage, args.srcImageLayout, args.dstBuffer, args.regionCount, &args.pRegions);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyImageToBuffer2(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyImageToBufferInfo2>* pCopyImageToBufferInfo
+    const ApiCallInfo& call_info, args::CmdCopyImageToBuffer2& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer2(call_info, commandBuffer, pCopyImageToBufferInfo);
-    ProcessTransferCommandImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer2(call_info, args);
+    ProcessTransferCommandImageToBuffer2(args.commandBuffer, &args.pCopyImageToBufferInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyImageToBuffer2KHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkCopyImageToBufferInfo2>* pCopyImageToBufferInfo
+    const ApiCallInfo& call_info, args::CmdCopyImageToBuffer2KHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer2KHR(call_info, commandBuffer, pCopyImageToBufferInfo);
-    ProcessTransferCommandImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
+    VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer2KHR(call_info, args);
+    ProcessTransferCommandImageToBuffer2(args.commandBuffer, &args.pCopyImageToBufferInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBlitImage(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId srcImage,
-    VkImageLayout srcImageLayout,
-    format::HandleId dstImage,
-    VkImageLayout dstImageLayout,
-    uint32_t regionCount,
-    StructPointerDecoder<Decoded_VkImageBlit>* pRegions,
-    VkFilter filter
+    const ApiCallInfo& call_info, args::CmdBlitImage& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdBlitImage(
-        call_info, commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter
-    );
+    VulkanSqliteConsumer::Process_vkCmdBlitImage(call_info, args);
     ProcessTransferCommandBlit(
-        commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, filter, regionCount, pRegions
+        args.commandBuffer, args.srcImage, args.srcImageLayout, args.dstImage, args.dstImageLayout, args.filter, args.regionCount, &args.pRegions
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBlitImage2(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkBlitImageInfo2>* pBlitImageInfo
+    const ApiCallInfo& call_info, args::CmdBlitImage2& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdBlitImage2(call_info, commandBuffer, pBlitImageInfo);
-    ProcessTransferCommandBlit2(commandBuffer, pBlitImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdBlitImage2(call_info, args);
+    ProcessTransferCommandBlit2(args.commandBuffer, &args.pBlitImageInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBlitImage2KHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkBlitImageInfo2>* pBlitImageInfo
+    const ApiCallInfo& call_info, args::CmdBlitImage2KHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdBlitImage2KHR(call_info, commandBuffer, pBlitImageInfo);
-    ProcessTransferCommandBlit2(commandBuffer, pBlitImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdBlitImage2KHR(call_info, args);
+    ProcessTransferCommandBlit2(args.commandBuffer, &args.pBlitImageInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdResolveImage(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId srcImage,
-    VkImageLayout srcImageLayout,
-    format::HandleId dstImage,
-    VkImageLayout dstImageLayout,
-    uint32_t regionCount,
-    StructPointerDecoder<Decoded_VkImageResolve>* pRegions
+    const ApiCallInfo& call_info, args::CmdResolveImage& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdResolveImage(
-        call_info, commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions
-    );
+    VulkanSqliteConsumer::Process_vkCmdResolveImage(call_info, args);
 
     // Process as transfer command with regions
     auto instanceId =
-        statements.InsertTransferCommand(this->block_index_, context.GetCommandBufferRecordingId(commandBuffer));
+        statements.InsertTransferCommand(this->block_index_, context.GetCommandBufferRecordingId(args.commandBuffer));
 
     statements.UpdateTransferCommandImageCopy(
-        instanceId, context.GetImageId(srcImage), context.GetImageId(dstImage), srcImageLayout, dstImageLayout
+        instanceId, context.GetImageId(args.srcImage), context.GetImageId(args.dstImage), args.srcImageLayout, args.dstImageLayout
     );
 
     // Insert region data
-    if (pRegions != nullptr && pRegions->GetPointer() != nullptr)
+    if (args.pRegions.GetPointer() != nullptr)
     {
-        auto srcImageId = context.GetImageId(srcImage);
-        auto dstImageId = context.GetImageId(dstImage);
+        auto srcImageId = context.GetImageId(args.srcImage);
+        auto dstImageId = context.GetImageId(args.dstImage);
 
-        for (uint32_t i = 0; i < regionCount; ++i)
+        for (uint32_t i = 0; i < args.regionCount; ++i)
         {
-            const auto& region = pRegions->GetPointer()[i];
+            const auto& region = args.pRegions.GetPointer()[i];
             statements.InsertTransferCommandRegionImageCopy(
                 instanceId,
                 i, // regionIndex
@@ -11775,23 +10891,19 @@ void VulkanSqliteConsumerExt::Process_vkCmdResolveImage(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdResolveImage2(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkResolveImageInfo2>* pResolveImageInfo
+    const ApiCallInfo& call_info, args::CmdResolveImage2& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdResolveImage2(call_info, commandBuffer, pResolveImageInfo);
-    ProcessTransferCommandResolve2(commandBuffer, pResolveImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdResolveImage2(call_info, args);
+    ProcessTransferCommandResolve2(args.commandBuffer, &args.pResolveImageInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdResolveImage2KHR(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    StructPointerDecoder<Decoded_VkResolveImageInfo2>* pResolveImageInfo
+    const ApiCallInfo& call_info, args::CmdResolveImage2KHR& args
 )
 {
-    VulkanSqliteConsumer::Process_vkCmdResolveImage2KHR(call_info, commandBuffer, pResolveImageInfo);
-    ProcessTransferCommandResolve2(commandBuffer, pResolveImageInfo);
+    VulkanSqliteConsumer::Process_vkCmdResolveImage2KHR(call_info, args);
+    ProcessTransferCommandResolve2(args.commandBuffer, &args.pResolveImageInfo);
 }
 
 GFXRECON_END_NAMESPACE(decode)

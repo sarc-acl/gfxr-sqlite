@@ -565,12 +565,7 @@ void VulkanSqliteConsumerBase::ProcessInitImageCommand(
 
 void VulkanSqliteConsumerBase::Process_vkCmdBuildAccelerationStructuresIndirectKHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    uint32_t infoCount,
-    StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
-    PointerDecoder<VkDeviceAddress>* pIndirectDeviceAddresses,
-    PointerDecoder<uint32_t>* pIndirectStrides,
-    PointerDecoder<uint32_t*>* ppMaxPrimitiveCounts
+    args::CmdBuildAccelerationStructuresIndirectKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
@@ -579,14 +574,14 @@ void VulkanSqliteConsumerBase::Process_vkCmdBuildAccelerationStructuresIndirectK
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 
-    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", commandBuffer);
-    RecordField(statements, fieldInfo, 2, "infoCount", "uint32_t", infoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfos", pInfos, " VkAccelerationStructureBuildGeometryInfoKHR");
-    FieldToSqlite(statements, fieldInfo, 4, "pIndirectDeviceAddresses", pIndirectDeviceAddresses, "VkDeviceAddress");
-    FieldToSqlite(statements, fieldInfo, 5, "pIndirectStrides", pIndirectStrides, "uint32_t");
+    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
+    RecordField(statements, fieldInfo, 2, "infoCount", "uint32_t", args.infoCount);
+    FieldToSqlite(statements, fieldInfo, 3, "pInfos", &args.pInfos, " VkAccelerationStructureBuildGeometryInfoKHR");
+    FieldToSqlite(statements, fieldInfo, 4, "pIndirectDeviceAddresses", &args.pIndirectDeviceAddresses, "VkDeviceAddress");
+    FieldToSqlite(statements, fieldInfo, 5, "pIndirectStrides", &args.pIndirectStrides, "uint32_t");
     // TODO need to handle ppMaxPrimitiveCounts manually due to non-const --> const conversion not allowed
     // when retriving the internal pointer
-    // FieldToSqlite(context, fieldInfo, 6, "ppMaxPrimitiveCounts", ppMaxPrimitiveCounts, "uint32_t*");
+    // FieldToSqlite(context, fieldInfo, 6, "ppMaxPrimitiveCounts", &args.ppMaxPrimitiveCounts, "uint32_t*");
 }
 
 void VulkanSqliteConsumerBase::ProcessAnnotation(
@@ -618,44 +613,38 @@ void VulkanSqliteConsumerBase::ProcessAnnotation(
 
 void VulkanSqliteConsumerBase::Process_vkUpdateDescriptorSetWithTemplate(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorSet,
-    format::HandleId descriptorUpdateTemplate,
-    DescriptorUpdateTemplateDecoder* pData
+    args::UpdateDescriptorSetWithTemplate& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkUpdateDescriptorSetWithTemplate");
     statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
 
-    RecordField(statements, fieldInfo, 1, "device", "VkDevice", device);
-    RecordField(statements, fieldInfo, 2, "descriptorSet", "VkDescriptorSet", descriptorSet);
+    RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(statements, fieldInfo, 2, "descriptorSet", "VkDescriptorSet", args.descriptorSet);
     RecordField(
-        statements, fieldInfo, 3, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", descriptorUpdateTemplate
+        statements, fieldInfo, 3, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", args.descriptorUpdateTemplate
     );
-    FieldToSqlite(statements, fieldInfo, 4, "pData", pData, "const void*");
+    FieldToSqlite(statements, fieldInfo, 4, "pData", &args.pData, "const void*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
 
 void VulkanSqliteConsumerBase::Process_vkUpdateDescriptorSetWithTemplateKHR(
     const ApiCallInfo& call_info,
-    format::HandleId device,
-    format::HandleId descriptorSet,
-    format::HandleId descriptorUpdateTemplate,
-    DescriptorUpdateTemplateDecoder* pData
+    args::UpdateDescriptorSetWithTemplateKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkUpdateDescriptorSetWithTemplateKHR");
     statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
 
-    RecordField(statements, fieldInfo, 1, "device", "VkDevice", device);
-    RecordField(statements, fieldInfo, 2, "descriptorSet", "VkDescriptorSet", descriptorSet);
+    RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(statements, fieldInfo, 2, "descriptorSet", "VkDescriptorSet", args.descriptorSet);
     RecordField(
-        statements, fieldInfo, 3, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", descriptorUpdateTemplate
+        statements, fieldInfo, 3, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", args.descriptorUpdateTemplate
     );
-    FieldToSqlite(statements, fieldInfo, 4, "pData", pData, "const void*");
+    FieldToSqlite(statements, fieldInfo, 4, "pData", &args.pData, "const void*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -687,28 +676,24 @@ void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate(
 
 void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplateKHR(
     const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId descriptorUpdateTemplate,
-    format::HandleId layout,
-    uint32_t set,
-    DescriptorUpdateTemplateDecoder* pData
+    args::CmdPushDescriptorSetWithTemplateKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplateKHR");
     statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
 
-    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", commandBuffer);
+    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
-        statements, fieldInfo, 2, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", descriptorUpdateTemplate
+        statements, fieldInfo, 2, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", args.descriptorUpdateTemplate
     );
-    RecordField(statements, fieldInfo, 3, "layout", "VkPipelineLayout", layout);
-    RecordField(statements, fieldInfo, 4, "set", "uint32_t", set);
-    FieldToSqlite(statements, fieldInfo, 5, "pData", pData, "const void*");
+    RecordField(statements, fieldInfo, 3, "layout", "VkPipelineLayout", args.layout);
+    RecordField(statements, fieldInfo, 4, "set", "uint32_t", args.set);
+    FieldToSqlite(statements, fieldInfo, 5, "pData", &args.pData, "const void*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 
-    UpdateCommandBufferCommands(call_info, commandBuffer);
+    UpdateCommandBufferCommands(call_info, args.commandBuffer);
 }
 
 GFXRECON_END_NAMESPACE(decode)

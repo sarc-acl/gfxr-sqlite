@@ -280,6 +280,56 @@ void FieldToSqlite(
     const FieldInfo& fieldInfo,
     size_t fieldIndex,
     std::string_view fieldName,
+    const Decoded_VkDataGraphPipelineConstantARM* data,
+    std::string_view typeName
+)
+{
+    if (data && data->decoded_value)
+    {
+        const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+        FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
+        const auto& decoded_value = *data->decoded_value;
+        const auto& meta_struct = *data;
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "id", decoded_value.id, "uint32_t");
+        RecordFieldAsHex(statements, memberInfo, 3, "pConstantData", "void*", meta_struct.pConstantData);
+        FieldToSqlite(statements, memberInfo, 4, "pNext", meta_struct.pNext);
+    }
+    else
+    {
+        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, "vkDataGraphPipelineConstantARM");
+    }
+}
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkBaseOutStructure* data,
+    std::string_view typeName
+)
+{
+    if (data && data->decoded_value)
+    {
+        const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+        FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
+        const auto& decoded_value = *data->decoded_value;
+        const auto& meta_struct = *data;
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "pNext", meta_struct.pNext);
+    }
+    else
+    {
+        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, "vkBaseOutStructure");
+    }
+}
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
     const Decoded_VkAccelerationStructureMotionInstanceNV* data,
     std::string_view typeName
 )

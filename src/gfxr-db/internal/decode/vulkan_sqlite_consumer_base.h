@@ -197,11 +197,7 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkCmdPushDescriptorSetWithTemplateKHR(
         const ApiCallInfo& call_info,
-        format::HandleId commandBuffer,
-        format::HandleId descriptorUpdateTemplate,
-        format::HandleId layout,
-        uint32_t set,
-        DescriptorUpdateTemplateDecoder* pData
+        args::CmdPushDescriptorSetWithTemplateKHR& args
     ) override;
 
     // TODO: missing from upstream GFXR (and thus never will be called)
@@ -216,20 +212,14 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkUpdateDescriptorSetWithTemplate(
         const ApiCallInfo& call_info,
-        format::HandleId device,
-        format::HandleId descriptorSet,
-        format::HandleId descriptorUpdateTemplate,
-        DescriptorUpdateTemplateDecoder* pData
+        args::UpdateDescriptorSetWithTemplate& args
     ) override;
 
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkUpdateDescriptorSetWithTemplateKHR(
         const ApiCallInfo& call_info,
-        format::HandleId device,
-        format::HandleId descriptorSet,
-        format::HandleId descriptorUpdateTemplate,
-        DescriptorUpdateTemplateDecoder* pData
+        args::UpdateDescriptorSetWithTemplateKHR& args
     ) override;
 
     virtual void Process_vkBuildAccelerationStructuresKHR(
@@ -254,12 +244,7 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
 
     virtual void Process_vkCmdBuildAccelerationStructuresIndirectKHR(
         const ApiCallInfo& call_info,
-        format::HandleId commandBuffer,
-        uint32_t infoCount,
-        StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
-        PointerDecoder<VkDeviceAddress>* pIndirectDeviceAddresses,
-        PointerDecoder<uint32_t>* pIndirectStrides,
-        PointerDecoder<uint32_t*>* ppMaxPrimitiveCounts
+        args::CmdBuildAccelerationStructuresIndirectKHR& args
     ) override;
 
     /// @brief Convert annotations, which are simple {type:enum, key:string, value:string} objects.

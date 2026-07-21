@@ -342,6 +342,30 @@ void FieldToSqlite(
     std::string_view typeName
 );
 
+// VkDataGraphPipelineConstantARM has a custom decoder (pConstantData is a raw void* payload
+// whose contents depend on the associated data graph pipeline resource type and cannot be
+// generically interpreted), so it is not covered by the generated struct-to-sqlite overloads.
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkDataGraphPipelineConstantARM* data,
+    std::string_view typeName
+);
+
+// VkBaseOutStructure is used as a generic extensible out-parameter (e.g. for the ARM data graph
+// queue family property queries), where the concrete struct type is determined by the caller-provided
+// pNext chain rather than by this generic header, so only its own sType/pNext fields are recorded.
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkBaseOutStructure* data,
+    std::string_view typeName
+);
+
 void FieldToSqlite(
     VulkanSqlitePreparedStatements& statements,
     const FieldInfo& fieldInfo,
