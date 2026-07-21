@@ -89,6 +89,22 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
         const ApiCallInfo&                          call_info,
         args::DestroyDevice&                        args) override;
 
+    virtual void Process_vkEnumerateInstanceExtensionProperties(
+        const ApiCallInfo&                          call_info,
+        args::EnumerateInstanceExtensionProperties& args) override;
+
+    virtual void Process_vkEnumerateDeviceExtensionProperties(
+        const ApiCallInfo&                          call_info,
+        args::EnumerateDeviceExtensionProperties&   args) override;
+
+    virtual void Process_vkEnumerateInstanceLayerProperties(
+        const ApiCallInfo&                          call_info,
+        args::EnumerateInstanceLayerProperties&     args) override;
+
+    virtual void Process_vkEnumerateDeviceLayerProperties(
+        const ApiCallInfo&                          call_info,
+        args::EnumerateDeviceLayerProperties&       args) override;
+
     virtual void Process_vkGetDeviceQueue(
         const ApiCallInfo&                          call_info,
         args::GetDeviceQueue&                       args) override;
@@ -569,6 +585,10 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
         const ApiCallInfo&                          call_info,
         args::CmdEndRenderPass&                     args) override;
 
+    virtual void Process_vkEnumerateInstanceVersion(
+        const ApiCallInfo&                          call_info,
+        args::EnumerateInstanceVersion&             args) override;
+
     virtual void Process_vkBindBufferMemory2(
         const ApiCallInfo&                          call_info,
         args::BindBufferMemory2&                    args) override;
@@ -920,6 +940,10 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
     virtual void Process_vkCmdPushDescriptorSet2(
         const ApiCallInfo&                          call_info,
         args::CmdPushDescriptorSet2&                args) override;
+
+    virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
+        const ApiCallInfo&                          call_info,
+        args::CmdPushDescriptorSetWithTemplate2&    args) override;
 
     virtual void Process_vkCmdSetLineStipple(
         const ApiCallInfo&                          call_info,
@@ -2705,6 +2729,14 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
         const ApiCallInfo&                          call_info,
         args::GetPhysicalDeviceExternalTensorPropertiesARM& args) override;
 
+    virtual void Process_vkGetTensorOpaqueCaptureDescriptorDataARM(
+        const ApiCallInfo&                          call_info,
+        args::GetTensorOpaqueCaptureDescriptorDataARM& args) override;
+
+    virtual void Process_vkGetTensorViewOpaqueCaptureDescriptorDataARM(
+        const ApiCallInfo&                          call_info,
+        args::GetTensorViewOpaqueCaptureDescriptorDataARM& args) override;
+
     virtual void Process_vkGetShaderModuleIdentifierEXT(
         const ApiCallInfo&                          call_info,
         args::GetShaderModuleIdentifierEXT&         args) override;
@@ -2948,6 +2980,14 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
     virtual void Process_vkCmdBuildAccelerationStructuresKHR(
         const ApiCallInfo&                          call_info,
         args::CmdBuildAccelerationStructuresKHR&    args) override;
+
+    virtual void Process_vkBuildAccelerationStructuresKHR(
+        const ApiCallInfo&                          call_info,
+        args::BuildAccelerationStructuresKHR&       args) override;
+
+    virtual void Process_vkCopyAccelerationStructureKHR(
+        const ApiCallInfo&                          call_info,
+        args::CopyAccelerationStructureKHR&         args) override;
 
     virtual void Process_vkCopyAccelerationStructureToMemoryKHR(
         const ApiCallInfo&                          call_info,
