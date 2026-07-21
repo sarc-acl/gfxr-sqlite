@@ -372,6 +372,15 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
         # would involve storing function pointers in the database (and GFXR file), which doesn't make sense.
         self.APICALL_BLACKLIST.append('vkGetInstanceProcAddr')
         self.APICALL_BLACKLIST.append('vkGetDeviceProcAddr')
+        # Loader/layer-negotiation calls reporting per-machine capability info (available layers,
+        # extensions, API version). gfxreconstruct's own replay consumer re-queries the replay
+        # machine's real driver directly for these rather than replaying a recorded value (see
+        # vulkan_replay_consumer_base.cpp), so it doesn't generate an args:: struct for them either.
+        self.APICALL_BLACKLIST.append('vkEnumerateInstanceExtensionProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateDeviceExtensionProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateInstanceLayerProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateDeviceLayerProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateInstanceVersion')
         # Add the following to the blacklist due to custom implementations in vulkan_sqlite_consumer_base
         # Custom implementations are needed due to generated code using uint64_t or void* for pData,
         # while actual code uses DescriptorUpdateTemplateDecoder* instead.
@@ -384,12 +393,23 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
         self.APICALL_BLACKLIST.append('vkCmdPushDescriptorSetWithTemplateKHR')
         # Add the following to the blacklist due to missing support issues, attempt to re-enable once feature is required
         self.APICALL_BLACKLIST.append('vkCreateIndirectExecutionSetEXT')
+        # VK_NV_external_compute_queue: no args:: struct or consumer virtual exists anywhere upstream
+        # (also blacklisted in gfxreconstruct's own "functions-all"); brand new, no prior gfxr-sqlite
+        # tracking to preserve.
+        self.APICALL_BLACKLIST.append('vkCreateExternalComputeQueueNV')
+        self.APICALL_BLACKLIST.append('vkDestroyExternalComputeQueueNV')
+        self.APICALL_BLACKLIST.append('vkGetExternalComputeQueueDataNV')
         # VK_EXT_descriptor_buffer extension functions need custom struct handling for unions
         self.APICALL_BLACKLIST.append('vkGetBufferOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetImageOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetImageViewOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetSamplerOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT')
+        # VK_ARM_tensors: same OpaqueCaptureDescriptorData family/reason as the EXT ones above; also
+        # blacklisted upstream (gfxreconstruct's own blacklists.json "functions-all"), so no args::
+        # struct exists to generate against.
+        self.APICALL_BLACKLIST.append('vkGetTensorOpaqueCaptureDescriptorDataARM')
+        self.APICALL_BLACKLIST.append('vkGetTensorViewOpaqueCaptureDescriptorDataARM')
         self.APICALL_BLACKLIST.append('vkGetDescriptorSetLayoutSizeEXT')
         self.APICALL_BLACKLIST.append('vkGetDescriptorSetLayoutBindingOffsetEXT')
         self.APICALL_BLACKLIST.append('vkGetDescriptorEXT')
@@ -652,6 +672,33 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
 
         return value
 
+    # Decoder wrapper classes whose FieldToSqlite/GetHandle/GetMetaStructPointer/etc. overloads take a
+    # pointer-to-decoder (no reference overload exists), so a by-value args-struct field needs "&".
+    # PointerDecoder<T> is deliberately excluded: it has a reference-taking overload and is passed
+    # directly. Opaque single pointers (e.g. a lone "void*") decode to a plain uint64_t scalar rather
+    # than any wrapper class, so they also fall through to "no &" (passed by value, like RecordField).
+    POINTER_DECODER_WRAPPER_PREFIXES = (
+        'StructPointerDecoder<',
+        'HandlePointerDecoder<',
+        'StringDecoder',
+        'StringArrayDecoder',
+        'WStringDecoder',
+    )
+
+    def make_field_ref(self, value):
+        """Return the C++ expression referencing this value's args-struct field, for passing to
+        FieldToSqlite/GetHandle/GetMetaStructPointer/etc. helpers that expect a pointer-to-decoder.
+        Since the args:: struct refactor, decoder fields are stored BY VALUE in the args struct (not by
+        pointer, as the old per-command positional parameters were), so calls whose decoded type is one
+        of the pointer-only wrapper classes need the address-of operator; everything else (PointerDecoder<T>,
+        which has a reference overload, and plain scalars like a lone uint64_t-encoded void*) is passed
+        directly, matching what these helpers already accepted before the args-struct refactor.
+        """
+        decoded_param_type = self.make_decoded_param_type(value)
+        if decoded_param_type.startswith(self.POINTER_DECODER_WRAPPER_PREFIXES):
+            return f'&{value.prefixed_name}'
+        return value.prefixed_name
+
     # yapf: disable
     def make_consumer_func_body(self, return_type, name, values):
         """Return VulkanSqliteConsumer class member function definition."""
@@ -668,17 +715,19 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     type_name = value.full_type
                 body += '\n'
                 if value.is_pointer and not value.is_array:
+                    field_ref = self.make_field_ref(value)
                     body += textwrap.indent(inspect.cleandoc(
                         f'''
                             FieldToSqlite(statements, fieldInfo, {fieldIndex}, "{value.name}", {
-                            value.prefixed_name}, "{type_name}");
+                            field_ref}, "{type_name}");
                         '''
                     ), '    ')
                 elif value.is_array:
+                    field_ref = self.make_field_ref(value)
                     body += textwrap.indent(inspect.cleandoc(
                         f'''
                             FieldToSqlite(statements, fieldInfo, {fieldIndex}, "{value.name}", {
-                            value.prefixed_name}, "{type_name}");
+                            field_ref}, "{type_name}");
                         '''
                     ), '    ')
                 else:
@@ -727,7 +776,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+                    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
                     if (!surfaceValid)
                     {
                         if (args.result == VK_SUCCESS)
@@ -737,7 +786,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         return;
                     }
 
-                    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+                    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
                     if (!createInfoValid)
                     {
                         if (args.result == VK_SUCCESS)
@@ -855,8 +904,8 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [shadersValid, shaders, shadersCount] = GetHandleArray(args.pShaders);
-                    auto [stagesValid, stages, stagesCount] = GetPointerArray(args.pStages);
+                    auto [shadersValid, shaders, shadersCount] = GetHandleArray(&args.pShaders);
+                    auto [stagesValid, stages, stagesCount] = GetPointerArray(&args.pStages);
                     if (!stagesValid)
                     {
                         GFXRECON_SQLITE_LOG_WARNING("Failed to bind shader objects, invalid pStages");
@@ -977,14 +1026,14 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [buffersValid, buffers, buffersCount] = GetHandleArray(args.pBuffers);
+                    auto [buffersValid, buffers, buffersCount] = GetHandleArray(&args.pBuffers);
                     if (!buffersValid)
                     {
                         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pBuffers");
                         return;
                     }
 
-                    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(args.pOffsets);
+                    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(&args.pOffsets);
                     if (!offsetsValid)
                     {
                         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pOffsets");
@@ -996,8 +1045,8 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 body += '\n'
                 body += textwrap.indent(inspect.cleandoc(
                     '''
-                        auto [sizesValid, sizes, sizesCount] = GetPointerArray(args.pSizes);
-                        auto [stridesValid, strides, stridesCount] = GetPointerArray(args.pStrides);
+                        auto [sizesValid, sizes, sizesCount] = GetPointerArray(&args.pSizes);
+                        auto [stridesValid, strides, stridesCount] = GetPointerArray(&args.pStrides);
                     '''
                 ), '    ')
             body += '\n'
@@ -1366,7 +1415,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [commandPoolValid, commandPool] = GetHandle(args.pCommandPool);
+                    auto [commandPoolValid, commandPool] = GetHandle(&args.pCommandPool);
                     if (!commandPoolValid)
                     {
                         if (args.result == VK_SUCCESS)
@@ -1376,7 +1425,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         return;
                     }
 
-                    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+                    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
                     if (!createInfoValid)
                     {
                         if (args.result == VK_SUCCESS)
@@ -1446,7 +1495,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(args.pCommandBuffers);
+                    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
                     if (!commandBuffersValid)
                     {
                         if (args.result == VK_SUCCESS)
@@ -1456,7 +1505,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         return;
                     }
 
-                    auto [allocateInfoValid, allocateInfo] = GetMetaStructPointer(args.pAllocateInfo);
+                    auto [allocateInfoValid, allocateInfo] = GetMetaStructPointer(&args.pAllocateInfo);
                     if (!allocateInfoValid)
                     {
                         if (args.result == VK_SUCCESS)
@@ -1481,7 +1530,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(args.pBeginInfo);
+                    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pBeginInfo);
                     if (!beginInfoValid)
                     {
                         GFXRECON_SQLITE_LOG_WARNING("Failed to create command buffer recording, invalid pBeginInfo");
@@ -1557,7 +1606,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(args.pCommandBuffers);
+                auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
                 if (!commandBuffersValid)
                 {
                     GFXRECON_SQLITE_LOG_WARNING("Failed to free command buffers, invalid pCommandBuffers");
@@ -1620,7 +1669,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(args.pRenderPassBegin);
+                    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pRenderPassBegin);
                     if (!beginInfoValid)
                     {
                         GFXRECON_SQLITE_LOG_WARNING("Failed to create render pass recording, invalid pBeginInfo");
@@ -1710,7 +1759,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 body += '\n'
                 body += textwrap.indent(inspect.cleandoc(
                     '''
-                        auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(args.pSubpassBeginInfo);
+                        auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
                         if (!subpassBeginInfoValid)
                         {
                             GFXRECON_SQLITE_LOG_WARNING("Failed to create render subpass recording, invalid pSubpassBeginInfo");
@@ -1779,7 +1828,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 body += '\n'
                 body += textwrap.indent(inspect.cleandoc(
                     '''
-                        auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(args.pSubpassBeginInfo);
+                        auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
                         if (!subpassBeginInfoValid)
                         {
                             GFXRECON_SQLITE_LOG_WARNING("Failed to create next subpass, invalid pSubpassBeginInfo");
@@ -1788,7 +1837,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
 
                         LogUnsupportedPNext(subpassBeginInfo->pNext);
 
-                        auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(args.pSubpassEndInfo);
+                        auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
                         if (!subpassEndInfoValid)
                         {
                             GFXRECON_SQLITE_LOG_WARNING("Failed to create create next subpass, invalid pSubpassEndInfo");
@@ -1880,7 +1929,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 body += '\n'
                 body += textwrap.indent(inspect.cleandoc(
                     '''
-                        auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(args.pSubpassEndInfo);
+                        auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
                         if (!subpassEndInfoValid)
                         {
                             GFXRECON_SQLITE_LOG_WARNING("Failed to process end subpass, invalid pSubpassEndInfo");
@@ -1894,7 +1943,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [renderingInfoValid, renderingInfo] = GetMetaStructPointer(args.pRenderingInfo);
+                    auto [renderingInfoValid, renderingInfo] = GetMetaStructPointer(&args.pRenderingInfo);
                     if (!renderingInfoValid)
                     {
                         GFXRECON_SQLITE_LOG_WARNING("Failed to create dynamic render pass recording, invalid pRenderingInfo");
@@ -2060,7 +2109,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(args.pCommandBuffers);
+                    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
                     if (!commandBuffersValid)
                     {
                         GFXRECON_SQLITE_LOG_WARNING("Failed to insert secondary command buffer execution, invalid pCommandBuffers");

@@ -51,9 +51,9 @@ void VulkanSqliteConsumer::Process_vkCreateInstance(
     const auto functionId = statements.InsertFunctionName("vkCreateInstance");
     statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
 
-    FieldToSqlite(statements, fieldInfo, 1, "pCreateInfo", args.pCreateInfo, "const VkInstanceCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 3, "pInstance", args.pInstance, "VkInstance*");
+    FieldToSqlite(statements, fieldInfo, 1, "pCreateInfo", &args.pCreateInfo, "const VkInstanceCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInstance", &args.pInstance, "VkInstance*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -68,7 +68,7 @@ void VulkanSqliteConsumer::Process_vkDestroyInstance(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -84,7 +84,7 @@ void VulkanSqliteConsumer::Process_vkEnumeratePhysicalDevices(
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
     FieldToSqlite(statements, fieldInfo, 2, "pPhysicalDeviceCount", args.pPhysicalDeviceCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pPhysicalDevices", args.pPhysicalDevices, "VkPhysicalDevice*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPhysicalDevices", &args.pPhysicalDevices, "VkPhysicalDevice*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -99,7 +99,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceFeatures(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pFeatures", args.pFeatures, "VkPhysicalDeviceFeatures*");
+    FieldToSqlite(statements, fieldInfo, 2, "pFeatures", &args.pFeatures, "VkPhysicalDeviceFeatures*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -116,7 +116,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceFormatProperties(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "format", "VkFormat", args.format);
-    FieldToSqlite(statements, fieldInfo, 3, "pFormatProperties", args.pFormatProperties, "VkFormatProperties*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFormatProperties", &args.pFormatProperties, "VkFormatProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -141,7 +141,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceImageFormatProperties(
         statements, fieldInfo, 5, "usage", "VkImageUsageFlags", args.usage);
     RecordField(
         statements, fieldInfo, 6, "flags", "VkImageCreateFlags", args.flags);
-    FieldToSqlite(statements, fieldInfo, 7, "pImageFormatProperties", args.pImageFormatProperties, "VkImageFormatProperties*");
+    FieldToSqlite(statements, fieldInfo, 7, "pImageFormatProperties", &args.pImageFormatProperties, "VkImageFormatProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -156,7 +156,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pProperties", args.pProperties, "VkPhysicalDeviceProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pProperties", &args.pProperties, "VkPhysicalDeviceProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -172,7 +172,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyProperties(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pQueueFamilyPropertyCount", args.pQueueFamilyPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyProperties", args.pQueueFamilyProperties, "VkQueueFamilyProperties*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyProperties", &args.pQueueFamilyProperties, "VkQueueFamilyProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -187,7 +187,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceMemoryProperties(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryProperties", args.pMemoryProperties, "VkPhysicalDeviceMemoryProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryProperties", &args.pMemoryProperties, "VkPhysicalDeviceMemoryProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -202,9 +202,9 @@ void VulkanSqliteConsumer::Process_vkCreateDevice(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDeviceCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pDevice", args.pDevice, "VkDevice*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDeviceCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDevice", &args.pDevice, "VkDevice*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -219,71 +219,9 @@ void VulkanSqliteConsumer::Process_vkDestroyDevice(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
-}
-
-void VulkanSqliteConsumer::Process_vkEnumerateInstanceExtensionProperties(
-    const ApiCallInfo&                          call_info,
-    args::EnumerateInstanceExtensionProperties& args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkEnumerateInstanceExtensionProperties");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    FieldToSqlite(statements, fieldInfo, 1, "pLayerName", args.pLayerName, "const char*");
-    FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkExtensionProperties*");
-
-    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-}
-
-void VulkanSqliteConsumer::Process_vkEnumerateDeviceExtensionProperties(
-    const ApiCallInfo&                          call_info,
-    args::EnumerateDeviceExtensionProperties&   args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkEnumerateDeviceExtensionProperties");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    RecordField(
-        statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pLayerName", args.pLayerName, "const char*");
-    FieldToSqlite(statements, fieldInfo, 3, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkExtensionProperties*");
-
-    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-}
-
-void VulkanSqliteConsumer::Process_vkEnumerateInstanceLayerProperties(
-    const ApiCallInfo&                          call_info,
-    args::EnumerateInstanceLayerProperties&     args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkEnumerateInstanceLayerProperties");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    FieldToSqlite(statements, fieldInfo, 1, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 2, "pProperties", args.pProperties, "VkLayerProperties*");
-
-    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-}
-
-void VulkanSqliteConsumer::Process_vkEnumerateDeviceLayerProperties(
-    const ApiCallInfo&                          call_info,
-    args::EnumerateDeviceLayerProperties&       args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkEnumerateDeviceLayerProperties");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    RecordField(
-        statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkLayerProperties*");
-
-    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
 
 void VulkanSqliteConsumer::Process_vkGetDeviceQueue(
@@ -300,7 +238,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceQueue(
         statements, fieldInfo, 2, "queueFamilyIndex", "uint32_t", args.queueFamilyIndex);
     RecordField(
         statements, fieldInfo, 3, "queueIndex", "uint32_t", args.queueIndex);
-    FieldToSqlite(statements, fieldInfo, 4, "pQueue", args.pQueue, "VkQueue*");
+    FieldToSqlite(statements, fieldInfo, 4, "pQueue", &args.pQueue, "VkQueue*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -317,7 +255,7 @@ void VulkanSqliteConsumer::Process_vkQueueSubmit(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
     RecordField(
         statements, fieldInfo, 2, "submitCount", "uint32_t", args.submitCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pSubmits", args.pSubmits, "const VkSubmitInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubmits", &args.pSubmits, "const VkSubmitInfo*");
     RecordField(
         statements, fieldInfo, 4, "fence", "VkFence", args.fence);
 
@@ -371,9 +309,9 @@ void VulkanSqliteConsumer::Process_vkAllocateMemory(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pAllocateInfo", args.pAllocateInfo, "const VkMemoryAllocateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pMemory", args.pMemory, "VkDeviceMemory*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAllocateInfo", &args.pAllocateInfo, "const VkMemoryAllocateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMemory", &args.pMemory, "VkDeviceMemory*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -399,7 +337,7 @@ void VulkanSqliteConsumer::Process_vkFreeMemory(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "memory", "VkDeviceMemory", args.memory);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     auto deviceId = context.GetDeviceId(args.device);
@@ -482,7 +420,7 @@ void VulkanSqliteConsumer::Process_vkFlushMappedMemoryRanges(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "memoryRangeCount", "uint32_t", args.memoryRangeCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRanges", args.pMemoryRanges, "const VkMappedMemoryRange*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRanges", &args.pMemoryRanges, "const VkMappedMemoryRange*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -508,7 +446,7 @@ void VulkanSqliteConsumer::Process_vkInvalidateMappedMemoryRanges(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "memoryRangeCount", "uint32_t", args.memoryRangeCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRanges", args.pMemoryRanges, "const VkMappedMemoryRange*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRanges", &args.pMemoryRanges, "const VkMappedMemoryRange*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -609,7 +547,7 @@ void VulkanSqliteConsumer::Process_vkGetBufferMemoryRequirements(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "buffer", "VkBuffer", args.buffer);
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -626,7 +564,7 @@ void VulkanSqliteConsumer::Process_vkGetImageMemoryRequirements(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -644,7 +582,7 @@ void VulkanSqliteConsumer::Process_vkGetImageSparseMemoryRequirements(
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
     FieldToSqlite(statements, fieldInfo, 3, "pSparseMemoryRequirementCount", args.pSparseMemoryRequirementCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", &args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -670,7 +608,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSparseImageFormatPropertie
     RecordField(
         statements, fieldInfo, 6, "tiling", "VkImageTiling", args.tiling);
     FieldToSqlite(statements, fieldInfo, 7, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 8, "pProperties", args.pProperties, "VkSparseImageFormatProperties*");
+    FieldToSqlite(statements, fieldInfo, 8, "pProperties", &args.pProperties, "VkSparseImageFormatProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -687,7 +625,7 @@ void VulkanSqliteConsumer::Process_vkQueueBindSparse(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfo", args.pBindInfo, "const VkBindSparseInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfo", &args.pBindInfo, "const VkBindSparseInfo*");
     RecordField(
         statements, fieldInfo, 4, "fence", "VkFence", args.fence);
 
@@ -704,9 +642,9 @@ void VulkanSqliteConsumer::Process_vkCreateFence(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkFenceCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pFence", args.pFence, "VkFence*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkFenceCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pFence", &args.pFence, "VkFence*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -723,7 +661,7 @@ void VulkanSqliteConsumer::Process_vkDestroyFence(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "fence", "VkFence", args.fence);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -740,7 +678,7 @@ void VulkanSqliteConsumer::Process_vkResetFences(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "fenceCount", "uint32_t", args.fenceCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pFences", args.pFences, "const VkFence*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFences", &args.pFences, "const VkFence*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -782,7 +720,7 @@ void VulkanSqliteConsumer::Process_vkWaitForFences(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "fenceCount", "uint32_t", args.fenceCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pFences", args.pFences, "const VkFence*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFences", &args.pFences, "const VkFence*");
     RecordField(
         statements, fieldInfo, 4, "waitAll", "VkBool32", args.waitAll);
     RecordField(
@@ -810,9 +748,9 @@ void VulkanSqliteConsumer::Process_vkCreateSemaphore(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkSemaphoreCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSemaphore", args.pSemaphore, "VkSemaphore*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkSemaphoreCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSemaphore", &args.pSemaphore, "VkSemaphore*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -829,7 +767,7 @@ void VulkanSqliteConsumer::Process_vkDestroySemaphore(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "semaphore", "VkSemaphore", args.semaphore);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -844,9 +782,9 @@ void VulkanSqliteConsumer::Process_vkCreateQueryPool(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkQueryPoolCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pQueryPool", args.pQueryPool, "VkQueryPool*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkQueryPoolCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pQueryPool", &args.pQueryPool, "VkQueryPool*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -863,7 +801,7 @@ void VulkanSqliteConsumer::Process_vkDestroyQueryPool(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "queryPool", "VkQueryPool", args.queryPool);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -905,9 +843,9 @@ void VulkanSqliteConsumer::Process_vkCreateBuffer(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkBufferCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pBuffer", args.pBuffer, "VkBuffer*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkBufferCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBuffer", &args.pBuffer, "VkBuffer*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -924,7 +862,7 @@ void VulkanSqliteConsumer::Process_vkDestroyBuffer(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "buffer", "VkBuffer", args.buffer);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -939,9 +877,9 @@ void VulkanSqliteConsumer::Process_vkCreateImage(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkImageCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pImage", args.pImage, "VkImage*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkImageCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pImage", &args.pImage, "VkImage*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -958,7 +896,7 @@ void VulkanSqliteConsumer::Process_vkDestroyImage(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -975,8 +913,8 @@ void VulkanSqliteConsumer::Process_vkGetImageSubresourceLayout(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
-    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", args.pSubresource, "const VkImageSubresource*");
-    FieldToSqlite(statements, fieldInfo, 4, "pLayout", args.pLayout, "VkSubresourceLayout*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", &args.pSubresource, "const VkImageSubresource*");
+    FieldToSqlite(statements, fieldInfo, 4, "pLayout", &args.pLayout, "VkSubresourceLayout*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -991,9 +929,9 @@ void VulkanSqliteConsumer::Process_vkCreateImageView(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkImageViewCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pView", args.pView, "VkImageView*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkImageViewCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pView", &args.pView, "VkImageView*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -1010,7 +948,7 @@ void VulkanSqliteConsumer::Process_vkDestroyImageView(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "imageView", "VkImageView", args.imageView);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -1025,12 +963,12 @@ void VulkanSqliteConsumer::Process_vkCreateCommandPool(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkCommandPoolCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pCommandPool", args.pCommandPool, "VkCommandPool*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkCommandPoolCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCommandPool", &args.pCommandPool, "VkCommandPool*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [commandPoolValid, commandPool] = GetHandle(args.pCommandPool);
+    auto [commandPoolValid, commandPool] = GetHandle(&args.pCommandPool);
     if (!commandPoolValid)
     {
         if (args.result == VK_SUCCESS)
@@ -1040,7 +978,7 @@ void VulkanSqliteConsumer::Process_vkCreateCommandPool(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -1069,7 +1007,7 @@ void VulkanSqliteConsumer::Process_vkDestroyCommandPool(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "commandPool", "VkCommandPool", args.commandPool);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     auto commandPoolIter = context.commandPoolHandleToId.find(ToInt64(args.commandPool));
@@ -1150,11 +1088,11 @@ void VulkanSqliteConsumer::Process_vkAllocateCommandBuffers(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pAllocateInfo", args.pAllocateInfo, "const VkCommandBufferAllocateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pCommandBuffers", args.pCommandBuffers, "VkCommandBuffer*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAllocateInfo", &args.pAllocateInfo, "const VkCommandBufferAllocateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCommandBuffers", &args.pCommandBuffers, "VkCommandBuffer*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(args.pCommandBuffers);
+    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
     if (!commandBuffersValid)
     {
         if (args.result == VK_SUCCESS)
@@ -1164,7 +1102,7 @@ void VulkanSqliteConsumer::Process_vkAllocateCommandBuffers(
         return;
     }
 
-    auto [allocateInfoValid, allocateInfo] = GetMetaStructPointer(args.pAllocateInfo);
+    auto [allocateInfoValid, allocateInfo] = GetMetaStructPointer(&args.pAllocateInfo);
     if (!allocateInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -1199,10 +1137,10 @@ void VulkanSqliteConsumer::Process_vkFreeCommandBuffers(
         statements, fieldInfo, 2, "commandPool", "VkCommandPool", args.commandPool);
     RecordField(
         statements, fieldInfo, 3, "commandBufferCount", "uint32_t", args.commandBufferCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCommandBuffers", args.pCommandBuffers, "const VkCommandBuffer*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCommandBuffers", &args.pCommandBuffers, "const VkCommandBuffer*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
-    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(args.pCommandBuffers);
+    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
     if (!commandBuffersValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to free command buffers, invalid pCommandBuffers");
@@ -1259,10 +1197,10 @@ void VulkanSqliteConsumer::Process_vkBeginCommandBuffer(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBeginInfo", args.pBeginInfo, "const VkCommandBufferBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBeginInfo", &args.pBeginInfo, "const VkCommandBufferBeginInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(args.pBeginInfo);
+    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pBeginInfo);
     if (!beginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create command buffer recording, invalid pBeginInfo");
@@ -1387,7 +1325,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyBuffer(
         statements, fieldInfo, 3, "dstBuffer", "VkBuffer", args.dstBuffer);
     RecordField(
         statements, fieldInfo, 4, "regionCount", "uint32_t", args.regionCount);
-    FieldToSqlite(statements, fieldInfo, 5, "pRegions", args.pRegions, "const VkBufferCopy*");
+    FieldToSqlite(statements, fieldInfo, 5, "pRegions", &args.pRegions, "const VkBufferCopy*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -1422,7 +1360,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyImage(
         statements, fieldInfo, 5, "dstImageLayout", "VkImageLayout", args.dstImageLayout);
     RecordField(
         statements, fieldInfo, 6, "regionCount", "uint32_t", args.regionCount);
-    FieldToSqlite(statements, fieldInfo, 7, "pRegions", args.pRegions, "const VkImageCopy*");
+    FieldToSqlite(statements, fieldInfo, 7, "pRegions", &args.pRegions, "const VkImageCopy*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -1455,7 +1393,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage(
         statements, fieldInfo, 4, "dstImageLayout", "VkImageLayout", args.dstImageLayout);
     RecordField(
         statements, fieldInfo, 5, "regionCount", "uint32_t", args.regionCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pRegions", args.pRegions, "const VkBufferImageCopy*");
+    FieldToSqlite(statements, fieldInfo, 6, "pRegions", &args.pRegions, "const VkBufferImageCopy*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -1488,7 +1426,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer(
         statements, fieldInfo, 4, "dstBuffer", "VkBuffer", args.dstBuffer);
     RecordField(
         statements, fieldInfo, 5, "regionCount", "uint32_t", args.regionCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pRegions", args.pRegions, "const VkBufferImageCopy*");
+    FieldToSqlite(statements, fieldInfo, 6, "pRegions", &args.pRegions, "const VkBufferImageCopy*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -1662,13 +1600,13 @@ void VulkanSqliteConsumer::Process_vkCmdPipelineBarrier(
         statements, fieldInfo, 4, "dependencyFlags", "VkDependencyFlags", args.dependencyFlags);
     RecordField(
         statements, fieldInfo, 5, "memoryBarrierCount", "uint32_t", args.memoryBarrierCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pMemoryBarriers", args.pMemoryBarriers, "const VkMemoryBarrier*");
+    FieldToSqlite(statements, fieldInfo, 6, "pMemoryBarriers", &args.pMemoryBarriers, "const VkMemoryBarrier*");
     RecordField(
         statements, fieldInfo, 7, "bufferMemoryBarrierCount", "uint32_t", args.bufferMemoryBarrierCount);
-    FieldToSqlite(statements, fieldInfo, 8, "pBufferMemoryBarriers", args.pBufferMemoryBarriers, "const VkBufferMemoryBarrier*");
+    FieldToSqlite(statements, fieldInfo, 8, "pBufferMemoryBarriers", &args.pBufferMemoryBarriers, "const VkBufferMemoryBarrier*");
     RecordField(
         statements, fieldInfo, 9, "imageMemoryBarrierCount", "uint32_t", args.imageMemoryBarrierCount);
-    FieldToSqlite(statements, fieldInfo, 10, "pImageMemoryBarriers", args.pImageMemoryBarriers, "const VkImageMemoryBarrier*");
+    FieldToSqlite(statements, fieldInfo, 10, "pImageMemoryBarriers", &args.pImageMemoryBarriers, "const VkImageMemoryBarrier*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -2037,11 +1975,11 @@ void VulkanSqliteConsumer::Process_vkCmdExecuteCommands(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "commandBufferCount", "uint32_t", args.commandBufferCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pCommandBuffers", args.pCommandBuffers, "const VkCommandBuffer*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCommandBuffers", &args.pCommandBuffers, "const VkCommandBuffer*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(args.pCommandBuffers);
+    auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
     if (!commandBuffersValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to insert secondary command buffer execution, invalid pCommandBuffers");
@@ -2127,9 +2065,9 @@ void VulkanSqliteConsumer::Process_vkCreateEvent(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkEventCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pEvent", args.pEvent, "VkEvent*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkEventCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pEvent", &args.pEvent, "VkEvent*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2146,7 +2084,7 @@ void VulkanSqliteConsumer::Process_vkDestroyEvent(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "event", "VkEvent", args.event);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2209,9 +2147,9 @@ void VulkanSqliteConsumer::Process_vkCreateBufferView(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkBufferViewCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pView", args.pView, "VkBufferView*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkBufferViewCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pView", &args.pView, "VkBufferView*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2228,7 +2166,7 @@ void VulkanSqliteConsumer::Process_vkDestroyBufferView(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bufferView", "VkBufferView", args.bufferView);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2243,9 +2181,9 @@ void VulkanSqliteConsumer::Process_vkCreateShaderModule(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkShaderModuleCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pShaderModule", args.pShaderModule, "VkShaderModule*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkShaderModuleCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pShaderModule", &args.pShaderModule, "VkShaderModule*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2262,7 +2200,7 @@ void VulkanSqliteConsumer::Process_vkDestroyShaderModule(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "shaderModule", "VkShaderModule", args.shaderModule);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2277,9 +2215,9 @@ void VulkanSqliteConsumer::Process_vkCreatePipelineCache(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkPipelineCacheCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pPipelineCache", args.pPipelineCache, "VkPipelineCache*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkPipelineCacheCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pPipelineCache", &args.pPipelineCache, "VkPipelineCache*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2296,7 +2234,7 @@ void VulkanSqliteConsumer::Process_vkDestroyPipelineCache(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "pipelineCache", "VkPipelineCache", args.pipelineCache);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2333,7 +2271,7 @@ void VulkanSqliteConsumer::Process_vkMergePipelineCaches(
         statements, fieldInfo, 2, "dstCache", "VkPipelineCache", args.dstCache);
     RecordField(
         statements, fieldInfo, 3, "srcCacheCount", "uint32_t", args.srcCacheCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pSrcCaches", args.pSrcCaches, "const VkPipelineCache*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSrcCaches", &args.pSrcCaches, "const VkPipelineCache*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2352,9 +2290,9 @@ void VulkanSqliteConsumer::Process_vkCreateComputePipelines(
         statements, fieldInfo, 2, "pipelineCache", "VkPipelineCache", args.pipelineCache);
     RecordField(
         statements, fieldInfo, 3, "createInfoCount", "uint32_t", args.createInfoCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCreateInfos", args.pCreateInfos, "const VkComputePipelineCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 5, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 6, "pPipelines", args.pPipelines, "VkPipeline*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCreateInfos", &args.pCreateInfos, "const VkComputePipelineCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 5, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 6, "pPipelines", &args.pPipelines, "VkPipeline*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2371,7 +2309,7 @@ void VulkanSqliteConsumer::Process_vkDestroyPipeline(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "pipeline", "VkPipeline", args.pipeline);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2386,9 +2324,9 @@ void VulkanSqliteConsumer::Process_vkCreatePipelineLayout(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkPipelineLayoutCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pPipelineLayout", args.pPipelineLayout, "VkPipelineLayout*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkPipelineLayoutCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pPipelineLayout", &args.pPipelineLayout, "VkPipelineLayout*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2405,7 +2343,7 @@ void VulkanSqliteConsumer::Process_vkDestroyPipelineLayout(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "pipelineLayout", "VkPipelineLayout", args.pipelineLayout);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2420,9 +2358,9 @@ void VulkanSqliteConsumer::Process_vkCreateSampler(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkSamplerCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSampler", args.pSampler, "VkSampler*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkSamplerCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSampler", &args.pSampler, "VkSampler*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2439,7 +2377,7 @@ void VulkanSqliteConsumer::Process_vkDestroySampler(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "sampler", "VkSampler", args.sampler);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2454,9 +2392,9 @@ void VulkanSqliteConsumer::Process_vkCreateDescriptorSetLayout(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDescriptorSetLayoutCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSetLayout", args.pSetLayout, "VkDescriptorSetLayout*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDescriptorSetLayoutCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSetLayout", &args.pSetLayout, "VkDescriptorSetLayout*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2473,7 +2411,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDescriptorSetLayout(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "descriptorSetLayout", "VkDescriptorSetLayout", args.descriptorSetLayout);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2488,9 +2426,9 @@ void VulkanSqliteConsumer::Process_vkCreateDescriptorPool(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDescriptorPoolCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorPool", args.pDescriptorPool, "VkDescriptorPool*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDescriptorPoolCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorPool", &args.pDescriptorPool, "VkDescriptorPool*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2507,7 +2445,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDescriptorPool(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "descriptorPool", "VkDescriptorPool", args.descriptorPool);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2540,8 +2478,8 @@ void VulkanSqliteConsumer::Process_vkAllocateDescriptorSets(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pAllocateInfo", args.pAllocateInfo, "const VkDescriptorSetAllocateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pDescriptorSets", args.pDescriptorSets, "VkDescriptorSet*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAllocateInfo", &args.pAllocateInfo, "const VkDescriptorSetAllocateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDescriptorSets", &args.pDescriptorSets, "VkDescriptorSet*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2560,7 +2498,7 @@ void VulkanSqliteConsumer::Process_vkFreeDescriptorSets(
         statements, fieldInfo, 2, "descriptorPool", "VkDescriptorPool", args.descriptorPool);
     RecordField(
         statements, fieldInfo, 3, "descriptorSetCount", "uint32_t", args.descriptorSetCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorSets", args.pDescriptorSets, "const VkDescriptorSet*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorSets", &args.pDescriptorSets, "const VkDescriptorSet*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -2577,10 +2515,10 @@ void VulkanSqliteConsumer::Process_vkUpdateDescriptorSets(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "descriptorWriteCount", "uint32_t", args.descriptorWriteCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pDescriptorWrites", args.pDescriptorWrites, "const VkWriteDescriptorSet*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDescriptorWrites", &args.pDescriptorWrites, "const VkWriteDescriptorSet*");
     RecordField(
         statements, fieldInfo, 4, "descriptorCopyCount", "uint32_t", args.descriptorCopyCount);
-    FieldToSqlite(statements, fieldInfo, 5, "pDescriptorCopies", args.pDescriptorCopies, "const VkCopyDescriptorSet*");
+    FieldToSqlite(statements, fieldInfo, 5, "pDescriptorCopies", &args.pDescriptorCopies, "const VkCopyDescriptorSet*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -2701,7 +2639,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets(
         statements, fieldInfo, 4, "firstSet", "uint32_t", args.firstSet);
     RecordField(
         statements, fieldInfo, 5, "descriptorSetCount", "uint32_t", args.descriptorSetCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pDescriptorSets", args.pDescriptorSets, "const VkDescriptorSet*");
+    FieldToSqlite(statements, fieldInfo, 6, "pDescriptorSets", &args.pDescriptorSets, "const VkDescriptorSet*");
     RecordField(
         statements, fieldInfo, 7, "dynamicOffsetCount", "uint32_t", args.dynamicOffsetCount);
     FieldToSqlite(statements, fieldInfo, 8, "pDynamicOffsets", args.pDynamicOffsets, "const uint32_t*");
@@ -2724,10 +2662,10 @@ void VulkanSqliteConsumer::Process_vkCmdClearColorImage(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
     RecordField(
         statements, fieldInfo, 3, "imageLayout", "VkImageLayout", args.imageLayout);
-    FieldToSqlite(statements, fieldInfo, 4, "pColor", args.pColor, "const VkClearColorValue*");
+    FieldToSqlite(statements, fieldInfo, 4, "pColor", &args.pColor, "const VkClearColorValue*");
     RecordField(
         statements, fieldInfo, 5, "rangeCount", "uint32_t", args.rangeCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pRanges", args.pRanges, "const VkImageSubresourceRange*");
+    FieldToSqlite(statements, fieldInfo, 6, "pRanges", &args.pRanges, "const VkImageSubresourceRange*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -2989,20 +2927,20 @@ void VulkanSqliteConsumer::Process_vkCmdWaitEvents(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "eventCount", "uint32_t", args.eventCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pEvents", args.pEvents, "const VkEvent*");
+    FieldToSqlite(statements, fieldInfo, 3, "pEvents", &args.pEvents, "const VkEvent*");
     RecordField(
         statements, fieldInfo, 4, "srcStageMask", "VkPipelineStageFlags", args.srcStageMask);
     RecordField(
         statements, fieldInfo, 5, "dstStageMask", "VkPipelineStageFlags", args.dstStageMask);
     RecordField(
         statements, fieldInfo, 6, "memoryBarrierCount", "uint32_t", args.memoryBarrierCount);
-    FieldToSqlite(statements, fieldInfo, 7, "pMemoryBarriers", args.pMemoryBarriers, "const VkMemoryBarrier*");
+    FieldToSqlite(statements, fieldInfo, 7, "pMemoryBarriers", &args.pMemoryBarriers, "const VkMemoryBarrier*");
     RecordField(
         statements, fieldInfo, 8, "bufferMemoryBarrierCount", "uint32_t", args.bufferMemoryBarrierCount);
-    FieldToSqlite(statements, fieldInfo, 9, "pBufferMemoryBarriers", args.pBufferMemoryBarriers, "const VkBufferMemoryBarrier*");
+    FieldToSqlite(statements, fieldInfo, 9, "pBufferMemoryBarriers", &args.pBufferMemoryBarriers, "const VkBufferMemoryBarrier*");
     RecordField(
         statements, fieldInfo, 10, "imageMemoryBarrierCount", "uint32_t", args.imageMemoryBarrierCount);
-    FieldToSqlite(statements, fieldInfo, 11, "pImageMemoryBarriers", args.pImageMemoryBarriers, "const VkImageMemoryBarrier*");
+    FieldToSqlite(statements, fieldInfo, 11, "pImageMemoryBarriers", &args.pImageMemoryBarriers, "const VkImageMemoryBarrier*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -3094,9 +3032,9 @@ void VulkanSqliteConsumer::Process_vkCreateGraphicsPipelines(
         statements, fieldInfo, 2, "pipelineCache", "VkPipelineCache", args.pipelineCache);
     RecordField(
         statements, fieldInfo, 3, "createInfoCount", "uint32_t", args.createInfoCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCreateInfos", args.pCreateInfos, "const VkGraphicsPipelineCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 5, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 6, "pPipelines", args.pPipelines, "VkPipeline*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCreateInfos", &args.pCreateInfos, "const VkGraphicsPipelineCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 5, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 6, "pPipelines", &args.pPipelines, "VkPipeline*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -3111,9 +3049,9 @@ void VulkanSqliteConsumer::Process_vkCreateFramebuffer(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkFramebufferCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pFramebuffer", args.pFramebuffer, "VkFramebuffer*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkFramebufferCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pFramebuffer", &args.pFramebuffer, "VkFramebuffer*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -3130,7 +3068,7 @@ void VulkanSqliteConsumer::Process_vkDestroyFramebuffer(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "framebuffer", "VkFramebuffer", args.framebuffer);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -3145,9 +3083,9 @@ void VulkanSqliteConsumer::Process_vkCreateRenderPass(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkRenderPassCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pRenderPass", args.pRenderPass, "VkRenderPass*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkRenderPassCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pRenderPass", &args.pRenderPass, "VkRenderPass*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -3164,7 +3102,7 @@ void VulkanSqliteConsumer::Process_vkDestroyRenderPass(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "renderPass", "VkRenderPass", args.renderPass);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -3181,7 +3119,7 @@ void VulkanSqliteConsumer::Process_vkGetRenderAreaGranularity(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "renderPass", "VkRenderPass", args.renderPass);
-    FieldToSqlite(statements, fieldInfo, 3, "pGranularity", args.pGranularity, "VkExtent2D*");
+    FieldToSqlite(statements, fieldInfo, 3, "pGranularity", &args.pGranularity, "VkExtent2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -3200,7 +3138,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetViewport(
         statements, fieldInfo, 2, "firstViewport", "uint32_t", args.firstViewport);
     RecordField(
         statements, fieldInfo, 3, "viewportCount", "uint32_t", args.viewportCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pViewports", args.pViewports, "const VkViewport*");
+    FieldToSqlite(statements, fieldInfo, 4, "pViewports", &args.pViewports, "const VkViewport*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -3220,7 +3158,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetScissor(
         statements, fieldInfo, 2, "firstScissor", "uint32_t", args.firstScissor);
     RecordField(
         statements, fieldInfo, 3, "scissorCount", "uint32_t", args.scissorCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pScissors", args.pScissors, "const VkRect2D*");
+    FieldToSqlite(statements, fieldInfo, 4, "pScissors", &args.pScissors, "const VkRect2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -3426,19 +3364,19 @@ void VulkanSqliteConsumer::Process_vkCmdBindVertexBuffers(
         statements, fieldInfo, 2, "firstBinding", "uint32_t", args.firstBinding);
     RecordField(
         statements, fieldInfo, 3, "bindingCount", "uint32_t", args.bindingCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", args.pBuffers, "const VkBuffer*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", &args.pBuffers, "const VkBuffer*");
     FieldToSqlite(statements, fieldInfo, 5, "pOffsets", args.pOffsets, "const VkDeviceSize*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [buffersValid, buffers, buffersCount] = GetHandleArray(args.pBuffers);
+    auto [buffersValid, buffers, buffersCount] = GetHandleArray(&args.pBuffers);
     if (!buffersValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pBuffers");
         return;
     }
 
-    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(args.pOffsets);
+    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(&args.pOffsets);
     if (!offsetsValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pOffsets");
@@ -3990,7 +3928,7 @@ void VulkanSqliteConsumer::Process_vkCmdBlitImage(
         statements, fieldInfo, 5, "dstImageLayout", "VkImageLayout", args.dstImageLayout);
     RecordField(
         statements, fieldInfo, 6, "regionCount", "uint32_t", args.regionCount);
-    FieldToSqlite(statements, fieldInfo, 7, "pRegions", args.pRegions, "const VkImageBlit*");
+    FieldToSqlite(statements, fieldInfo, 7, "pRegions", &args.pRegions, "const VkImageBlit*");
     RecordField(
         statements, fieldInfo, 8, "filter", "VkFilter", args.filter);
 
@@ -4021,10 +3959,10 @@ void VulkanSqliteConsumer::Process_vkCmdClearDepthStencilImage(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
     RecordField(
         statements, fieldInfo, 3, "imageLayout", "VkImageLayout", args.imageLayout);
-    FieldToSqlite(statements, fieldInfo, 4, "pDepthStencil", args.pDepthStencil, "const VkClearDepthStencilValue*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDepthStencil", &args.pDepthStencil, "const VkClearDepthStencilValue*");
     RecordField(
         statements, fieldInfo, 5, "rangeCount", "uint32_t", args.rangeCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pRanges", args.pRanges, "const VkImageSubresourceRange*");
+    FieldToSqlite(statements, fieldInfo, 6, "pRanges", &args.pRanges, "const VkImageSubresourceRange*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -4090,10 +4028,10 @@ void VulkanSqliteConsumer::Process_vkCmdClearAttachments(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "attachmentCount", "uint32_t", args.attachmentCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pAttachments", args.pAttachments, "const VkClearAttachment*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAttachments", &args.pAttachments, "const VkClearAttachment*");
     RecordField(
         statements, fieldInfo, 4, "rectCount", "uint32_t", args.rectCount);
-    FieldToSqlite(statements, fieldInfo, 5, "pRects", args.pRects, "const VkClearRect*");
+    FieldToSqlite(statements, fieldInfo, 5, "pRects", &args.pRects, "const VkClearRect*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -4167,7 +4105,7 @@ void VulkanSqliteConsumer::Process_vkCmdResolveImage(
         statements, fieldInfo, 5, "dstImageLayout", "VkImageLayout", args.dstImageLayout);
     RecordField(
         statements, fieldInfo, 6, "regionCount", "uint32_t", args.regionCount);
-    FieldToSqlite(statements, fieldInfo, 7, "pRegions", args.pRegions, "const VkImageResolve*");
+    FieldToSqlite(statements, fieldInfo, 7, "pRegions", &args.pRegions, "const VkImageResolve*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -4192,13 +4130,13 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderPassBegin", args.pRenderPassBegin, "const VkRenderPassBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderPassBegin", &args.pRenderPassBegin, "const VkRenderPassBeginInfo*");
     RecordField(
         statements, fieldInfo, 3, "contents", "VkSubpassContents", args.contents);
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(args.pRenderPassBegin);
+    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pRenderPassBegin);
     if (!beginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create render pass recording, invalid pBeginInfo");
@@ -4412,19 +4350,6 @@ void VulkanSqliteConsumer::Process_vkCmdEndRenderPass(
         context.commandBufferHandleToRenderPassRecordingIdStack.erase(renderPassRecordingIdStackIter);
     }
 }
-void VulkanSqliteConsumer::Process_vkEnumerateInstanceVersion(
-    const ApiCallInfo&                          call_info,
-    args::EnumerateInstanceVersion&             args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkEnumerateInstanceVersion");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    FieldToSqlite(statements, fieldInfo, 1, "pApiVersion", args.pApiVersion, "uint32_t*");
-
-    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-}
-
 void VulkanSqliteConsumer::Process_vkBindBufferMemory2(
     const ApiCallInfo&                          call_info,
     args::BindBufferMemory2&                    args)
@@ -4437,7 +4362,7 @@ void VulkanSqliteConsumer::Process_vkBindBufferMemory2(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", args.pBindInfos, "const VkBindBufferMemoryInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", &args.pBindInfos, "const VkBindBufferMemoryInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -4463,7 +4388,7 @@ void VulkanSqliteConsumer::Process_vkBindImageMemory2(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", args.pBindInfos, "const VkBindImageMemoryInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", &args.pBindInfos, "const VkBindImageMemoryInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -4526,7 +4451,7 @@ void VulkanSqliteConsumer::Process_vkEnumeratePhysicalDeviceGroups(
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
     FieldToSqlite(statements, fieldInfo, 2, "pPhysicalDeviceGroupCount", args.pPhysicalDeviceGroupCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pPhysicalDeviceGroupProperties", args.pPhysicalDeviceGroupProperties, "VkPhysicalDeviceGroupProperties*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPhysicalDeviceGroupProperties", &args.pPhysicalDeviceGroupProperties, "VkPhysicalDeviceGroupProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -4541,8 +4466,8 @@ void VulkanSqliteConsumer::Process_vkGetImageMemoryRequirements2(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkImageMemoryRequirementsInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkImageMemoryRequirementsInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4557,8 +4482,8 @@ void VulkanSqliteConsumer::Process_vkGetBufferMemoryRequirements2(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBufferMemoryRequirementsInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBufferMemoryRequirementsInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4573,9 +4498,9 @@ void VulkanSqliteConsumer::Process_vkGetImageSparseMemoryRequirements2(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkImageSparseMemoryRequirementsInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkImageSparseMemoryRequirementsInfo2*");
     FieldToSqlite(statements, fieldInfo, 3, "pSparseMemoryRequirementCount", args.pSparseMemoryRequirementCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", &args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4590,7 +4515,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceFeatures2(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pFeatures", args.pFeatures, "VkPhysicalDeviceFeatures2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pFeatures", &args.pFeatures, "VkPhysicalDeviceFeatures2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4605,7 +4530,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties2(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pProperties", args.pProperties, "VkPhysicalDeviceProperties2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pProperties", &args.pProperties, "VkPhysicalDeviceProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4622,7 +4547,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceFormatProperties2(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "format", "VkFormat", args.format);
-    FieldToSqlite(statements, fieldInfo, 3, "pFormatProperties", args.pFormatProperties, "VkFormatProperties2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFormatProperties", &args.pFormatProperties, "VkFormatProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4637,8 +4562,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceImageFormatProperties2(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pImageFormatInfo", args.pImageFormatInfo, "const VkPhysicalDeviceImageFormatInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pImageFormatProperties", args.pImageFormatProperties, "VkImageFormatProperties2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pImageFormatInfo", &args.pImageFormatInfo, "const VkPhysicalDeviceImageFormatInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pImageFormatProperties", &args.pImageFormatProperties, "VkImageFormatProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -4654,7 +4579,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyProperties2(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pQueueFamilyPropertyCount", args.pQueueFamilyPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyProperties", args.pQueueFamilyProperties, "VkQueueFamilyProperties2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyProperties", &args.pQueueFamilyProperties, "VkQueueFamilyProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4669,7 +4594,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceMemoryProperties2(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryProperties", args.pMemoryProperties, "VkPhysicalDeviceMemoryProperties2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryProperties", &args.pMemoryProperties, "VkPhysicalDeviceMemoryProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4684,9 +4609,9 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSparseImageFormatPropertie
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pFormatInfo", args.pFormatInfo, "const VkPhysicalDeviceSparseImageFormatInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pFormatInfo", &args.pFormatInfo, "const VkPhysicalDeviceSparseImageFormatInfo2*");
     FieldToSqlite(statements, fieldInfo, 3, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkSparseImageFormatProperties2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkSparseImageFormatProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4719,8 +4644,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceQueue2(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pQueueInfo", args.pQueueInfo, "const VkDeviceQueueInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pQueue", args.pQueue, "VkQueue*");
+    FieldToSqlite(statements, fieldInfo, 2, "pQueueInfo", &args.pQueueInfo, "const VkDeviceQueueInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQueue", &args.pQueue, "VkQueue*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4735,8 +4660,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalBufferProperties(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pExternalBufferInfo", args.pExternalBufferInfo, "const VkPhysicalDeviceExternalBufferInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pExternalBufferProperties", args.pExternalBufferProperties, "VkExternalBufferProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExternalBufferInfo", &args.pExternalBufferInfo, "const VkPhysicalDeviceExternalBufferInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExternalBufferProperties", &args.pExternalBufferProperties, "VkExternalBufferProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4751,8 +4676,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalFenceProperties(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pExternalFenceInfo", args.pExternalFenceInfo, "const VkPhysicalDeviceExternalFenceInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pExternalFenceProperties", args.pExternalFenceProperties, "VkExternalFenceProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExternalFenceInfo", &args.pExternalFenceInfo, "const VkPhysicalDeviceExternalFenceInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExternalFenceProperties", &args.pExternalFenceProperties, "VkExternalFenceProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4767,8 +4692,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalSemaphorePropertie
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pExternalSemaphoreInfo", args.pExternalSemaphoreInfo, "const VkPhysicalDeviceExternalSemaphoreInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pExternalSemaphoreProperties", args.pExternalSemaphoreProperties, "VkExternalSemaphoreProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExternalSemaphoreInfo", &args.pExternalSemaphoreInfo, "const VkPhysicalDeviceExternalSemaphoreInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExternalSemaphoreProperties", &args.pExternalSemaphoreProperties, "VkExternalSemaphoreProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4822,9 +4747,9 @@ void VulkanSqliteConsumer::Process_vkCreateDescriptorUpdateTemplate(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDescriptorUpdateTemplateCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorUpdateTemplate", args.pDescriptorUpdateTemplate, "VkDescriptorUpdateTemplate*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDescriptorUpdateTemplateCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorUpdateTemplate", &args.pDescriptorUpdateTemplate, "VkDescriptorUpdateTemplate*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -4841,7 +4766,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDescriptorUpdateTemplate(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", args.descriptorUpdateTemplate);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4856,8 +4781,8 @@ void VulkanSqliteConsumer::Process_vkGetDescriptorSetLayoutSupport(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDescriptorSetLayoutCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSupport", args.pSupport, "VkDescriptorSetLayoutSupport*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDescriptorSetLayoutCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSupport", &args.pSupport, "VkDescriptorSetLayoutSupport*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4872,9 +4797,9 @@ void VulkanSqliteConsumer::Process_vkCreateSamplerYcbcrConversion(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkSamplerYcbcrConversionCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pYcbcrConversion", args.pYcbcrConversion, "VkSamplerYcbcrConversion*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkSamplerYcbcrConversionCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pYcbcrConversion", &args.pYcbcrConversion, "VkSamplerYcbcrConversion*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -4891,7 +4816,7 @@ void VulkanSqliteConsumer::Process_vkDestroySamplerYcbcrConversion(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "ycbcrConversion", "VkSamplerYcbcrConversion", args.ycbcrConversion);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -4942,7 +4867,7 @@ void VulkanSqliteConsumer::Process_vkWaitSemaphores(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pWaitInfo", args.pWaitInfo, "const VkSemaphoreWaitInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pWaitInfo", &args.pWaitInfo, "const VkSemaphoreWaitInfo*");
     RecordField(
         statements, fieldInfo, 3, "timeout", "uint64_t", args.timeout);
 
@@ -4968,7 +4893,7 @@ void VulkanSqliteConsumer::Process_vkSignalSemaphore(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pSignalInfo", args.pSignalInfo, "const VkSemaphoreSignalInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSignalInfo", &args.pSignalInfo, "const VkSemaphoreSignalInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -4992,7 +4917,7 @@ void VulkanSqliteConsumer::Process_vkGetBufferDeviceAddress(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBufferDeviceAddressInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBufferDeviceAddressInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkDeviceAddress", args.result);
 }
@@ -5007,7 +4932,7 @@ void VulkanSqliteConsumer::Process_vkGetBufferOpaqueCaptureAddress(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBufferDeviceAddressInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBufferDeviceAddressInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "uint64_t", args.result);
 }
@@ -5022,7 +4947,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceMemoryOpaqueCaptureAddress(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceMemoryOpaqueCaptureAddressInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceMemoryOpaqueCaptureAddressInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "uint64_t", args.result);
 }
@@ -5301,9 +5226,9 @@ void VulkanSqliteConsumer::Process_vkCreateRenderPass2(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkRenderPassCreateInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pRenderPass", args.pRenderPass, "VkRenderPass*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkRenderPassCreateInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pRenderPass", &args.pRenderPass, "VkRenderPass*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -5318,12 +5243,12 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderPassBegin", args.pRenderPassBegin, "const VkRenderPassBeginInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSubpassBeginInfo", args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderPassBegin", &args.pRenderPassBegin, "const VkRenderPassBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubpassBeginInfo", &args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(args.pRenderPassBegin);
+    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pRenderPassBegin);
     if (!beginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create render pass recording, invalid pBeginInfo");
@@ -5405,7 +5330,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2(
         }
     }
 
-    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(args.pSubpassBeginInfo);
+    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
     if (!subpassBeginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create render subpass recording, invalid pSubpassBeginInfo");
@@ -5430,8 +5355,8 @@ void VulkanSqliteConsumer::Process_vkCmdNextSubpass2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pSubpassBeginInfo", args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSubpassEndInfo", args.pSubpassEndInfo, "const VkSubpassEndInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSubpassBeginInfo", &args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubpassEndInfo", &args.pSubpassEndInfo, "const VkSubpassEndInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -5471,7 +5396,7 @@ void VulkanSqliteConsumer::Process_vkCmdNextSubpass2(
         statements.EndRenderSubpassRecording(this->block_index_, subpassRecordingIter->second);
     }
 
-    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(args.pSubpassBeginInfo);
+    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
     if (!subpassBeginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create next subpass, invalid pSubpassBeginInfo");
@@ -5480,7 +5405,7 @@ void VulkanSqliteConsumer::Process_vkCmdNextSubpass2(
 
     LogUnsupportedPNext(subpassBeginInfo->pNext);
 
-    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(args.pSubpassEndInfo);
+    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
     if (!subpassEndInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create create next subpass, invalid pSubpassEndInfo");
@@ -5504,7 +5429,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndRenderPass2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pSubpassEndInfo", args.pSubpassEndInfo, "const VkSubpassEndInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSubpassEndInfo", &args.pSubpassEndInfo, "const VkSubpassEndInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -5569,7 +5494,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndRenderPass2(
         context.commandBufferHandleToRenderPassRecordingIdStack.erase(renderPassRecordingIdStackIter);
     }
 
-    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(args.pSubpassEndInfo);
+    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
     if (!subpassEndInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to process end subpass, invalid pSubpassEndInfo");
@@ -5589,7 +5514,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceToolProperties(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pToolCount", args.pToolCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pToolProperties", args.pToolProperties, "VkPhysicalDeviceToolProperties*");
+    FieldToSqlite(statements, fieldInfo, 3, "pToolProperties", &args.pToolProperties, "VkPhysicalDeviceToolProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -5604,9 +5529,9 @@ void VulkanSqliteConsumer::Process_vkCreatePrivateDataSlot(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkPrivateDataSlotCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pPrivateDataSlot", args.pPrivateDataSlot, "VkPrivateDataSlot*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkPrivateDataSlotCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pPrivateDataSlot", &args.pPrivateDataSlot, "VkPrivateDataSlot*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -5623,7 +5548,7 @@ void VulkanSqliteConsumer::Process_vkDestroyPrivateDataSlot(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "privateDataSlot", "VkPrivateDataSlot", args.privateDataSlot);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -5681,7 +5606,7 @@ void VulkanSqliteConsumer::Process_vkCmdPipelineBarrier2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDependencyInfo", args.pDependencyInfo, "const VkDependencyInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDependencyInfo", &args.pDependencyInfo, "const VkDependencyInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -5768,7 +5693,7 @@ void VulkanSqliteConsumer::Process_vkQueueSubmit2(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
     RecordField(
         statements, fieldInfo, 2, "submitCount", "uint32_t", args.submitCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pSubmits", args.pSubmits, "const VkSubmitInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubmits", &args.pSubmits, "const VkSubmitInfo2*");
     RecordField(
         statements, fieldInfo, 4, "fence", "VkFence", args.fence);
 
@@ -5785,7 +5710,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyBuffer2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferInfo", args.pCopyBufferInfo, "const VkCopyBufferInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferInfo", &args.pCopyBufferInfo, "const VkCopyBufferInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -5810,7 +5735,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyImage2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageInfo", args.pCopyImageInfo, "const VkCopyImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageInfo", &args.pCopyImageInfo, "const VkCopyImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -5835,7 +5760,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferToImageInfo", args.pCopyBufferToImageInfo, "const VkCopyBufferToImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferToImageInfo", &args.pCopyBufferToImageInfo, "const VkCopyBufferToImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -5860,7 +5785,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToBufferInfo", args.pCopyImageToBufferInfo, "const VkCopyImageToBufferInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToBufferInfo", &args.pCopyImageToBufferInfo, "const VkCopyImageToBufferInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -5885,8 +5810,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceBufferMemoryRequirements(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceBufferMemoryRequirements*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceBufferMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -5901,8 +5826,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceImageMemoryRequirements(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceImageMemoryRequirements*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceImageMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -5917,9 +5842,9 @@ void VulkanSqliteConsumer::Process_vkGetDeviceImageSparseMemoryRequirements(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceImageMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceImageMemoryRequirements*");
     FieldToSqlite(statements, fieldInfo, 3, "pSparseMemoryRequirementCount", args.pSparseMemoryRequirementCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", &args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -5936,7 +5861,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetEvent2(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "event", "VkEvent", args.event);
-    FieldToSqlite(statements, fieldInfo, 3, "pDependencyInfo", args.pDependencyInfo, "const VkDependencyInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDependencyInfo", &args.pDependencyInfo, "const VkDependencyInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6069,8 +5994,8 @@ void VulkanSqliteConsumer::Process_vkCmdWaitEvents2(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "eventCount", "uint32_t", args.eventCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pEvents", args.pEvents, "const VkEvent*");
-    FieldToSqlite(statements, fieldInfo, 4, "pDependencyInfos", args.pDependencyInfos, "const VkDependencyInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pEvents", &args.pEvents, "const VkEvent*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDependencyInfos", &args.pDependencyInfos, "const VkDependencyInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6134,7 +6059,7 @@ void VulkanSqliteConsumer::Process_vkCmdBlitImage2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBlitImageInfo", args.pBlitImageInfo, "const VkBlitImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBlitImageInfo", &args.pBlitImageInfo, "const VkBlitImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6159,7 +6084,7 @@ void VulkanSqliteConsumer::Process_vkCmdResolveImage2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pResolveImageInfo", args.pResolveImageInfo, "const VkResolveImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pResolveImageInfo", &args.pResolveImageInfo, "const VkResolveImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6184,11 +6109,11 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRendering(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderingInfo", args.pRenderingInfo, "const VkRenderingInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderingInfo", &args.pRenderingInfo, "const VkRenderingInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [renderingInfoValid, renderingInfo] = GetMetaStructPointer(args.pRenderingInfo);
+    auto [renderingInfoValid, renderingInfo] = GetMetaStructPointer(&args.pRenderingInfo);
     if (!renderingInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create dynamic render pass recording, invalid pRenderingInfo");
@@ -6421,7 +6346,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetViewportWithCount(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "viewportCount", "uint32_t", args.viewportCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pViewports", args.pViewports, "const VkViewport*");
+    FieldToSqlite(statements, fieldInfo, 3, "pViewports", &args.pViewports, "const VkViewport*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6439,7 +6364,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetScissorWithCount(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "scissorCount", "uint32_t", args.scissorCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pScissors", args.pScissors, "const VkRect2D*");
+    FieldToSqlite(statements, fieldInfo, 3, "pScissors", &args.pScissors, "const VkRect2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6459,28 +6384,28 @@ void VulkanSqliteConsumer::Process_vkCmdBindVertexBuffers2(
         statements, fieldInfo, 2, "firstBinding", "uint32_t", args.firstBinding);
     RecordField(
         statements, fieldInfo, 3, "bindingCount", "uint32_t", args.bindingCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", args.pBuffers, "const VkBuffer*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", &args.pBuffers, "const VkBuffer*");
     FieldToSqlite(statements, fieldInfo, 5, "pOffsets", args.pOffsets, "const VkDeviceSize*");
     FieldToSqlite(statements, fieldInfo, 6, "pSizes", args.pSizes, "const VkDeviceSize*");
     FieldToSqlite(statements, fieldInfo, 7, "pStrides", args.pStrides, "const VkDeviceSize*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [buffersValid, buffers, buffersCount] = GetHandleArray(args.pBuffers);
+    auto [buffersValid, buffers, buffersCount] = GetHandleArray(&args.pBuffers);
     if (!buffersValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pBuffers");
         return;
     }
 
-    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(args.pOffsets);
+    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(&args.pOffsets);
     if (!offsetsValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pOffsets");
         return;
     }
-    auto [sizesValid, sizes, sizesCount] = GetPointerArray(args.pSizes);
-    auto [stridesValid, strides, stridesCount] = GetPointerArray(args.pStrides);
+    auto [sizesValid, sizes, sizesCount] = GetPointerArray(&args.pSizes);
+    auto [stridesValid, strides, stridesCount] = GetPointerArray(&args.pStrides);
     auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
@@ -6707,7 +6632,7 @@ void VulkanSqliteConsumer::Process_vkMapMemory2(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryMapInfo", args.pMemoryMapInfo, "const VkMemoryMapInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryMapInfo", &args.pMemoryMapInfo, "const VkMemoryMapInfo*");
     FieldToSqlite(statements, fieldInfo, 3, "ppData", args.ppData, "void**");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -6732,7 +6657,7 @@ void VulkanSqliteConsumer::Process_vkUnmapMemory2(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryUnmapInfo", args.pMemoryUnmapInfo, "const VkMemoryUnmapInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryUnmapInfo", &args.pMemoryUnmapInfo, "const VkMemoryUnmapInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -6756,8 +6681,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceImageSubresourceLayout(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceImageSubresourceInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pLayout", args.pLayout, "VkSubresourceLayout2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceImageSubresourceInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pLayout", &args.pLayout, "VkSubresourceLayout2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -6774,8 +6699,8 @@ void VulkanSqliteConsumer::Process_vkGetImageSubresourceLayout2(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
-    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", args.pSubresource, "const VkImageSubresource2*");
-    FieldToSqlite(statements, fieldInfo, 4, "pLayout", args.pLayout, "VkSubresourceLayout2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", &args.pSubresource, "const VkImageSubresource2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pLayout", &args.pLayout, "VkSubresourceLayout2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -6790,7 +6715,7 @@ void VulkanSqliteConsumer::Process_vkCopyMemoryToImage(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryToImageInfo", args.pCopyMemoryToImageInfo, "const VkCopyMemoryToImageInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryToImageInfo", &args.pCopyMemoryToImageInfo, "const VkCopyMemoryToImageInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -6805,7 +6730,7 @@ void VulkanSqliteConsumer::Process_vkCopyImageToMemory(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToMemoryInfo", args.pCopyImageToMemoryInfo, "const VkCopyImageToMemoryInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToMemoryInfo", &args.pCopyImageToMemoryInfo, "const VkCopyImageToMemoryInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -6820,7 +6745,7 @@ void VulkanSqliteConsumer::Process_vkCopyImageToImage(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToImageInfo", args.pCopyImageToImageInfo, "const VkCopyImageToImageInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToImageInfo", &args.pCopyImageToImageInfo, "const VkCopyImageToImageInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -6837,7 +6762,7 @@ void VulkanSqliteConsumer::Process_vkTransitionImageLayout(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "transitionCount", "uint32_t", args.transitionCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pTransitions", args.pTransitions, "const VkHostImageLayoutTransitionInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pTransitions", &args.pTransitions, "const VkHostImageLayoutTransitionInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -6860,7 +6785,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet(
         statements, fieldInfo, 4, "set", "uint32_t", args.set);
     RecordField(
         statements, fieldInfo, 5, "descriptorWriteCount", "uint32_t", args.descriptorWriteCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pDescriptorWrites", args.pDescriptorWrites, "const VkWriteDescriptorSet*");
+    FieldToSqlite(statements, fieldInfo, 6, "pDescriptorWrites", &args.pDescriptorWrites, "const VkWriteDescriptorSet*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6876,7 +6801,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBindDescriptorSetsInfo", args.pBindDescriptorSetsInfo, "const VkBindDescriptorSetsInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBindDescriptorSetsInfo", &args.pBindDescriptorSetsInfo, "const VkBindDescriptorSetsInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6892,7 +6817,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushConstants2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushConstantsInfo", args.pPushConstantsInfo, "const VkPushConstantsInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPushConstantsInfo", &args.pPushConstantsInfo, "const VkPushConstantsInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6908,7 +6833,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetInfo", args.pPushDescriptorSetInfo, "const VkPushDescriptorSetInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetInfo", &args.pPushDescriptorSetInfo, "const VkPushDescriptorSetInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -6924,7 +6849,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetWithTemplateInfo", args.pPushDescriptorSetWithTemplateInfo, "const VkPushDescriptorSetWithTemplateInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetWithTemplateInfo", &args.pPushDescriptorSetWithTemplateInfo, "const VkPushDescriptorSetWithTemplateInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -7016,8 +6941,8 @@ void VulkanSqliteConsumer::Process_vkGetRenderingAreaGranularity(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderingAreaInfo", args.pRenderingAreaInfo, "const VkRenderingAreaInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pGranularity", args.pGranularity, "VkExtent2D*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderingAreaInfo", &args.pRenderingAreaInfo, "const VkRenderingAreaInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pGranularity", &args.pGranularity, "VkExtent2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -7032,7 +6957,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetRenderingAttachmentLocations(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pLocationInfo", args.pLocationInfo, "const VkRenderingAttachmentLocationInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pLocationInfo", &args.pLocationInfo, "const VkRenderingAttachmentLocationInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -7048,7 +6973,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndices(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInputAttachmentIndexInfo", args.pInputAttachmentIndexInfo, "const VkRenderingInputAttachmentIndexInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInputAttachmentIndexInfo", &args.pInputAttachmentIndexInfo, "const VkRenderingInputAttachmentIndexInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -7065,7 +6990,7 @@ void VulkanSqliteConsumer::Process_vkDestroySurfaceKHR(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
     RecordField(
         statements, fieldInfo, 2, "surface", "VkSurfaceKHR", args.surface);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     auto surfaceIter = context.surfaceHandleToId.find(ToInt64(args.surface));
@@ -7114,7 +7039,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "surface", "VkSurfaceKHR", args.surface);
-    FieldToSqlite(statements, fieldInfo, 3, "pSurfaceCapabilities", args.pSurfaceCapabilities, "VkSurfaceCapabilitiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSurfaceCapabilities", &args.pSurfaceCapabilities, "VkSurfaceCapabilitiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7132,7 +7057,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSurfaceFormatsKHR(
     RecordField(
         statements, fieldInfo, 2, "surface", "VkSurfaceKHR", args.surface);
     FieldToSqlite(statements, fieldInfo, 3, "pSurfaceFormatCount", args.pSurfaceFormatCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurfaceFormats", args.pSurfaceFormats, "VkSurfaceFormatKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurfaceFormats", &args.pSurfaceFormats, "VkSurfaceFormatKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7164,9 +7089,9 @@ void VulkanSqliteConsumer::Process_vkCreateSwapchainKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkSwapchainCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSwapchain", args.pSwapchain, "VkSwapchainKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkSwapchainCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSwapchain", &args.pSwapchain, "VkSwapchainKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7183,7 +7108,7 @@ void VulkanSqliteConsumer::Process_vkDestroySwapchainKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -7201,7 +7126,7 @@ void VulkanSqliteConsumer::Process_vkGetSwapchainImagesKHR(
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
     FieldToSqlite(statements, fieldInfo, 3, "pSwapchainImageCount", args.pSwapchainImageCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSwapchainImages", args.pSwapchainImages, "VkImage*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSwapchainImages", &args.pSwapchainImages, "VkImage*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7239,7 +7164,7 @@ void VulkanSqliteConsumer::Process_vkQueuePresentKHR(
 
     RecordField(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
-    FieldToSqlite(statements, fieldInfo, 2, "pPresentInfo", args.pPresentInfo, "const VkPresentInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPresentInfo", &args.pPresentInfo, "const VkPresentInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7254,7 +7179,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceGroupPresentCapabilitiesKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pDeviceGroupPresentCapabilities", args.pDeviceGroupPresentCapabilities, "VkDeviceGroupPresentCapabilitiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDeviceGroupPresentCapabilities", &args.pDeviceGroupPresentCapabilities, "VkDeviceGroupPresentCapabilitiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7289,7 +7214,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDevicePresentRectanglesKHR(
     RecordField(
         statements, fieldInfo, 2, "surface", "VkSurfaceKHR", args.surface);
     FieldToSqlite(statements, fieldInfo, 3, "pRectCount", args.pRectCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pRects", args.pRects, "VkRect2D*");
+    FieldToSqlite(statements, fieldInfo, 4, "pRects", &args.pRects, "VkRect2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7304,7 +7229,7 @@ void VulkanSqliteConsumer::Process_vkAcquireNextImage2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pAcquireInfo", args.pAcquireInfo, "const VkAcquireNextImageInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAcquireInfo", &args.pAcquireInfo, "const VkAcquireNextImageInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pImageIndex", args.pImageIndex, "uint32_t*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -7320,7 +7245,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceDisplayPropertiesKHR(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkDisplayPropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkDisplayPropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7336,7 +7261,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkDisplayPlanePropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkDisplayPlanePropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7354,7 +7279,7 @@ void VulkanSqliteConsumer::Process_vkGetDisplayPlaneSupportedDisplaysKHR(
     RecordField(
         statements, fieldInfo, 2, "planeIndex", "uint32_t", args.planeIndex);
     FieldToSqlite(statements, fieldInfo, 3, "pDisplayCount", args.pDisplayCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pDisplays", args.pDisplays, "VkDisplayKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDisplays", &args.pDisplays, "VkDisplayKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7372,7 +7297,7 @@ void VulkanSqliteConsumer::Process_vkGetDisplayModePropertiesKHR(
     RecordField(
         statements, fieldInfo, 2, "display", "VkDisplayKHR", args.display);
     FieldToSqlite(statements, fieldInfo, 3, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkDisplayModePropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkDisplayModePropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7389,9 +7314,9 @@ void VulkanSqliteConsumer::Process_vkCreateDisplayModeKHR(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "display", "VkDisplayKHR", args.display);
-    FieldToSqlite(statements, fieldInfo, 3, "pCreateInfo", args.pCreateInfo, "const VkDisplayModeCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 5, "pMode", args.pMode, "VkDisplayModeKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCreateInfo", &args.pCreateInfo, "const VkDisplayModeCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 5, "pMode", &args.pMode, "VkDisplayModeKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7410,7 +7335,7 @@ void VulkanSqliteConsumer::Process_vkGetDisplayPlaneCapabilitiesKHR(
         statements, fieldInfo, 2, "mode", "VkDisplayModeKHR", args.mode);
     RecordField(
         statements, fieldInfo, 3, "planeIndex", "uint32_t", args.planeIndex);
-    FieldToSqlite(statements, fieldInfo, 4, "pCapabilities", args.pCapabilities, "VkDisplayPlaneCapabilitiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCapabilities", &args.pCapabilities, "VkDisplayPlaneCapabilitiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7425,12 +7350,12 @@ void VulkanSqliteConsumer::Process_vkCreateDisplayPlaneSurfaceKHR(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDisplaySurfaceCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDisplaySurfaceCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7440,7 +7365,7 @@ void VulkanSqliteConsumer::Process_vkCreateDisplayPlaneSurfaceKHR(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7468,9 +7393,9 @@ void VulkanSqliteConsumer::Process_vkCreateSharedSwapchainsKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchainCount", "uint32_t", args.swapchainCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pCreateInfos", args.pCreateInfos, "const VkSwapchainCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 5, "pSwapchains", args.pSwapchains, "VkSwapchainKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCreateInfos", &args.pCreateInfos, "const VkSwapchainCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 5, "pSwapchains", &args.pSwapchains, "VkSwapchainKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7484,12 +7409,12 @@ void VulkanSqliteConsumer::Process_vkCreateXlibSurfaceKHR(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkXlibSurfaceCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkXlibSurfaceCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7499,7 +7424,7 @@ void VulkanSqliteConsumer::Process_vkCreateXlibSurfaceKHR(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7544,12 +7469,12 @@ void VulkanSqliteConsumer::Process_vkCreateXcbSurfaceKHR(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkXcbSurfaceCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkXcbSurfaceCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7559,7 +7484,7 @@ void VulkanSqliteConsumer::Process_vkCreateXcbSurfaceKHR(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7604,12 +7529,12 @@ void VulkanSqliteConsumer::Process_vkCreateWaylandSurfaceKHR(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkWaylandSurfaceCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkWaylandSurfaceCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7619,7 +7544,7 @@ void VulkanSqliteConsumer::Process_vkCreateWaylandSurfaceKHR(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7662,12 +7587,12 @@ void VulkanSqliteConsumer::Process_vkCreateAndroidSurfaceKHR(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkAndroidSurfaceCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkAndroidSurfaceCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7677,7 +7602,7 @@ void VulkanSqliteConsumer::Process_vkCreateAndroidSurfaceKHR(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7703,12 +7628,12 @@ void VulkanSqliteConsumer::Process_vkCreateWin32SurfaceKHR(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkWin32SurfaceCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkWin32SurfaceCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7718,7 +7643,7 @@ void VulkanSqliteConsumer::Process_vkCreateWin32SurfaceKHR(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -7760,8 +7685,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceVideoCapabilitiesKHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pVideoProfile", args.pVideoProfile, "const VkVideoProfileInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pCapabilities", args.pCapabilities, "VkVideoCapabilitiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pVideoProfile", &args.pVideoProfile, "const VkVideoProfileInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCapabilities", &args.pCapabilities, "VkVideoCapabilitiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7776,9 +7701,9 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceVideoFormatPropertiesKHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pVideoFormatInfo", args.pVideoFormatInfo, "const VkPhysicalDeviceVideoFormatInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pVideoFormatInfo", &args.pVideoFormatInfo, "const VkPhysicalDeviceVideoFormatInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pVideoFormatPropertyCount", args.pVideoFormatPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pVideoFormatProperties", args.pVideoFormatProperties, "VkVideoFormatPropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pVideoFormatProperties", &args.pVideoFormatProperties, "VkVideoFormatPropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7793,9 +7718,9 @@ void VulkanSqliteConsumer::Process_vkCreateVideoSessionKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkVideoSessionCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pVideoSession", args.pVideoSession, "VkVideoSessionKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkVideoSessionCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pVideoSession", &args.pVideoSession, "VkVideoSessionKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7812,7 +7737,7 @@ void VulkanSqliteConsumer::Process_vkDestroyVideoSessionKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "videoSession", "VkVideoSessionKHR", args.videoSession);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -7830,7 +7755,7 @@ void VulkanSqliteConsumer::Process_vkGetVideoSessionMemoryRequirementsKHR(
     RecordField(
         statements, fieldInfo, 2, "videoSession", "VkVideoSessionKHR", args.videoSession);
     FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirementsCount", args.pMemoryRequirementsCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pMemoryRequirements", args.pMemoryRequirements, "VkVideoSessionMemoryRequirementsKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMemoryRequirements", &args.pMemoryRequirements, "VkVideoSessionMemoryRequirementsKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7849,7 +7774,7 @@ void VulkanSqliteConsumer::Process_vkBindVideoSessionMemoryKHR(
         statements, fieldInfo, 2, "videoSession", "VkVideoSessionKHR", args.videoSession);
     RecordField(
         statements, fieldInfo, 3, "bindSessionMemoryInfoCount", "uint32_t", args.bindSessionMemoryInfoCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pBindSessionMemoryInfos", args.pBindSessionMemoryInfos, "const VkBindVideoSessionMemoryInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBindSessionMemoryInfos", &args.pBindSessionMemoryInfos, "const VkBindVideoSessionMemoryInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7864,9 +7789,9 @@ void VulkanSqliteConsumer::Process_vkCreateVideoSessionParametersKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkVideoSessionParametersCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pVideoSessionParameters", args.pVideoSessionParameters, "VkVideoSessionParametersKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkVideoSessionParametersCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pVideoSessionParameters", &args.pVideoSessionParameters, "VkVideoSessionParametersKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7883,7 +7808,7 @@ void VulkanSqliteConsumer::Process_vkUpdateVideoSessionParametersKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "videoSessionParameters", "VkVideoSessionParametersKHR", args.videoSessionParameters);
-    FieldToSqlite(statements, fieldInfo, 3, "pUpdateInfo", args.pUpdateInfo, "const VkVideoSessionParametersUpdateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pUpdateInfo", &args.pUpdateInfo, "const VkVideoSessionParametersUpdateInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -7900,7 +7825,7 @@ void VulkanSqliteConsumer::Process_vkDestroyVideoSessionParametersKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "videoSessionParameters", "VkVideoSessionParametersKHR", args.videoSessionParameters);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -7915,7 +7840,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginVideoCodingKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBeginInfo", args.pBeginInfo, "const VkVideoBeginCodingInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBeginInfo", &args.pBeginInfo, "const VkVideoBeginCodingInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -7931,7 +7856,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndVideoCodingKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pEndCodingInfo", args.pEndCodingInfo, "const VkVideoEndCodingInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pEndCodingInfo", &args.pEndCodingInfo, "const VkVideoEndCodingInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -7947,7 +7872,7 @@ void VulkanSqliteConsumer::Process_vkCmdControlVideoCodingKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCodingControlInfo", args.pCodingControlInfo, "const VkVideoCodingControlInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCodingControlInfo", &args.pCodingControlInfo, "const VkVideoCodingControlInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -7962,7 +7887,7 @@ void VulkanSqliteConsumer::Process_vkCmdDecodeVideoKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDecodeInfo", args.pDecodeInfo, "const VkVideoDecodeInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDecodeInfo", &args.pDecodeInfo, "const VkVideoDecodeInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -7977,11 +7902,11 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderingKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderingInfo", args.pRenderingInfo, "const VkRenderingInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderingInfo", &args.pRenderingInfo, "const VkRenderingInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [renderingInfoValid, renderingInfo] = GetMetaStructPointer(args.pRenderingInfo);
+    auto [renderingInfoValid, renderingInfo] = GetMetaStructPointer(&args.pRenderingInfo);
     if (!renderingInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create dynamic render pass recording, invalid pRenderingInfo");
@@ -8160,7 +8085,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceFeatures2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pFeatures", args.pFeatures, "VkPhysicalDeviceFeatures2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pFeatures", &args.pFeatures, "VkPhysicalDeviceFeatures2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8175,7 +8100,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pProperties", args.pProperties, "VkPhysicalDeviceProperties2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pProperties", &args.pProperties, "VkPhysicalDeviceProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8192,7 +8117,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceFormatProperties2KHR(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "format", "VkFormat", args.format);
-    FieldToSqlite(statements, fieldInfo, 3, "pFormatProperties", args.pFormatProperties, "VkFormatProperties2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFormatProperties", &args.pFormatProperties, "VkFormatProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8207,8 +8132,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceImageFormatProperties2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pImageFormatInfo", args.pImageFormatInfo, "const VkPhysicalDeviceImageFormatInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pImageFormatProperties", args.pImageFormatProperties, "VkImageFormatProperties2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pImageFormatInfo", &args.pImageFormatInfo, "const VkPhysicalDeviceImageFormatInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pImageFormatProperties", &args.pImageFormatProperties, "VkImageFormatProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8224,7 +8149,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyProperties2KHR(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pQueueFamilyPropertyCount", args.pQueueFamilyPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyProperties", args.pQueueFamilyProperties, "VkQueueFamilyProperties2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyProperties", &args.pQueueFamilyProperties, "VkQueueFamilyProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8239,7 +8164,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceMemoryProperties2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryProperties", args.pMemoryProperties, "VkPhysicalDeviceMemoryProperties2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryProperties", &args.pMemoryProperties, "VkPhysicalDeviceMemoryProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8254,9 +8179,9 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSparseImageFormatPropertie
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pFormatInfo", args.pFormatInfo, "const VkPhysicalDeviceSparseImageFormatInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pFormatInfo", &args.pFormatInfo, "const VkPhysicalDeviceSparseImageFormatInfo2*");
     FieldToSqlite(statements, fieldInfo, 3, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkSparseImageFormatProperties2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkSparseImageFormatProperties2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8364,7 +8289,7 @@ void VulkanSqliteConsumer::Process_vkEnumeratePhysicalDeviceGroupsKHR(
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
     FieldToSqlite(statements, fieldInfo, 2, "pPhysicalDeviceGroupCount", args.pPhysicalDeviceGroupCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pPhysicalDeviceGroupProperties", args.pPhysicalDeviceGroupProperties, "VkPhysicalDeviceGroupProperties*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPhysicalDeviceGroupProperties", &args.pPhysicalDeviceGroupProperties, "VkPhysicalDeviceGroupProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8378,8 +8303,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalBufferPropertiesKH
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pExternalBufferInfo", args.pExternalBufferInfo, "const VkPhysicalDeviceExternalBufferInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pExternalBufferProperties", args.pExternalBufferProperties, "VkExternalBufferProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExternalBufferInfo", &args.pExternalBufferInfo, "const VkPhysicalDeviceExternalBufferInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExternalBufferProperties", &args.pExternalBufferProperties, "VkExternalBufferProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8393,7 +8318,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryWin32HandleKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetWin32HandleInfo", args.pGetWin32HandleInfo, "const VkMemoryGetWin32HandleInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetWin32HandleInfo", &args.pGetWin32HandleInfo, "const VkMemoryGetWin32HandleInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pHandle", args.pHandle, "HANDLE*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -8412,7 +8337,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryWin32HandlePropertiesKHR(
     RecordField(
         statements, fieldInfo, 2, "handleType", "VkExternalMemoryHandleTypeFlagBits", args.handleType);
     FieldToSqlite(statements, fieldInfo, 3, "handle", args.handle, "HANDLE");
-    FieldToSqlite(statements, fieldInfo, 4, "pMemoryWin32HandleProperties", args.pMemoryWin32HandleProperties, "VkMemoryWin32HandlePropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMemoryWin32HandleProperties", &args.pMemoryWin32HandleProperties, "VkMemoryWin32HandlePropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8426,7 +8351,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryFdKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetFdInfo", args.pGetFdInfo, "const VkMemoryGetFdInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetFdInfo", &args.pGetFdInfo, "const VkMemoryGetFdInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pFd", args.pFd, "int*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -8446,7 +8371,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryFdPropertiesKHR(
         statements, fieldInfo, 2, "handleType", "VkExternalMemoryHandleTypeFlagBits", args.handleType);
     RecordField(
         statements, fieldInfo, 3, "fd", "int", args.fd);
-    FieldToSqlite(statements, fieldInfo, 4, "pMemoryFdProperties", args.pMemoryFdProperties, "VkMemoryFdPropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMemoryFdProperties", &args.pMemoryFdProperties, "VkMemoryFdPropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8460,8 +8385,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalSemaphorePropertie
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pExternalSemaphoreInfo", args.pExternalSemaphoreInfo, "const VkPhysicalDeviceExternalSemaphoreInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pExternalSemaphoreProperties", args.pExternalSemaphoreProperties, "VkExternalSemaphoreProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExternalSemaphoreInfo", &args.pExternalSemaphoreInfo, "const VkPhysicalDeviceExternalSemaphoreInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExternalSemaphoreProperties", &args.pExternalSemaphoreProperties, "VkExternalSemaphoreProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8475,7 +8400,7 @@ void VulkanSqliteConsumer::Process_vkImportSemaphoreWin32HandleKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pImportSemaphoreWin32HandleInfo", args.pImportSemaphoreWin32HandleInfo, "const VkImportSemaphoreWin32HandleInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pImportSemaphoreWin32HandleInfo", &args.pImportSemaphoreWin32HandleInfo, "const VkImportSemaphoreWin32HandleInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8490,7 +8415,7 @@ void VulkanSqliteConsumer::Process_vkGetSemaphoreWin32HandleKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetWin32HandleInfo", args.pGetWin32HandleInfo, "const VkSemaphoreGetWin32HandleInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetWin32HandleInfo", &args.pGetWin32HandleInfo, "const VkSemaphoreGetWin32HandleInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pHandle", args.pHandle, "HANDLE*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -8505,7 +8430,7 @@ void VulkanSqliteConsumer::Process_vkImportSemaphoreFdKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pImportSemaphoreFdInfo", args.pImportSemaphoreFdInfo, "const VkImportSemaphoreFdInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pImportSemaphoreFdInfo", &args.pImportSemaphoreFdInfo, "const VkImportSemaphoreFdInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8520,7 +8445,7 @@ void VulkanSqliteConsumer::Process_vkGetSemaphoreFdKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetFdInfo", args.pGetFdInfo, "const VkSemaphoreGetFdInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetFdInfo", &args.pGetFdInfo, "const VkSemaphoreGetFdInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pFd", args.pFd, "int*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -8543,7 +8468,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetKHR(
         statements, fieldInfo, 4, "set", "uint32_t", args.set);
     RecordField(
         statements, fieldInfo, 5, "descriptorWriteCount", "uint32_t", args.descriptorWriteCount);
-    FieldToSqlite(statements, fieldInfo, 6, "pDescriptorWrites", args.pDescriptorWrites, "const VkWriteDescriptorSet*");
+    FieldToSqlite(statements, fieldInfo, 6, "pDescriptorWrites", &args.pDescriptorWrites, "const VkWriteDescriptorSet*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -8558,9 +8483,9 @@ void VulkanSqliteConsumer::Process_vkCreateDescriptorUpdateTemplateKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDescriptorUpdateTemplateCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorUpdateTemplate", args.pDescriptorUpdateTemplate, "VkDescriptorUpdateTemplate*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDescriptorUpdateTemplateCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDescriptorUpdateTemplate", &args.pDescriptorUpdateTemplate, "VkDescriptorUpdateTemplate*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8577,7 +8502,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDescriptorUpdateTemplateKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", args.descriptorUpdateTemplate);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8591,9 +8516,9 @@ void VulkanSqliteConsumer::Process_vkCreateRenderPass2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkRenderPassCreateInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pRenderPass", args.pRenderPass, "VkRenderPass*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkRenderPassCreateInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pRenderPass", &args.pRenderPass, "VkRenderPass*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8608,12 +8533,12 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderPassBegin", args.pRenderPassBegin, "const VkRenderPassBeginInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSubpassBeginInfo", args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderPassBegin", &args.pRenderPassBegin, "const VkRenderPassBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubpassBeginInfo", &args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(args.pRenderPassBegin);
+    auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pRenderPassBegin);
     if (!beginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create render pass recording, invalid pBeginInfo");
@@ -8695,7 +8620,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginRenderPass2KHR(
         }
     }
 
-    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(args.pSubpassBeginInfo);
+    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
     if (!subpassBeginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create render subpass recording, invalid pSubpassBeginInfo");
@@ -8720,8 +8645,8 @@ void VulkanSqliteConsumer::Process_vkCmdNextSubpass2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pSubpassBeginInfo", args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSubpassEndInfo", args.pSubpassEndInfo, "const VkSubpassEndInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSubpassBeginInfo", &args.pSubpassBeginInfo, "const VkSubpassBeginInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubpassEndInfo", &args.pSubpassEndInfo, "const VkSubpassEndInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -8761,7 +8686,7 @@ void VulkanSqliteConsumer::Process_vkCmdNextSubpass2KHR(
         statements.EndRenderSubpassRecording(this->block_index_, subpassRecordingIter->second);
     }
 
-    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(args.pSubpassBeginInfo);
+    auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
     if (!subpassBeginInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create next subpass, invalid pSubpassBeginInfo");
@@ -8770,7 +8695,7 @@ void VulkanSqliteConsumer::Process_vkCmdNextSubpass2KHR(
 
     LogUnsupportedPNext(subpassBeginInfo->pNext);
 
-    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(args.pSubpassEndInfo);
+    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
     if (!subpassEndInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to create create next subpass, invalid pSubpassEndInfo");
@@ -8794,7 +8719,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndRenderPass2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pSubpassEndInfo", args.pSubpassEndInfo, "const VkSubpassEndInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSubpassEndInfo", &args.pSubpassEndInfo, "const VkSubpassEndInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -8859,7 +8784,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndRenderPass2KHR(
         context.commandBufferHandleToRenderPassRecordingIdStack.erase(renderPassRecordingIdStackIter);
     }
 
-    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(args.pSubpassEndInfo);
+    auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
     if (!subpassEndInfoValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to process end subpass, invalid pSubpassEndInfo");
@@ -8893,8 +8818,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalFencePropertiesKHR
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pExternalFenceInfo", args.pExternalFenceInfo, "const VkPhysicalDeviceExternalFenceInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pExternalFenceProperties", args.pExternalFenceProperties, "VkExternalFenceProperties*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExternalFenceInfo", &args.pExternalFenceInfo, "const VkPhysicalDeviceExternalFenceInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExternalFenceProperties", &args.pExternalFenceProperties, "VkExternalFenceProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -8908,7 +8833,7 @@ void VulkanSqliteConsumer::Process_vkImportFenceWin32HandleKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pImportFenceWin32HandleInfo", args.pImportFenceWin32HandleInfo, "const VkImportFenceWin32HandleInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pImportFenceWin32HandleInfo", &args.pImportFenceWin32HandleInfo, "const VkImportFenceWin32HandleInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8923,7 +8848,7 @@ void VulkanSqliteConsumer::Process_vkGetFenceWin32HandleKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetWin32HandleInfo", args.pGetWin32HandleInfo, "const VkFenceGetWin32HandleInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetWin32HandleInfo", &args.pGetWin32HandleInfo, "const VkFenceGetWin32HandleInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pHandle", args.pHandle, "HANDLE*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -8938,7 +8863,7 @@ void VulkanSqliteConsumer::Process_vkImportFenceFdKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pImportFenceFdInfo", args.pImportFenceFdInfo, "const VkImportFenceFdInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pImportFenceFdInfo", &args.pImportFenceFdInfo, "const VkImportFenceFdInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8953,7 +8878,7 @@ void VulkanSqliteConsumer::Process_vkGetFenceFdKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetFdInfo", args.pGetFdInfo, "const VkFenceGetFdInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetFdInfo", &args.pGetFdInfo, "const VkFenceGetFdInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pFd", args.pFd, "int*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -8971,8 +8896,8 @@ void VulkanSqliteConsumer::Process_vkEnumeratePhysicalDeviceQueueFamilyPerforman
     RecordField(
         statements, fieldInfo, 2, "queueFamilyIndex", "uint32_t", args.queueFamilyIndex);
     FieldToSqlite(statements, fieldInfo, 3, "pCounterCount", args.pCounterCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pCounters", args.pCounters, "VkPerformanceCounterKHR*");
-    FieldToSqlite(statements, fieldInfo, 5, "pCounterDescriptions", args.pCounterDescriptions, "VkPerformanceCounterDescriptionKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCounters", &args.pCounters, "VkPerformanceCounterKHR*");
+    FieldToSqlite(statements, fieldInfo, 5, "pCounterDescriptions", &args.pCounterDescriptions, "VkPerformanceCounterDescriptionKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -8987,7 +8912,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyPerformanceQuer
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pPerformanceQueryCreateInfo", args.pPerformanceQueryCreateInfo, "const VkQueryPoolPerformanceCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPerformanceQueryCreateInfo", &args.pPerformanceQueryCreateInfo, "const VkQueryPoolPerformanceCreateInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pNumPasses", args.pNumPasses, "uint32_t*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
@@ -9003,7 +8928,7 @@ void VulkanSqliteConsumer::Process_vkAcquireProfilingLockKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkAcquireProfilingLockInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkAcquireProfilingLockInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9031,8 +8956,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSurfaceCapabilities2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSurfaceCapabilities", args.pSurfaceCapabilities, "VkSurfaceCapabilities2KHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", &args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSurfaceCapabilities", &args.pSurfaceCapabilities, "VkSurfaceCapabilities2KHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9047,9 +8972,9 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSurfaceFormats2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", &args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pSurfaceFormatCount", args.pSurfaceFormatCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurfaceFormats", args.pSurfaceFormats, "VkSurfaceFormat2KHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurfaceFormats", &args.pSurfaceFormats, "VkSurfaceFormat2KHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9064,7 +8989,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceDisplayProperties2KHR(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkDisplayProperties2KHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkDisplayProperties2KHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9080,7 +9005,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkDisplayPlaneProperties2KHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkDisplayPlaneProperties2KHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9098,7 +9023,7 @@ void VulkanSqliteConsumer::Process_vkGetDisplayModeProperties2KHR(
     RecordField(
         statements, fieldInfo, 2, "display", "VkDisplayKHR", args.display);
     FieldToSqlite(statements, fieldInfo, 3, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkDisplayModeProperties2KHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkDisplayModeProperties2KHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9113,8 +9038,8 @@ void VulkanSqliteConsumer::Process_vkGetDisplayPlaneCapabilities2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pDisplayPlaneInfo", args.pDisplayPlaneInfo, "const VkDisplayPlaneInfo2KHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pCapabilities", args.pCapabilities, "VkDisplayPlaneCapabilities2KHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDisplayPlaneInfo", &args.pDisplayPlaneInfo, "const VkDisplayPlaneInfo2KHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCapabilities", &args.pCapabilities, "VkDisplayPlaneCapabilities2KHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9128,8 +9053,8 @@ void VulkanSqliteConsumer::Process_vkGetImageMemoryRequirements2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkImageMemoryRequirementsInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkImageMemoryRequirementsInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -9144,8 +9069,8 @@ void VulkanSqliteConsumer::Process_vkGetBufferMemoryRequirements2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBufferMemoryRequirementsInfo2*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBufferMemoryRequirementsInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -9160,9 +9085,9 @@ void VulkanSqliteConsumer::Process_vkGetImageSparseMemoryRequirements2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkImageSparseMemoryRequirementsInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkImageSparseMemoryRequirementsInfo2*");
     FieldToSqlite(statements, fieldInfo, 3, "pSparseMemoryRequirementCount", args.pSparseMemoryRequirementCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", &args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -9176,9 +9101,9 @@ void VulkanSqliteConsumer::Process_vkCreateSamplerYcbcrConversionKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkSamplerYcbcrConversionCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pYcbcrConversion", args.pYcbcrConversion, "VkSamplerYcbcrConversion*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkSamplerYcbcrConversionCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pYcbcrConversion", &args.pYcbcrConversion, "VkSamplerYcbcrConversion*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9195,7 +9120,7 @@ void VulkanSqliteConsumer::Process_vkDestroySamplerYcbcrConversionKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "ycbcrConversion", "VkSamplerYcbcrConversion", args.ycbcrConversion);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -9211,7 +9136,7 @@ void VulkanSqliteConsumer::Process_vkBindBufferMemory2KHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", args.pBindInfos, "const VkBindBufferMemoryInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", &args.pBindInfos, "const VkBindBufferMemoryInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -9237,7 +9162,7 @@ void VulkanSqliteConsumer::Process_vkBindImageMemory2KHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", args.pBindInfos, "const VkBindImageMemoryInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", &args.pBindInfos, "const VkBindImageMemoryInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -9260,8 +9185,8 @@ void VulkanSqliteConsumer::Process_vkGetDescriptorSetLayoutSupportKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDescriptorSetLayoutCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSupport", args.pSupport, "VkDescriptorSetLayoutSupport*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDescriptorSetLayoutCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSupport", &args.pSupport, "VkDescriptorSetLayoutSupport*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -9555,7 +9480,7 @@ void VulkanSqliteConsumer::Process_vkWaitSemaphoresKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pWaitInfo", args.pWaitInfo, "const VkSemaphoreWaitInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pWaitInfo", &args.pWaitInfo, "const VkSemaphoreWaitInfo*");
     RecordField(
         statements, fieldInfo, 3, "timeout", "uint64_t", args.timeout);
 
@@ -9581,7 +9506,7 @@ void VulkanSqliteConsumer::Process_vkSignalSemaphoreKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pSignalInfo", args.pSignalInfo, "const VkSemaphoreSignalInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSignalInfo", &args.pSignalInfo, "const VkSemaphoreSignalInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -9605,7 +9530,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceFragmentShadingRatesKHR(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pFragmentShadingRateCount", args.pFragmentShadingRateCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pFragmentShadingRates", args.pFragmentShadingRates, "VkPhysicalDeviceFragmentShadingRateKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFragmentShadingRates", &args.pFragmentShadingRates, "VkPhysicalDeviceFragmentShadingRateKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9620,7 +9545,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetFragmentShadingRateKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pFragmentSize", args.pFragmentSize, "const VkExtent2D*");
+    FieldToSqlite(statements, fieldInfo, 2, "pFragmentSize", &args.pFragmentSize, "const VkExtent2D*");
     FieldToSqlite(statements, fieldInfo, 3, "combinerOps", args.combinerOps, "const VkFragmentShadingRateCombinerOpKHR");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
@@ -9636,7 +9561,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetRenderingAttachmentLocationsKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pLocationInfo", args.pLocationInfo, "const VkRenderingAttachmentLocationInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pLocationInfo", &args.pLocationInfo, "const VkRenderingAttachmentLocationInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -9652,7 +9577,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndicesKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInputAttachmentIndexInfo", args.pInputAttachmentIndexInfo, "const VkRenderingInputAttachmentIndexInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInputAttachmentIndexInfo", &args.pInputAttachmentIndexInfo, "const VkRenderingInputAttachmentIndexInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -9695,7 +9620,7 @@ void VulkanSqliteConsumer::Process_vkGetBufferDeviceAddressKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBufferDeviceAddressInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBufferDeviceAddressInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkDeviceAddress", args.result);
 }
@@ -9710,7 +9635,7 @@ void VulkanSqliteConsumer::Process_vkGetBufferOpaqueCaptureAddressKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBufferDeviceAddressInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBufferDeviceAddressInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "uint64_t", args.result);
 }
@@ -9725,7 +9650,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceMemoryOpaqueCaptureAddressKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceMemoryOpaqueCaptureAddressInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceMemoryOpaqueCaptureAddressInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "uint64_t", args.result);
 }
@@ -9739,8 +9664,8 @@ void VulkanSqliteConsumer::Process_vkCreateDeferredOperationKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 3, "pDeferredOperation", args.pDeferredOperation, "VkDeferredOperationKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDeferredOperation", &args.pDeferredOperation, "VkDeferredOperationKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9757,7 +9682,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDeferredOperationKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "operation", "VkDeferredOperationKHR", args.operation);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -9819,9 +9744,9 @@ void VulkanSqliteConsumer::Process_vkGetPipelineExecutablePropertiesKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pPipelineInfo", args.pPipelineInfo, "const VkPipelineInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPipelineInfo", &args.pPipelineInfo, "const VkPipelineInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pExecutableCount", args.pExecutableCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkPipelineExecutablePropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkPipelineExecutablePropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9836,9 +9761,9 @@ void VulkanSqliteConsumer::Process_vkGetPipelineExecutableStatisticsKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pExecutableInfo", args.pExecutableInfo, "const VkPipelineExecutableInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExecutableInfo", &args.pExecutableInfo, "const VkPipelineExecutableInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pStatisticCount", args.pStatisticCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pStatistics", args.pStatistics, "VkPipelineExecutableStatisticKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pStatistics", &args.pStatistics, "VkPipelineExecutableStatisticKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9853,9 +9778,9 @@ void VulkanSqliteConsumer::Process_vkGetPipelineExecutableInternalRepresentation
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pExecutableInfo", args.pExecutableInfo, "const VkPipelineExecutableInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExecutableInfo", &args.pExecutableInfo, "const VkPipelineExecutableInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pInternalRepresentationCount", args.pInternalRepresentationCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pInternalRepresentations", args.pInternalRepresentations, "VkPipelineExecutableInternalRepresentationKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pInternalRepresentations", &args.pInternalRepresentations, "VkPipelineExecutableInternalRepresentationKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9869,7 +9794,7 @@ void VulkanSqliteConsumer::Process_vkMapMemory2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryMapInfo", args.pMemoryMapInfo, "const VkMemoryMapInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryMapInfo", &args.pMemoryMapInfo, "const VkMemoryMapInfo*");
     FieldToSqlite(statements, fieldInfo, 3, "ppData", args.ppData, "void**");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -9894,7 +9819,7 @@ void VulkanSqliteConsumer::Process_vkUnmapMemory2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryUnmapInfo", args.pMemoryUnmapInfo, "const VkMemoryUnmapInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryUnmapInfo", &args.pMemoryUnmapInfo, "const VkMemoryUnmapInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -9917,8 +9842,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceVideoEncodeQualityLevelPro
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pQualityLevelInfo", args.pQualityLevelInfo, "const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pQualityLevelProperties", args.pQualityLevelProperties, "VkVideoEncodeQualityLevelPropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pQualityLevelInfo", &args.pQualityLevelInfo, "const VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQualityLevelProperties", &args.pQualityLevelProperties, "VkVideoEncodeQualityLevelPropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -9933,8 +9858,8 @@ void VulkanSqliteConsumer::Process_vkGetEncodedVideoSessionParametersKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pVideoSessionParametersInfo", args.pVideoSessionParametersInfo, "const VkVideoEncodeSessionParametersGetInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pFeedbackInfo", args.pFeedbackInfo, "VkVideoEncodeSessionParametersFeedbackInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pVideoSessionParametersInfo", &args.pVideoSessionParametersInfo, "const VkVideoEncodeSessionParametersGetInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFeedbackInfo", &args.pFeedbackInfo, "VkVideoEncodeSessionParametersFeedbackInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 4, "pDataSize", args.pDataSize, "size_t*");
     FieldToSqlite(statements, fieldInfo, 5, "pData", args.pData, "void*");
 
@@ -9951,7 +9876,7 @@ void VulkanSqliteConsumer::Process_vkCmdEncodeVideoKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pEncodeInfo", args.pEncodeInfo, "const VkVideoEncodeInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pEncodeInfo", &args.pEncodeInfo, "const VkVideoEncodeInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -9968,7 +9893,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetEvent2KHR(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "event", "VkEvent", args.event);
-    FieldToSqlite(statements, fieldInfo, 3, "pDependencyInfo", args.pDependencyInfo, "const VkDependencyInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDependencyInfo", &args.pDependencyInfo, "const VkDependencyInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10101,8 +10026,8 @@ void VulkanSqliteConsumer::Process_vkCmdWaitEvents2KHR(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "eventCount", "uint32_t", args.eventCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pEvents", args.pEvents, "const VkEvent*");
-    FieldToSqlite(statements, fieldInfo, 4, "pDependencyInfos", args.pDependencyInfos, "const VkDependencyInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pEvents", &args.pEvents, "const VkEvent*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDependencyInfos", &args.pDependencyInfos, "const VkDependencyInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10166,7 +10091,7 @@ void VulkanSqliteConsumer::Process_vkCmdPipelineBarrier2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDependencyInfo", args.pDependencyInfo, "const VkDependencyInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDependencyInfo", &args.pDependencyInfo, "const VkDependencyInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10253,7 +10178,7 @@ void VulkanSqliteConsumer::Process_vkQueueSubmit2KHR(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
     RecordField(
         statements, fieldInfo, 2, "submitCount", "uint32_t", args.submitCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pSubmits", args.pSubmits, "const VkSubmitInfo2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubmits", &args.pSubmits, "const VkSubmitInfo2*");
     RecordField(
         statements, fieldInfo, 4, "fence", "VkFence", args.fence);
 
@@ -10269,7 +10194,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindIndexBuffer3KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBindIndexBuffer3InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBindIndexBuffer3InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10292,7 +10217,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindVertexBuffers3KHR(
         statements, fieldInfo, 2, "firstBinding", "uint32_t", args.firstBinding);
     RecordField(
         statements, fieldInfo, 3, "bindingCount", "uint32_t", args.bindingCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pBindingInfos", args.pBindingInfos, "const VkBindVertexBuffer3InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBindingInfos", &args.pBindingInfos, "const VkBindVertexBuffer3InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10311,7 +10236,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawIndirect2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDrawIndirect2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDrawIndirect2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10330,7 +10255,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawIndexedIndirect2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDrawIndirect2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDrawIndirect2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10349,7 +10274,7 @@ void VulkanSqliteConsumer::Process_vkCmdDispatchIndirect2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDispatchIndirect2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDispatchIndirect2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10368,7 +10293,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMemoryKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryInfo", args.pCopyMemoryInfo, "const VkCopyDeviceMemoryInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryInfo", &args.pCopyMemoryInfo, "const VkCopyDeviceMemoryInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10384,7 +10309,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMemoryToImageKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryInfo", args.pCopyMemoryInfo, "const VkCopyDeviceMemoryImageInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryInfo", &args.pCopyMemoryInfo, "const VkCopyDeviceMemoryImageInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10400,7 +10325,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyImageToMemoryKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryInfo", args.pCopyMemoryInfo, "const VkCopyDeviceMemoryImageInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryInfo", &args.pCopyMemoryInfo, "const VkCopyDeviceMemoryImageInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10416,7 +10341,7 @@ void VulkanSqliteConsumer::Process_vkCmdUpdateMemoryKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDstRange", args.pDstRange, "const VkDeviceAddressRangeKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDstRange", &args.pDstRange, "const VkDeviceAddressRangeKHR*");
     RecordField(
         statements, fieldInfo, 3, "dstFlags", "VkAddressCommandFlagsKHR", args.dstFlags);
     RecordField(
@@ -10437,7 +10362,7 @@ void VulkanSqliteConsumer::Process_vkCmdFillMemoryKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDstRange", args.pDstRange, "const VkDeviceAddressRangeKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDstRange", &args.pDstRange, "const VkDeviceAddressRangeKHR*");
     RecordField(
         statements, fieldInfo, 3, "dstFlags", "VkAddressCommandFlagsKHR", args.dstFlags);
     RecordField(
@@ -10463,7 +10388,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyQueryPoolResultsToMemoryKHR(
         statements, fieldInfo, 3, "firstQuery", "uint32_t", args.firstQuery);
     RecordField(
         statements, fieldInfo, 4, "queryCount", "uint32_t", args.queryCount);
-    FieldToSqlite(statements, fieldInfo, 5, "pDstRange", args.pDstRange, "const VkStridedDeviceAddressRangeKHR*");
+    FieldToSqlite(statements, fieldInfo, 5, "pDstRange", &args.pDstRange, "const VkStridedDeviceAddressRangeKHR*");
     RecordField(
         statements, fieldInfo, 6, "dstFlags", "VkAddressCommandFlagsKHR", args.dstFlags);
     RecordField(
@@ -10483,7 +10408,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawIndirectCount2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDrawIndirectCount2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDrawIndirectCount2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10502,7 +10427,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawIndexedIndirectCount2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDrawIndirectCount2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDrawIndirectCount2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10521,7 +10446,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginConditionalRendering2EXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pConditionalRenderingBegin", args.pConditionalRenderingBegin, "const VkConditionalRenderingBeginInfo2EXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pConditionalRenderingBegin", &args.pConditionalRenderingBegin, "const VkConditionalRenderingBeginInfo2EXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10541,7 +10466,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindTransformFeedbackBuffers2EXT(
         statements, fieldInfo, 2, "firstBinding", "uint32_t", args.firstBinding);
     RecordField(
         statements, fieldInfo, 3, "bindingCount", "uint32_t", args.bindingCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pBindingInfos", args.pBindingInfos, "const VkBindTransformFeedbackBuffer2InfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBindingInfos", &args.pBindingInfos, "const VkBindTransformFeedbackBuffer2InfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10564,7 +10489,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginTransformFeedback2EXT(
         statements, fieldInfo, 2, "firstCounterRange", "uint32_t", args.firstCounterRange);
     RecordField(
         statements, fieldInfo, 3, "counterRangeCount", "uint32_t", args.counterRangeCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCounterInfos", args.pCounterInfos, "const VkBindTransformFeedbackBuffer2InfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCounterInfos", &args.pCounterInfos, "const VkBindTransformFeedbackBuffer2InfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10584,7 +10509,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndTransformFeedback2EXT(
         statements, fieldInfo, 2, "firstCounterRange", "uint32_t", args.firstCounterRange);
     RecordField(
         statements, fieldInfo, 3, "counterRangeCount", "uint32_t", args.counterRangeCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCounterInfos", args.pCounterInfos, "const VkBindTransformFeedbackBuffer2InfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCounterInfos", &args.pCounterInfos, "const VkBindTransformFeedbackBuffer2InfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10604,7 +10529,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawIndirectByteCount2EXT(
         statements, fieldInfo, 2, "instanceCount", "uint32_t", args.instanceCount);
     RecordField(
         statements, fieldInfo, 3, "firstInstance", "uint32_t", args.firstInstance);
-    FieldToSqlite(statements, fieldInfo, 4, "pCounterInfo", args.pCounterInfo, "const VkBindTransformFeedbackBuffer2InfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCounterInfo", &args.pCounterInfo, "const VkBindTransformFeedbackBuffer2InfoEXT*");
     RecordField(
         statements, fieldInfo, 5, "counterOffset", "uint32_t", args.counterOffset);
     RecordField(
@@ -10627,7 +10552,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawMeshTasksIndirect2EXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDrawIndirect2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDrawIndirect2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10646,7 +10571,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawMeshTasksIndirectCount2EXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDrawIndirectCount2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDrawIndirectCount2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10665,7 +10590,7 @@ void VulkanSqliteConsumer::Process_vkCmdWriteMarkerToMemoryAMD(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkMemoryMarkerInfoAMD*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkMemoryMarkerInfoAMD*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10681,9 +10606,9 @@ void VulkanSqliteConsumer::Process_vkCreateAccelerationStructure2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkAccelerationStructureCreateInfo2KHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pAccelerationStructure", args.pAccelerationStructure, "VkAccelerationStructureKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkAccelerationStructureCreateInfo2KHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pAccelerationStructure", &args.pAccelerationStructure, "VkAccelerationStructureKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -10697,7 +10622,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyBuffer2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferInfo", args.pCopyBufferInfo, "const VkCopyBufferInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferInfo", &args.pCopyBufferInfo, "const VkCopyBufferInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10722,7 +10647,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyImage2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageInfo", args.pCopyImageInfo, "const VkCopyImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageInfo", &args.pCopyImageInfo, "const VkCopyImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10747,7 +10672,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferToImageInfo", args.pCopyBufferToImageInfo, "const VkCopyBufferToImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyBufferToImageInfo", &args.pCopyBufferToImageInfo, "const VkCopyBufferToImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10772,7 +10697,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToBufferInfo", args.pCopyImageToBufferInfo, "const VkCopyImageToBufferInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToBufferInfo", &args.pCopyImageToBufferInfo, "const VkCopyImageToBufferInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10797,7 +10722,7 @@ void VulkanSqliteConsumer::Process_vkCmdBlitImage2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBlitImageInfo", args.pBlitImageInfo, "const VkBlitImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBlitImageInfo", &args.pBlitImageInfo, "const VkBlitImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10822,7 +10747,7 @@ void VulkanSqliteConsumer::Process_vkCmdResolveImage2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pResolveImageInfo", args.pResolveImageInfo, "const VkResolveImageInfo2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pResolveImageInfo", &args.pResolveImageInfo, "const VkResolveImageInfo2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -10872,8 +10797,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceBufferMemoryRequirementsKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceBufferMemoryRequirements*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceBufferMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -10888,8 +10813,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceImageMemoryRequirementsKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceImageMemoryRequirements*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceImageMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -10904,9 +10829,9 @@ void VulkanSqliteConsumer::Process_vkGetDeviceImageSparseMemoryRequirementsKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceImageMemoryRequirements*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceImageMemoryRequirements*");
     FieldToSqlite(statements, fieldInfo, 3, "pSparseMemoryRequirementCount", args.pSparseMemoryRequirementCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSparseMemoryRequirements", &args.pSparseMemoryRequirements, "VkSparseImageMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -10977,8 +10902,8 @@ void VulkanSqliteConsumer::Process_vkGetRenderingAreaGranularityKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderingAreaInfo", args.pRenderingAreaInfo, "const VkRenderingAreaInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pGranularity", args.pGranularity, "VkExtent2D*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderingAreaInfo", &args.pRenderingAreaInfo, "const VkRenderingAreaInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pGranularity", &args.pGranularity, "VkExtent2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -10993,8 +10918,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceImageSubresourceLayoutKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceImageSubresourceInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pLayout", args.pLayout, "VkSubresourceLayout2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceImageSubresourceInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pLayout", &args.pLayout, "VkSubresourceLayout2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -11011,8 +10936,8 @@ void VulkanSqliteConsumer::Process_vkGetImageSubresourceLayout2KHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
-    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", args.pSubresource, "const VkImageSubresource2*");
-    FieldToSqlite(statements, fieldInfo, 4, "pLayout", args.pLayout, "VkSubresourceLayout2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", &args.pSubresource, "const VkImageSubresource2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pLayout", &args.pLayout, "VkSubresourceLayout2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -11028,7 +10953,7 @@ void VulkanSqliteConsumer::Process_vkWaitForPresent2KHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pPresentWait2Info", args.pPresentWait2Info, "const VkPresentWait2InfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPresentWait2Info", &args.pPresentWait2Info, "const VkPresentWait2InfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     auto deviceId = context.GetDeviceId(args.device);
@@ -11051,9 +10976,9 @@ void VulkanSqliteConsumer::Process_vkCreatePipelineBinariesKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkPipelineBinaryCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pBinaries", args.pBinaries, "VkPipelineBinaryHandlesInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkPipelineBinaryCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBinaries", &args.pBinaries, "VkPipelineBinaryHandlesInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11070,7 +10995,7 @@ void VulkanSqliteConsumer::Process_vkDestroyPipelineBinaryKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "pipelineBinary", "VkPipelineBinaryKHR", args.pipelineBinary);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -11085,8 +11010,8 @@ void VulkanSqliteConsumer::Process_vkGetPipelineKeyKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pPipelineCreateInfo", args.pPipelineCreateInfo, "const VkPipelineCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pPipelineKey", args.pPipelineKey, "VkPipelineBinaryKeyKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPipelineCreateInfo", &args.pPipelineCreateInfo, "const VkPipelineCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPipelineKey", &args.pPipelineKey, "VkPipelineBinaryKeyKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11101,8 +11026,8 @@ void VulkanSqliteConsumer::Process_vkGetPipelineBinaryDataKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkPipelineBinaryDataInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pPipelineBinaryKey", args.pPipelineBinaryKey, "VkPipelineBinaryKeyKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkPipelineBinaryDataInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPipelineBinaryKey", &args.pPipelineBinaryKey, "VkPipelineBinaryKeyKHR*");
     FieldToSqlite(statements, fieldInfo, 4, "pPipelineBinaryDataSize", args.pPipelineBinaryDataSize, "size_t*");
     FieldToSqlite(statements, fieldInfo, 5, "pPipelineBinaryData", args.pPipelineBinaryData, "void*");
 
@@ -11119,8 +11044,8 @@ void VulkanSqliteConsumer::Process_vkReleaseCapturedPipelineDataKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkReleaseCapturedPipelineDataInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkReleaseCapturedPipelineDataInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11134,7 +11059,7 @@ void VulkanSqliteConsumer::Process_vkReleaseSwapchainImagesKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pReleaseInfo", args.pReleaseInfo, "const VkReleaseSwapchainImagesInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pReleaseInfo", &args.pReleaseInfo, "const VkReleaseSwapchainImagesInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11149,7 +11074,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceCooperativeMatrixPropertie
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkCooperativeMatrixPropertiesKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkCooperativeMatrixPropertiesKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11199,7 +11124,7 @@ void VulkanSqliteConsumer::Process_vkGetCalibratedTimestampsKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "timestampCount", "uint32_t", args.timestampCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pTimestampInfos", args.pTimestampInfos, "const VkCalibratedTimestampInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pTimestampInfos", &args.pTimestampInfos, "const VkCalibratedTimestampInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 4, "pTimestamps", args.pTimestamps, "uint64_t*");
     FieldToSqlite(statements, fieldInfo, 5, "pMaxDeviation", args.pMaxDeviation, "uint64_t*");
 
@@ -11215,7 +11140,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindDescriptorSets2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBindDescriptorSetsInfo", args.pBindDescriptorSetsInfo, "const VkBindDescriptorSetsInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBindDescriptorSetsInfo", &args.pBindDescriptorSetsInfo, "const VkBindDescriptorSetsInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11231,7 +11156,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushConstants2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushConstantsInfo", args.pPushConstantsInfo, "const VkPushConstantsInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPushConstantsInfo", &args.pPushConstantsInfo, "const VkPushConstantsInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11247,7 +11172,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetInfo", args.pPushDescriptorSetInfo, "const VkPushDescriptorSetInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetInfo", &args.pPushDescriptorSetInfo, "const VkPushDescriptorSetInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11263,7 +11188,7 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetWithTemplateInfo", args.pPushDescriptorSetWithTemplateInfo, "const VkPushDescriptorSetWithTemplateInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetWithTemplateInfo", &args.pPushDescriptorSetWithTemplateInfo, "const VkPushDescriptorSetWithTemplateInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11278,7 +11203,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMemoryIndirectKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryIndirectInfo", args.pCopyMemoryIndirectInfo, "const VkCopyMemoryIndirectInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryIndirectInfo", &args.pCopyMemoryIndirectInfo, "const VkCopyMemoryIndirectInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11294,7 +11219,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMemoryToImageIndirectKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryToImageIndirectInfo", args.pCopyMemoryToImageIndirectInfo, "const VkCopyMemoryToImageIndirectInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryToImageIndirectInfo", &args.pCopyMemoryToImageIndirectInfo, "const VkCopyMemoryToImageIndirectInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11312,7 +11237,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceFaultReportsKHR(
     RecordField(
         statements, fieldInfo, 2, "timeout", "uint64_t", args.timeout);
     FieldToSqlite(statements, fieldInfo, 3, "pFaultCounts", args.pFaultCounts, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pFaultInfo", args.pFaultInfo, "VkDeviceFaultInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pFaultInfo", &args.pFaultInfo, "VkDeviceFaultInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11327,7 +11252,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceFaultDebugInfoKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pDebugInfo", args.pDebugInfo, "VkDeviceFaultDebugInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDebugInfo", &args.pDebugInfo, "VkDeviceFaultDebugInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11341,7 +11266,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndRendering2KHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderingEndInfo", args.pRenderingEndInfo, "const VkRenderingEndInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderingEndInfo", &args.pRenderingEndInfo, "const VkRenderingEndInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11373,9 +11298,9 @@ void VulkanSqliteConsumer::Process_vkCreateDebugReportCallbackEXT(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDebugReportCallbackCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pCallback", args.pCallback, "VkDebugReportCallbackEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDebugReportCallbackCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCallback", &args.pCallback, "VkDebugReportCallbackEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11392,7 +11317,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDebugReportCallbackEXT(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
     RecordField(
         statements, fieldInfo, 2, "callback", "VkDebugReportCallbackEXT", args.callback);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -11417,8 +11342,8 @@ void VulkanSqliteConsumer::Process_vkDebugReportMessageEXT(
         statements, fieldInfo, 5, "location", "size_t", args.location);
     RecordField(
         statements, fieldInfo, 6, "messageCode", "int32_t", args.messageCode);
-    FieldToSqlite(statements, fieldInfo, 7, "pLayerPrefix", args.pLayerPrefix, "const char*");
-    FieldToSqlite(statements, fieldInfo, 8, "pMessage", args.pMessage, "const char*");
+    FieldToSqlite(statements, fieldInfo, 7, "pLayerPrefix", &args.pLayerPrefix, "const char*");
+    FieldToSqlite(statements, fieldInfo, 8, "pMessage", &args.pMessage, "const char*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -11432,7 +11357,7 @@ void VulkanSqliteConsumer::Process_vkDebugMarkerSetObjectTagEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pTagInfo", args.pTagInfo, "const VkDebugMarkerObjectTagInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pTagInfo", &args.pTagInfo, "const VkDebugMarkerObjectTagInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11447,7 +11372,7 @@ void VulkanSqliteConsumer::Process_vkDebugMarkerSetObjectNameEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pNameInfo", args.pNameInfo, "const VkDebugMarkerObjectNameInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pNameInfo", &args.pNameInfo, "const VkDebugMarkerObjectNameInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -11462,7 +11387,7 @@ void VulkanSqliteConsumer::Process_vkCmdDebugMarkerBeginEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", args.pMarkerInfo, "const VkDebugMarkerMarkerInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", &args.pMarkerInfo, "const VkDebugMarkerMarkerInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11493,7 +11418,7 @@ void VulkanSqliteConsumer::Process_vkCmdDebugMarkerInsertEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", args.pMarkerInfo, "const VkDebugMarkerMarkerInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", &args.pMarkerInfo, "const VkDebugMarkerMarkerInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -11512,7 +11437,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindTransformFeedbackBuffersEXT(
         statements, fieldInfo, 2, "firstBinding", "uint32_t", args.firstBinding);
     RecordField(
         statements, fieldInfo, 3, "bindingCount", "uint32_t", args.bindingCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", args.pBuffers, "const VkBuffer*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", &args.pBuffers, "const VkBuffer*");
     FieldToSqlite(statements, fieldInfo, 5, "pOffsets", args.pOffsets, "const VkDeviceSize*");
     FieldToSqlite(statements, fieldInfo, 6, "pSizes", args.pSizes, "const VkDeviceSize*");
 
@@ -11534,7 +11459,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginTransformFeedbackEXT(
         statements, fieldInfo, 2, "firstCounterBuffer", "uint32_t", args.firstCounterBuffer);
     RecordField(
         statements, fieldInfo, 3, "counterBufferCount", "uint32_t", args.counterBufferCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCounterBuffers", args.pCounterBuffers, "const VkBuffer*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCounterBuffers", &args.pCounterBuffers, "const VkBuffer*");
     FieldToSqlite(statements, fieldInfo, 5, "pCounterBufferOffsets", args.pCounterBufferOffsets, "const VkDeviceSize*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
@@ -11603,7 +11528,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndTransformFeedbackEXT(
         statements, fieldInfo, 2, "firstCounterBuffer", "uint32_t", args.firstCounterBuffer);
     RecordField(
         statements, fieldInfo, 3, "counterBufferCount", "uint32_t", args.counterBufferCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCounterBuffers", args.pCounterBuffers, "const VkBuffer*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCounterBuffers", &args.pCounterBuffers, "const VkBuffer*");
     FieldToSqlite(statements, fieldInfo, 5, "pCounterBufferOffsets", args.pCounterBufferOffsets, "const VkDeviceSize*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
@@ -11937,7 +11862,7 @@ void VulkanSqliteConsumer::Process_vkGetImageViewHandleNVX(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkImageViewHandleInfoNVX*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkImageViewHandleInfoNVX*");
 
     statements.InsertApiEventReturns(this->block_index_, "uint32_t", args.result);
 }
@@ -11952,7 +11877,7 @@ void VulkanSqliteConsumer::Process_vkGetImageViewHandle64NVX(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkImageViewHandleInfoNVX*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkImageViewHandleInfoNVX*");
 
     statements.InsertApiEventReturns(this->block_index_, "uint64_t", args.result);
 }
@@ -11969,7 +11894,7 @@ void VulkanSqliteConsumer::Process_vkGetImageViewAddressNVX(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "imageView", "VkImageView", args.imageView);
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkImageViewAddressPropertiesNVX*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkImageViewAddressPropertiesNVX*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12285,12 +12210,12 @@ void VulkanSqliteConsumer::Process_vkCreateStreamDescriptorSurfaceGGP(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkStreamDescriptorSurfaceCreateInfoGGP*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkStreamDescriptorSurfaceCreateInfoGGP*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12300,7 +12225,7 @@ void VulkanSqliteConsumer::Process_vkCreateStreamDescriptorSurfaceGGP(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12338,7 +12263,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalImageFormatPropert
         statements, fieldInfo, 6, "flags", "VkImageCreateFlags", args.flags);
     RecordField(
         statements, fieldInfo, 7, "externalHandleType", "VkExternalMemoryHandleTypeFlagsNV", args.externalHandleType);
-    FieldToSqlite(statements, fieldInfo, 8, "pExternalImageFormatProperties", args.pExternalImageFormatProperties, "VkExternalImageFormatPropertiesNV*");
+    FieldToSqlite(statements, fieldInfo, 8, "pExternalImageFormatProperties", &args.pExternalImageFormatProperties, "VkExternalImageFormatPropertiesNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12370,12 +12295,12 @@ void VulkanSqliteConsumer::Process_vkCreateViSurfaceNN(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkViSurfaceCreateInfoNN*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkViSurfaceCreateInfoNN*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12385,7 +12310,7 @@ void VulkanSqliteConsumer::Process_vkCreateViSurfaceNN(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12411,7 +12336,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginConditionalRenderingEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pConditionalRenderingBegin", args.pConditionalRenderingBegin, "const VkConditionalRenderingBeginInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pConditionalRenderingBegin", &args.pConditionalRenderingBegin, "const VkConditionalRenderingBeginInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -12445,7 +12370,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetViewportWScalingNV(
         statements, fieldInfo, 2, "firstViewport", "uint32_t", args.firstViewport);
     RecordField(
         statements, fieldInfo, 3, "viewportCount", "uint32_t", args.viewportCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pViewportWScalings", args.pViewportWScalings, "const VkViewportWScalingNV*");
+    FieldToSqlite(statements, fieldInfo, 4, "pViewportWScalings", &args.pViewportWScalings, "const VkViewportWScalingNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -12495,7 +12420,7 @@ void VulkanSqliteConsumer::Process_vkGetRandROutputDisplayEXT(
     FieldToSqlite(statements, fieldInfo, 2, "dpy", args.dpy, "Display*");
     RecordField(
         statements, fieldInfo, 3, "rrOutput", "RROutput", args.rrOutput);
-    FieldToSqlite(statements, fieldInfo, 4, "pDisplay", args.pDisplay, "VkDisplayKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDisplay", &args.pDisplay, "VkDisplayKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12511,7 +12436,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSurfaceCapabilities2EXT(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "surface", "VkSurfaceKHR", args.surface);
-    FieldToSqlite(statements, fieldInfo, 3, "pSurfaceCapabilities", args.pSurfaceCapabilities, "VkSurfaceCapabilities2EXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSurfaceCapabilities", &args.pSurfaceCapabilities, "VkSurfaceCapabilities2EXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12527,7 +12452,7 @@ void VulkanSqliteConsumer::Process_vkDisplayPowerControlEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "display", "VkDisplayKHR", args.display);
-    FieldToSqlite(statements, fieldInfo, 3, "pDisplayPowerInfo", args.pDisplayPowerInfo, "const VkDisplayPowerInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDisplayPowerInfo", &args.pDisplayPowerInfo, "const VkDisplayPowerInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12542,9 +12467,9 @@ void VulkanSqliteConsumer::Process_vkRegisterDeviceEventEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pDeviceEventInfo", args.pDeviceEventInfo, "const VkDeviceEventInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pFence", args.pFence, "VkFence*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDeviceEventInfo", &args.pDeviceEventInfo, "const VkDeviceEventInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pFence", &args.pFence, "VkFence*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12561,9 +12486,9 @@ void VulkanSqliteConsumer::Process_vkRegisterDisplayEventEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "display", "VkDisplayKHR", args.display);
-    FieldToSqlite(statements, fieldInfo, 3, "pDisplayEventInfo", args.pDisplayEventInfo, "const VkDisplayEventInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 5, "pFence", args.pFence, "VkFence*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDisplayEventInfo", &args.pDisplayEventInfo, "const VkDisplayEventInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 5, "pFence", &args.pFence, "VkFence*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12598,7 +12523,7 @@ void VulkanSqliteConsumer::Process_vkGetRefreshCycleDurationGOOGLE(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pDisplayTimingProperties", args.pDisplayTimingProperties, "VkRefreshCycleDurationGOOGLE*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDisplayTimingProperties", &args.pDisplayTimingProperties, "VkRefreshCycleDurationGOOGLE*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12616,7 +12541,7 @@ void VulkanSqliteConsumer::Process_vkGetPastPresentationTimingGOOGLE(
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
     FieldToSqlite(statements, fieldInfo, 3, "pPresentationTimingCount", args.pPresentationTimingCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pPresentationTimings", args.pPresentationTimings, "VkPastPresentationTimingGOOGLE*");
+    FieldToSqlite(statements, fieldInfo, 4, "pPresentationTimings", &args.pPresentationTimings, "VkPastPresentationTimingGOOGLE*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12634,7 +12559,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetDiscardRectangleEXT(
         statements, fieldInfo, 2, "firstDiscardRectangle", "uint32_t", args.firstDiscardRectangle);
     RecordField(
         statements, fieldInfo, 3, "discardRectangleCount", "uint32_t", args.discardRectangleCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pDiscardRectangles", args.pDiscardRectangles, "const VkRect2D*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDiscardRectangles", &args.pDiscardRectangles, "const VkRect2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -12685,8 +12610,8 @@ void VulkanSqliteConsumer::Process_vkSetHdrMetadataEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchainCount", "uint32_t", args.swapchainCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pSwapchains", args.pSwapchains, "const VkSwapchainKHR*");
-    FieldToSqlite(statements, fieldInfo, 4, "pMetadata", args.pMetadata, "const VkHdrMetadataEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSwapchains", &args.pSwapchains, "const VkSwapchainKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMetadata", &args.pMetadata, "const VkHdrMetadataEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -12700,12 +12625,12 @@ void VulkanSqliteConsumer::Process_vkCreateIOSSurfaceMVK(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkIOSSurfaceCreateInfoMVK*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkIOSSurfaceCreateInfoMVK*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12715,7 +12640,7 @@ void VulkanSqliteConsumer::Process_vkCreateIOSSurfaceMVK(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12741,12 +12666,12 @@ void VulkanSqliteConsumer::Process_vkCreateMacOSSurfaceMVK(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkMacOSSurfaceCreateInfoMVK*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkMacOSSurfaceCreateInfoMVK*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12756,7 +12681,7 @@ void VulkanSqliteConsumer::Process_vkCreateMacOSSurfaceMVK(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -12782,7 +12707,7 @@ void VulkanSqliteConsumer::Process_vkSetDebugUtilsObjectNameEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pNameInfo", args.pNameInfo, "const VkDebugUtilsObjectNameInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pNameInfo", &args.pNameInfo, "const VkDebugUtilsObjectNameInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12797,7 +12722,7 @@ void VulkanSqliteConsumer::Process_vkSetDebugUtilsObjectTagEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pTagInfo", args.pTagInfo, "const VkDebugUtilsObjectTagInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pTagInfo", &args.pTagInfo, "const VkDebugUtilsObjectTagInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12812,7 +12737,7 @@ void VulkanSqliteConsumer::Process_vkQueueBeginDebugUtilsLabelEXT(
 
     RecordField(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
-    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", &args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -12841,7 +12766,7 @@ void VulkanSqliteConsumer::Process_vkQueueInsertDebugUtilsLabelEXT(
 
     RecordField(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
-    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", &args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -12856,7 +12781,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginDebugUtilsLabelEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", &args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -12887,7 +12812,7 @@ void VulkanSqliteConsumer::Process_vkCmdInsertDebugUtilsLabelEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pLabelInfo", &args.pLabelInfo, "const VkDebugUtilsLabelEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -12951,9 +12876,9 @@ void VulkanSqliteConsumer::Process_vkCreateDebugUtilsMessengerEXT(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDebugUtilsMessengerCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pMessenger", args.pMessenger, "VkDebugUtilsMessengerEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDebugUtilsMessengerCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMessenger", &args.pMessenger, "VkDebugUtilsMessengerEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -12970,7 +12895,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDebugUtilsMessengerEXT(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
     RecordField(
         statements, fieldInfo, 2, "messenger", "VkDebugUtilsMessengerEXT", args.messenger);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -12989,7 +12914,7 @@ void VulkanSqliteConsumer::Process_vkSubmitDebugUtilsMessageEXT(
         statements, fieldInfo, 2, "messageSeverity", "VkDebugUtilsMessageSeverityFlagBitsEXT", args.messageSeverity);
     RecordField(
         statements, fieldInfo, 3, "messageTypes", "VkDebugUtilsMessageTypeFlagsEXT", args.messageTypes);
-    FieldToSqlite(statements, fieldInfo, 4, "pCallbackData", args.pCallbackData, "const VkDebugUtilsMessengerCallbackDataEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCallbackData", &args.pCallbackData, "const VkDebugUtilsMessengerCallbackDataEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -13004,7 +12929,7 @@ void VulkanSqliteConsumer::Process_vkGetAndroidHardwareBufferPropertiesANDROID(
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     FieldToSqlite(statements, fieldInfo, 2, "buffer", args.buffer, "const struct AHardwareBuffer*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkAndroidHardwareBufferPropertiesANDROID*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkAndroidHardwareBufferPropertiesANDROID*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13019,7 +12944,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryAndroidHardwareBufferANDROID(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkMemoryGetAndroidHardwareBufferInfoANDROID*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkMemoryGetAndroidHardwareBufferInfoANDROID*");
     FieldToSqlite(statements, fieldInfo, 3, "pBuffer", args.pBuffer, "struct AHardwareBuffer**");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -13034,9 +12959,9 @@ void VulkanSqliteConsumer::Process_vkCreateGpaSessionAMD(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkGpaSessionCreateInfoAMD*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pGpaSession", args.pGpaSession, "VkGpaSessionAMD*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkGpaSessionCreateInfoAMD*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pGpaSession", &args.pGpaSession, "VkGpaSessionAMD*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13053,7 +12978,7 @@ void VulkanSqliteConsumer::Process_vkDestroyGpaSessionAMD(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "gpaSession", "VkGpaSessionAMD", args.gpaSession);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -13068,7 +12993,7 @@ void VulkanSqliteConsumer::Process_vkSetGpaDeviceClockModeAMD(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "VkGpaDeviceClockModeInfoAMD*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "VkGpaDeviceClockModeInfoAMD*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13083,7 +13008,7 @@ void VulkanSqliteConsumer::Process_vkGetGpaDeviceClockInfoAMD(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "VkGpaDeviceGetClockInfoAMD*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "VkGpaDeviceGetClockInfoAMD*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13134,7 +13059,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginGpaSampleAMD(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "gpaSession", "VkGpaSessionAMD", args.gpaSession);
-    FieldToSqlite(statements, fieldInfo, 3, "pGpaSampleBeginInfo", args.pGpaSampleBeginInfo, "const VkGpaSampleBeginInfoAMD*");
+    FieldToSqlite(statements, fieldInfo, 3, "pGpaSampleBeginInfo", &args.pGpaSampleBeginInfo, "const VkGpaSampleBeginInfoAMD*");
     FieldToSqlite(statements, fieldInfo, 4, "pSampleID", args.pSampleID, "uint32_t*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -13238,7 +13163,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetSampleLocationsEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pSampleLocationsInfo", args.pSampleLocationsInfo, "const VkSampleLocationsInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSampleLocationsInfo", &args.pSampleLocationsInfo, "const VkSampleLocationsInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -13256,7 +13181,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceMultisamplePropertiesEXT(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "samples", "VkSampleCountFlagBits", args.samples);
-    FieldToSqlite(statements, fieldInfo, 3, "pMultisampleProperties", args.pMultisampleProperties, "VkMultisamplePropertiesEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMultisampleProperties", &args.pMultisampleProperties, "VkMultisamplePropertiesEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -13272,7 +13197,7 @@ void VulkanSqliteConsumer::Process_vkGetImageDrmFormatModifierPropertiesEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkImageDrmFormatModifierPropertiesEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkImageDrmFormatModifierPropertiesEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13286,9 +13211,9 @@ void VulkanSqliteConsumer::Process_vkCreateValidationCacheEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkValidationCacheCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pValidationCache", args.pValidationCache, "VkValidationCacheEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkValidationCacheCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pValidationCache", &args.pValidationCache, "VkValidationCacheEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13305,7 +13230,7 @@ void VulkanSqliteConsumer::Process_vkDestroyValidationCacheEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "validationCache", "VkValidationCacheEXT", args.validationCache);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -13324,7 +13249,7 @@ void VulkanSqliteConsumer::Process_vkMergeValidationCachesEXT(
         statements, fieldInfo, 2, "dstCache", "VkValidationCacheEXT", args.dstCache);
     RecordField(
         statements, fieldInfo, 3, "srcCacheCount", "uint32_t", args.srcCacheCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pSrcCaches", args.pSrcCaches, "const VkValidationCacheEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSrcCaches", &args.pSrcCaches, "const VkValidationCacheEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13379,7 +13304,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetViewportShadingRatePaletteNV(
         statements, fieldInfo, 2, "firstViewport", "uint32_t", args.firstViewport);
     RecordField(
         statements, fieldInfo, 3, "viewportCount", "uint32_t", args.viewportCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pShadingRatePalettes", args.pShadingRatePalettes, "const VkShadingRatePaletteNV*");
+    FieldToSqlite(statements, fieldInfo, 4, "pShadingRatePalettes", &args.pShadingRatePalettes, "const VkShadingRatePaletteNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -13399,7 +13324,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetCoarseSampleOrderNV(
         statements, fieldInfo, 2, "sampleOrderType", "VkCoarseSampleOrderTypeNV", args.sampleOrderType);
     RecordField(
         statements, fieldInfo, 3, "customSampleOrderCount", "uint32_t", args.customSampleOrderCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCustomSampleOrders", args.pCustomSampleOrders, "const VkCoarseSampleOrderCustomNV*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCustomSampleOrders", &args.pCustomSampleOrders, "const VkCoarseSampleOrderCustomNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -13414,9 +13339,9 @@ void VulkanSqliteConsumer::Process_vkCreateAccelerationStructureNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkAccelerationStructureCreateInfoNV*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pAccelerationStructure", args.pAccelerationStructure, "VkAccelerationStructureNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkAccelerationStructureCreateInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pAccelerationStructure", &args.pAccelerationStructure, "VkAccelerationStructureNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13433,7 +13358,7 @@ void VulkanSqliteConsumer::Process_vkDestroyAccelerationStructureNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "accelerationStructure", "VkAccelerationStructureNV", args.accelerationStructure);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -13448,8 +13373,8 @@ void VulkanSqliteConsumer::Process_vkGetAccelerationStructureMemoryRequirementsN
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkAccelerationStructureMemoryRequirementsInfoNV*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkAccelerationStructureMemoryRequirementsInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -13466,7 +13391,7 @@ void VulkanSqliteConsumer::Process_vkBindAccelerationStructureMemoryNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", args.pBindInfos, "const VkBindAccelerationStructureMemoryInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", &args.pBindInfos, "const VkBindAccelerationStructureMemoryInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13481,7 +13406,7 @@ void VulkanSqliteConsumer::Process_vkCmdBuildAccelerationStructureNV(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkAccelerationStructureInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkAccelerationStructureInfoNV*");
     RecordField(
         statements, fieldInfo, 3, "instanceData", "VkBuffer", args.instanceData);
     RecordField(
@@ -13685,9 +13610,9 @@ void VulkanSqliteConsumer::Process_vkCreateRayTracingPipelinesNV(
         statements, fieldInfo, 2, "pipelineCache", "VkPipelineCache", args.pipelineCache);
     RecordField(
         statements, fieldInfo, 3, "createInfoCount", "uint32_t", args.createInfoCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pCreateInfos", args.pCreateInfos, "const VkRayTracingPipelineCreateInfoNV*");
-    FieldToSqlite(statements, fieldInfo, 5, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 6, "pPipelines", args.pPipelines, "VkPipeline*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCreateInfos", &args.pCreateInfos, "const VkRayTracingPipelineCreateInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 5, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 6, "pPipelines", &args.pPipelines, "VkPipeline*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -13769,7 +13694,7 @@ void VulkanSqliteConsumer::Process_vkCmdWriteAccelerationStructuresPropertiesNV(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "accelerationStructureCount", "uint32_t", args.accelerationStructureCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pAccelerationStructures", args.pAccelerationStructures, "const VkAccelerationStructureNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAccelerationStructures", &args.pAccelerationStructures, "const VkAccelerationStructureNV*");
     RecordField(
         statements, fieldInfo, 4, "queryType", "VkQueryType", args.queryType);
     RecordField(
@@ -13859,7 +13784,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryHostPointerPropertiesEXT(
     RecordField(
         statements, fieldInfo, 2, "handleType", "VkExternalMemoryHandleTypeFlagBits", args.handleType);
     FieldToSqlite(statements, fieldInfo, 3, "pHostPointer", args.pHostPointer, "const void*");
-    FieldToSqlite(statements, fieldInfo, 4, "pMemoryHostPointerProperties", args.pMemoryHostPointerProperties, "VkMemoryHostPointerPropertiesEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMemoryHostPointerProperties", &args.pMemoryHostPointerProperties, "VkMemoryHostPointerPropertiesEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -14032,7 +13957,7 @@ void VulkanSqliteConsumer::Process_vkGetCalibratedTimestampsEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "timestampCount", "uint32_t", args.timestampCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pTimestampInfos", args.pTimestampInfos, "const VkCalibratedTimestampInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pTimestampInfos", &args.pTimestampInfos, "const VkCalibratedTimestampInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 4, "pTimestamps", args.pTimestamps, "uint64_t*");
     FieldToSqlite(statements, fieldInfo, 5, "pMaxDeviation", args.pMaxDeviation, "uint64_t*");
 
@@ -14426,7 +14351,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetExclusiveScissorNV(
         statements, fieldInfo, 2, "firstExclusiveScissor", "uint32_t", args.firstExclusiveScissor);
     RecordField(
         statements, fieldInfo, 3, "exclusiveScissorCount", "uint32_t", args.exclusiveScissorCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pExclusiveScissors", args.pExclusiveScissors, "const VkRect2D*");
+    FieldToSqlite(statements, fieldInfo, 4, "pExclusiveScissors", &args.pExclusiveScissors, "const VkRect2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -14506,7 +14431,7 @@ void VulkanSqliteConsumer::Process_vkGetQueueCheckpointDataNV(
     RecordField(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
     FieldToSqlite(statements, fieldInfo, 2, "pCheckpointDataCount", args.pCheckpointDataCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pCheckpointData", args.pCheckpointData, "VkCheckpointDataNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCheckpointData", &args.pCheckpointData, "VkCheckpointDataNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -14522,7 +14447,7 @@ void VulkanSqliteConsumer::Process_vkGetQueueCheckpointData2NV(
     RecordField(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
     FieldToSqlite(statements, fieldInfo, 2, "pCheckpointDataCount", args.pCheckpointDataCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pCheckpointData", args.pCheckpointData, "VkCheckpointData2NV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCheckpointData", &args.pCheckpointData, "VkCheckpointData2NV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -14556,7 +14481,7 @@ void VulkanSqliteConsumer::Process_vkGetSwapchainTimingPropertiesEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pSwapchainTimingProperties", args.pSwapchainTimingProperties, "VkSwapchainTimingPropertiesEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSwapchainTimingProperties", &args.pSwapchainTimingProperties, "VkSwapchainTimingPropertiesEXT*");
     FieldToSqlite(statements, fieldInfo, 4, "pSwapchainTimingPropertiesCounter", args.pSwapchainTimingPropertiesCounter, "uint64_t*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -14574,7 +14499,7 @@ void VulkanSqliteConsumer::Process_vkGetSwapchainTimeDomainPropertiesEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pSwapchainTimeDomainProperties", args.pSwapchainTimeDomainProperties, "VkSwapchainTimeDomainPropertiesEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSwapchainTimeDomainProperties", &args.pSwapchainTimeDomainProperties, "VkSwapchainTimeDomainPropertiesEXT*");
     FieldToSqlite(statements, fieldInfo, 4, "pTimeDomainsCounter", args.pTimeDomainsCounter, "uint64_t*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -14590,8 +14515,8 @@ void VulkanSqliteConsumer::Process_vkGetPastPresentationTimingEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pPastPresentationTimingInfo", args.pPastPresentationTimingInfo, "const VkPastPresentationTimingInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pPastPresentationTimingProperties", args.pPastPresentationTimingProperties, "VkPastPresentationTimingPropertiesEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPastPresentationTimingInfo", &args.pPastPresentationTimingInfo, "const VkPastPresentationTimingInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPastPresentationTimingProperties", &args.pPastPresentationTimingProperties, "VkPastPresentationTimingPropertiesEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -14605,7 +14530,7 @@ void VulkanSqliteConsumer::Process_vkInitializePerformanceApiINTEL(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInitializeInfo", args.pInitializeInfo, "const VkInitializePerformanceApiInfoINTEL*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInitializeInfo", &args.pInitializeInfo, "const VkInitializePerformanceApiInfoINTEL*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -14634,7 +14559,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetPerformanceMarkerINTEL(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", args.pMarkerInfo, "const VkPerformanceMarkerInfoINTEL*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", &args.pMarkerInfo, "const VkPerformanceMarkerInfoINTEL*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -14698,7 +14623,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetPerformanceStreamMarkerINTEL(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", args.pMarkerInfo, "const VkPerformanceStreamMarkerInfoINTEL*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMarkerInfo", &args.pMarkerInfo, "const VkPerformanceStreamMarkerInfoINTEL*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -14762,7 +14687,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetPerformanceOverrideINTEL(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pOverrideInfo", args.pOverrideInfo, "const VkPerformanceOverrideInfoINTEL*");
+    FieldToSqlite(statements, fieldInfo, 2, "pOverrideInfo", &args.pOverrideInfo, "const VkPerformanceOverrideInfoINTEL*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -14826,8 +14751,8 @@ void VulkanSqliteConsumer::Process_vkAcquirePerformanceConfigurationINTEL(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pAcquireInfo", args.pAcquireInfo, "const VkPerformanceConfigurationAcquireInfoINTEL*");
-    FieldToSqlite(statements, fieldInfo, 3, "pConfiguration", args.pConfiguration, "VkPerformanceConfigurationINTEL*");
+    FieldToSqlite(statements, fieldInfo, 2, "pAcquireInfo", &args.pAcquireInfo, "const VkPerformanceConfigurationAcquireInfoINTEL*");
+    FieldToSqlite(statements, fieldInfo, 3, "pConfiguration", &args.pConfiguration, "VkPerformanceConfigurationINTEL*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -14876,7 +14801,7 @@ void VulkanSqliteConsumer::Process_vkGetPerformanceParameterINTEL(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "parameter", "VkPerformanceParameterTypeINTEL", args.parameter);
-    FieldToSqlite(statements, fieldInfo, 3, "pValue", args.pValue, "VkPerformanceValueINTEL*");
+    FieldToSqlite(statements, fieldInfo, 3, "pValue", &args.pValue, "VkPerformanceValueINTEL*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -14907,12 +14832,12 @@ void VulkanSqliteConsumer::Process_vkCreateImagePipeSurfaceFUCHSIA(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkImagePipeSurfaceCreateInfoFUCHSIA*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkImagePipeSurfaceCreateInfoFUCHSIA*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -14922,7 +14847,7 @@ void VulkanSqliteConsumer::Process_vkCreateImagePipeSurfaceFUCHSIA(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -14948,12 +14873,12 @@ void VulkanSqliteConsumer::Process_vkCreateMetalSurfaceEXT(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkMetalSurfaceCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkMetalSurfaceCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -14963,7 +14888,7 @@ void VulkanSqliteConsumer::Process_vkCreateMetalSurfaceEXT(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -14989,7 +14914,7 @@ void VulkanSqliteConsumer::Process_vkGetBufferDeviceAddressEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkBufferDeviceAddressInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkBufferDeviceAddressInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkDeviceAddress", args.result);
 }
@@ -15004,7 +14929,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceToolPropertiesEXT(
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pToolCount", args.pToolCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pToolProperties", args.pToolProperties, "VkPhysicalDeviceToolProperties*");
+    FieldToSqlite(statements, fieldInfo, 3, "pToolProperties", &args.pToolProperties, "VkPhysicalDeviceToolProperties*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15019,7 +14944,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceCooperativeMatrixPropertie
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkCooperativeMatrixPropertiesNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkCooperativeMatrixPropertiesNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15034,7 +14959,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSupportedFramebufferMixedS
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pCombinationCount", args.pCombinationCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pCombinations", args.pCombinations, "VkFramebufferMixedSamplesCombinationNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCombinations", &args.pCombinations, "VkFramebufferMixedSamplesCombinationNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15048,7 +14973,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceSurfacePresentModes2EXT(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", &args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pPresentModeCount", args.pPresentModeCount, "uint32_t*");
     FieldToSqlite(statements, fieldInfo, 4, "pPresentModes", args.pPresentModes, "VkPresentModeKHR*");
 
@@ -15097,7 +15022,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceGroupSurfacePresentModes2EXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pSurfaceInfo", &args.pSurfaceInfo, "const VkPhysicalDeviceSurfaceInfo2KHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pModes", args.pModes, "VkDeviceGroupPresentModeFlagsKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -15112,12 +15037,12 @@ void VulkanSqliteConsumer::Process_vkCreateHeadlessSurfaceEXT(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkHeadlessSurfaceCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkHeadlessSurfaceCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -15127,7 +15052,7 @@ void VulkanSqliteConsumer::Process_vkCreateHeadlessSurfaceEXT(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -15243,7 +15168,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetViewportWithCountEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "viewportCount", "uint32_t", args.viewportCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pViewports", args.pViewports, "const VkViewport*");
+    FieldToSqlite(statements, fieldInfo, 3, "pViewports", &args.pViewports, "const VkViewport*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15261,7 +15186,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetScissorWithCountEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "scissorCount", "uint32_t", args.scissorCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pScissors", args.pScissors, "const VkRect2D*");
+    FieldToSqlite(statements, fieldInfo, 3, "pScissors", &args.pScissors, "const VkRect2D*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15281,28 +15206,28 @@ void VulkanSqliteConsumer::Process_vkCmdBindVertexBuffers2EXT(
         statements, fieldInfo, 2, "firstBinding", "uint32_t", args.firstBinding);
     RecordField(
         statements, fieldInfo, 3, "bindingCount", "uint32_t", args.bindingCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", args.pBuffers, "const VkBuffer*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBuffers", &args.pBuffers, "const VkBuffer*");
     FieldToSqlite(statements, fieldInfo, 5, "pOffsets", args.pOffsets, "const VkDeviceSize*");
     FieldToSqlite(statements, fieldInfo, 6, "pSizes", args.pSizes, "const VkDeviceSize*");
     FieldToSqlite(statements, fieldInfo, 7, "pStrides", args.pStrides, "const VkDeviceSize*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [buffersValid, buffers, buffersCount] = GetHandleArray(args.pBuffers);
+    auto [buffersValid, buffers, buffersCount] = GetHandleArray(&args.pBuffers);
     if (!buffersValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pBuffers");
         return;
     }
 
-    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(args.pOffsets);
+    auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(&args.pOffsets);
     if (!offsetsValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pOffsets");
         return;
     }
-    auto [sizesValid, sizes, sizesCount] = GetPointerArray(args.pSizes);
-    auto [stridesValid, strides, stridesCount] = GetPointerArray(args.pStrides);
+    auto [sizesValid, sizes, sizesCount] = GetPointerArray(&args.pSizes);
+    auto [stridesValid, strides, stridesCount] = GetPointerArray(&args.pStrides);
     auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
@@ -15478,7 +15403,7 @@ void VulkanSqliteConsumer::Process_vkCopyMemoryToImageEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryToImageInfo", args.pCopyMemoryToImageInfo, "const VkCopyMemoryToImageInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyMemoryToImageInfo", &args.pCopyMemoryToImageInfo, "const VkCopyMemoryToImageInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15493,7 +15418,7 @@ void VulkanSqliteConsumer::Process_vkCopyImageToMemoryEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToMemoryInfo", args.pCopyImageToMemoryInfo, "const VkCopyImageToMemoryInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToMemoryInfo", &args.pCopyImageToMemoryInfo, "const VkCopyImageToMemoryInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15508,7 +15433,7 @@ void VulkanSqliteConsumer::Process_vkCopyImageToImageEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToImageInfo", args.pCopyImageToImageInfo, "const VkCopyImageToImageInfo*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyImageToImageInfo", &args.pCopyImageToImageInfo, "const VkCopyImageToImageInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15525,7 +15450,7 @@ void VulkanSqliteConsumer::Process_vkTransitionImageLayoutEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "transitionCount", "uint32_t", args.transitionCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pTransitions", args.pTransitions, "const VkHostImageLayoutTransitionInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pTransitions", &args.pTransitions, "const VkHostImageLayoutTransitionInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15542,8 +15467,8 @@ void VulkanSqliteConsumer::Process_vkGetImageSubresourceLayout2EXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "image", "VkImage", args.image);
-    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", args.pSubresource, "const VkImageSubresource2*");
-    FieldToSqlite(statements, fieldInfo, 4, "pLayout", args.pLayout, "VkSubresourceLayout2*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSubresource", &args.pSubresource, "const VkImageSubresource2*");
+    FieldToSqlite(statements, fieldInfo, 4, "pLayout", &args.pLayout, "VkSubresourceLayout2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -15557,7 +15482,7 @@ void VulkanSqliteConsumer::Process_vkReleaseSwapchainImagesEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pReleaseInfo", args.pReleaseInfo, "const VkReleaseSwapchainImagesInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pReleaseInfo", &args.pReleaseInfo, "const VkReleaseSwapchainImagesInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15571,8 +15496,8 @@ void VulkanSqliteConsumer::Process_vkGetGeneratedCommandsMemoryRequirementsNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkGeneratedCommandsMemoryRequirementsInfoNV*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkGeneratedCommandsMemoryRequirementsInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -15587,7 +15512,7 @@ void VulkanSqliteConsumer::Process_vkCmdPreprocessGeneratedCommandsNV(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pGeneratedCommandsInfo", args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGeneratedCommandsInfo", &args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15653,7 +15578,7 @@ void VulkanSqliteConsumer::Process_vkCmdExecuteGeneratedCommandsNV(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "isPreprocessed", "VkBool32", args.isPreprocessed);
-    FieldToSqlite(statements, fieldInfo, 3, "pGeneratedCommandsInfo", args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pGeneratedCommandsInfo", &args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15738,9 +15663,9 @@ void VulkanSqliteConsumer::Process_vkCreateIndirectCommandsLayoutNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkIndirectCommandsLayoutCreateInfoNV*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pIndirectCommandsLayout", args.pIndirectCommandsLayout, "VkIndirectCommandsLayoutNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkIndirectCommandsLayoutCreateInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pIndirectCommandsLayout", &args.pIndirectCommandsLayout, "VkIndirectCommandsLayoutNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15757,7 +15682,7 @@ void VulkanSqliteConsumer::Process_vkDestroyIndirectCommandsLayoutNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "indirectCommandsLayout", "VkIndirectCommandsLayoutNV", args.indirectCommandsLayout);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -15771,7 +15696,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetDepthBias2EXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDepthBiasInfo", args.pDepthBiasInfo, "const VkDepthBiasInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDepthBiasInfo", &args.pDepthBiasInfo, "const VkDepthBiasInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15808,7 +15733,7 @@ void VulkanSqliteConsumer::Process_vkGetDrmDisplayEXT(
         statements, fieldInfo, 2, "drmFd", "int32_t", args.drmFd);
     RecordField(
         statements, fieldInfo, 3, "connectorId", "uint32_t", args.connectorId);
-    FieldToSqlite(statements, fieldInfo, 4, "display", args.display, "VkDisplayKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "display", &args.display, "VkDisplayKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15822,9 +15747,9 @@ void VulkanSqliteConsumer::Process_vkCreatePrivateDataSlotEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkPrivateDataSlotCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pPrivateDataSlot", args.pPrivateDataSlot, "VkPrivateDataSlot*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkPrivateDataSlotCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pPrivateDataSlot", &args.pPrivateDataSlot, "VkPrivateDataSlot*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15841,7 +15766,7 @@ void VulkanSqliteConsumer::Process_vkDestroyPrivateDataSlotEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "privateDataSlot", "VkPrivateDataSlot", args.privateDataSlot);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -15898,7 +15823,7 @@ void VulkanSqliteConsumer::Process_vkQueueSetPerfHintQCOM(
 
     RecordField(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
-    FieldToSqlite(statements, fieldInfo, 2, "pPerfHintInfo", args.pPerfHintInfo, "const VkPerfHintInfoQCOM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPerfHintInfo", &args.pPerfHintInfo, "const VkPerfHintInfoQCOM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -15912,7 +15837,7 @@ void VulkanSqliteConsumer::Process_vkCmdDispatchTileQCOM(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDispatchTileInfo", args.pDispatchTileInfo, "const VkDispatchTileInfoQCOM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDispatchTileInfo", &args.pDispatchTileInfo, "const VkDispatchTileInfoQCOM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15928,7 +15853,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginPerTileExecutionQCOM(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPerTileBeginInfo", args.pPerTileBeginInfo, "const VkPerTileBeginInfoQCOM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPerTileBeginInfo", &args.pPerTileBeginInfo, "const VkPerTileBeginInfoQCOM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15944,7 +15869,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndPerTileExecutionQCOM(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPerTileEndInfo", args.pPerTileEndInfo, "const VkPerTileEndInfoQCOM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPerTileEndInfo", &args.pPerTileEndInfo, "const VkPerTileEndInfoQCOM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -15976,8 +15901,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceFaultInfoEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pFaultCounts", args.pFaultCounts, "VkDeviceFaultCountsEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pFaultInfo", args.pFaultInfo, "VkDeviceFaultInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pFaultCounts", &args.pFaultCounts, "VkDeviceFaultCountsEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pFaultInfo", &args.pFaultInfo, "VkDeviceFaultInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16009,7 +15934,7 @@ void VulkanSqliteConsumer::Process_vkGetWinrtDisplayNV(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "deviceRelativeId", "uint32_t", args.deviceRelativeId);
-    FieldToSqlite(statements, fieldInfo, 3, "pDisplay", args.pDisplay, "VkDisplayKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDisplay", &args.pDisplay, "VkDisplayKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16023,12 +15948,12 @@ void VulkanSqliteConsumer::Process_vkCreateDirectFBSurfaceEXT(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDirectFBSurfaceCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDirectFBSurfaceCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -16038,7 +15963,7 @@ void VulkanSqliteConsumer::Process_vkCreateDirectFBSurfaceEXT(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -16083,10 +16008,10 @@ void VulkanSqliteConsumer::Process_vkCmdSetVertexInputEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "vertexBindingDescriptionCount", "uint32_t", args.vertexBindingDescriptionCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pVertexBindingDescriptions", args.pVertexBindingDescriptions, "const VkVertexInputBindingDescription2EXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pVertexBindingDescriptions", &args.pVertexBindingDescriptions, "const VkVertexInputBindingDescription2EXT*");
     RecordField(
         statements, fieldInfo, 4, "vertexAttributeDescriptionCount", "uint32_t", args.vertexAttributeDescriptionCount);
-    FieldToSqlite(statements, fieldInfo, 5, "pVertexAttributeDescriptions", args.pVertexAttributeDescriptions, "const VkVertexInputAttributeDescription2EXT*");
+    FieldToSqlite(statements, fieldInfo, 5, "pVertexAttributeDescriptions", &args.pVertexAttributeDescriptions, "const VkVertexInputAttributeDescription2EXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -16101,7 +16026,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryZirconHandleFUCHSIA(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetZirconHandleInfo", args.pGetZirconHandleInfo, "const VkMemoryGetZirconHandleInfoFUCHSIA*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetZirconHandleInfo", &args.pGetZirconHandleInfo, "const VkMemoryGetZirconHandleInfoFUCHSIA*");
     FieldToSqlite(statements, fieldInfo, 3, "pZirconHandle", args.pZirconHandle, "zx_handle_t*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -16121,7 +16046,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryZirconHandlePropertiesFUCHSIA(
         statements, fieldInfo, 2, "handleType", "VkExternalMemoryHandleTypeFlagBits", args.handleType);
     RecordField(
         statements, fieldInfo, 3, "zirconHandle", "zx_handle_t", args.zirconHandle);
-    FieldToSqlite(statements, fieldInfo, 4, "pMemoryZirconHandleProperties", args.pMemoryZirconHandleProperties, "VkMemoryZirconHandlePropertiesFUCHSIA*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMemoryZirconHandleProperties", &args.pMemoryZirconHandleProperties, "VkMemoryZirconHandlePropertiesFUCHSIA*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16135,7 +16060,7 @@ void VulkanSqliteConsumer::Process_vkImportSemaphoreZirconHandleFUCHSIA(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pImportSemaphoreZirconHandleInfo", args.pImportSemaphoreZirconHandleInfo, "const VkImportSemaphoreZirconHandleInfoFUCHSIA*");
+    FieldToSqlite(statements, fieldInfo, 2, "pImportSemaphoreZirconHandleInfo", &args.pImportSemaphoreZirconHandleInfo, "const VkImportSemaphoreZirconHandleInfoFUCHSIA*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16150,7 +16075,7 @@ void VulkanSqliteConsumer::Process_vkGetSemaphoreZirconHandleFUCHSIA(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetZirconHandleInfo", args.pGetZirconHandleInfo, "const VkSemaphoreGetZirconHandleInfoFUCHSIA*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetZirconHandleInfo", &args.pGetZirconHandleInfo, "const VkSemaphoreGetZirconHandleInfoFUCHSIA*");
     FieldToSqlite(statements, fieldInfo, 3, "pZirconHandle", args.pZirconHandle, "zx_handle_t*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -16183,7 +16108,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryRemoteAddressNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pMemoryGetRemoteAddressInfo", args.pMemoryGetRemoteAddressInfo, "const VkMemoryGetRemoteAddressInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pMemoryGetRemoteAddressInfo", &args.pMemoryGetRemoteAddressInfo, "const VkMemoryGetRemoteAddressInfoNV*");
     FieldToSqlite(statements, fieldInfo, 3, "pAddress", args.pAddress, "VkRemoteAddressNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -16282,12 +16207,12 @@ void VulkanSqliteConsumer::Process_vkCreateScreenSurfaceQNX(
 
     RecordField(
         statements, fieldInfo, 1, "instance", "VkInstance", args.instance);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkScreenSurfaceCreateInfoQNX*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSurface", args.pSurface, "VkSurfaceKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkScreenSurfaceCreateInfoQNX*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    auto [surfaceValid, surface] = GetHandle(args.pSurface);
+    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
     if (!surfaceValid)
     {
         if (args.result == VK_SUCCESS)
@@ -16297,7 +16222,7 @@ void VulkanSqliteConsumer::Process_vkCreateScreenSurfaceQNX(
         return;
     }
 
-    auto [createInfoValid, createInfo] = GetMetaStructPointer(args.pCreateInfo);
+    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
         if (args.result == VK_SUCCESS)
@@ -16359,7 +16284,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawMultiEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "drawCount", "uint32_t", args.drawCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pVertexInfo", args.pVertexInfo, "const VkMultiDrawInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pVertexInfo", &args.pVertexInfo, "const VkMultiDrawInfoEXT*");
     RecordField(
         statements, fieldInfo, 4, "instanceCount", "uint32_t", args.instanceCount);
     RecordField(
@@ -16383,7 +16308,7 @@ void VulkanSqliteConsumer::Process_vkCmdDrawMultiIndexedEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "drawCount", "uint32_t", args.drawCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pIndexInfo", args.pIndexInfo, "const VkMultiDrawIndexedInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pIndexInfo", &args.pIndexInfo, "const VkMultiDrawIndexedInfoEXT*");
     RecordField(
         statements, fieldInfo, 4, "instanceCount", "uint32_t", args.instanceCount);
     RecordField(
@@ -16405,9 +16330,9 @@ void VulkanSqliteConsumer::Process_vkCreateMicromapEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkMicromapCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pMicromap", args.pMicromap, "VkMicromapEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkMicromapCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMicromap", &args.pMicromap, "VkMicromapEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16424,7 +16349,7 @@ void VulkanSqliteConsumer::Process_vkDestroyMicromapEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "micromap", "VkMicromapEXT", args.micromap);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -16441,7 +16366,7 @@ void VulkanSqliteConsumer::Process_vkCmdBuildMicromapsEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "infoCount", "uint32_t", args.infoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfos", args.pInfos, "const VkMicromapBuildInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfos", &args.pInfos, "const VkMicromapBuildInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -16461,7 +16386,7 @@ void VulkanSqliteConsumer::Process_vkBuildMicromapsEXT(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
     RecordField(
         statements, fieldInfo, 3, "infoCount", "uint32_t", args.infoCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pInfos", args.pInfos, "const VkMicromapBuildInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pInfos", &args.pInfos, "const VkMicromapBuildInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16478,7 +16403,7 @@ void VulkanSqliteConsumer::Process_vkCopyMicromapEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfo", args.pInfo, "const VkCopyMicromapInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkCopyMicromapInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16495,7 +16420,7 @@ void VulkanSqliteConsumer::Process_vkCopyMicromapToMemoryEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfo", args.pInfo, "const VkCopyMicromapToMemoryInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkCopyMicromapToMemoryInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16512,7 +16437,7 @@ void VulkanSqliteConsumer::Process_vkCopyMemoryToMicromapEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfo", args.pInfo, "const VkCopyMemoryToMicromapInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkCopyMemoryToMicromapInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -16529,7 +16454,7 @@ void VulkanSqliteConsumer::Process_vkWriteMicromapsPropertiesEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "micromapCount", "uint32_t", args.micromapCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pMicromaps", args.pMicromaps, "const VkMicromapEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMicromaps", &args.pMicromaps, "const VkMicromapEXT*");
     RecordField(
         statements, fieldInfo, 4, "queryType", "VkQueryType", args.queryType);
     RecordField(
@@ -16551,7 +16476,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMicromapEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkCopyMicromapInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkCopyMicromapInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -16615,7 +16540,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMicromapToMemoryEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkCopyMicromapToMemoryInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkCopyMicromapToMemoryInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -16679,7 +16604,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMemoryToMicromapEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkCopyMemoryToMicromapInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkCopyMemoryToMicromapInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -16745,7 +16670,7 @@ void VulkanSqliteConsumer::Process_vkCmdWriteMicromapsPropertiesEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "micromapCount", "uint32_t", args.micromapCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pMicromaps", args.pMicromaps, "const VkMicromapEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMicromaps", &args.pMicromaps, "const VkMicromapEXT*");
     RecordField(
         statements, fieldInfo, 4, "queryType", "VkQueryType", args.queryType);
     RecordField(
@@ -16815,7 +16740,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceMicromapCompatibilityEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pVersionInfo", args.pVersionInfo, "const VkMicromapVersionInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pVersionInfo", &args.pVersionInfo, "const VkMicromapVersionInfoEXT*");
     FieldToSqlite(statements, fieldInfo, 3, "pCompatibility", args.pCompatibility, "VkAccelerationStructureCompatibilityKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
@@ -16833,8 +16758,8 @@ void VulkanSqliteConsumer::Process_vkGetMicromapBuildSizesEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "buildType", "VkAccelerationStructureBuildTypeKHR", args.buildType);
-    FieldToSqlite(statements, fieldInfo, 3, "pBuildInfo", args.pBuildInfo, "const VkMicromapBuildInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSizeInfo", args.pSizeInfo, "VkMicromapBuildSizesInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBuildInfo", &args.pBuildInfo, "const VkMicromapBuildInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSizeInfo", &args.pSizeInfo, "VkMicromapBuildSizesInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17084,7 +17009,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetDispatchParametersARM(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDispatchParameters", args.pDispatchParameters, "const VkDispatchParametersARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDispatchParameters", &args.pDispatchParameters, "const VkDispatchParametersARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -17099,8 +17024,8 @@ void VulkanSqliteConsumer::Process_vkGetDescriptorSetLayoutHostMappingInfoVALVE(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pBindingReference", args.pBindingReference, "const VkDescriptorSetBindingReferenceVALVE*");
-    FieldToSqlite(statements, fieldInfo, 3, "pHostMapping", args.pHostMapping, "VkDescriptorSetLayoutHostMappingInfoVALVE*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBindingReference", &args.pBindingReference, "const VkDescriptorSetBindingReferenceVALVE*");
+    FieldToSqlite(statements, fieldInfo, 3, "pHostMapping", &args.pHostMapping, "VkDescriptorSetLayoutHostMappingInfoVALVE*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17131,8 +17056,8 @@ void VulkanSqliteConsumer::Process_vkGetPipelineIndirectMemoryRequirementsNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkComputePipelineCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkComputePipelineCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17214,7 +17139,7 @@ void VulkanSqliteConsumer::Process_vkGetPipelineIndirectDeviceAddressNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkPipelineIndirectDeviceAddressInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkPipelineIndirectDeviceAddressInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkDeviceAddress", args.result);
 }
@@ -17372,7 +17297,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetColorBlendEquationEXT(
         statements, fieldInfo, 2, "firstAttachment", "uint32_t", args.firstAttachment);
     RecordField(
         statements, fieldInfo, 3, "attachmentCount", "uint32_t", args.attachmentCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pColorBlendEquations", args.pColorBlendEquations, "const VkColorBlendEquationEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pColorBlendEquations", &args.pColorBlendEquations, "const VkColorBlendEquationEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -17514,7 +17439,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetColorBlendAdvancedEXT(
         statements, fieldInfo, 2, "firstAttachment", "uint32_t", args.firstAttachment);
     RecordField(
         statements, fieldInfo, 3, "attachmentCount", "uint32_t", args.attachmentCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pColorBlendAdvanced", args.pColorBlendAdvanced, "const VkColorBlendAdvancedEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pColorBlendAdvanced", &args.pColorBlendAdvanced, "const VkColorBlendAdvancedEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -17619,7 +17544,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetViewportSwizzleNV(
         statements, fieldInfo, 2, "firstViewport", "uint32_t", args.firstViewport);
     RecordField(
         statements, fieldInfo, 3, "viewportCount", "uint32_t", args.viewportCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pViewportSwizzles", args.pViewportSwizzles, "const VkViewportSwizzleNV*");
+    FieldToSqlite(statements, fieldInfo, 4, "pViewportSwizzles", &args.pViewportSwizzles, "const VkViewportSwizzleNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -17771,9 +17696,9 @@ void VulkanSqliteConsumer::Process_vkCreateTensorARM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkTensorCreateInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pTensor", args.pTensor, "VkTensorARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkTensorCreateInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pTensor", &args.pTensor, "VkTensorARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -17790,7 +17715,7 @@ void VulkanSqliteConsumer::Process_vkDestroyTensorARM(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "tensor", "VkTensorARM", args.tensor);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17805,9 +17730,9 @@ void VulkanSqliteConsumer::Process_vkCreateTensorViewARM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkTensorViewCreateInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pView", args.pView, "VkTensorViewARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkTensorViewCreateInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pView", &args.pView, "VkTensorViewARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -17824,7 +17749,7 @@ void VulkanSqliteConsumer::Process_vkDestroyTensorViewARM(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "tensorView", "VkTensorViewARM", args.tensorView);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17839,8 +17764,8 @@ void VulkanSqliteConsumer::Process_vkGetTensorMemoryRequirementsARM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkTensorMemoryRequirementsInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkTensorMemoryRequirementsInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17857,7 +17782,7 @@ void VulkanSqliteConsumer::Process_vkBindTensorMemoryARM(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", args.pBindInfos, "const VkBindTensorMemoryInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", &args.pBindInfos, "const VkBindTensorMemoryInfoARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -17872,8 +17797,8 @@ void VulkanSqliteConsumer::Process_vkGetDeviceTensorMemoryRequirementsARM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDeviceTensorMemoryRequirementsARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDeviceTensorMemoryRequirementsARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17888,7 +17813,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyTensorARM(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pCopyTensorInfo", args.pCopyTensorInfo, "const VkCopyTensorInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCopyTensorInfo", &args.pCopyTensorInfo, "const VkCopyTensorInfoARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -17904,42 +17829,10 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalTensorPropertiesAR
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pExternalTensorInfo", args.pExternalTensorInfo, "const VkPhysicalDeviceExternalTensorInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pExternalTensorProperties", args.pExternalTensorProperties, "VkExternalTensorPropertiesARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pExternalTensorInfo", &args.pExternalTensorInfo, "const VkPhysicalDeviceExternalTensorInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExternalTensorProperties", &args.pExternalTensorProperties, "VkExternalTensorPropertiesARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
-}
-
-void VulkanSqliteConsumer::Process_vkGetTensorOpaqueCaptureDescriptorDataARM(
-    const ApiCallInfo&                          call_info,
-    args::GetTensorOpaqueCaptureDescriptorDataARM& args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkGetTensorOpaqueCaptureDescriptorDataARM");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    RecordField(
-        statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkTensorCaptureDescriptorDataInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pData", args.pData, "void*");
-
-    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-}
-
-void VulkanSqliteConsumer::Process_vkGetTensorViewOpaqueCaptureDescriptorDataARM(
-    const ApiCallInfo&                          call_info,
-    args::GetTensorViewOpaqueCaptureDescriptorDataARM& args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkGetTensorViewOpaqueCaptureDescriptorDataARM");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    RecordField(
-        statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkTensorViewCaptureDescriptorDataInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pData", args.pData, "void*");
-
-    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
 void VulkanSqliteConsumer::Process_vkGetShaderModuleIdentifierEXT(
     const ApiCallInfo&                          call_info,
@@ -17953,7 +17846,7 @@ void VulkanSqliteConsumer::Process_vkGetShaderModuleIdentifierEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "shaderModule", "VkShaderModule", args.shaderModule);
-    FieldToSqlite(statements, fieldInfo, 3, "pIdentifier", args.pIdentifier, "VkShaderModuleIdentifierEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pIdentifier", &args.pIdentifier, "VkShaderModuleIdentifierEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17968,8 +17861,8 @@ void VulkanSqliteConsumer::Process_vkGetShaderModuleCreateInfoIdentifierEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkShaderModuleCreateInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pIdentifier", args.pIdentifier, "VkShaderModuleIdentifierEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkShaderModuleCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pIdentifier", &args.pIdentifier, "VkShaderModuleIdentifierEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -17983,9 +17876,9 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceOpticalFlowImageFormatsNV(
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pOpticalFlowImageFormatInfo", args.pOpticalFlowImageFormatInfo, "const VkOpticalFlowImageFormatInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pOpticalFlowImageFormatInfo", &args.pOpticalFlowImageFormatInfo, "const VkOpticalFlowImageFormatInfoNV*");
     FieldToSqlite(statements, fieldInfo, 3, "pFormatCount", args.pFormatCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pImageFormatProperties", args.pImageFormatProperties, "VkOpticalFlowImageFormatPropertiesNV*");
+    FieldToSqlite(statements, fieldInfo, 4, "pImageFormatProperties", &args.pImageFormatProperties, "VkOpticalFlowImageFormatPropertiesNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18000,9 +17893,9 @@ void VulkanSqliteConsumer::Process_vkCreateOpticalFlowSessionNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkOpticalFlowSessionCreateInfoNV*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSession", args.pSession, "VkOpticalFlowSessionNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkOpticalFlowSessionCreateInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSession", &args.pSession, "VkOpticalFlowSessionNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18019,7 +17912,7 @@ void VulkanSqliteConsumer::Process_vkDestroyOpticalFlowSessionNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "session", "VkOpticalFlowSessionNV", args.session);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18058,7 +17951,7 @@ void VulkanSqliteConsumer::Process_vkCmdOpticalFlowExecuteNV(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "session", "VkOpticalFlowSessionNV", args.session);
-    FieldToSqlite(statements, fieldInfo, 3, "pExecuteInfo", args.pExecuteInfo, "const VkOpticalFlowExecuteInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pExecuteInfo", &args.pExecuteInfo, "const VkOpticalFlowExecuteInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18073,7 +17966,7 @@ void VulkanSqliteConsumer::Process_vkAntiLagUpdateAMD(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pData", args.pData, "const VkAntiLagDataAMD*");
+    FieldToSqlite(statements, fieldInfo, 2, "pData", &args.pData, "const VkAntiLagDataAMD*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18089,9 +17982,9 @@ void VulkanSqliteConsumer::Process_vkCreateShadersEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "createInfoCount", "uint32_t", args.createInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pCreateInfos", args.pCreateInfos, "const VkShaderCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 5, "pShaders", args.pShaders, "VkShaderEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pCreateInfos", &args.pCreateInfos, "const VkShaderCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 5, "pShaders", &args.pShaders, "VkShaderEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18108,7 +18001,7 @@ void VulkanSqliteConsumer::Process_vkDestroyShaderEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "shader", "VkShaderEXT", args.shader);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18144,12 +18037,12 @@ void VulkanSqliteConsumer::Process_vkCmdBindShadersEXT(
     RecordField(
         statements, fieldInfo, 2, "stageCount", "uint32_t", args.stageCount);
     FieldToSqlite(statements, fieldInfo, 3, "pStages", args.pStages, "const VkShaderStageFlagBits*");
-    FieldToSqlite(statements, fieldInfo, 4, "pShaders", args.pShaders, "const VkShaderEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pShaders", &args.pShaders, "const VkShaderEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto [shadersValid, shaders, shadersCount] = GetHandleArray(args.pShaders);
-    auto [stagesValid, stages, stagesCount] = GetPointerArray(args.pStages);
+    auto [shadersValid, shaders, shadersCount] = GetHandleArray(&args.pShaders);
+    auto [stagesValid, stages, stagesCount] = GetPointerArray(&args.pStages);
     if (!stagesValid)
     {
         GFXRECON_SQLITE_LOG_WARNING("Failed to bind shader objects, invalid pStages");
@@ -18280,7 +18173,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetDepthClampRangeEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "depthClampMode", "VkDepthClampModeEXT", args.depthClampMode);
-    FieldToSqlite(statements, fieldInfo, 3, "pDepthClampRange", args.pDepthClampRange, "const VkDepthClampRangeEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pDepthClampRange", &args.pDepthClampRange, "const VkDepthClampRangeEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18298,7 +18191,7 @@ void VulkanSqliteConsumer::Process_vkGetFramebufferTilePropertiesQCOM(
     RecordField(
         statements, fieldInfo, 2, "framebuffer", "VkFramebuffer", args.framebuffer);
     FieldToSqlite(statements, fieldInfo, 3, "pPropertiesCount", args.pPropertiesCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkTilePropertiesQCOM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkTilePropertiesQCOM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18313,8 +18206,8 @@ void VulkanSqliteConsumer::Process_vkGetDynamicRenderingTilePropertiesQCOM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderingInfo", args.pRenderingInfo, "const VkRenderingInfo*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkTilePropertiesQCOM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderingInfo", &args.pRenderingInfo, "const VkRenderingInfo*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkTilePropertiesQCOM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18329,7 +18222,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceCooperativeVectorPropertie
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkCooperativeVectorPropertiesNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkCooperativeVectorPropertiesNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18344,7 +18237,7 @@ void VulkanSqliteConsumer::Process_vkConvertCooperativeVectorMatrixNV(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkConvertCooperativeVectorMatrixInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkConvertCooperativeVectorMatrixInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18361,7 +18254,7 @@ void VulkanSqliteConsumer::Process_vkCmdConvertCooperativeVectorMatrixNV(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "infoCount", "uint32_t", args.infoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfos", args.pInfos, "const VkConvertCooperativeVectorMatrixInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfos", &args.pInfos, "const VkConvertCooperativeVectorMatrixInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18378,7 +18271,7 @@ void VulkanSqliteConsumer::Process_vkSetLatencySleepModeNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pSleepModeInfo", args.pSleepModeInfo, "const VkLatencySleepModeInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSleepModeInfo", &args.pSleepModeInfo, "const VkLatencySleepModeInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18395,7 +18288,7 @@ void VulkanSqliteConsumer::Process_vkLatencySleepNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pSleepInfo", args.pSleepInfo, "const VkLatencySleepInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSleepInfo", &args.pSleepInfo, "const VkLatencySleepInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18412,7 +18305,7 @@ void VulkanSqliteConsumer::Process_vkSetLatencyMarkerNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pLatencyMarkerInfo", args.pLatencyMarkerInfo, "const VkSetLatencyMarkerInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pLatencyMarkerInfo", &args.pLatencyMarkerInfo, "const VkSetLatencyMarkerInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18429,7 +18322,7 @@ void VulkanSqliteConsumer::Process_vkGetLatencyTimingsNV(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "swapchain", "VkSwapchainKHR", args.swapchain);
-    FieldToSqlite(statements, fieldInfo, 3, "pLatencyMarkerInfo", args.pLatencyMarkerInfo, "VkGetLatencyMarkerInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pLatencyMarkerInfo", &args.pLatencyMarkerInfo, "VkGetLatencyMarkerInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18444,7 +18337,7 @@ void VulkanSqliteConsumer::Process_vkQueueNotifyOutOfBandNV(
 
     RecordField(
         statements, fieldInfo, 1, "queue", "VkQueue", args.queue);
-    FieldToSqlite(statements, fieldInfo, 2, "pQueueTypeInfo", args.pQueueTypeInfo, "const VkOutOfBandQueueTypeInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pQueueTypeInfo", &args.pQueueTypeInfo, "const VkOutOfBandQueueTypeInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18464,9 +18357,9 @@ void VulkanSqliteConsumer::Process_vkCreateDataGraphPipelinesARM(
         statements, fieldInfo, 3, "pipelineCache", "VkPipelineCache", args.pipelineCache);
     RecordField(
         statements, fieldInfo, 4, "createInfoCount", "uint32_t", args.createInfoCount);
-    FieldToSqlite(statements, fieldInfo, 5, "pCreateInfos", args.pCreateInfos, "const VkDataGraphPipelineCreateInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 6, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 7, "pPipelines", args.pPipelines, "VkPipeline*");
+    FieldToSqlite(statements, fieldInfo, 5, "pCreateInfos", &args.pCreateInfos, "const VkDataGraphPipelineCreateInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 6, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 7, "pPipelines", &args.pPipelines, "VkPipeline*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18481,9 +18374,9 @@ void VulkanSqliteConsumer::Process_vkCreateDataGraphPipelineSessionARM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkDataGraphPipelineSessionCreateInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pSession", args.pSession, "VkDataGraphPipelineSessionARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkDataGraphPipelineSessionCreateInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pSession", &args.pSession, "VkDataGraphPipelineSessionARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18498,9 +18391,9 @@ void VulkanSqliteConsumer::Process_vkGetDataGraphPipelineSessionBindPointRequire
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDataGraphPipelineSessionBindPointRequirementsInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDataGraphPipelineSessionBindPointRequirementsInfoARM*");
     FieldToSqlite(statements, fieldInfo, 3, "pBindPointRequirementCount", args.pBindPointRequirementCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pBindPointRequirements", args.pBindPointRequirements, "VkDataGraphPipelineSessionBindPointRequirementARM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pBindPointRequirements", &args.pBindPointRequirements, "VkDataGraphPipelineSessionBindPointRequirementARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18515,8 +18408,8 @@ void VulkanSqliteConsumer::Process_vkGetDataGraphPipelineSessionMemoryRequiremen
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkDataGraphPipelineSessionMemoryRequirementsInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkDataGraphPipelineSessionMemoryRequirementsInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18533,7 +18426,7 @@ void VulkanSqliteConsumer::Process_vkBindDataGraphPipelineSessionMemoryARM(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "bindInfoCount", "uint32_t", args.bindInfoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", args.pBindInfos, "const VkBindDataGraphPipelineSessionMemoryInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBindInfos", &args.pBindInfos, "const VkBindDataGraphPipelineSessionMemoryInfoARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18550,7 +18443,7 @@ void VulkanSqliteConsumer::Process_vkDestroyDataGraphPipelineSessionARM(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "session", "VkDataGraphPipelineSessionARM", args.session);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18567,7 +18460,7 @@ void VulkanSqliteConsumer::Process_vkCmdDispatchDataGraphARM(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "session", "VkDataGraphPipelineSessionARM", args.session);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfo", args.pInfo, "const VkDataGraphPipelineDispatchInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkDataGraphPipelineDispatchInfoARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18583,7 +18476,7 @@ void VulkanSqliteConsumer::Process_vkGetDataGraphPipelineAvailablePropertiesARM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pPipelineInfo", args.pPipelineInfo, "const VkDataGraphPipelineInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPipelineInfo", &args.pPipelineInfo, "const VkDataGraphPipelineInfoARM*");
     FieldToSqlite(statements, fieldInfo, 3, "pPropertiesCount", args.pPropertiesCount, "uint32_t*");
     FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkDataGraphPipelinePropertyARM*");
 
@@ -18600,10 +18493,10 @@ void VulkanSqliteConsumer::Process_vkGetDataGraphPipelinePropertiesARM(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pPipelineInfo", args.pPipelineInfo, "const VkDataGraphPipelineInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pPipelineInfo", &args.pPipelineInfo, "const VkDataGraphPipelineInfoARM*");
     RecordField(
         statements, fieldInfo, 3, "propertiesCount", "uint32_t", args.propertiesCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkDataGraphPipelinePropertyQueryResultARM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkDataGraphPipelinePropertyQueryResultARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18621,7 +18514,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyDataGraphProper
     RecordField(
         statements, fieldInfo, 2, "queueFamilyIndex", "uint32_t", args.queueFamilyIndex);
     FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyDataGraphPropertyCount", args.pQueueFamilyDataGraphPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pQueueFamilyDataGraphProperties", args.pQueueFamilyDataGraphProperties, "VkQueueFamilyDataGraphPropertiesARM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pQueueFamilyDataGraphProperties", &args.pQueueFamilyDataGraphProperties, "VkQueueFamilyDataGraphPropertiesARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18636,8 +18529,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyDataGraphProces
 
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
-    FieldToSqlite(statements, fieldInfo, 2, "pQueueFamilyDataGraphProcessingEngineInfo", args.pQueueFamilyDataGraphProcessingEngineInfo, "const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM*");
-    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyDataGraphProcessingEngineProperties", args.pQueueFamilyDataGraphProcessingEngineProperties, "VkQueueFamilyDataGraphProcessingEnginePropertiesARM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pQueueFamilyDataGraphProcessingEngineInfo", &args.pQueueFamilyDataGraphProcessingEngineInfo, "const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyDataGraphProcessingEngineProperties", &args.pQueueFamilyDataGraphProcessingEngineProperties, "VkQueueFamilyDataGraphProcessingEnginePropertiesARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18667,7 +18560,7 @@ void VulkanSqliteConsumer::Process_vkCmdBindTileMemoryQCOM(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pTileMemoryBindInfo", args.pTileMemoryBindInfo, "const VkTileMemoryBindInfoQCOM*");
+    FieldToSqlite(statements, fieldInfo, 2, "pTileMemoryBindInfo", &args.pTileMemoryBindInfo, "const VkTileMemoryBindInfoQCOM*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18682,7 +18575,7 @@ void VulkanSqliteConsumer::Process_vkCmdDecompressMemoryEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pDecompressMemoryInfoEXT", args.pDecompressMemoryInfoEXT, "const VkDecompressMemoryInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pDecompressMemoryInfoEXT", &args.pDecompressMemoryInfoEXT, "const VkDecompressMemoryInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18722,8 +18615,8 @@ void VulkanSqliteConsumer::Process_vkGetPartitionedAccelerationStructuresBuildSi
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkPartitionedAccelerationStructureInstancesInputNV*");
-    FieldToSqlite(statements, fieldInfo, 3, "pSizeInfo", args.pSizeInfo, "VkAccelerationStructureBuildSizesInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkPartitionedAccelerationStructureInstancesInputNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pSizeInfo", &args.pSizeInfo, "VkAccelerationStructureBuildSizesInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18738,7 +18631,7 @@ void VulkanSqliteConsumer::Process_vkCmdBuildPartitionedAccelerationStructuresNV
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBuildInfo", args.pBuildInfo, "const VkBuildPartitionedAccelerationStructureInfoNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBuildInfo", &args.pBuildInfo, "const VkBuildPartitionedAccelerationStructureInfoNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18753,8 +18646,8 @@ void VulkanSqliteConsumer::Process_vkGetGeneratedCommandsMemoryRequirementsEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkGeneratedCommandsMemoryRequirementsInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", args.pMemoryRequirements, "VkMemoryRequirements2*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkGeneratedCommandsMemoryRequirementsInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMemoryRequirements", &args.pMemoryRequirements, "VkMemoryRequirements2*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18769,7 +18662,7 @@ void VulkanSqliteConsumer::Process_vkCmdPreprocessGeneratedCommandsEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pGeneratedCommandsInfo", args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGeneratedCommandsInfo", &args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoEXT*");
     RecordField(
         statements, fieldInfo, 3, "stateCommandBuffer", "VkCommandBuffer", args.stateCommandBuffer);
 
@@ -18837,7 +18730,7 @@ void VulkanSqliteConsumer::Process_vkCmdExecuteGeneratedCommandsEXT(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "isPreprocessed", "VkBool32", args.isPreprocessed);
-    FieldToSqlite(statements, fieldInfo, 3, "pGeneratedCommandsInfo", args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pGeneratedCommandsInfo", &args.pGeneratedCommandsInfo, "const VkGeneratedCommandsInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -18901,9 +18794,9 @@ void VulkanSqliteConsumer::Process_vkCreateIndirectCommandsLayoutEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkIndirectCommandsLayoutCreateInfoEXT*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pIndirectCommandsLayout", args.pIndirectCommandsLayout, "VkIndirectCommandsLayoutEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkIndirectCommandsLayoutCreateInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pIndirectCommandsLayout", &args.pIndirectCommandsLayout, "VkIndirectCommandsLayoutEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -18920,7 +18813,7 @@ void VulkanSqliteConsumer::Process_vkDestroyIndirectCommandsLayoutEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "indirectCommandsLayout", "VkIndirectCommandsLayoutEXT", args.indirectCommandsLayout);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18937,7 +18830,7 @@ void VulkanSqliteConsumer::Process_vkDestroyIndirectExecutionSetEXT(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "indirectExecutionSet", "VkIndirectExecutionSetEXT", args.indirectExecutionSet);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18956,7 +18849,7 @@ void VulkanSqliteConsumer::Process_vkUpdateIndirectExecutionSetPipelineEXT(
         statements, fieldInfo, 2, "indirectExecutionSet", "VkIndirectExecutionSetEXT", args.indirectExecutionSet);
     RecordField(
         statements, fieldInfo, 3, "executionSetWriteCount", "uint32_t", args.executionSetWriteCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pExecutionSetWrites", args.pExecutionSetWrites, "const VkWriteIndirectExecutionSetPipelineEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pExecutionSetWrites", &args.pExecutionSetWrites, "const VkWriteIndirectExecutionSetPipelineEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18975,7 +18868,7 @@ void VulkanSqliteConsumer::Process_vkUpdateIndirectExecutionSetShaderEXT(
         statements, fieldInfo, 2, "indirectExecutionSet", "VkIndirectExecutionSetEXT", args.indirectExecutionSet);
     RecordField(
         statements, fieldInfo, 3, "executionSetWriteCount", "uint32_t", args.executionSetWriteCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pExecutionSetWrites", args.pExecutionSetWrites, "const VkWriteIndirectExecutionSetShaderEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pExecutionSetWrites", &args.pExecutionSetWrites, "const VkWriteIndirectExecutionSetShaderEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -18990,7 +18883,7 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceCooperativeMatrixFlexibleD
     RecordField(
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     FieldToSqlite(statements, fieldInfo, 2, "pPropertyCount", args.pPropertyCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 3, "pProperties", args.pProperties, "VkCooperativeMatrixFlexibleDimensionsPropertiesNV*");
+    FieldToSqlite(statements, fieldInfo, 3, "pProperties", &args.pProperties, "VkCooperativeMatrixFlexibleDimensionsPropertiesNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19004,7 +18897,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryMetalHandleEXT(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pGetMetalHandleInfo", args.pGetMetalHandleInfo, "const VkMemoryGetMetalHandleInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pGetMetalHandleInfo", &args.pGetMetalHandleInfo, "const VkMemoryGetMetalHandleInfoEXT*");
     FieldToSqlite(statements, fieldInfo, 3, "pHandle", args.pHandle, "void**");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
@@ -19023,7 +18916,7 @@ void VulkanSqliteConsumer::Process_vkGetMemoryMetalHandlePropertiesEXT(
     RecordField(
         statements, fieldInfo, 2, "handleType", "VkExternalMemoryHandleTypeFlagBits", args.handleType);
     FieldToSqlite(statements, fieldInfo, 3, "pHandle", args.pHandle, "const void*");
-    FieldToSqlite(statements, fieldInfo, 4, "pMemoryMetalHandleProperties", args.pMemoryMetalHandleProperties, "VkMemoryMetalHandlePropertiesEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pMemoryMetalHandleProperties", &args.pMemoryMetalHandleProperties, "VkMemoryMetalHandlePropertiesEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19040,8 +18933,8 @@ void VulkanSqliteConsumer::Process_vkEnumeratePhysicalDeviceQueueFamilyPerforman
     RecordField(
         statements, fieldInfo, 2, "queueFamilyIndex", "uint32_t", args.queueFamilyIndex);
     FieldToSqlite(statements, fieldInfo, 3, "pCounterCount", args.pCounterCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 4, "pCounters", args.pCounters, "VkPerformanceCounterARM*");
-    FieldToSqlite(statements, fieldInfo, 5, "pCounterDescriptions", args.pCounterDescriptions, "VkPerformanceCounterDescriptionARM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pCounters", &args.pCounters, "VkPerformanceCounterARM*");
+    FieldToSqlite(statements, fieldInfo, 5, "pCounterDescriptions", &args.pCounterDescriptions, "VkPerformanceCounterDescriptionARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19055,7 +18948,7 @@ void VulkanSqliteConsumer::Process_vkCmdEndRendering2EXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRenderingEndInfo", args.pRenderingEndInfo, "const VkRenderingEndInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRenderingEndInfo", &args.pRenderingEndInfo, "const VkRenderingEndInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -19070,7 +18963,7 @@ void VulkanSqliteConsumer::Process_vkCmdBeginCustomResolveEXT(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pBeginCustomResolveInfo", args.pBeginCustomResolveInfo, "const VkBeginCustomResolveInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 2, "pBeginCustomResolveInfo", &args.pBeginCustomResolveInfo, "const VkBeginCustomResolveInfoEXT*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -19087,10 +18980,10 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyDataGraphOptica
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "queueFamilyIndex", "uint32_t", args.queueFamilyIndex);
-    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyDataGraphProperties", args.pQueueFamilyDataGraphProperties, "const VkQueueFamilyDataGraphPropertiesARM*");
-    FieldToSqlite(statements, fieldInfo, 4, "pOpticalFlowImageFormatInfo", args.pOpticalFlowImageFormatInfo, "const VkDataGraphOpticalFlowImageFormatInfoARM*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyDataGraphProperties", &args.pQueueFamilyDataGraphProperties, "const VkQueueFamilyDataGraphPropertiesARM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pOpticalFlowImageFormatInfo", &args.pOpticalFlowImageFormatInfo, "const VkDataGraphOpticalFlowImageFormatInfoARM*");
     FieldToSqlite(statements, fieldInfo, 5, "pFormatCount", args.pFormatCount, "uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 6, "pImageFormatProperties", args.pImageFormatProperties, "VkDataGraphOpticalFlowImageFormatPropertiesARM*");
+    FieldToSqlite(statements, fieldInfo, 6, "pImageFormatProperties", &args.pImageFormatProperties, "VkDataGraphOpticalFlowImageFormatPropertiesARM*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19107,8 +19000,8 @@ void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceQueueFamilyDataGraphEngine
         statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
     RecordField(
         statements, fieldInfo, 2, "queueFamilyIndex", "uint32_t", args.queueFamilyIndex);
-    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyDataGraphProperties", args.pQueueFamilyDataGraphProperties, "const VkQueueFamilyDataGraphPropertiesARM*");
-    FieldToSqlite(statements, fieldInfo, 4, "pProperties", args.pProperties, "VkBaseOutStructure*");
+    FieldToSqlite(statements, fieldInfo, 3, "pQueueFamilyDataGraphProperties", &args.pQueueFamilyDataGraphProperties, "const VkQueueFamilyDataGraphPropertiesARM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkBaseOutStructure*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19122,7 +19015,7 @@ void VulkanSqliteConsumer::Process_vkCmdSetComputeOccupancyPriorityNV(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pParameters", args.pParameters, "const VkComputeOccupancyPriorityParametersNV*");
+    FieldToSqlite(statements, fieldInfo, 2, "pParameters", &args.pParameters, "const VkComputeOccupancyPriorityParametersNV*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -19153,9 +19046,9 @@ void VulkanSqliteConsumer::Process_vkCreateAccelerationStructureKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", args.pCreateInfo, "const VkAccelerationStructureCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 4, "pAccelerationStructure", args.pAccelerationStructure, "VkAccelerationStructureKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pCreateInfo", &args.pCreateInfo, "const VkAccelerationStructureCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 4, "pAccelerationStructure", &args.pAccelerationStructure, "VkAccelerationStructureKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19172,7 +19065,7 @@ void VulkanSqliteConsumer::Process_vkDestroyAccelerationStructureKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "accelerationStructure", "VkAccelerationStructureKHR", args.accelerationStructure);
-    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -19189,8 +19082,8 @@ void VulkanSqliteConsumer::Process_vkCmdBuildAccelerationStructuresKHR(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "infoCount", "uint32_t", args.infoCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfos", args.pInfos, "const VkAccelerationStructureBuildGeometryInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 4, "ppBuildRangeInfos", args.ppBuildRangeInfos, "const VkAccelerationStructureBuildRangeInfoKHR* const*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfos", &args.pInfos, "const VkAccelerationStructureBuildGeometryInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "ppBuildRangeInfos", &args.ppBuildRangeInfos, "const VkAccelerationStructureBuildRangeInfoKHR* const*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -19210,8 +19103,8 @@ void VulkanSqliteConsumer::Process_vkBuildAccelerationStructuresKHR(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
     RecordField(
         statements, fieldInfo, 3, "infoCount", "uint32_t", args.infoCount);
-    FieldToSqlite(statements, fieldInfo, 4, "pInfos", args.pInfos, "const VkAccelerationStructureBuildGeometryInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 5, "ppBuildRangeInfos", args.ppBuildRangeInfos, "const VkAccelerationStructureBuildRangeInfoKHR* const*");
+    FieldToSqlite(statements, fieldInfo, 4, "pInfos", &args.pInfos, "const VkAccelerationStructureBuildGeometryInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 5, "ppBuildRangeInfos", &args.ppBuildRangeInfos, "const VkAccelerationStructureBuildRangeInfoKHR* const*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19228,7 +19121,7 @@ void VulkanSqliteConsumer::Process_vkCopyAccelerationStructureKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfo", args.pInfo, "const VkCopyAccelerationStructureInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkCopyAccelerationStructureInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19245,7 +19138,7 @@ void VulkanSqliteConsumer::Process_vkCopyAccelerationStructureToMemoryKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfo", args.pInfo, "const VkCopyAccelerationStructureToMemoryInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkCopyAccelerationStructureToMemoryInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19262,7 +19155,7 @@ void VulkanSqliteConsumer::Process_vkCopyMemoryToAccelerationStructureKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
-    FieldToSqlite(statements, fieldInfo, 3, "pInfo", args.pInfo, "const VkCopyMemoryToAccelerationStructureInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkCopyMemoryToAccelerationStructureInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19279,7 +19172,7 @@ void VulkanSqliteConsumer::Process_vkWriteAccelerationStructuresPropertiesKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "accelerationStructureCount", "uint32_t", args.accelerationStructureCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pAccelerationStructures", args.pAccelerationStructures, "const VkAccelerationStructureKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAccelerationStructures", &args.pAccelerationStructures, "const VkAccelerationStructureKHR*");
     RecordField(
         statements, fieldInfo, 4, "queryType", "VkQueryType", args.queryType);
     RecordField(
@@ -19301,7 +19194,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyAccelerationStructureKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkCopyAccelerationStructureInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkCopyAccelerationStructureInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -19317,7 +19210,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyAccelerationStructureToMemoryKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkCopyAccelerationStructureToMemoryInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkCopyAccelerationStructureToMemoryInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -19381,7 +19274,7 @@ void VulkanSqliteConsumer::Process_vkCmdCopyMemoryToAccelerationStructureKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkCopyMemoryToAccelerationStructureInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkCopyMemoryToAccelerationStructureInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
@@ -19445,7 +19338,7 @@ void VulkanSqliteConsumer::Process_vkGetAccelerationStructureDeviceAddressKHR(
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pInfo", args.pInfo, "const VkAccelerationStructureDeviceAddressInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pInfo", &args.pInfo, "const VkAccelerationStructureDeviceAddressInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkDeviceAddress", args.result);
 }
@@ -19462,7 +19355,7 @@ void VulkanSqliteConsumer::Process_vkCmdWriteAccelerationStructuresPropertiesKHR
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
         statements, fieldInfo, 2, "accelerationStructureCount", "uint32_t", args.accelerationStructureCount);
-    FieldToSqlite(statements, fieldInfo, 3, "pAccelerationStructures", args.pAccelerationStructures, "const VkAccelerationStructureKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pAccelerationStructures", &args.pAccelerationStructures, "const VkAccelerationStructureKHR*");
     RecordField(
         statements, fieldInfo, 4, "queryType", "VkQueryType", args.queryType);
     RecordField(
@@ -19532,7 +19425,7 @@ void VulkanSqliteConsumer::Process_vkGetDeviceAccelerationStructureCompatibility
 
     RecordField(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
-    FieldToSqlite(statements, fieldInfo, 2, "pVersionInfo", args.pVersionInfo, "const VkAccelerationStructureVersionInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pVersionInfo", &args.pVersionInfo, "const VkAccelerationStructureVersionInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 3, "pCompatibility", args.pCompatibility, "VkAccelerationStructureCompatibilityKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
@@ -19550,9 +19443,9 @@ void VulkanSqliteConsumer::Process_vkGetAccelerationStructureBuildSizesKHR(
         statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(
         statements, fieldInfo, 2, "buildType", "VkAccelerationStructureBuildTypeKHR", args.buildType);
-    FieldToSqlite(statements, fieldInfo, 3, "pBuildInfo", args.pBuildInfo, "const VkAccelerationStructureBuildGeometryInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pBuildInfo", &args.pBuildInfo, "const VkAccelerationStructureBuildGeometryInfoKHR*");
     FieldToSqlite(statements, fieldInfo, 4, "pMaxPrimitiveCounts", args.pMaxPrimitiveCounts, "const uint32_t*");
-    FieldToSqlite(statements, fieldInfo, 5, "pSizeInfo", args.pSizeInfo, "VkAccelerationStructureBuildSizesInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 5, "pSizeInfo", &args.pSizeInfo, "VkAccelerationStructureBuildSizesInfoKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 }
@@ -19566,10 +19459,10 @@ void VulkanSqliteConsumer::Process_vkCmdTraceRaysKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRaygenShaderBindingTable", args.pRaygenShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMissShaderBindingTable", args.pMissShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
-    FieldToSqlite(statements, fieldInfo, 4, "pHitShaderBindingTable", args.pHitShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
-    FieldToSqlite(statements, fieldInfo, 5, "pCallableShaderBindingTable", args.pCallableShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRaygenShaderBindingTable", &args.pRaygenShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMissShaderBindingTable", &args.pMissShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pHitShaderBindingTable", &args.pHitShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 5, "pCallableShaderBindingTable", &args.pCallableShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
     RecordField(
         statements, fieldInfo, 6, "width", "uint32_t", args.width);
     RecordField(
@@ -19607,9 +19500,9 @@ void VulkanSqliteConsumer::Process_vkCreateRayTracingPipelinesKHR(
         statements, fieldInfo, 3, "pipelineCache", "VkPipelineCache", args.pipelineCache);
     RecordField(
         statements, fieldInfo, 4, "createInfoCount", "uint32_t", args.createInfoCount);
-    FieldToSqlite(statements, fieldInfo, 5, "pCreateInfos", args.pCreateInfos, "const VkRayTracingPipelineCreateInfoKHR*");
-    FieldToSqlite(statements, fieldInfo, 6, "pAllocator", args.pAllocator, "const VkAllocationCallbacks*");
-    FieldToSqlite(statements, fieldInfo, 7, "pPipelines", args.pPipelines, "VkPipeline*");
+    FieldToSqlite(statements, fieldInfo, 5, "pCreateInfos", &args.pCreateInfos, "const VkRayTracingPipelineCreateInfoKHR*");
+    FieldToSqlite(statements, fieldInfo, 6, "pAllocator", &args.pAllocator, "const VkAllocationCallbacks*");
+    FieldToSqlite(statements, fieldInfo, 7, "pPipelines", &args.pPipelines, "VkPipeline*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
@@ -19647,10 +19540,10 @@ void VulkanSqliteConsumer::Process_vkCmdTraceRaysIndirectKHR(
 
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pRaygenShaderBindingTable", args.pRaygenShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
-    FieldToSqlite(statements, fieldInfo, 3, "pMissShaderBindingTable", args.pMissShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
-    FieldToSqlite(statements, fieldInfo, 4, "pHitShaderBindingTable", args.pHitShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
-    FieldToSqlite(statements, fieldInfo, 5, "pCallableShaderBindingTable", args.pCallableShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 2, "pRaygenShaderBindingTable", &args.pRaygenShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 3, "pMissShaderBindingTable", &args.pMissShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 4, "pHitShaderBindingTable", &args.pHitShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
+    FieldToSqlite(statements, fieldInfo, 5, "pCallableShaderBindingTable", &args.pCallableShaderBindingTable, "const VkStridedDeviceAddressRegionKHR*");
     RecordField(
         statements, fieldInfo, 6, "indirectDeviceAddress", "VkDeviceAddress", args.indirectDeviceAddress);
 

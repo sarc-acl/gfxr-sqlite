@@ -196,17 +196,23 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         args::CmdPushDescriptorSetWithTemplateKHR& args
     ) override;
 
-    // TODO: missing from upstream GFXR (and thus never will be called)
+    // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
+    // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
+    // (its normal auto-generated logging body) to hook into.
     virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
         const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
     );
 
-    // TODO: missing from upstream GFXR (and thus never will be called)
+    // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
+    // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
+    // (its normal auto-generated logging body) to hook into.
     virtual void Process_vkBuildAccelerationStructuresKHR(
         const ApiCallInfo& call_info, args::BuildAccelerationStructuresKHR& args
     );
 
-    // TODO: missing from upstream GFXR (and thus never will be called)
+    // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
+    // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
+    // (its normal auto-generated logging body) to hook into.
     virtual void Process_vkCopyAccelerationStructureKHR(
         const ApiCallInfo& call_info, args::CopyAccelerationStructureKHR& args
     );
