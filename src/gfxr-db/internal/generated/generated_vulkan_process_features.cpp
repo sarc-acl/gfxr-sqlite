@@ -984,6 +984,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(header);
+                if(pFeatures->videoEncodeFeedback2) { enabledFeatureNames.emplace_back("videoEncodeFeedback2"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceDepthClampZeroOneFeaturesKHR>():
             {
                 // clang-format off
@@ -1010,6 +1018,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceOpacityMicromapFeaturesKHR>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceOpacityMicromapFeaturesKHR*>(header);
+                if(pFeatures->micromap) { enabledFeatureNames.emplace_back("micromap"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance10FeaturesKHR>():
             {
                 // clang-format off
@@ -1023,6 +1039,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format off
                 const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(header);
                 if(pFeatures->maintenance11) { enabledFeatureNames.emplace_back("maintenance11"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceExtendedFlagsFeaturesKHR>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(header);
+                if(pFeatures->extendedFlags) { enabledFeatureNames.emplace_back("extendedFlags"); }
                 // clang-format on
                 break;
             }
@@ -1076,6 +1100,17 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceGpaFeaturesAMD>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceGpaFeaturesAMD*>(header);
+                if(pFeatures->perfCounters) { enabledFeatureNames.emplace_back("perfCounters"); }
+                if(pFeatures->streamingPerfCounters) { enabledFeatureNames.emplace_back("streamingPerfCounters"); }
+                if(pFeatures->sqThreadTracing) { enabledFeatureNames.emplace_back("sqThreadTracing"); }
+                if(pFeatures->clockModes) { enabledFeatureNames.emplace_back("clockModes"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT>():
             {
                 // clang-format off
@@ -1114,6 +1149,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format off
                 const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM*>(header);
                 if(pFeatures->cooperativeMatrixConversion) { enabledFeatureNames.emplace_back("cooperativeMatrixConversion"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM*>(header);
+                if(pFeatures->elapsedTimerQuery) { enabledFeatureNames.emplace_back("elapsedTimerQuery"); }
                 // clang-format on
                 break;
             }
@@ -1394,6 +1437,32 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format off
                 const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(header);
                 if(pFeatures->queuePerfHint) { enabledFeatureNames.emplace_back("queuePerfHint"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceImageProcessing3FeaturesQCOM>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageProcessing3FeaturesQCOM*>(header);
+                if(pFeatures->imageGatherLinear) { enabledFeatureNames.emplace_back("imageGatherLinear"); }
+                if(pFeatures->imageGatherExtendedModes) { enabledFeatureNames.emplace_back("imageGatherExtendedModes"); }
+                if(pFeatures->blockMatchExtendedClampToEdge) { enabledFeatureNames.emplace_back("blockMatchExtendedClampToEdge"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM*>(header);
+                if(pFeatures->shaderMultipleWaitQueues) { enabledFeatureNames.emplace_back("shaderMultipleWaitQueues"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSplitBarrierFeaturesEXT>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderSplitBarrierFeaturesEXT*>(header);
+                if(pFeatures->shaderSplitBarrier) { enabledFeatureNames.emplace_back("shaderSplitBarrier"); }
                 // clang-format on
                 break;
             }
@@ -1877,6 +1946,27 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceTensorFeaturesARM>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTensorFeaturesARM*>(header);
+                if(pFeatures->tensorNonPacked) { enabledFeatureNames.emplace_back("tensorNonPacked"); }
+                if(pFeatures->shaderTensorAccess) { enabledFeatureNames.emplace_back("shaderTensorAccess"); }
+                if(pFeatures->shaderStorageTensorArrayDynamicIndexing) { enabledFeatureNames.emplace_back("shaderStorageTensorArrayDynamicIndexing"); }
+                if(pFeatures->shaderStorageTensorArrayNonUniformIndexing) { enabledFeatureNames.emplace_back("shaderStorageTensorArrayNonUniformIndexing"); }
+                if(pFeatures->descriptorBindingStorageTensorUpdateAfterBind) { enabledFeatureNames.emplace_back("descriptorBindingStorageTensorUpdateAfterBind"); }
+                if(pFeatures->tensors) { enabledFeatureNames.emplace_back("tensors"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceDescriptorBufferTensorFeaturesARM>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDescriptorBufferTensorFeaturesARM*>(header);
+                if(pFeatures->descriptorBufferTensorDescriptors) { enabledFeatureNames.emplace_back("descriptorBufferTensorDescriptors"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT>():
             {
                 // clang-format off
@@ -2267,6 +2357,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(header);
+                if(pFeatures->multisampledRenderToSwapchain) { enabledFeatureNames.emplace_back("multisampledRenderToSwapchain"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT>():
             {
                 // clang-format off
@@ -2296,6 +2394,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format off
                 const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(header);
                 if(pFeatures->dataGraphModel) { enabledFeatureNames.emplace_back("dataGraphModel"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(header);
+                if(pFeatures->dataGraphOpticalFlow) { enabledFeatureNames.emplace_back("dataGraphOpticalFlow"); }
                 // clang-format on
                 break;
             }
@@ -2339,6 +2445,17 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(header);
+                if(pFeatures->shaderFloat4) { enabledFeatureNames.emplace_back("shaderFloat4"); }
+                if(pFeatures->shaderFloat6) { enabledFeatureNames.emplace_back("shaderFloat6"); }
+                if(pFeatures->shaderFloat8UnsignedE8M0) { enabledFeatureNames.emplace_back("shaderFloat8UnsignedE8M0"); }
+                if(pFeatures->shaderMXInt8) { enabledFeatureNames.emplace_back("shaderMXInt8"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE>():
             {
                 // clang-format off
@@ -2371,6 +2488,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format off
                 const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(header);
                 if(pFeatures->primitiveRestartIndex) { enabledFeatureNames.emplace_back("primitiveRestartIndex"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(header);
+                if(pFeatures->cooperativeMatrixDecodeVector) { enabledFeatureNames.emplace_back("cooperativeMatrixDecodeVector"); }
                 // clang-format on
                 break;
             }
