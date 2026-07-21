@@ -34,6 +34,12 @@ namespace gfxrSqlite
     {
         return GFXR_DB_VERSION_STRING;
     }
+
+    // Encodes major/minor/patch into the single integer SQLite's PRAGMA user_version stores.
+    constexpr int versionNumber()
+    {
+        return (GFXR_DB_VERSION_MAJOR * 10000) + (GFXR_DB_VERSION_MINOR * 100) + GFXR_DB_VERSION_PATCH;
+    }
 } // namespace gfxrSqlite
 
 #endif // VERSION_H

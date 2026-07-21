@@ -26,12 +26,7 @@ using namespace util::platform;
 
 static void CreateCoreDataTables(sqlite3* db)
 {
-    ExecSQL(
-        db,
-        "CREATE TABLE dbSchemaVersion("
-        "   version TEXT UNIQUE NOT NULL PRIMARY KEY) WITHOUT ROWID, STRICT;"
-        "INSERT INTO dbSchemaVersion(version) VALUES('" GFXR_DB_VERSION_STRING "');"
-    );
+    ExecSQL(db, ("PRAGMA user_version = " + std::to_string(gfxrSqlite::versionNumber()) + ";").c_str());
 
     ExecSQL(
         db,
