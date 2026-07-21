@@ -7014,6 +7014,16 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     );
 }
 
+void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate(
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate(call_info, args);
+
+    PushDescriptorSetWithTemplate(args.commandBuffer, args.descriptorUpdateTemplate, args.layout, args.set, &args.pData);
+}
+
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplateKHR(
     const ApiCallInfo& call_info,
     args::CmdPushDescriptorSetWithTemplateKHR& args
@@ -7050,6 +7060,16 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate2(
         pushDescriptorSetWithTemplateInfo->decoded_value->set,
         &pushDescriptorSetWithTemplateInfo->pData
     );
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2(
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2(call_info, args);
+
+    PushDescriptorSetWithTemplate2(args.commandBuffer, &args.pPushDescriptorSetWithTemplateInfo);
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
@@ -9175,6 +9195,20 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildRangeInfo(
     }
 }
 
+void VulkanSqliteConsumerExt::Process_vkBuildAccelerationStructuresKHR(
+    const ApiCallInfo& call_info, args::BuildAccelerationStructuresKHR& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkBuildAccelerationStructuresKHR(call_info, args);
+
+    auto buildId = statements.InsertAccelerationStructureBuild(
+        args.device, args.deferredOperation, std::nullopt, this->block_index_
+    );
+
+    ProcessVkAccelerationStructureBuildGeometryInfo(buildId, &args.pInfos, &args.ppBuildRangeInfos);
+}
+
 void VulkanSqliteConsumerExt::Process_vkCmdBuildAccelerationStructuresKHR(
     const ApiCallInfo& call_info, args::CmdBuildAccelerationStructuresKHR& args
 )
@@ -9202,6 +9236,30 @@ void VulkanSqliteConsumerExt::ProcessVulkanBuildAccelerationStructuresCommand(
     auto buildId = statements.InsertAccelerationStructureBuild(device, std::nullopt, std::nullopt, this->block_index_);
 
     ProcessVkAccelerationStructureBuildGeometryInfo(buildId, pInfos, ppRangeInfos);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCopyAccelerationStructureKHR(
+    const ApiCallInfo& call_info, args::CopyAccelerationStructureKHR& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCopyAccelerationStructureKHR(call_info, args);
+
+    auto [infoValid, info] = GetMetaStructPointer(&args.pInfo);
+    if (infoValid)
+    {
+        statements.InsertAccelerationStructureCopy(
+            args.device,
+            args.deferredOperation,
+            std::nullopt,
+            info->src,
+            info->dst,
+            std::nullopt,
+            std::nullopt,
+            info->decoded_value->mode,
+            this->block_index_
+        );
+    }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCopyAccelerationStructureToMemoryKHR(

@@ -650,28 +650,23 @@ void VulkanSqliteConsumerBase::Process_vkUpdateDescriptorSetWithTemplateKHR(
 }
 
 void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate(
-    const ApiCallInfo& call_info,
-    format::HandleId commandBuffer,
-    format::HandleId descriptorUpdateTemplate,
-    format::HandleId layout,
-    uint32_t set,
-    DescriptorUpdateTemplateDecoder* pData
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate");
     statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
 
-    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", commandBuffer);
+    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
-        statements, fieldInfo, 2, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", descriptorUpdateTemplate
+        statements, fieldInfo, 2, "descriptorUpdateTemplate", "VkDescriptorUpdateTemplate", args.descriptorUpdateTemplate
     );
-    RecordField(statements, fieldInfo, 3, "layout", "VkPipelineLayout", layout);
-    RecordField(statements, fieldInfo, 4, "set", "uint32_t", set);
-    FieldToSqlite(statements, fieldInfo, 5, "pData", pData, "const void*");
+    RecordField(statements, fieldInfo, 3, "layout", "VkPipelineLayout", args.layout);
+    RecordField(statements, fieldInfo, 4, "set", "uint32_t", args.set);
+    FieldToSqlite(statements, fieldInfo, 5, "pData", &args.pData, "const void*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
-    UpdateCommandBufferCommands(call_info, commandBuffer);
+    UpdateCommandBufferCommands(call_info, args.commandBuffer);
 }
 
 void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplateKHR(
@@ -694,6 +689,62 @@ void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplateKHR(
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
+}
+
+void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate2(
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
+)
+{
+    FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
+    const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate2");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
+    FieldToSqlite(
+        statements,
+        fieldInfo,
+        2,
+        "pPushDescriptorSetWithTemplateInfo",
+        &args.pPushDescriptorSetWithTemplateInfo,
+        "const VkPushDescriptorSetWithTemplateInfo*"
+    );
+
+    statements.InsertApiEventReturns(this->block_index_, "void", "void");
+    UpdateCommandBufferCommands(call_info, args.commandBuffer);
+}
+
+void VulkanSqliteConsumerBase::Process_vkBuildAccelerationStructuresKHR(
+    const ApiCallInfo& call_info, args::BuildAccelerationStructuresKHR& args
+)
+{
+    FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
+    const auto functionId = statements.InsertFunctionName("vkBuildAccelerationStructuresKHR");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
+    RecordField(statements, fieldInfo, 3, "infoCount", "uint32_t", args.infoCount);
+    FieldToSqlite(statements, fieldInfo, 4, "pInfos", &args.pInfos, "const VkAccelerationStructureBuildGeometryInfoKHR*");
+    FieldToSqlite(
+        statements, fieldInfo, 5, "ppBuildRangeInfos", &args.ppBuildRangeInfos, "const VkAccelerationStructureBuildRangeInfoKHR* const*"
+    );
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
+}
+
+void VulkanSqliteConsumerBase::Process_vkCopyAccelerationStructureKHR(
+    const ApiCallInfo& call_info, args::CopyAccelerationStructureKHR& args
+)
+{
+    FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
+    const auto functionId = statements.InsertFunctionName("vkCopyAccelerationStructureKHR");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
+    FieldToSqlite(statements, fieldInfo, 3, "pInfo", &args.pInfo, "const VkCopyAccelerationStructureInfoKHR*");
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
 }
 
 GFXRECON_END_NAMESPACE(decode)

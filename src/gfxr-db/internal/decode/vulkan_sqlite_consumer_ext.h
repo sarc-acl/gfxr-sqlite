@@ -238,7 +238,15 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     virtual void Process_vkCmdPushDescriptorSet2KHR(const ApiCallInfo& call_info, args::CmdPushDescriptorSet2KHR& args) override;
 
+    virtual void Process_vkCmdPushDescriptorSetWithTemplate(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate& args
+    ) override;
+
     virtual void Process_vkCmdPushDescriptorSetWithTemplateKHR(const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplateKHR& args) override;
+
+    virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
+    ) override;
 
     virtual void Process_vkCmdPushDescriptorSetWithTemplate2KHR(const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2KHR& args) override;
 
@@ -489,6 +497,10 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         const ApiCallInfo& call_info, args::DestroyAccelerationStructureNV& args
     ) override;
 
+    void Process_vkBuildAccelerationStructuresKHR(
+        const ApiCallInfo& call_info, args::BuildAccelerationStructuresKHR& args
+    ) override;
+
     void Process_vkCmdBuildAccelerationStructuresKHR(
         const ApiCallInfo& call_info, args::CmdBuildAccelerationStructuresKHR& args
     ) override;
@@ -498,6 +510,10 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         uint32_t infoCount,
         StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
         StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>* ppRangeInfos
+    ) override;
+
+    void Process_vkCopyAccelerationStructureKHR(
+        const ApiCallInfo& call_info, args::CopyAccelerationStructureKHR& args
     ) override;
 
     void Process_vkCopyAccelerationStructureToMemoryKHR(
