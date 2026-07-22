@@ -90,6 +90,15 @@ class VulkanSqliteConsumerHeaderGenerator(VulkanConsumerHeaderGenerator):
         # would involve storing function pointers in the database (and GFXR file), which doesn't make sense.
         self.APICALL_BLACKLIST.append('vkGetInstanceProcAddr')
         self.APICALL_BLACKLIST.append('vkGetDeviceProcAddr')
+        # Loader/layer-negotiation calls reporting per-machine capability info (available layers,
+        # extensions, API version). gfxreconstruct's own replay consumer re-queries the replay
+        # machine's real driver directly for these rather than replaying a recorded value (see
+        # vulkan_replay_consumer_base.cpp), so it doesn't generate an args:: struct for them either.
+        self.APICALL_BLACKLIST.append('vkEnumerateInstanceExtensionProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateDeviceExtensionProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateInstanceLayerProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateDeviceLayerProperties')
+        self.APICALL_BLACKLIST.append('vkEnumerateInstanceVersion')
         # Add the following to the blacklist due to custom implementations in vulkan_sqlite_consumer_base
         # Custom implementations are needed due to generated code using uint64_t or void* for pData,
         # while actual code uses DescriptorUpdateTemplateDecoder* instead.
@@ -102,12 +111,23 @@ class VulkanSqliteConsumerHeaderGenerator(VulkanConsumerHeaderGenerator):
         self.APICALL_BLACKLIST.append('vkCmdPushDescriptorSetWithTemplateKHR')
         # Add the following to the blacklist due to missing support issues, attempt to re-enable once feature is required
         self.APICALL_BLACKLIST.append('vkCreateIndirectExecutionSetEXT')
+        # VK_NV_external_compute_queue: no args:: struct or consumer virtual exists anywhere upstream
+        # (also blacklisted in gfxreconstruct's own "functions-all"); brand new, no prior gfxr-sqlite
+        # tracking to preserve.
+        self.APICALL_BLACKLIST.append('vkCreateExternalComputeQueueNV')
+        self.APICALL_BLACKLIST.append('vkDestroyExternalComputeQueueNV')
+        self.APICALL_BLACKLIST.append('vkGetExternalComputeQueueDataNV')
         # VK_EXT_descriptor_buffer extension functions need custom struct handling for unions
         self.APICALL_BLACKLIST.append('vkGetBufferOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetImageOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetImageViewOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetSamplerOpaqueCaptureDescriptorDataEXT')
         self.APICALL_BLACKLIST.append('vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT')
+        # VK_ARM_tensors: same OpaqueCaptureDescriptorData family/reason as the EXT ones above; also
+        # blacklisted upstream (gfxreconstruct's own blacklists.json "functions-all"), so no args::
+        # struct exists to generate against.
+        self.APICALL_BLACKLIST.append('vkGetTensorOpaqueCaptureDescriptorDataARM')
+        self.APICALL_BLACKLIST.append('vkGetTensorViewOpaqueCaptureDescriptorDataARM')
         self.APICALL_BLACKLIST.append('vkGetDescriptorSetLayoutSizeEXT')
         self.APICALL_BLACKLIST.append('vkGetDescriptorSetLayoutBindingOffsetEXT')
         self.APICALL_BLACKLIST.append('vkGetDescriptorEXT')

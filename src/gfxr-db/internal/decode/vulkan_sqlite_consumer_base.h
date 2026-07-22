@@ -39,6 +39,48 @@
 
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
+GFXRECON_BEGIN_NAMESPACE(args)
+
+// Hand-authored args structs for commands gfxreconstruct blacklists from its own Vulkan consumer
+// codegen (see external/gfxreconstruct's vulkan_generators/blacklists.json) but that gfxr-sqlite still
+// wants to track. These mirror the field lists the codegen produced the last time gfxr-sqlite's
+// generated consumer was regenerated before each command was dropped upstream — see the matching
+// "TODO: missing from upstream GFXR" declarations in VulkanSqliteConsumerBase below.
+
+struct CmdPushDescriptorSetWithTemplate
+{
+    format::HandleId                commandBuffer;
+    format::HandleId                descriptorUpdateTemplate;
+    format::HandleId                layout;
+    uint32_t                        set;
+    DescriptorUpdateTemplateDecoder pData;
+};
+
+struct CmdPushDescriptorSetWithTemplate2
+{
+    format::HandleId                                                  commandBuffer;
+    StructPointerDecoder<Decoded_VkPushDescriptorSetWithTemplateInfo> pPushDescriptorSetWithTemplateInfo;
+};
+
+struct BuildAccelerationStructuresKHR
+{
+    VkResult                                                        result;
+    format::HandleId                                                device;
+    format::HandleId                                                deferredOperation;
+    uint32_t                                                        infoCount;
+    StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR> pInfos;
+    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>   ppBuildRangeInfos;
+};
+
+struct CopyAccelerationStructureKHR
+{
+    VkResult                                                    result;
+    format::HandleId                                            device;
+    format::HandleId                                            deferredOperation;
+    StructPointerDecoder<Decoded_VkCopyAccelerationStructureInfoKHR> pInfo;
+};
+
+GFXRECON_END_NAMESPACE(args)
 
 class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
 {
@@ -140,126 +182,58 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         const uint8_t* data
     ) override;
 
-    virtual void Process_vkEnumerateInstanceExtensionProperties(
-        const ApiCallInfo& call_info,
-        VkResult returnValue,
-        StringDecoder* pLayerName,
-        PointerDecoder<uint32_t>* pPropertyCount,
-        StructPointerDecoder<Decoded_VkExtensionProperties>* pProperties
-    )
-    {}
-
-    virtual void Process_vkEnumerateDeviceExtensionProperties(
-        const ApiCallInfo& call_info,
-        VkResult returnValue,
-        format::HandleId physicalDevice,
-        StringDecoder* pLayerName,
-        PointerDecoder<uint32_t>* pPropertyCount,
-        StructPointerDecoder<Decoded_VkExtensionProperties>* pProperties
-    )
-    {}
-
-    virtual void Process_vkEnumerateInstanceLayerProperties(
-        const ApiCallInfo& call_info,
-        VkResult returnValue,
-        PointerDecoder<uint32_t>* pPropertyCount,
-        StructPointerDecoder<Decoded_VkLayerProperties>* pProperties
-    )
-    {}
-
-    virtual void Process_vkEnumerateDeviceLayerProperties(
-        const ApiCallInfo& call_info,
-        VkResult returnValue,
-        format::HandleId physicalDevice,
-        PointerDecoder<uint32_t>* pPropertyCount,
-        StructPointerDecoder<Decoded_VkLayerProperties>* pProperties
-    )
-    {}
-
-    virtual void Process_vkEnumerateInstanceVersion(
-        const ApiCallInfo& call_info, VkResult returnValue, PointerDecoder<uint32_t>* pApiVersion
-    )
-    {}
-
     // TODO: missing from upstream GFXR (and thus never will be called)
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkCmdPushDescriptorSetWithTemplate(
-        const ApiCallInfo& call_info,
-        format::HandleId commandBuffer,
-        format::HandleId descriptorUpdateTemplate,
-        format::HandleId layout,
-        uint32_t set,
-        DescriptorUpdateTemplateDecoder* pData
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate& args
     );
 
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkCmdPushDescriptorSetWithTemplateKHR(
         const ApiCallInfo& call_info,
-        format::HandleId commandBuffer,
-        format::HandleId descriptorUpdateTemplate,
-        format::HandleId layout,
-        uint32_t set,
-        DescriptorUpdateTemplateDecoder* pData
+        args::CmdPushDescriptorSetWithTemplateKHR& args
     ) override;
 
-    // TODO: missing from upstream GFXR (and thus never will be called)
+    // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
+    // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
+    // (its normal auto-generated logging body) to hook into.
     virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
-        const ApiCallInfo& call_info,
-        format::HandleId commandBuffer,
-        StructPointerDecoder<Decoded_VkPushDescriptorSetWithTemplateInfo>* pPushDescriptorSetWithTemplateInfo
-    )
-    {}
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
+    );
+
+    // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
+    // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
+    // (its normal auto-generated logging body) to hook into.
+    virtual void Process_vkBuildAccelerationStructuresKHR(
+        const ApiCallInfo& call_info, args::BuildAccelerationStructuresKHR& args
+    );
+
+    // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
+    // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
+    // (its normal auto-generated logging body) to hook into.
+    virtual void Process_vkCopyAccelerationStructureKHR(
+        const ApiCallInfo& call_info, args::CopyAccelerationStructureKHR& args
+    );
 
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkUpdateDescriptorSetWithTemplate(
         const ApiCallInfo& call_info,
-        format::HandleId device,
-        format::HandleId descriptorSet,
-        format::HandleId descriptorUpdateTemplate,
-        DescriptorUpdateTemplateDecoder* pData
+        args::UpdateDescriptorSetWithTemplate& args
     ) override;
 
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkUpdateDescriptorSetWithTemplateKHR(
         const ApiCallInfo& call_info,
-        format::HandleId device,
-        format::HandleId descriptorSet,
-        format::HandleId descriptorUpdateTemplate,
-        DescriptorUpdateTemplateDecoder* pData
+        args::UpdateDescriptorSetWithTemplateKHR& args
     ) override;
-
-    virtual void Process_vkBuildAccelerationStructuresKHR(
-        const ApiCallInfo& call_info,
-        VkResult returnValue,
-        format::HandleId device,
-        format::HandleId deferredOperation,
-        uint32_t infoCount,
-        StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
-        StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>* ppBuildRangeInfos
-    )
-    {}
-
-    virtual void Process_vkCopyAccelerationStructureKHR(
-        const ApiCallInfo& call_info,
-        VkResult returnValue,
-        format::HandleId device,
-        format::HandleId deferredOperation,
-        StructPointerDecoder<Decoded_VkCopyAccelerationStructureInfoKHR>* pInfo
-    )
-    {}
 
     virtual void Process_vkCmdBuildAccelerationStructuresIndirectKHR(
         const ApiCallInfo& call_info,
-        format::HandleId commandBuffer,
-        uint32_t infoCount,
-        StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR>* pInfos,
-        PointerDecoder<VkDeviceAddress>* pIndirectDeviceAddresses,
-        PointerDecoder<uint32_t>* pIndirectStrides,
-        PointerDecoder<uint32_t*>* ppMaxPrimitiveCounts
+        args::CmdBuildAccelerationStructuresIndirectKHR& args
     ) override;
 
     /// @brief Convert annotations, which are simple {type:enum, key:string, value:string} objects.
