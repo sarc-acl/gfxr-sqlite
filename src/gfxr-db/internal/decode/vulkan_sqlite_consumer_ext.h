@@ -31,25 +31,45 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
     VulkanSqliteConsumerExt(sqlite3* db);
 
     // special handling override functions
-    void Process_vkSetDebugUtilsObjectNameEXT(const ApiCallInfo& call_info, args::SetDebugUtilsObjectNameEXT& args) override;
+    void Process_vkSetDebugUtilsObjectNameEXT(
+        const ApiCallInfo& call_info, args::SetDebugUtilsObjectNameEXT& args
+    ) override;
 
-    void Process_vkSetDebugUtilsObjectTagEXT(const ApiCallInfo& call_info, args::SetDebugUtilsObjectTagEXT& args) override;
+    void Process_vkSetDebugUtilsObjectTagEXT(
+        const ApiCallInfo& call_info, args::SetDebugUtilsObjectTagEXT& args
+    ) override;
 
-    void Process_vkQueueBeginDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::QueueBeginDebugUtilsLabelEXT& args) override;
+    void Process_vkQueueBeginDebugUtilsLabelEXT(
+        const ApiCallInfo& call_info, args::QueueBeginDebugUtilsLabelEXT& args
+    ) override;
 
-    void Process_vkQueueEndDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::QueueEndDebugUtilsLabelEXT& args) override;
+    void Process_vkQueueEndDebugUtilsLabelEXT(
+        const ApiCallInfo& call_info, args::QueueEndDebugUtilsLabelEXT& args
+    ) override;
 
-    void Process_vkQueueInsertDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::QueueInsertDebugUtilsLabelEXT& args) override;
+    void Process_vkQueueInsertDebugUtilsLabelEXT(
+        const ApiCallInfo& call_info, args::QueueInsertDebugUtilsLabelEXT& args
+    ) override;
 
-    void Process_vkCmdBeginDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::CmdBeginDebugUtilsLabelEXT& args) override;
+    void Process_vkCmdBeginDebugUtilsLabelEXT(
+        const ApiCallInfo& call_info, args::CmdBeginDebugUtilsLabelEXT& args
+    ) override;
 
-    void Process_vkCmdEndDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::CmdEndDebugUtilsLabelEXT& args) override;
+    void Process_vkCmdEndDebugUtilsLabelEXT(
+        const ApiCallInfo& call_info, args::CmdEndDebugUtilsLabelEXT& args
+    ) override;
 
-    void Process_vkCmdInsertDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::CmdInsertDebugUtilsLabelEXT& args) override;
+    void Process_vkCmdInsertDebugUtilsLabelEXT(
+        const ApiCallInfo& call_info, args::CmdInsertDebugUtilsLabelEXT& args
+    ) override;
 
-    void Process_vkDebugMarkerSetObjectTagEXT(const ApiCallInfo& call_info, args::DebugMarkerSetObjectTagEXT& args) override;
+    void Process_vkDebugMarkerSetObjectTagEXT(
+        const ApiCallInfo& call_info, args::DebugMarkerSetObjectTagEXT& args
+    ) override;
 
-    void Process_vkDebugMarkerSetObjectNameEXT(const ApiCallInfo& call_info, args::DebugMarkerSetObjectNameEXT& args) override;
+    void Process_vkDebugMarkerSetObjectNameEXT(
+        const ApiCallInfo& call_info, args::DebugMarkerSetObjectNameEXT& args
+    ) override;
 
     void Process_vkCmdDebugMarkerBeginEXT(const ApiCallInfo& call_info, args::CmdDebugMarkerBeginEXT& args) override;
 
@@ -57,19 +77,29 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkCmdDebugMarkerInsertEXT(const ApiCallInfo& call_info, args::CmdDebugMarkerInsertEXT& args) override;
 
-    void Process_vkCreateDebugReportCallbackEXT(const ApiCallInfo& call_info, args::CreateDebugReportCallbackEXT& args) override;
+    void Process_vkCreateDebugReportCallbackEXT(
+        const ApiCallInfo& call_info, args::CreateDebugReportCallbackEXT& args
+    ) override;
 
-    void Process_vkDestroyDebugReportCallbackEXT(const ApiCallInfo& call_info, args::DestroyDebugReportCallbackEXT& args) override;
+    void Process_vkDestroyDebugReportCallbackEXT(
+        const ApiCallInfo& call_info, args::DestroyDebugReportCallbackEXT& args
+    ) override;
 
-    void Process_vkCreateDebugUtilsMessengerEXT(const ApiCallInfo& call_info, args::CreateDebugUtilsMessengerEXT& args) override;
+    void Process_vkCreateDebugUtilsMessengerEXT(
+        const ApiCallInfo& call_info, args::CreateDebugUtilsMessengerEXT& args
+    ) override;
 
-    void Process_vkDestroyDebugUtilsMessengerEXT(const ApiCallInfo& call_info, args::DestroyDebugUtilsMessengerEXT& args) override;
+    void Process_vkDestroyDebugUtilsMessengerEXT(
+        const ApiCallInfo& call_info, args::DestroyDebugUtilsMessengerEXT& args
+    ) override;
 
     void Process_vkCreateInstance(const ApiCallInfo& call_info, args::CreateInstance& args) override;
 
     void Process_vkDestroyInstance(const ApiCallInfo& call_info, args::DestroyInstance& args) override;
 
-    void Process_vkEnumeratePhysicalDevices(const ApiCallInfo& call_info, args::EnumeratePhysicalDevices& args) override;
+    void Process_vkEnumeratePhysicalDevices(
+        const ApiCallInfo& call_info, args::EnumeratePhysicalDevices& args
+    ) override;
 
     void Process_vkCreateDevice(const ApiCallInfo& call_info, args::CreateDevice& args) override;
 
@@ -156,9 +186,13 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkDestroyShaderModule(const ApiCallInfo& call_info, args::DestroyShaderModule& args) override;
 
-    void Process_vkCreateValidationCacheEXT(const ApiCallInfo& call_info, args::CreateValidationCacheEXT& args) override;
+    void Process_vkCreateValidationCacheEXT(
+        const ApiCallInfo& call_info, args::CreateValidationCacheEXT& args
+    ) override;
 
-    void Process_vkDestroyValidationCacheEXT(const ApiCallInfo& call_info, args::DestroyValidationCacheEXT& args) override;
+    void Process_vkDestroyValidationCacheEXT(
+        const ApiCallInfo& call_info, args::DestroyValidationCacheEXT& args
+    ) override;
 
     void Process_vkCreatePipelineCache(const ApiCallInfo& call_info, args::CreatePipelineCache& args) override;
 
@@ -168,9 +202,13 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkCreateComputePipelines(const ApiCallInfo& call_info, args::CreateComputePipelines& args) override;
 
-    void Process_vkCreateRayTracingPipelinesNV(const ApiCallInfo& call_info, args::CreateRayTracingPipelinesNV& args) override;
+    void Process_vkCreateRayTracingPipelinesNV(
+        const ApiCallInfo& call_info, args::CreateRayTracingPipelinesNV& args
+    ) override;
 
-    void Process_vkCreateRayTracingPipelinesKHR(const ApiCallInfo& call_info, args::CreateRayTracingPipelinesKHR& args) override;
+    void Process_vkCreateRayTracingPipelinesKHR(
+        const ApiCallInfo& call_info, args::CreateRayTracingPipelinesKHR& args
+    ) override;
 
     void Process_vkDestroyPipeline(const ApiCallInfo& call_info, args::DestroyPipeline& args) override;
 
@@ -178,9 +216,13 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkDestroyPipelineLayout(const ApiCallInfo& call_info, args::DestroyPipelineLayout& args) override;
 
-    void Process_vkCreateDescriptorSetLayout(const ApiCallInfo& call_info, args::CreateDescriptorSetLayout& args) override;
+    void Process_vkCreateDescriptorSetLayout(
+        const ApiCallInfo& call_info, args::CreateDescriptorSetLayout& args
+    ) override;
 
-    void Process_vkDestroyDescriptorSetLayout(const ApiCallInfo& call_info, args::DestroyDescriptorSetLayout& args) override;
+    void Process_vkDestroyDescriptorSetLayout(
+        const ApiCallInfo& call_info, args::DestroyDescriptorSetLayout& args
+    ) override;
 
     void Process_vkCreateDescriptorPool(const ApiCallInfo& call_info, args::CreateDescriptorPool& args) override;
 
@@ -200,55 +242,91 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkDestroyRenderPass(const ApiCallInfo& call_info, args::DestroyRenderPass& args) override;
 
-    void Process_vkCreateSamplerYcbcrConversion(const ApiCallInfo& call_info, args::CreateSamplerYcbcrConversion& args) override;
+    void Process_vkCreateSamplerYcbcrConversion(
+        const ApiCallInfo& call_info, args::CreateSamplerYcbcrConversion& args
+    ) override;
 
-    void Process_vkCreateSamplerYcbcrConversionKHR(const ApiCallInfo& call_info, args::CreateSamplerYcbcrConversionKHR& args) override;
+    void Process_vkCreateSamplerYcbcrConversionKHR(
+        const ApiCallInfo& call_info, args::CreateSamplerYcbcrConversionKHR& args
+    ) override;
 
-    void Process_vkDestroySamplerYcbcrConversion(const ApiCallInfo& call_info, args::DestroySamplerYcbcrConversion& args) override;
+    void Process_vkDestroySamplerYcbcrConversion(
+        const ApiCallInfo& call_info, args::DestroySamplerYcbcrConversion& args
+    ) override;
 
-    void Process_vkDestroySamplerYcbcrConversionKHR(const ApiCallInfo& call_info, args::DestroySamplerYcbcrConversionKHR& args) override;
+    void Process_vkDestroySamplerYcbcrConversionKHR(
+        const ApiCallInfo& call_info, args::DestroySamplerYcbcrConversionKHR& args
+    ) override;
 
     void Process_vkCreatePrivateDataSlot(const ApiCallInfo& call_info, args::CreatePrivateDataSlot& args) override;
 
-    void Process_vkCreatePrivateDataSlotEXT(const ApiCallInfo& call_info, args::CreatePrivateDataSlotEXT& args) override;
+    void Process_vkCreatePrivateDataSlotEXT(
+        const ApiCallInfo& call_info, args::CreatePrivateDataSlotEXT& args
+    ) override;
 
     void Process_vkDestroyPrivateDataSlot(const ApiCallInfo& call_info, args::DestroyPrivateDataSlot& args) override;
 
-    void Process_vkDestroyPrivateDataSlotEXT(const ApiCallInfo& call_info, args::DestroyPrivateDataSlotEXT& args) override;
+    void Process_vkDestroyPrivateDataSlotEXT(
+        const ApiCallInfo& call_info, args::DestroyPrivateDataSlotEXT& args
+    ) override;
 
-    void Process_vkCreateDescriptorUpdateTemplate(const ApiCallInfo& call_info, args::CreateDescriptorUpdateTemplate& args) override;
+    void Process_vkCreateDescriptorUpdateTemplate(
+        const ApiCallInfo& call_info, args::CreateDescriptorUpdateTemplate& args
+    ) override;
 
-    void Process_vkDestroyDescriptorUpdateTemplate(const ApiCallInfo& call_info, args::DestroyDescriptorUpdateTemplate& args) override;
+    void Process_vkDestroyDescriptorUpdateTemplate(
+        const ApiCallInfo& call_info, args::DestroyDescriptorUpdateTemplate& args
+    ) override;
 
-    void Process_vkCreateDescriptorUpdateTemplateKHR(const ApiCallInfo& call_info, args::CreateDescriptorUpdateTemplateKHR& args) override;
+    void Process_vkCreateDescriptorUpdateTemplateKHR(
+        const ApiCallInfo& call_info, args::CreateDescriptorUpdateTemplateKHR& args
+    ) override;
 
-    void Process_vkDestroyDescriptorUpdateTemplateKHR(const ApiCallInfo& call_info, args::DestroyDescriptorUpdateTemplateKHR& args) override;
+    void Process_vkDestroyDescriptorUpdateTemplateKHR(
+        const ApiCallInfo& call_info, args::DestroyDescriptorUpdateTemplateKHR& args
+    ) override;
 
     void Process_vkUpdateDescriptorSets(const ApiCallInfo& call_info, args::UpdateDescriptorSets& args) override;
 
-    void Process_vkUpdateDescriptorSetWithTemplate(const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplate& args) override;
+    void Process_vkUpdateDescriptorSetWithTemplate(
+        const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplate& args
+    ) override;
 
-    void Process_vkUpdateDescriptorSetWithTemplateKHR(const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplateKHR& args) override;
+    void Process_vkUpdateDescriptorSetWithTemplateKHR(
+        const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplateKHR& args
+    ) override;
 
-    virtual void Process_vkCmdPushDescriptorSet(const ApiCallInfo& call_info, args::CmdPushDescriptorSet& args) override;
+    virtual void Process_vkCmdPushDescriptorSet(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSet& args
+    ) override;
 
-    virtual void Process_vkCmdPushDescriptorSetKHR(const ApiCallInfo& call_info, args::CmdPushDescriptorSetKHR& args) override;
+    virtual void Process_vkCmdPushDescriptorSetKHR(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSetKHR& args
+    ) override;
 
-    virtual void Process_vkCmdPushDescriptorSet2(const ApiCallInfo& call_info, args::CmdPushDescriptorSet2& args) override;
+    virtual void Process_vkCmdPushDescriptorSet2(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSet2& args
+    ) override;
 
-    virtual void Process_vkCmdPushDescriptorSet2KHR(const ApiCallInfo& call_info, args::CmdPushDescriptorSet2KHR& args) override;
+    virtual void Process_vkCmdPushDescriptorSet2KHR(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSet2KHR& args
+    ) override;
 
     virtual void Process_vkCmdPushDescriptorSetWithTemplate(
         const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate& args
     ) override;
 
-    virtual void Process_vkCmdPushDescriptorSetWithTemplateKHR(const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplateKHR& args) override;
+    virtual void Process_vkCmdPushDescriptorSetWithTemplateKHR(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplateKHR& args
+    ) override;
 
     virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
         const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
     ) override;
 
-    virtual void Process_vkCmdPushDescriptorSetWithTemplate2KHR(const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2KHR& args) override;
+    virtual void Process_vkCmdPushDescriptorSetWithTemplate2KHR(
+        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2KHR& args
+    ) override;
 
     void Process_vkCreateBuffer(const ApiCallInfo& call_info, args::CreateBuffer& args) override;
 
@@ -270,7 +348,9 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkDestroySampler(const ApiCallInfo& call_info, args::DestroySampler& args) override;
 
-    void Process_vkGetRandROutputDisplayEXT(const ApiCallInfo& call_info, args::GetRandROutputDisplayEXT& args) override;
+    void Process_vkGetRandROutputDisplayEXT(
+        const ApiCallInfo& call_info, args::GetRandROutputDisplayEXT& args
+    ) override;
 
     void Process_vkGetDrmDisplayEXT(const ApiCallInfo& call_info, args::GetDrmDisplayEXT& args) override;
 
@@ -280,7 +360,9 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkCreateSwapchainKHR(const ApiCallInfo& call_info, args::CreateSwapchainKHR& args) override;
 
-    void Process_vkCreateSharedSwapchainsKHR(const ApiCallInfo& call_info, args::CreateSharedSwapchainsKHR& args) override;
+    void Process_vkCreateSharedSwapchainsKHR(
+        const ApiCallInfo& call_info, args::CreateSharedSwapchainsKHR& args
+    ) override;
 
     void Process_vkDestroySwapchainKHR(const ApiCallInfo& call_info, args::DestroySwapchainKHR& args) override;
 
@@ -292,140 +374,82 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkCreateFramebuffer(const ApiCallInfo& call_info, args::CreateFramebuffer& args) override;
 
-    void Process_vkDestroyFramebuffer(
-        const ApiCallInfo& call_info,
-        args::DestroyFramebuffer& args
-    ) override;
+    void Process_vkDestroyFramebuffer(const ApiCallInfo& call_info, args::DestroyFramebuffer& args) override;
 
-    void Process_vkCmdSetVertexInputEXT(
-        const ApiCallInfo& call_info,
-        args::CmdSetVertexInputEXT& args
-    ) override;
+    void Process_vkCmdSetVertexInputEXT(const ApiCallInfo& call_info, args::CmdSetVertexInputEXT& args) override;
 
     void Process_vkCmdSetRenderingAttachmentLocations(
-        const ApiCallInfo& call_info,
-        args::CmdSetRenderingAttachmentLocations& args
+        const ApiCallInfo& call_info, args::CmdSetRenderingAttachmentLocations& args
     ) override;
 
     void Process_vkCmdSetRenderingAttachmentLocationsKHR(
-        const ApiCallInfo& call_info,
-        args::CmdSetRenderingAttachmentLocationsKHR& args
+        const ApiCallInfo& call_info, args::CmdSetRenderingAttachmentLocationsKHR& args
     ) override;
 
     void Process_vkCmdSetRenderingInputAttachmentIndices(
-        const ApiCallInfo& call_info,
-        args::CmdSetRenderingInputAttachmentIndices& args
+        const ApiCallInfo& call_info, args::CmdSetRenderingInputAttachmentIndices& args
     ) override;
 
     void Process_vkCmdSetRenderingInputAttachmentIndicesKHR(
-        const ApiCallInfo& call_info,
-        args::CmdSetRenderingInputAttachmentIndicesKHR& args
+        const ApiCallInfo& call_info, args::CmdSetRenderingInputAttachmentIndicesKHR& args
     ) override;
 
-    void Process_vkCmdSetViewport(
-        const ApiCallInfo& call_info,
-        args::CmdSetViewport& args
-    ) override;
+    void Process_vkCmdSetViewport(const ApiCallInfo& call_info, args::CmdSetViewport& args) override;
 
-    void Process_vkCmdSetViewportWithCount(
-        const ApiCallInfo& call_info,
-        args::CmdSetViewportWithCount& args
-    ) override;
+    void Process_vkCmdSetViewportWithCount(const ApiCallInfo& call_info, args::CmdSetViewportWithCount& args) override;
 
     void Process_vkCmdSetViewportWithCountEXT(
-        const ApiCallInfo& call_info,
-        args::CmdSetViewportWithCountEXT& args
+        const ApiCallInfo& call_info, args::CmdSetViewportWithCountEXT& args
     ) override;
 
-    void Process_vkCmdSetScissor(
-        const ApiCallInfo& call_info,
-        args::CmdSetScissor& args
-    ) override;
+    void Process_vkCmdSetScissor(const ApiCallInfo& call_info, args::CmdSetScissor& args) override;
 
-    void Process_vkCmdSetScissorWithCount(
-        const ApiCallInfo& call_info,
-        args::CmdSetScissorWithCount& args
-    ) override;
+    void Process_vkCmdSetScissorWithCount(const ApiCallInfo& call_info, args::CmdSetScissorWithCount& args) override;
 
     void Process_vkCmdSetScissorWithCountEXT(
-        const ApiCallInfo& call_info,
-        args::CmdSetScissorWithCountEXT& args
+        const ApiCallInfo& call_info, args::CmdSetScissorWithCountEXT& args
     ) override;
 
-    void Process_vkCmdSetLineWidth(
-        const ApiCallInfo& call_info, args::CmdSetLineWidth& args
-    ) override;
+    void Process_vkCmdSetLineWidth(const ApiCallInfo& call_info, args::CmdSetLineWidth& args) override;
 
-    void Process_vkCmdSetDepthBias(
-        const ApiCallInfo& call_info,
-        args::CmdSetDepthBias& args
-    ) override;
-    void Process_vkCmdSetDepthBias2EXT(
-        const ApiCallInfo& call_info,
-        args::CmdSetDepthBias2EXT& args
-    ) override;
+    void Process_vkCmdSetDepthBias(const ApiCallInfo& call_info, args::CmdSetDepthBias& args) override;
+    void Process_vkCmdSetDepthBias2EXT(const ApiCallInfo& call_info, args::CmdSetDepthBias2EXT& args) override;
 
-    void Process_vkCmdSetBlendConstants(
-        const ApiCallInfo& call_info, args::CmdSetBlendConstants& args
-    ) override;
+    void Process_vkCmdSetBlendConstants(const ApiCallInfo& call_info, args::CmdSetBlendConstants& args) override;
 
-    void Process_vkCmdSetDepthBounds(
-        const ApiCallInfo& call_info, args::CmdSetDepthBounds& args
-    ) override;
+    void Process_vkCmdSetDepthBounds(const ApiCallInfo& call_info, args::CmdSetDepthBounds& args) override;
 
     void Process_vkCmdSetStencilCompareMask(
         const ApiCallInfo& call_info, args::CmdSetStencilCompareMask& args
     ) override;
 
-    void Process_vkCmdSetStencilWriteMask(
-        const ApiCallInfo& call_info, args::CmdSetStencilWriteMask& args
-    ) override;
+    void Process_vkCmdSetStencilWriteMask(const ApiCallInfo& call_info, args::CmdSetStencilWriteMask& args) override;
 
-    void Process_vkCmdSetStencilReference(
-        const ApiCallInfo& call_info, args::CmdSetStencilReference& args
-    ) override;
+    void Process_vkCmdSetStencilReference(const ApiCallInfo& call_info, args::CmdSetStencilReference& args) override;
 
-    void Process_vkCmdSetCullMode(
-        const ApiCallInfo& call_info, args::CmdSetCullMode& args
-    ) override;
-    void Process_vkCmdSetCullModeEXT(
-        const ApiCallInfo& call_info, args::CmdSetCullModeEXT& args
-    ) override;
+    void Process_vkCmdSetCullMode(const ApiCallInfo& call_info, args::CmdSetCullMode& args) override;
+    void Process_vkCmdSetCullModeEXT(const ApiCallInfo& call_info, args::CmdSetCullModeEXT& args) override;
 
-    void Process_vkCmdSetFrontFace(
-        const ApiCallInfo& call_info, args::CmdSetFrontFace& args
-    ) override;
-    void Process_vkCmdSetFrontFaceEXT(
-        const ApiCallInfo& call_info, args::CmdSetFrontFaceEXT& args
-    ) override;
+    void Process_vkCmdSetFrontFace(const ApiCallInfo& call_info, args::CmdSetFrontFace& args) override;
+    void Process_vkCmdSetFrontFaceEXT(const ApiCallInfo& call_info, args::CmdSetFrontFaceEXT& args) override;
 
-    void Process_vkCmdSetPrimitiveTopology(
-        const ApiCallInfo& call_info, args::CmdSetPrimitiveTopology& args
-    ) override;
+    void Process_vkCmdSetPrimitiveTopology(const ApiCallInfo& call_info, args::CmdSetPrimitiveTopology& args) override;
     void Process_vkCmdSetPrimitiveTopologyEXT(
         const ApiCallInfo& call_info, args::CmdSetPrimitiveTopologyEXT& args
     ) override;
 
-    void Process_vkCmdSetDepthTestEnable(
-        const ApiCallInfo& call_info, args::CmdSetDepthTestEnable& args
-    ) override;
+    void Process_vkCmdSetDepthTestEnable(const ApiCallInfo& call_info, args::CmdSetDepthTestEnable& args) override;
     void Process_vkCmdSetDepthTestEnableEXT(
         const ApiCallInfo& call_info, args::CmdSetDepthTestEnableEXT& args
     ) override;
 
-    void Process_vkCmdSetDepthWriteEnable(
-        const ApiCallInfo& call_info, args::CmdSetDepthWriteEnable& args
-    ) override;
+    void Process_vkCmdSetDepthWriteEnable(const ApiCallInfo& call_info, args::CmdSetDepthWriteEnable& args) override;
     void Process_vkCmdSetDepthWriteEnableEXT(
         const ApiCallInfo& call_info, args::CmdSetDepthWriteEnableEXT& args
     ) override;
 
-    void Process_vkCmdSetDepthCompareOp(
-        const ApiCallInfo& call_info, args::CmdSetDepthCompareOp& args
-    ) override;
-    void Process_vkCmdSetDepthCompareOpEXT(
-        const ApiCallInfo& call_info, args::CmdSetDepthCompareOpEXT& args
-    ) override;
+    void Process_vkCmdSetDepthCompareOp(const ApiCallInfo& call_info, args::CmdSetDepthCompareOp& args) override;
+    void Process_vkCmdSetDepthCompareOpEXT(const ApiCallInfo& call_info, args::CmdSetDepthCompareOpEXT& args) override;
 
     void Process_vkCmdSetDepthBoundsTestEnable(
         const ApiCallInfo& call_info, args::CmdSetDepthBoundsTestEnable& args
@@ -434,19 +458,13 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         const ApiCallInfo& call_info, args::CmdSetDepthBoundsTestEnableEXT& args
     ) override;
 
-    void Process_vkCmdSetStencilTestEnable(
-        const ApiCallInfo& call_info, args::CmdSetStencilTestEnable& args
-    ) override;
+    void Process_vkCmdSetStencilTestEnable(const ApiCallInfo& call_info, args::CmdSetStencilTestEnable& args) override;
     void Process_vkCmdSetStencilTestEnableEXT(
         const ApiCallInfo& call_info, args::CmdSetStencilTestEnableEXT& args
     ) override;
 
-    void Process_vkCmdSetStencilOp(
-        const ApiCallInfo& call_info, args::CmdSetStencilOp& args
-    ) override;
-    void Process_vkCmdSetStencilOpEXT(
-        const ApiCallInfo& call_info, args::CmdSetStencilOpEXT& args
-    ) override;
+    void Process_vkCmdSetStencilOp(const ApiCallInfo& call_info, args::CmdSetStencilOp& args) override;
+    void Process_vkCmdSetStencilOpEXT(const ApiCallInfo& call_info, args::CmdSetStencilOpEXT& args) override;
 
     void Process_vkCmdSetRasterizerDiscardEnable(
         const ApiCallInfo& call_info, args::CmdSetRasterizerDiscardEnable& args
@@ -455,9 +473,7 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         const ApiCallInfo& call_info, args::CmdSetRasterizerDiscardEnableEXT& args
     ) override;
 
-    void Process_vkCmdSetDepthBiasEnable(
-        const ApiCallInfo& call_info, args::CmdSetDepthBiasEnable& args
-    ) override;
+    void Process_vkCmdSetDepthBiasEnable(const ApiCallInfo& call_info, args::CmdSetDepthBiasEnable& args) override;
     void Process_vkCmdSetDepthBiasEnableEXT(
         const ApiCallInfo& call_info, args::CmdSetDepthBiasEnableEXT& args
     ) override;
@@ -473,12 +489,160 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         const ApiCallInfo& call_info, args::CmdSetPatchControlPointsEXT& args
     ) override;
 
-    void Process_vkCmdSetLogicOpEXT(
-        const ApiCallInfo& call_info, args::CmdSetLogicOpEXT& args
-    ) override;
+    void Process_vkCmdSetLogicOpEXT(const ApiCallInfo& call_info, args::CmdSetLogicOpEXT& args) override;
 
     void Process_vkCmdSetColorWriteEnableEXT(
         const ApiCallInfo& call_info, args::CmdSetColorWriteEnableEXT& args
+    ) override;
+
+    void Process_vkCmdSetLineStipple(const ApiCallInfo& call_info, args::CmdSetLineStipple& args) override;
+    void Process_vkCmdSetLineStippleKHR(const ApiCallInfo& call_info, args::CmdSetLineStippleKHR& args) override;
+    void Process_vkCmdSetLineStippleEXT(const ApiCallInfo& call_info, args::CmdSetLineStippleEXT& args) override;
+
+    void Process_vkCmdSetFragmentShadingRateKHR(
+        const ApiCallInfo& call_info, args::CmdSetFragmentShadingRateKHR& args
+    ) override;
+    void Process_vkCmdSetFragmentShadingRateEnumNV(
+        const ApiCallInfo& call_info, args::CmdSetFragmentShadingRateEnumNV& args
+    ) override;
+
+    void Process_vkCmdSetViewportWScalingNV(
+        const ApiCallInfo& call_info, args::CmdSetViewportWScalingNV& args
+    ) override;
+
+    void Process_vkCmdSetDiscardRectangleEXT(
+        const ApiCallInfo& call_info, args::CmdSetDiscardRectangleEXT& args
+    ) override;
+    void Process_vkCmdSetDiscardRectangleEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetDiscardRectangleEnableEXT& args
+    ) override;
+    void Process_vkCmdSetDiscardRectangleModeEXT(
+        const ApiCallInfo& call_info, args::CmdSetDiscardRectangleModeEXT& args
+    ) override;
+
+    void Process_vkCmdSetSampleLocationsEXT(
+        const ApiCallInfo& call_info, args::CmdSetSampleLocationsEXT& args
+    ) override;
+
+    void Process_vkCmdSetViewportShadingRatePaletteNV(
+        const ApiCallInfo& call_info, args::CmdSetViewportShadingRatePaletteNV& args
+    ) override;
+    void Process_vkCmdSetCoarseSampleOrderNV(
+        const ApiCallInfo& call_info, args::CmdSetCoarseSampleOrderNV& args
+    ) override;
+
+    void Process_vkCmdSetExclusiveScissorEnableNV(
+        const ApiCallInfo& call_info, args::CmdSetExclusiveScissorEnableNV& args
+    ) override;
+    void Process_vkCmdSetExclusiveScissorNV(
+        const ApiCallInfo& call_info, args::CmdSetExclusiveScissorNV& args
+    ) override;
+
+    void Process_vkCmdSetDepthClampEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetDepthClampEnableEXT& args
+    ) override;
+    void Process_vkCmdSetPolygonModeEXT(const ApiCallInfo& call_info, args::CmdSetPolygonModeEXT& args) override;
+    void Process_vkCmdSetRasterizationSamplesEXT(
+        const ApiCallInfo& call_info, args::CmdSetRasterizationSamplesEXT& args
+    ) override;
+    void Process_vkCmdSetSampleMaskEXT(const ApiCallInfo& call_info, args::CmdSetSampleMaskEXT& args) override;
+    void Process_vkCmdSetAlphaToCoverageEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetAlphaToCoverageEnableEXT& args
+    ) override;
+    void Process_vkCmdSetAlphaToOneEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetAlphaToOneEnableEXT& args
+    ) override;
+    void Process_vkCmdSetLogicOpEnableEXT(const ApiCallInfo& call_info, args::CmdSetLogicOpEnableEXT& args) override;
+    void Process_vkCmdSetColorBlendEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetColorBlendEnableEXT& args
+    ) override;
+    void Process_vkCmdSetColorBlendEquationEXT(
+        const ApiCallInfo& call_info, args::CmdSetColorBlendEquationEXT& args
+    ) override;
+    void Process_vkCmdSetColorWriteMaskEXT(const ApiCallInfo& call_info, args::CmdSetColorWriteMaskEXT& args) override;
+    void Process_vkCmdSetTessellationDomainOriginEXT(
+        const ApiCallInfo& call_info, args::CmdSetTessellationDomainOriginEXT& args
+    ) override;
+    void Process_vkCmdSetRasterizationStreamEXT(
+        const ApiCallInfo& call_info, args::CmdSetRasterizationStreamEXT& args
+    ) override;
+    void Process_vkCmdSetConservativeRasterizationModeEXT(
+        const ApiCallInfo& call_info, args::CmdSetConservativeRasterizationModeEXT& args
+    ) override;
+    void Process_vkCmdSetExtraPrimitiveOverestimationSizeEXT(
+        const ApiCallInfo& call_info, args::CmdSetExtraPrimitiveOverestimationSizeEXT& args
+    ) override;
+    void Process_vkCmdSetDepthClipEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetDepthClipEnableEXT& args
+    ) override;
+    void Process_vkCmdSetSampleLocationsEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetSampleLocationsEnableEXT& args
+    ) override;
+    void Process_vkCmdSetColorBlendAdvancedEXT(
+        const ApiCallInfo& call_info, args::CmdSetColorBlendAdvancedEXT& args
+    ) override;
+    void Process_vkCmdSetProvokingVertexModeEXT(
+        const ApiCallInfo& call_info, args::CmdSetProvokingVertexModeEXT& args
+    ) override;
+    void Process_vkCmdSetLineRasterizationModeEXT(
+        const ApiCallInfo& call_info, args::CmdSetLineRasterizationModeEXT& args
+    ) override;
+    void Process_vkCmdSetLineStippleEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetLineStippleEnableEXT& args
+    ) override;
+    void Process_vkCmdSetDepthClipNegativeOneToOneEXT(
+        const ApiCallInfo& call_info, args::CmdSetDepthClipNegativeOneToOneEXT& args
+    ) override;
+    void Process_vkCmdSetViewportWScalingEnableNV(
+        const ApiCallInfo& call_info, args::CmdSetViewportWScalingEnableNV& args
+    ) override;
+    void Process_vkCmdSetViewportSwizzleNV(const ApiCallInfo& call_info, args::CmdSetViewportSwizzleNV& args) override;
+    void Process_vkCmdSetCoverageToColorEnableNV(
+        const ApiCallInfo& call_info, args::CmdSetCoverageToColorEnableNV& args
+    ) override;
+    void Process_vkCmdSetCoverageToColorLocationNV(
+        const ApiCallInfo& call_info, args::CmdSetCoverageToColorLocationNV& args
+    ) override;
+    void Process_vkCmdSetCoverageModulationModeNV(
+        const ApiCallInfo& call_info, args::CmdSetCoverageModulationModeNV& args
+    ) override;
+    void Process_vkCmdSetCoverageModulationTableEnableNV(
+        const ApiCallInfo& call_info, args::CmdSetCoverageModulationTableEnableNV& args
+    ) override;
+    void Process_vkCmdSetCoverageModulationTableNV(
+        const ApiCallInfo& call_info, args::CmdSetCoverageModulationTableNV& args
+    ) override;
+    void Process_vkCmdSetShadingRateImageEnableNV(
+        const ApiCallInfo& call_info, args::CmdSetShadingRateImageEnableNV& args
+    ) override;
+    void Process_vkCmdSetRepresentativeFragmentTestEnableNV(
+        const ApiCallInfo& call_info, args::CmdSetRepresentativeFragmentTestEnableNV& args
+    ) override;
+    void Process_vkCmdSetCoverageReductionModeNV(
+        const ApiCallInfo& call_info, args::CmdSetCoverageReductionModeNV& args
+    ) override;
+
+    void Process_vkCmdSetDepthClampRangeEXT(
+        const ApiCallInfo& call_info, args::CmdSetDepthClampRangeEXT& args
+    ) override;
+
+    void Process_vkCmdSetAttachmentFeedbackLoopEnableEXT(
+        const ApiCallInfo& call_info, args::CmdSetAttachmentFeedbackLoopEnableEXT& args
+    ) override;
+
+    void Process_vkCmdSetRayTracingPipelineStackSizeKHR(
+        const ApiCallInfo& call_info, args::CmdSetRayTracingPipelineStackSizeKHR& args
+    ) override;
+
+    // Not backed by a VkDynamicState enum, but still unimplemented command-buffer state setters.
+    void Process_vkCmdSetComputeOccupancyPriorityNV(
+        const ApiCallInfo& call_info, args::CmdSetComputeOccupancyPriorityNV& args
+    ) override;
+    void Process_vkCmdSetPrimitiveRestartIndexEXT(
+        const ApiCallInfo& call_info, args::CmdSetPrimitiveRestartIndexEXT& args
+    ) override;
+    void Process_vkCmdSetDispatchParametersARM(
+        const ApiCallInfo& call_info, args::CmdSetDispatchParametersARM& args
     ) override;
 
     void Process_vkCreateAccelerationStructureKHR(
@@ -537,77 +701,45 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
     ) override;
 
     // Transfer command overrides
-    void Process_vkCmdCopyBuffer(
-        const ApiCallInfo& call_info, args::CmdCopyBuffer& args
-    ) override;
+    void Process_vkCmdCopyBuffer(const ApiCallInfo& call_info, args::CmdCopyBuffer& args) override;
 
-    void Process_vkCmdCopyBuffer2(
-        const ApiCallInfo& call_info, args::CmdCopyBuffer2& args
-    ) override;
+    void Process_vkCmdCopyBuffer2(const ApiCallInfo& call_info, args::CmdCopyBuffer2& args) override;
 
-    void Process_vkCmdCopyBuffer2KHR(
-        const ApiCallInfo& call_info, args::CmdCopyBuffer2KHR& args
-    ) override;
+    void Process_vkCmdCopyBuffer2KHR(const ApiCallInfo& call_info, args::CmdCopyBuffer2KHR& args) override;
 
-    void Process_vkCmdCopyImage(
-        const ApiCallInfo& call_info, args::CmdCopyImage& args
-    ) override;
+    void Process_vkCmdCopyImage(const ApiCallInfo& call_info, args::CmdCopyImage& args) override;
 
-    void Process_vkCmdCopyImage2(
-        const ApiCallInfo& call_info, args::CmdCopyImage2& args
-    ) override;
+    void Process_vkCmdCopyImage2(const ApiCallInfo& call_info, args::CmdCopyImage2& args) override;
 
-    void Process_vkCmdCopyImage2KHR(
-        const ApiCallInfo& call_info, args::CmdCopyImage2KHR& args
-    ) override;
+    void Process_vkCmdCopyImage2KHR(const ApiCallInfo& call_info, args::CmdCopyImage2KHR& args) override;
 
-    void Process_vkCmdCopyBufferToImage(
-        const ApiCallInfo& call_info, args::CmdCopyBufferToImage& args
-    ) override;
+    void Process_vkCmdCopyBufferToImage(const ApiCallInfo& call_info, args::CmdCopyBufferToImage& args) override;
 
-    void Process_vkCmdCopyBufferToImage2(
-        const ApiCallInfo& call_info, args::CmdCopyBufferToImage2& args
-    ) override;
+    void Process_vkCmdCopyBufferToImage2(const ApiCallInfo& call_info, args::CmdCopyBufferToImage2& args) override;
 
     void Process_vkCmdCopyBufferToImage2KHR(
         const ApiCallInfo& call_info, args::CmdCopyBufferToImage2KHR& args
     ) override;
 
-    void Process_vkCmdCopyImageToBuffer(
-        const ApiCallInfo& call_info, args::CmdCopyImageToBuffer& args
-    ) override;
+    void Process_vkCmdCopyImageToBuffer(const ApiCallInfo& call_info, args::CmdCopyImageToBuffer& args) override;
 
-    void Process_vkCmdCopyImageToBuffer2(
-        const ApiCallInfo& call_info, args::CmdCopyImageToBuffer2& args
-    ) override;
+    void Process_vkCmdCopyImageToBuffer2(const ApiCallInfo& call_info, args::CmdCopyImageToBuffer2& args) override;
 
     void Process_vkCmdCopyImageToBuffer2KHR(
         const ApiCallInfo& call_info, args::CmdCopyImageToBuffer2KHR& args
     ) override;
 
-    void Process_vkCmdBlitImage(
-        const ApiCallInfo& call_info, args::CmdBlitImage& args
-    ) override;
+    void Process_vkCmdBlitImage(const ApiCallInfo& call_info, args::CmdBlitImage& args) override;
 
-    void Process_vkCmdBlitImage2(
-        const ApiCallInfo& call_info, args::CmdBlitImage2& args
-    ) override;
+    void Process_vkCmdBlitImage2(const ApiCallInfo& call_info, args::CmdBlitImage2& args) override;
 
-    void Process_vkCmdBlitImage2KHR(
-        const ApiCallInfo& call_info, args::CmdBlitImage2KHR& args
-    ) override;
+    void Process_vkCmdBlitImage2KHR(const ApiCallInfo& call_info, args::CmdBlitImage2KHR& args) override;
 
-    void Process_vkCmdResolveImage(
-        const ApiCallInfo& call_info, args::CmdResolveImage& args
-    ) override;
+    void Process_vkCmdResolveImage(const ApiCallInfo& call_info, args::CmdResolveImage& args) override;
 
-    void Process_vkCmdResolveImage2(
-        const ApiCallInfo& call_info, args::CmdResolveImage2& args
-    ) override;
+    void Process_vkCmdResolveImage2(const ApiCallInfo& call_info, args::CmdResolveImage2& args) override;
 
-    void Process_vkCmdResolveImage2KHR(
-        const ApiCallInfo& call_info, args::CmdResolveImage2KHR& args
-    ) override;
+    void Process_vkCmdResolveImage2KHR(const ApiCallInfo& call_info, args::CmdResolveImage2KHR& args) override;
 
     void Process_vkCmdCopyMemoryToAccelerationStructureKHR(
         const ApiCallInfo& call_info, args::CmdCopyMemoryToAccelerationStructureKHR& args
@@ -626,111 +758,72 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
     ) override;
 
     void Process_vkDestroyPipelineBinaryKHR(
-        const ApiCallInfo& call_info,
-        args::DestroyPipelineBinaryKHR& args
+        const ApiCallInfo& call_info, args::DestroyPipelineBinaryKHR& args
     ) override;
 
-    void Process_vkCreateVideoSessionKHR(
-        const ApiCallInfo& call_info,
-        args::CreateVideoSessionKHR& args
-    ) override;
+    void Process_vkCreateVideoSessionKHR(const ApiCallInfo& call_info, args::CreateVideoSessionKHR& args) override;
 
-    void Process_vkDestroyVideoSessionKHR(
-        const ApiCallInfo& call_info,
-        args::DestroyVideoSessionKHR& args
-    ) override;
+    void Process_vkDestroyVideoSessionKHR(const ApiCallInfo& call_info, args::DestroyVideoSessionKHR& args) override;
 
     void Process_vkCreateVideoSessionParametersKHR(
-        const ApiCallInfo& call_info,
-        args::CreateVideoSessionParametersKHR& args
+        const ApiCallInfo& call_info, args::CreateVideoSessionParametersKHR& args
     ) override;
 
     void Process_vkDestroyVideoSessionParametersKHR(
-        const ApiCallInfo& call_info,
-        args::DestroyVideoSessionParametersKHR& args
+        const ApiCallInfo& call_info, args::DestroyVideoSessionParametersKHR& args
     ) override;
 
     void Process_vkCreateIndirectCommandsLayoutEXT(
-        const ApiCallInfo& call_info,
-        args::CreateIndirectCommandsLayoutEXT& args
+        const ApiCallInfo& call_info, args::CreateIndirectCommandsLayoutEXT& args
     ) override;
 
     void Process_vkDestroyIndirectCommandsLayoutEXT(
-        const ApiCallInfo& call_info,
-        args::DestroyIndirectCommandsLayoutEXT& args
+        const ApiCallInfo& call_info, args::DestroyIndirectCommandsLayoutEXT& args
     ) override;
 
-    void Process_vkCreateMicromapEXT(
-        const ApiCallInfo& call_info,
-        args::CreateMicromapEXT& args
-    ) override;
+    void Process_vkCreateMicromapEXT(const ApiCallInfo& call_info, args::CreateMicromapEXT& args) override;
 
-    void Process_vkDestroyMicromapEXT(
-        const ApiCallInfo& call_info,
-        args::DestroyMicromapEXT& args
-    ) override;
+    void Process_vkDestroyMicromapEXT(const ApiCallInfo& call_info, args::DestroyMicromapEXT& args) override;
 
     void Process_vkCreateOpticalFlowSessionNV(
-        const ApiCallInfo& call_info,
-        args::CreateOpticalFlowSessionNV& args
+        const ApiCallInfo& call_info, args::CreateOpticalFlowSessionNV& args
     ) override;
 
     void Process_vkDestroyOpticalFlowSessionNV(
-        const ApiCallInfo& call_info,
-        args::DestroyOpticalFlowSessionNV& args
+        const ApiCallInfo& call_info, args::DestroyOpticalFlowSessionNV& args
     ) override;
 
     void Process_vkCreateDataGraphPipelinesARM(
-        const ApiCallInfo& call_info,
-        args::CreateDataGraphPipelinesARM& args
+        const ApiCallInfo& call_info, args::CreateDataGraphPipelinesARM& args
     ) override;
 
     void Process_vkCreateDataGraphPipelineSessionARM(
-        const ApiCallInfo& call_info,
-        args::CreateDataGraphPipelineSessionARM& args
+        const ApiCallInfo& call_info, args::CreateDataGraphPipelineSessionARM& args
     ) override;
 
     void Process_vkDestroyDataGraphPipelineSessionARM(
-        const ApiCallInfo& call_info,
-        args::DestroyDataGraphPipelineSessionARM& args
+        const ApiCallInfo& call_info, args::DestroyDataGraphPipelineSessionARM& args
     ) override;
 
-    void Process_vkCmdDispatchDataGraphARM(
-        const ApiCallInfo& call_info,
-        args::CmdDispatchDataGraphARM& args
-    ) override;
+    void Process_vkCmdDispatchDataGraphARM(const ApiCallInfo& call_info, args::CmdDispatchDataGraphARM& args) override;
 
     // TODO these were originally overridden in the export json
     // notes about each one in the implementation but need to determine
     // if these are still necessary
     void Process_vkCmdBuildAccelerationStructuresIndirectKHR(
-        const ApiCallInfo& call_info,
-        args::CmdBuildAccelerationStructuresIndirectKHR& args
+        const ApiCallInfo& call_info, args::CmdBuildAccelerationStructuresIndirectKHR& args
     ) override;
 
-    void Process_vkGetPipelineCacheData(
-        const ApiCallInfo& call_info,
-        args::GetPipelineCacheData& args
-    ) override;
+    void Process_vkGetPipelineCacheData(const ApiCallInfo& call_info, args::GetPipelineCacheData& args) override;
 
-    void Process_vkCmdPushConstants(
-        const ApiCallInfo& call_info,
-        args::CmdPushConstants& args
-    ) override;
+    void Process_vkCmdPushConstants(const ApiCallInfo& call_info, args::CmdPushConstants& args) override;
 
-    void Process_vkCmdBindDescriptorSets(
-        const ApiCallInfo& call_info,
-        args::CmdBindDescriptorSets& args
-    ) override;
+    void Process_vkCmdBindDescriptorSets(const ApiCallInfo& call_info, args::CmdBindDescriptorSets& args) override;
 
-    void Process_vkCmdBindDescriptorSets2(
-        const ApiCallInfo& call_info,
-        args::CmdBindDescriptorSets2& args
-    ) override;
+    void Process_vkCmdBindDescriptorSets2(const ApiCallInfo& call_info, args::CmdBindDescriptorSets2& args) override;
 
     void Process_vkCmdBindDescriptorSets2KHR(
-        const ApiCallInfo& call_info,
-        args::CmdBindDescriptorSets2KHR& args
+        const ApiCallInfo& call_info, args::CmdBindDescriptorSets2KHR& args
     ) override;
 
   private:

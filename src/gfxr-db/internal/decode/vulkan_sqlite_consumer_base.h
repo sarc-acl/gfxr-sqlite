@@ -251,6 +251,9 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
     void LogUnsupportedPNext(PNextNode* pNext);
     void LogUnsupportedPNext(VkStructureType type);
 
+    void LogUnsupportedDynamicState(VkDynamicState state);
+    void LogUnsupportedDynamicState(const char* commandName);
+
     template <class T>
     inline bool HasData(const gfxrecon::decode::StructPointerDecoder<T>* structPtr)
     {
