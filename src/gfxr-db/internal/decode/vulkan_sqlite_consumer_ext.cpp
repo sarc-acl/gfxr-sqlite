@@ -48,41 +48,42 @@
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
 
-#define CREATE_COMMAND_BUFFER_INSTANCE_ID()                                                                          \
+#define CREATE_COMMAND_BUFFER_INSTANCE_ID()                                                                         \
     auto commandBufferRecordingIdOpt = context.GetCommandBufferRecordingId(args.commandBuffer);                     \
-    if (!commandBufferRecordingIdOpt)                                                                                \
-    {                                                                                                                \
-        LOG_CMD_WARNING(                                                                                             \
+    if (!commandBufferRecordingIdOpt)                                                                               \
+    {                                                                                                               \
+        LOG_CMD_WARNING(                                                                                            \
             "Null command buffer recording not allowed for command buffer with handle %" PRIu64, args.commandBuffer \
-        );                                                                                                           \
-        return;                                                                                                      \
-    }                                                                                                                \
+        );                                                                                                          \
+        return;                                                                                                     \
+    }                                                                                                               \
     auto commandBufferRecordingId = commandBufferRecordingIdOpt.value()
 
 // Requires prior call to CREATE_COMMAND_BUFFER_INSTANCE_ID().
 // Declares renderPassRecordingId, renderSubpassRecordingId, dynamicRenderPassRecordingId as std::optional<int64_t>.
-#define GET_COMMAND_BUFFER_RENDERPASS_SCOPE()                                                                        \
-    std::optional<int64_t> renderPassRecordingId = std::nullopt;                                                     \
-    std::optional<int64_t> renderSubpassRecordingId = std::nullopt;                                                  \
-    std::optional<int64_t> dynamicRenderPassRecordingId = std::nullopt;                                              \
-    {                                                                                                                \
-        auto _rpIter = context.commandBufferHandleToRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));    \
-        if (_rpIter != context.commandBufferHandleToRenderPassRecordingIdStack.end() && !_rpIter->second.empty())    \
-        {                                                                                                            \
-            auto _rpTop = _rpIter->second.top();                                                                     \
-            renderPassRecordingId = _rpTop;                                                                          \
-            auto _subpassIter = context.renderPassRecordingIdToRenderSubpassRecordingId.find(_rpTop);                \
-            if (_subpassIter != context.renderPassRecordingIdToRenderSubpassRecordingId.end())                       \
-            {                                                                                                        \
-                renderSubpassRecordingId = _subpassIter->second;                                                     \
-            }                                                                                                        \
-        }                                                                                                            \
-        auto _drpIter = context.commandBufferHandleToDynamicRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer)); \
-        if (_drpIter != context.commandBufferHandleToDynamicRenderPassRecordingIdStack.end() &&                      \
-            !_drpIter->second.empty())                                                                               \
-        {                                                                                                            \
-            dynamicRenderPassRecordingId = _drpIter->second.top();                                                   \
-        }                                                                                                            \
+#define GET_COMMAND_BUFFER_RENDERPASS_SCOPE()                                                                     \
+    std::optional<int64_t> renderPassRecordingId = std::nullopt;                                                  \
+    std::optional<int64_t> renderSubpassRecordingId = std::nullopt;                                               \
+    std::optional<int64_t> dynamicRenderPassRecordingId = std::nullopt;                                           \
+    {                                                                                                             \
+        auto _rpIter = context.commandBufferHandleToRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer)); \
+        if (_rpIter != context.commandBufferHandleToRenderPassRecordingIdStack.end() && !_rpIter->second.empty()) \
+        {                                                                                                         \
+            auto _rpTop = _rpIter->second.top();                                                                  \
+            renderPassRecordingId = _rpTop;                                                                       \
+            auto _subpassIter = context.renderPassRecordingIdToRenderSubpassRecordingId.find(_rpTop);             \
+            if (_subpassIter != context.renderPassRecordingIdToRenderSubpassRecordingId.end())                    \
+            {                                                                                                     \
+                renderSubpassRecordingId = _subpassIter->second;                                                  \
+            }                                                                                                     \
+        }                                                                                                         \
+        auto _drpIter =                                                                                           \
+            context.commandBufferHandleToDynamicRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));     \
+        if (_drpIter != context.commandBufferHandleToDynamicRenderPassRecordingIdStack.end() &&                   \
+            !_drpIter->second.empty())                                                                            \
+        {                                                                                                         \
+            dynamicRenderPassRecordingId = _drpIter->second.top();                                                \
+        }                                                                                                         \
     }
 
 VulkanSqliteConsumerExt::VulkanSqliteConsumerExt(sqlite3* db) : VulkanSqliteConsumer(db)
@@ -97,8 +98,7 @@ VulkanSqliteConsumerExt::VulkanSqliteConsumerExt(sqlite3* db) : VulkanSqliteCons
 // special handling override functions
 
 void VulkanSqliteConsumerExt::Process_vkSetDebugUtilsObjectNameEXT(
-    const ApiCallInfo& call_info,
-    args::SetDebugUtilsObjectNameEXT& args
+    const ApiCallInfo& call_info, args::SetDebugUtilsObjectNameEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -125,8 +125,7 @@ void VulkanSqliteConsumerExt::Process_vkSetDebugUtilsObjectNameEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkSetDebugUtilsObjectTagEXT(
-    const ApiCallInfo& call_info,
-    args::SetDebugUtilsObjectTagEXT& args
+    const ApiCallInfo& call_info, args::SetDebugUtilsObjectTagEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -175,7 +174,9 @@ void VulkanSqliteConsumerExt::Process_vkQueueBeginDebugUtilsLabelEXT(
     statements.InsertDebugLabelQueueBegin(args.queue, name, color, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkQueueEndDebugUtilsLabelEXT(const ApiCallInfo& call_info, args::QueueEndDebugUtilsLabelEXT& args)
+void VulkanSqliteConsumerExt::Process_vkQueueEndDebugUtilsLabelEXT(
+    const ApiCallInfo& call_info, args::QueueEndDebugUtilsLabelEXT& args
+)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkQueueEndDebugUtilsLabelEXT(call_info, args);
@@ -183,7 +184,9 @@ void VulkanSqliteConsumerExt::Process_vkQueueEndDebugUtilsLabelEXT(const ApiCall
     auto stackIter = context.queueHandleToDebugLabelIdStack.find(ToInt64(args.queue));
     if (stackIter == context.queueHandleToDebugLabelIdStack.end() || stackIter->second.empty())
     {
-        LOG_CMD_WARNING("Failed to end queue debug label, no existing debug label for queue handle %" PRIu64, args.queue);
+        LOG_CMD_WARNING(
+            "Failed to end queue debug label, no existing debug label for queue handle %" PRIu64, args.queue
+        );
         return;
     }
     statements.UpdateDebugLabelEnd(stackIter->second.top(), this->block_index_);
@@ -212,8 +215,7 @@ void VulkanSqliteConsumerExt::Process_vkQueueInsertDebugUtilsLabelEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBeginDebugUtilsLabelEXT(
-    const ApiCallInfo& call_info,
-    args::CmdBeginDebugUtilsLabelEXT& args
+    const ApiCallInfo& call_info, args::CmdBeginDebugUtilsLabelEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -287,8 +289,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdEndDebugUtilsLabelEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdInsertDebugUtilsLabelEXT(
-    const ApiCallInfo& call_info,
-    args::CmdInsertDebugUtilsLabelEXT& args
+    const ApiCallInfo& call_info, args::CmdInsertDebugUtilsLabelEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -320,8 +321,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdInsertDebugUtilsLabelEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectTagEXT(
-    const ApiCallInfo& call_info,
-    args::DebugMarkerSetObjectTagEXT& args
+    const ApiCallInfo& call_info, args::DebugMarkerSetObjectTagEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -350,8 +350,7 @@ void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectTagEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectNameEXT(
-    const ApiCallInfo& call_info,
-    args::DebugMarkerSetObjectNameEXT& args
+    const ApiCallInfo& call_info, args::DebugMarkerSetObjectNameEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -378,8 +377,7 @@ void VulkanSqliteConsumerExt::Process_vkDebugMarkerSetObjectNameEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerBeginEXT(
-    const ApiCallInfo& call_info,
-    args::CmdDebugMarkerBeginEXT& args
+    const ApiCallInfo& call_info, args::CmdDebugMarkerBeginEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -452,8 +450,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerEndEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerInsertEXT(
-    const ApiCallInfo& call_info,
-    args::CmdDebugMarkerInsertEXT& args
+    const ApiCallInfo& call_info, args::CmdDebugMarkerInsertEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -485,8 +482,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdDebugMarkerInsertEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDebugReportCallbackEXT(
-    const ApiCallInfo& call_info,
-    args::CreateDebugReportCallbackEXT& args
+    const ApiCallInfo& call_info, args::CreateDebugReportCallbackEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -522,8 +518,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugReportCallbackEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDebugReportCallbackEXT(
-    const ApiCallInfo& call_info,
-    args::DestroyDebugReportCallbackEXT& args
+    const ApiCallInfo& call_info, args::DestroyDebugReportCallbackEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -538,8 +533,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDebugReportCallbackEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDebugUtilsMessengerEXT(
-    const ApiCallInfo& call_info,
-    args::CreateDebugUtilsMessengerEXT& args
+    const ApiCallInfo& call_info, args::CreateDebugUtilsMessengerEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -573,23 +567,20 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugUtilsMessengerEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDebugUtilsMessengerEXT(
-    const ApiCallInfo& call_info,
-    args::DestroyDebugUtilsMessengerEXT& args
+    const ApiCallInfo& call_info, args::DestroyDebugUtilsMessengerEXT& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyDebugUtilsMessengerEXT(call_info, args);
 
-    if (auto id = context.ExtractId(args.messenger, context.debugMessengerHandleToId, "debug messenger", this->block_index_))
+    if (auto id =
+            context.ExtractId(args.messenger, context.debugMessengerHandleToId, "debug messenger", this->block_index_))
     {
         statements.DestroyObject(statements.destroyDebugMessengerUpdateStatement, this->block_index_, *id);
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateInstance(
-    const ApiCallInfo& call_info,
-    args::CreateInstance& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateInstance(const ApiCallInfo& call_info, args::CreateInstance& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateInstance(call_info, args);
@@ -831,10 +822,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyInstance(
-    const ApiCallInfo& call_info,
-    args::DestroyInstance& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyInstance(const ApiCallInfo& call_info, args::DestroyInstance& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyInstance(call_info, args);
@@ -846,8 +834,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyInstance(
 }
 
 void VulkanSqliteConsumerExt::Process_vkEnumeratePhysicalDevices(
-    const ApiCallInfo& call_info,
-    args::EnumeratePhysicalDevices& args
+    const ApiCallInfo& call_info, args::EnumeratePhysicalDevices& args
 )
 {
     // generate the base apiEvents database entries
@@ -880,10 +867,7 @@ void VulkanSqliteConsumerExt::Process_vkEnumeratePhysicalDevices(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateDevice(
-    const ApiCallInfo& call_info,
-    args::CreateDevice& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateDevice(const ApiCallInfo& call_info, args::CreateDevice& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateDevice(call_info, args);
@@ -1005,10 +989,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDevice(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyDevice(
-    const ApiCallInfo& call_info,
-    args::DestroyDevice& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyDevice(const ApiCallInfo& call_info, args::DestroyDevice& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyDevice(call_info, args);
@@ -1094,10 +1075,7 @@ void VulkanSqliteConsumerExt::ProcessQueue(
     statements.InsertQueue(queueHandle, flags, queueFamilyIndex, queueIndex, priority, device);
 }
 
-void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue(
-    const ApiCallInfo& call_info,
-    args::GetDeviceQueue& args
-)
+void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue(const ApiCallInfo& call_info, args::GetDeviceQueue& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkGetDeviceQueue(call_info, args);
@@ -1110,10 +1088,7 @@ void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue(
     ProcessQueue(call_info, args.device, args.queueFamilyIndex, args.queueIndex, 0, &args.pQueue);
 }
 
-void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue2(
-    const ApiCallInfo& call_info,
-    args::GetDeviceQueue2& args
-)
+void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue2(const ApiCallInfo& call_info, args::GetDeviceQueue2& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkGetDeviceQueue2(call_info, args);
@@ -1137,10 +1112,7 @@ void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue2(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkQueueSubmit(
-    const ApiCallInfo& call_info,
-    args::QueueSubmit& args
-)
+void VulkanSqliteConsumerExt::Process_vkQueueSubmit(const ApiCallInfo& call_info, args::QueueSubmit& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkQueueSubmit(call_info, args);
@@ -1425,10 +1397,7 @@ void VulkanSqliteConsumerExt::ProcessQueueSubmit2Info(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkQueueSubmit2(
-    const ApiCallInfo& call_info,
-    args::QueueSubmit2& args
-)
+void VulkanSqliteConsumerExt::Process_vkQueueSubmit2(const ApiCallInfo& call_info, args::QueueSubmit2& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkQueueSubmit2(call_info, args);
@@ -1436,10 +1405,7 @@ void VulkanSqliteConsumerExt::Process_vkQueueSubmit2(
     ProcessQueueSubmit2Info(call_info, args.result, args.queue, args.submitCount, &args.pSubmits, args.fence);
 }
 
-void VulkanSqliteConsumerExt::Process_vkQueueSubmit2KHR(
-    const ApiCallInfo& call_info,
-    args::QueueSubmit2KHR& args
-)
+void VulkanSqliteConsumerExt::Process_vkQueueSubmit2KHR(const ApiCallInfo& call_info, args::QueueSubmit2KHR& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkQueueSubmit2KHR(call_info, args);
@@ -1447,10 +1413,7 @@ void VulkanSqliteConsumerExt::Process_vkQueueSubmit2KHR(
     ProcessQueueSubmit2Info(call_info, args.result, args.queue, args.submitCount, &args.pSubmits, args.fence);
 }
 
-void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
-    const ApiCallInfo& call_info,
-    args::QueuePresentKHR& args
-)
+void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(const ApiCallInfo& call_info, args::QueuePresentKHR& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkQueuePresentKHR(call_info, args);
@@ -1643,10 +1606,7 @@ void VulkanSqliteConsumerExt::Process_vkQueuePresentKHR(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateFence(
-    const ApiCallInfo& call_info,
-    args::CreateFence& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateFence(const ApiCallInfo& call_info, args::CreateFence& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateFence(call_info, args);
@@ -1697,10 +1657,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateFence(
     statements.InsertFenceSyncScope(ToInt64(fence), fenceId, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyFence(
-    const ApiCallInfo& call_info,
-    args::DestroyFence& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyFence(const ApiCallInfo& call_info, args::DestroyFence& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyFence(call_info, args);
@@ -1712,10 +1669,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyFence(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkResetFences(
-    const ApiCallInfo& call_info,
-    args::ResetFences& args
-)
+void VulkanSqliteConsumerExt::Process_vkResetFences(const ApiCallInfo& call_info, args::ResetFences& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkResetFences(call_info, args);
@@ -1751,10 +1705,7 @@ void VulkanSqliteConsumerExt::Process_vkResetFences(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkWaitForFences(
-    const ApiCallInfo& call_info,
-    args::WaitForFences& args
-)
+void VulkanSqliteConsumerExt::Process_vkWaitForFences(const ApiCallInfo& call_info, args::WaitForFences& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkWaitForFences(call_info, args);
@@ -1833,8 +1784,9 @@ void VulkanSqliteConsumerExt::Process_vkCreateSemaphore(const ApiCallInfo& call_
         pnext = header->pNext;
     }
 
-    auto semaphoreId =
-        statements.InsertSemaphore(semaphore, args.device, semaphoreType, initialValue, handleTypes, this->block_index_);
+    auto semaphoreId = statements.InsertSemaphore(
+        semaphore, args.device, semaphoreType, initialValue, handleTypes, this->block_index_
+    );
 
     // This line incorrectly generates warning C26813 "Use 'bitwise and' to check if a flag is set" unless it is
     // suppressed before Vulkan headers are included. VkSemaphoreType is not a bit flag enum (it just only has members
@@ -2197,18 +2149,23 @@ void VulkanSqliteConsumerExt::Process_vkCreateShaderModule(const ApiCallInfo& ca
     statements.InsertShaderModule(shaderModule, args.device, codeSize, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyShaderModule(const ApiCallInfo& call_info, args::DestroyShaderModule& args)
+void VulkanSqliteConsumerExt::Process_vkDestroyShaderModule(
+    const ApiCallInfo& call_info, args::DestroyShaderModule& args
+)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyShaderModule(call_info, args);
 
-    if (auto id = context.ExtractId(args.shaderModule, context.shaderModuleHandleToId, "shaderModule", this->block_index_))
+    if (auto id =
+            context.ExtractId(args.shaderModule, context.shaderModuleHandleToId, "shaderModule", this->block_index_))
     {
         statements.DestroyObject(statements.destroyShaderModuleUpdateStatement, this->block_index_, *id);
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateValidationCacheEXT(const ApiCallInfo& call_info, args::CreateValidationCacheEXT& args)
+void VulkanSqliteConsumerExt::Process_vkCreateValidationCacheEXT(
+    const ApiCallInfo& call_info, args::CreateValidationCacheEXT& args
+)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateValidationCacheEXT(call_info, args);
@@ -2240,7 +2197,9 @@ void VulkanSqliteConsumerExt::Process_vkCreateValidationCacheEXT(const ApiCallIn
     statements.InsertValidationCache(validationCache, args.device, initialDataSize, this->block_index_);
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyValidationCacheEXT(const ApiCallInfo& call_info, args::DestroyValidationCacheEXT& args)
+void VulkanSqliteConsumerExt::Process_vkDestroyValidationCacheEXT(
+    const ApiCallInfo& call_info, args::DestroyValidationCacheEXT& args
+)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyValidationCacheEXT(call_info, args);
@@ -2254,8 +2213,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyValidationCacheEXT(const ApiCallI
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreatePipelineCache(
-    const ApiCallInfo& call_info,
-    args::CreatePipelineCache& args
+    const ApiCallInfo& call_info, args::CreatePipelineCache& args
 )
 {
     // generate the base apiEvents database entries
@@ -2293,8 +2251,7 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineCache(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPipelineCache(
-    const ApiCallInfo& call_info,
-    args::DestroyPipelineCache& args
+    const ApiCallInfo& call_info, args::DestroyPipelineCache& args
 )
 {
     // generate the base apiEvents database entries
@@ -3812,8 +3769,7 @@ void VulkanSqliteConsumerExt::ProcessPipelineShaderStageCreateInfo(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
-    const ApiCallInfo& call_info,
-    args::CreateGraphicsPipelines& args
+    const ApiCallInfo& call_info, args::CreateGraphicsPipelines& args
 )
 {
     // generate the base apiEvents database entries
@@ -4174,8 +4130,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
-    const ApiCallInfo& call_info,
-    args::CreateComputePipelines& args
+    const ApiCallInfo& call_info, args::CreateComputePipelines& args
 )
 {
     // generate the base apiEvents database entries
@@ -4336,8 +4291,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateComputePipelines(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
-    const ApiCallInfo& call_info,
-    args::CreateRayTracingPipelinesNV& args
+    const ApiCallInfo& call_info, args::CreateRayTracingPipelinesNV& args
 )
 {
     // generate the base apiEvents database entries
@@ -4507,8 +4461,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesNV(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
-    const ApiCallInfo& call_info,
-    args::CreateRayTracingPipelinesKHR& args
+    const ApiCallInfo& call_info, args::CreateRayTracingPipelinesKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -4738,10 +4691,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRayTracingPipelinesKHR(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyPipeline(
-    const ApiCallInfo& call_info,
-    args::DestroyPipeline& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyPipeline(const ApiCallInfo& call_info, args::DestroyPipeline& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyPipeline(call_info, args);
@@ -4758,8 +4708,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyPipeline(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreatePipelineLayout(
-    const ApiCallInfo& call_info,
-    args::CreatePipelineLayout& args
+    const ApiCallInfo& call_info, args::CreatePipelineLayout& args
 )
 {
     // generate the base apiEvents database entries
@@ -4836,23 +4785,22 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineLayout(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPipelineLayout(
-    const ApiCallInfo& call_info,
-    args::DestroyPipelineLayout& args
+    const ApiCallInfo& call_info, args::DestroyPipelineLayout& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyPipelineLayout(call_info, args);
 
-    if (auto id =
-            context.ExtractId(args.pipelineLayout, context.pipelineLayoutHandleToId, "pipelineLayout", this->block_index_))
+    if (auto id = context.ExtractId(
+            args.pipelineLayout, context.pipelineLayoutHandleToId, "pipelineLayout", this->block_index_
+        ))
     {
         statements.DestroyObject(statements.destroyPipelineLayoutUpdateStatement, this->block_index_, *id);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDescriptorSetLayout(
-    const ApiCallInfo& call_info,
-    args::CreateDescriptorSetLayout& args
+    const ApiCallInfo& call_info, args::CreateDescriptorSetLayout& args
 )
 {
     // generate the base apiEvents database entries
@@ -4949,8 +4897,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDescriptorSetLayout(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorSetLayout(
-    const ApiCallInfo& call_info,
-    args::DestroyDescriptorSetLayout& args
+    const ApiCallInfo& call_info, args::DestroyDescriptorSetLayout& args
 )
 {
     // generate the base apiEvents database entries
@@ -4966,8 +4913,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorSetLayout(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDescriptorPool(
-    const ApiCallInfo& call_info,
-    args::CreateDescriptorPool& args
+    const ApiCallInfo& call_info, args::CreateDescriptorPool& args
 )
 {
     // generate the base apiEvents database entries
@@ -5002,15 +4948,15 @@ void VulkanSqliteConsumerExt::Process_vkCreateDescriptorPool(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorPool(
-    const ApiCallInfo& call_info,
-    args::DestroyDescriptorPool& args
+    const ApiCallInfo& call_info, args::DestroyDescriptorPool& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyDescriptorPool(call_info, args);
 
-    if (auto id =
-            context.ExtractId(args.descriptorPool, context.descriptorPoolHandleToId, "descriptor pool", this->block_index_))
+    if (auto id = context.ExtractId(
+            args.descriptorPool, context.descriptorPoolHandleToId, "descriptor pool", this->block_index_
+        ))
     {
         statements.DestroyObject(statements.destroyDescriptorPoolUpdateStatement, this->block_index_, *id);
         // update all un-freed associated descriptor sets as they are now implicitly freed
@@ -5019,8 +4965,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorPool(
 }
 
 void VulkanSqliteConsumerExt::Process_vkResetDescriptorPool(
-    const ApiCallInfo& call_info,
-    args::ResetDescriptorPool& args
+    const ApiCallInfo& call_info, args::ResetDescriptorPool& args
 )
 {
     // generate the base apiEvents database entries
@@ -5042,8 +4987,7 @@ void VulkanSqliteConsumerExt::Process_vkResetDescriptorPool(
 }
 
 void VulkanSqliteConsumerExt::Process_vkAllocateDescriptorSets(
-    const ApiCallInfo& call_info,
-    args::AllocateDescriptorSets& args
+    const ApiCallInfo& call_info, args::AllocateDescriptorSets& args
 )
 {
     // generate the base apiEvents database entries
@@ -5118,10 +5062,7 @@ void VulkanSqliteConsumerExt::Process_vkAllocateDescriptorSets(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkFreeDescriptorSets(
-    const ApiCallInfo& call_info,
-    args::FreeDescriptorSets& args
-)
+void VulkanSqliteConsumerExt::Process_vkFreeDescriptorSets(const ApiCallInfo& call_info, args::FreeDescriptorSets& args)
 {
 
     // generate the base apiEvents database entries
@@ -5366,9 +5307,7 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateRenderPass(
-    const ApiCallInfo& call_info, args::CreateRenderPass& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateRenderPass(const ApiCallInfo& call_info, args::CreateRenderPass& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateRenderPass(call_info, args);
@@ -5376,9 +5315,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRenderPass(
     CreateRenderPass(args.result, args.device, &args.pCreateInfo, &args.pRenderPass);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateRenderPass2(
-    const ApiCallInfo& call_info, args::CreateRenderPass2& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateRenderPass2(const ApiCallInfo& call_info, args::CreateRenderPass2& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateRenderPass2(call_info, args);
@@ -5396,9 +5333,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateRenderPass2KHR(
     CreateRenderPass(args.result, args.device, &args.pCreateInfo, &args.pRenderPass);
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyRenderPass(
-    const ApiCallInfo& call_info, args::DestroyRenderPass& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyRenderPass(const ApiCallInfo& call_info, args::DestroyRenderPass& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyRenderPass(call_info, args);
@@ -5588,8 +5523,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyPrivateDataSlotEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
-    const ApiCallInfo& call_info,
-    args::CmdBindDescriptorSets& args
+    const ApiCallInfo& call_info, args::CmdBindDescriptorSets& args
 )
 {
     // generate the base apiEvents database entries
@@ -5615,7 +5549,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
     auto pipelineLayoutIter = context.pipelineLayoutHandleToId.find(ToInt64(args.layout));
     if (pipelineLayoutIter == context.pipelineLayoutHandleToId.end())
     {
-        LOG_CMD_WARNING("Failed to bind descriptor sets, failed to find pipeline layout with handle %" PRIi64, args.layout);
+        LOG_CMD_WARNING(
+            "Failed to bind descriptor sets, failed to find pipeline layout with handle %" PRIi64, args.layout
+        );
         return;
     }
 
@@ -5658,7 +5594,8 @@ void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
                 break;
             default:
                 LOG_CMD_WARNING(
-                    "Failed to set descriptor set stage flags, unknown pipeline bind point %" PRIi64, args.pipelineBindPoint
+                    "Failed to set descriptor set stage flags, unknown pipeline bind point %" PRIi64,
+                    args.pipelineBindPoint
                 );
         }
 
@@ -5812,8 +5749,7 @@ void VulkanSqliteConsumerExt::BindDescriptorSets2(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets2(
-    const ApiCallInfo& call_info,
-    args::CmdBindDescriptorSets2& args
+    const ApiCallInfo& call_info, args::CmdBindDescriptorSets2& args
 )
 {
     // generate the base apiEvents database entries
@@ -5823,8 +5759,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets2(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets2KHR(
-    const ApiCallInfo& call_info,
-    args::CmdBindDescriptorSets2KHR& args
+    const ApiCallInfo& call_info, args::CmdBindDescriptorSets2KHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -6411,8 +6346,7 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
 }
 
 void VulkanSqliteConsumerExt::Process_vkUpdateDescriptorSets(
-    const ApiCallInfo& call_info,
-    args::UpdateDescriptorSets& args
+    const ApiCallInfo& call_info, args::UpdateDescriptorSets& args
 )
 {
     // generate the base apiEvents database entries
@@ -6725,8 +6659,7 @@ void VulkanSqliteConsumerExt::WriteDescriptorSetWithTemplate(
 }
 
 void VulkanSqliteConsumerExt::Process_vkUpdateDescriptorSetWithTemplate(
-    const ApiCallInfo& call_info,
-    args::UpdateDescriptorSetWithTemplate& args
+    const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplate& args
 )
 {
     // generate the base apiEvents database entries
@@ -6736,8 +6669,7 @@ void VulkanSqliteConsumerExt::Process_vkUpdateDescriptorSetWithTemplate(
 }
 
 void VulkanSqliteConsumerExt::Process_vkUpdateDescriptorSetWithTemplateKHR(
-    const ApiCallInfo& call_info,
-    args::UpdateDescriptorSetWithTemplateKHR& args
+    const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplateKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -6843,34 +6775,43 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet(
-    const ApiCallInfo& call_info,
-    args::CmdPushDescriptorSet& args
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSet& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet(call_info, args);
 
     PushDescriptorSet(
-        args.commandBuffer, args.pipelineBindPoint, std::nullopt, args.layout, args.set, args.descriptorWriteCount, &args.pDescriptorWrites
+        args.commandBuffer,
+        args.pipelineBindPoint,
+        std::nullopt,
+        args.layout,
+        args.set,
+        args.descriptorWriteCount,
+        &args.pDescriptorWrites
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetKHR(
-    const ApiCallInfo& call_info,
-    args::CmdPushDescriptorSetKHR& args
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSetKHR& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetKHR(call_info, args);
 
     PushDescriptorSet(
-        args.commandBuffer, args.pipelineBindPoint, std::nullopt, args.layout, args.set, args.descriptorWriteCount, &args.pDescriptorWrites
+        args.commandBuffer,
+        args.pipelineBindPoint,
+        std::nullopt,
+        args.layout,
+        args.set,
+        args.descriptorWriteCount,
+        &args.pDescriptorWrites
     );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2(
-    const ApiCallInfo& call_info,
-    args::CmdPushDescriptorSet2& args
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSet2& args
 )
 {
     // generate the base apiEvents database entries
@@ -6898,8 +6839,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSet2KHR(
-    const ApiCallInfo& call_info,
-    args::CmdPushDescriptorSet2KHR& args
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSet2KHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7021,18 +6961,21 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate(
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate(call_info, args);
 
-    PushDescriptorSetWithTemplate(args.commandBuffer, args.descriptorUpdateTemplate, args.layout, args.set, &args.pData);
+    PushDescriptorSetWithTemplate(
+        args.commandBuffer, args.descriptorUpdateTemplate, args.layout, args.set, &args.pData
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplateKHR(
-    const ApiCallInfo& call_info,
-    args::CmdPushDescriptorSetWithTemplateKHR& args
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplateKHR& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplateKHR(call_info, args);
 
-    PushDescriptorSetWithTemplate(args.commandBuffer, args.descriptorUpdateTemplate, args.layout, args.set, &args.pData);
+    PushDescriptorSetWithTemplate(
+        args.commandBuffer, args.descriptorUpdateTemplate, args.layout, args.set, &args.pData
+    );
 }
 
 void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate2(
@@ -7073,8 +7016,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
-    const ApiCallInfo& call_info,
-    args::CmdPushDescriptorSetWithTemplate2KHR& args
+    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2KHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7083,10 +7025,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
     PushDescriptorSetWithTemplate2(args.commandBuffer, &args.pPushDescriptorSetWithTemplateInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateBuffer(
-    const ApiCallInfo& call_info,
-    args::CreateBuffer& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateBuffer(const ApiCallInfo& call_info, args::CreateBuffer& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateBuffer(call_info, args);
@@ -7141,13 +7080,12 @@ void VulkanSqliteConsumerExt::Process_vkCreateBuffer(
         pnext = header->pNext;
     }
 
-    statements.InsertBuffer(buffer, args.device, ci.flags, ci.size, ci.usage, usage2, ci.sharingMode, this->block_index_);
+    statements.InsertBuffer(
+        buffer, args.device, ci.flags, ci.size, ci.usage, usage2, ci.sharingMode, this->block_index_
+    );
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyBuffer(
-    const ApiCallInfo& call_info,
-    args::DestroyBuffer& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyBuffer(const ApiCallInfo& call_info, args::DestroyBuffer& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyBuffer(call_info, args);
@@ -7158,10 +7096,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyBuffer(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateBufferView(
-    const ApiCallInfo& call_info,
-    args::CreateBufferView& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateBufferView(const ApiCallInfo& call_info, args::CreateBufferView& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateBufferView(call_info, args);
@@ -7197,10 +7132,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateBufferView(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyBufferView(
-    const ApiCallInfo& call_info,
-    args::DestroyBufferView& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyBufferView(const ApiCallInfo& call_info, args::DestroyBufferView& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyBufferView(call_info, args);
@@ -7211,10 +7143,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyBufferView(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateImage(
-    const ApiCallInfo& call_info,
-    args::CreateImage& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateImage(const ApiCallInfo& call_info, args::CreateImage& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateImage(call_info, args);
@@ -7408,10 +7337,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyImageView(const ApiCallInfo& call
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateSampler(
-    const ApiCallInfo& call_info,
-    args::CreateSampler& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateSampler(const ApiCallInfo& call_info, args::CreateSampler& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateSampler(call_info, args);
@@ -7491,10 +7417,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSampler(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroySampler(
-    const ApiCallInfo& call_info,
-    args::DestroySampler& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroySampler(const ApiCallInfo& call_info, args::DestroySampler& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroySampler(call_info, args);
@@ -7536,8 +7459,7 @@ void VulkanSqliteConsumerExt::GetDisplay(
 }
 
 void VulkanSqliteConsumerExt::Process_vkGetRandROutputDisplayEXT(
-    const ApiCallInfo& call_info,
-    args::GetRandROutputDisplayEXT& args
+    const ApiCallInfo& call_info, args::GetRandROutputDisplayEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -7546,10 +7468,7 @@ void VulkanSqliteConsumerExt::Process_vkGetRandROutputDisplayEXT(
     GetDisplay(args.result, args.physicalDevice, &args.pDisplay);
 }
 
-void VulkanSqliteConsumerExt::Process_vkGetDrmDisplayEXT(
-    const ApiCallInfo& call_info,
-    args::GetDrmDisplayEXT& args
-)
+void VulkanSqliteConsumerExt::Process_vkGetDrmDisplayEXT(const ApiCallInfo& call_info, args::GetDrmDisplayEXT& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkGetDrmDisplayEXT(call_info, args);
@@ -7557,10 +7476,7 @@ void VulkanSqliteConsumerExt::Process_vkGetDrmDisplayEXT(
     GetDisplay(args.result, args.physicalDevice, &args.display);
 }
 
-void VulkanSqliteConsumerExt::Process_vkGetWinrtDisplayNV(
-    const ApiCallInfo& call_info,
-    args::GetWinrtDisplayNV& args
-)
+void VulkanSqliteConsumerExt::Process_vkGetWinrtDisplayNV(const ApiCallInfo& call_info, args::GetWinrtDisplayNV& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkGetWinrtDisplayNV(call_info, args);
@@ -7569,8 +7485,7 @@ void VulkanSqliteConsumerExt::Process_vkGetWinrtDisplayNV(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
-    const ApiCallInfo& call_info,
-    args::CreateDisplayModeKHR& args
+    const ApiCallInfo& call_info, args::CreateDisplayModeKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7592,7 +7507,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
         if (args.result == VK_SUCCESS)
         {
             LOG_CMD_WARNING(
-                "Failed to create display mode, failed to find physical device with handle %" PRIu64, args.physicalDevice
+                "Failed to create display mode, failed to find physical device with handle %" PRIu64,
+                args.physicalDevice
             );
         }
         return;
@@ -7633,10 +7549,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(
-    const ApiCallInfo& call_info,
-    args::CreateSwapchainKHR& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(const ApiCallInfo& call_info, args::CreateSwapchainKHR& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateSwapchainKHR(call_info, args);
@@ -7695,8 +7608,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
-    const ApiCallInfo& call_info,
-    args::CreateSharedSwapchainsKHR& args
+    const ApiCallInfo& call_info, args::CreateSharedSwapchainsKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7782,8 +7694,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroySwapchainKHR(
-    const ApiCallInfo& call_info,
-    args::DestroySwapchainKHR& args
+    const ApiCallInfo& call_info, args::DestroySwapchainKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7798,8 +7709,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroySwapchainKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkGetSwapchainImagesKHR(
-    const ApiCallInfo& call_info,
-    args::GetSwapchainImagesKHR& args
+    const ApiCallInfo& call_info, args::GetSwapchainImagesKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7832,8 +7742,7 @@ void VulkanSqliteConsumerExt::Process_vkGetSwapchainImagesKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkAcquireNextImageKHR(
-    const ApiCallInfo& call_info,
-    args::AcquireNextImageKHR& args
+    const ApiCallInfo& call_info, args::AcquireNextImageKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7868,8 +7777,7 @@ void VulkanSqliteConsumerExt::Process_vkAcquireNextImageKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkAcquireNextImage2KHR(
-    const ApiCallInfo& call_info,
-    args::AcquireNextImage2KHR& args
+    const ApiCallInfo& call_info, args::AcquireNextImage2KHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -7916,10 +7824,7 @@ void VulkanSqliteConsumerExt::Process_vkAcquireNextImage2KHR(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateFramebuffer(
-    const ApiCallInfo& call_info,
-    args::CreateFramebuffer& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateFramebuffer(const ApiCallInfo& call_info, args::CreateFramebuffer& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateFramebuffer(call_info, args);
@@ -8021,10 +7926,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateFramebuffer(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyFramebuffer(
-    const ApiCallInfo& call_info,
-    args::DestroyFramebuffer& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyFramebuffer(const ApiCallInfo& call_info, args::DestroyFramebuffer& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyFramebuffer(call_info, args);
@@ -8036,8 +7938,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyFramebuffer(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetVertexInputEXT(
-    const ApiCallInfo& call_info,
-    args::CmdSetVertexInputEXT& args
+    const ApiCallInfo& call_info, args::CmdSetVertexInputEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -8048,7 +7949,8 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetVertexInputEXT(
     // we need to clear the existing state before insertion, the vulkan spec indicates that if this command does not
     // include the description for a binding, then it is set to undefined
     context.commandBufferRecordingVertexInputBindingDescriptions[commandBufferRecordingId].clear();
-    auto [vertexBindingsValid, vertexBindings, vertexBindingsCount] = GetMetaStructArray(&args.pVertexBindingDescriptions);
+    auto [vertexBindingsValid, vertexBindings, vertexBindingsCount] =
+        GetMetaStructArray(&args.pVertexBindingDescriptions);
     if (vertexBindingsValid)
     {
         for (size_t i = 0; i < vertexBindingsCount; ++i)
@@ -8087,8 +7989,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetVertexInputEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocations(
-    const ApiCallInfo& call_info,
-    args::CmdSetRenderingAttachmentLocations& args
+    const ApiCallInfo& call_info, args::CmdSetRenderingAttachmentLocations& args
 )
 {
     // generate the base apiEvents database entries
@@ -8120,8 +8021,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocations(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocationsKHR(
-    const ApiCallInfo& call_info,
-    args::CmdSetRenderingAttachmentLocationsKHR& args
+    const ApiCallInfo& call_info, args::CmdSetRenderingAttachmentLocationsKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -8153,18 +8053,16 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingAttachmentLocationsKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndices(
-    const ApiCallInfo& call_info,
-    args::CmdSetRenderingInputAttachmentIndices& args
+    const ApiCallInfo& call_info, args::CmdSetRenderingInputAttachmentIndices& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndices(
-        call_info, args
-    );
+    VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndices(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] = GetMetaStructPointer(&args.pInputAttachmentIndexInfo);
+    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] =
+        GetMetaStructPointer(&args.pInputAttachmentIndexInfo);
     if (!inputAttachmentIndexInfoValid)
     {
         LOG_CMD_WARNING(
@@ -8206,18 +8104,16 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndices(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndicesKHR(
-    const ApiCallInfo& call_info,
-    args::CmdSetRenderingInputAttachmentIndicesKHR& args
+    const ApiCallInfo& call_info, args::CmdSetRenderingInputAttachmentIndicesKHR& args
 )
 {
     // generate the base apiEvents database entries
-    VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndicesKHR(
-        call_info, args
-    );
+    VulkanSqliteConsumer::Process_vkCmdSetRenderingInputAttachmentIndicesKHR(call_info, args);
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] = GetMetaStructPointer(&args.pInputAttachmentIndexInfo);
+    auto [inputAttachmentIndexInfoValid, inputAttachmentIndexInfo] =
+        GetMetaStructPointer(&args.pInputAttachmentIndexInfo);
     if (!inputAttachmentIndexInfoValid)
     {
         LOG_CMD_WARNING(
@@ -8283,10 +8179,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetRenderingInputAttachmentIndicesKHR
         );                                                                             \
     }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetViewport(
-    const ApiCallInfo& call_info,
-    args::CmdSetViewport& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetViewport(const ApiCallInfo& call_info, args::CmdSetViewport& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetViewport(call_info, args);
@@ -8298,8 +8191,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetViewport(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWithCount(
-    const ApiCallInfo& call_info,
-    args::CmdSetViewportWithCount& args
+    const ApiCallInfo& call_info, args::CmdSetViewportWithCount& args
 )
 {
     // generate the base apiEvents database entries
@@ -8315,8 +8207,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWithCount(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWithCountEXT(
-    const ApiCallInfo& call_info,
-    args::CmdSetViewportWithCountEXT& args
+    const ApiCallInfo& call_info, args::CmdSetViewportWithCountEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -8348,10 +8239,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWithCountEXT(
         );                                                                                               \
     }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetScissor(
-    const ApiCallInfo& call_info,
-    args::CmdSetScissor& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetScissor(const ApiCallInfo& call_info, args::CmdSetScissor& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetScissor(call_info, args);
@@ -8363,8 +8251,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetScissor(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetScissorWithCount(
-    const ApiCallInfo& call_info,
-    args::CmdSetScissorWithCount& args
+    const ApiCallInfo& call_info, args::CmdSetScissorWithCount& args
 )
 {
     // generate the base apiEvents database entries
@@ -8380,8 +8267,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetScissorWithCount(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetScissorWithCountEXT(
-    const ApiCallInfo& call_info,
-    args::CmdSetScissorWithCountEXT& args
+    const ApiCallInfo& call_info, args::CmdSetScissorWithCountEXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -8396,9 +8282,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetScissorWithCountEXT(
     InsertDynamicScissor(0);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetLineWidth(
-    const ApiCallInfo& call_info, args::CmdSetLineWidth& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetLineWidth(const ApiCallInfo& call_info, args::CmdSetLineWidth& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetLineWidth(call_info, args);
@@ -8408,10 +8292,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetLineWidth(
     statements.InsertStateDynamicLineWidth(this->block_index_, commandBufferRecordingId, args.lineWidth);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias(
-    const ApiCallInfo& call_info,
-    args::CmdSetDepthBias& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias(const ApiCallInfo& call_info, args::CmdSetDepthBias& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetDepthBias(call_info, args);
@@ -8436,8 +8317,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBias2EXT(
-    const ApiCallInfo& call_info,
-    args::CmdSetDepthBias2EXT& args
+    const ApiCallInfo& call_info, args::CmdSetDepthBias2EXT& args
 )
 {
     // generate the base apiEvents database entries
@@ -8499,9 +8379,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetBlendConstants(
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBounds(
-    const ApiCallInfo& call_info, args::CmdSetDepthBounds& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetDepthBounds(const ApiCallInfo& call_info, args::CmdSetDepthBounds& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetDepthBounds(call_info, args);
@@ -8524,11 +8402,15 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetStencilCompareMask(
 
     if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
-        statements.InsertStateDynamicStencilCompareMaskFront(this->block_index_, commandBufferRecordingId, args.compareMask);
+        statements.InsertStateDynamicStencilCompareMaskFront(
+            this->block_index_, commandBufferRecordingId, args.compareMask
+        );
     }
     if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
-        statements.InsertStateDynamicStencilCompareMaskBack(this->block_index_, commandBufferRecordingId, args.compareMask);
+        statements.InsertStateDynamicStencilCompareMaskBack(
+            this->block_index_, commandBufferRecordingId, args.compareMask
+        );
     }
 }
 
@@ -8543,7 +8425,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetStencilWriteMask(
 
     if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
-        statements.InsertStateDynamicStencilWriteMaskFront(this->block_index_, commandBufferRecordingId, args.writeMask);
+        statements.InsertStateDynamicStencilWriteMaskFront(
+            this->block_index_, commandBufferRecordingId, args.writeMask
+        );
     }
     if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
@@ -8562,7 +8446,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetStencilReference(
 
     if (args.faceMask & VK_STENCIL_FACE_FRONT_BIT)
     {
-        statements.InsertStateDynamicStencilReferenceFront(this->block_index_, commandBufferRecordingId, args.reference);
+        statements.InsertStateDynamicStencilReferenceFront(
+            this->block_index_, commandBufferRecordingId, args.reference
+        );
     }
     if (args.faceMask & VK_STENCIL_FACE_BACK_BIT)
     {
@@ -8570,9 +8456,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetStencilReference(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetCullMode(
-    const ApiCallInfo& call_info, args::CmdSetCullMode& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetCullMode(const ApiCallInfo& call_info, args::CmdSetCullMode& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetCullMode(call_info, args);
@@ -8582,9 +8466,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetCullMode(
     statements.InsertStateDynamicCullMode(this->block_index_, commandBufferRecordingId, args.cullMode);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetCullModeEXT(
-    const ApiCallInfo& call_info, args::CmdSetCullModeEXT& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetCullModeEXT(const ApiCallInfo& call_info, args::CmdSetCullModeEXT& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetCullModeEXT(call_info, args);
@@ -8594,9 +8476,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetCullModeEXT(
     statements.InsertStateDynamicCullMode(this->block_index_, commandBufferRecordingId, args.cullMode);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetFrontFace(
-    const ApiCallInfo& call_info, args::CmdSetFrontFace& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetFrontFace(const ApiCallInfo& call_info, args::CmdSetFrontFace& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetFrontFace(call_info, args);
@@ -8606,9 +8486,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetFrontFace(
     statements.InsertStateDynamicFrontFace(this->block_index_, commandBufferRecordingId, args.frontFace);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetFrontFaceEXT(
-    const ApiCallInfo& call_info, args::CmdSetFrontFaceEXT& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetFrontFaceEXT(const ApiCallInfo& call_info, args::CmdSetFrontFaceEXT& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetFrontFaceEXT(call_info, args);
@@ -8627,7 +8505,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveTopology(
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicPrimitiveTopology(this->block_index_, commandBufferRecordingId, args.primitiveTopology);
+    statements.InsertStateDynamicPrimitiveTopology(
+        this->block_index_, commandBufferRecordingId, args.primitiveTopology
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveTopologyEXT(
@@ -8639,7 +8519,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveTopologyEXT(
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicPrimitiveTopology(this->block_index_, commandBufferRecordingId, args.primitiveTopology);
+    statements.InsertStateDynamicPrimitiveTopology(
+        this->block_index_, commandBufferRecordingId, args.primitiveTopology
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetDepthTestEnable(
@@ -8751,7 +8633,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetStencilTestEnable(
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicStencilTestEnable(this->block_index_, commandBufferRecordingId, args.stencilTestEnable);
+    statements.InsertStateDynamicStencilTestEnable(
+        this->block_index_, commandBufferRecordingId, args.stencilTestEnable
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdSetStencilTestEnableEXT(
@@ -8763,12 +8647,12 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetStencilTestEnableEXT(
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicStencilTestEnable(this->block_index_, commandBufferRecordingId, args.stencilTestEnable);
+    statements.InsertStateDynamicStencilTestEnable(
+        this->block_index_, commandBufferRecordingId, args.stencilTestEnable
+    );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetStencilOp(
-    const ApiCallInfo& call_info, args::CmdSetStencilOp& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetStencilOp(const ApiCallInfo& call_info, args::CmdSetStencilOp& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetStencilOp(call_info, args);
@@ -8789,9 +8673,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetStencilOp(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetStencilOpEXT(
-    const ApiCallInfo& call_info, args::CmdSetStencilOpEXT& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetStencilOpEXT(const ApiCallInfo& call_info, args::CmdSetStencilOpEXT& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetStencilOpEXT(call_info, args);
@@ -8901,12 +8783,12 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetPatchControlPointsEXT(
 
     CREATE_COMMAND_BUFFER_INSTANCE_ID();
 
-    statements.InsertStateDynamicPatchControlPoints(this->block_index_, commandBufferRecordingId, args.patchControlPoints);
+    statements.InsertStateDynamicPatchControlPoints(
+        this->block_index_, commandBufferRecordingId, args.patchControlPoints
+    );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdSetLogicOpEXT(
-    const ApiCallInfo& call_info, args::CmdSetLogicOpEXT& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdSetLogicOpEXT(const ApiCallInfo& call_info, args::CmdSetLogicOpEXT& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdSetLogicOpEXT(call_info, args);
@@ -8937,6 +8819,514 @@ void VulkanSqliteConsumerExt::Process_vkCmdSetColorWriteEnableEXT(
         const VkBool32 enable = enables[i];
         statements.InsertStateDynamicColorWriteEnable(this->block_index_, commandBufferRecordingId, i, enable);
     }
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetLineStipple(const ApiCallInfo& call_info, args::CmdSetLineStipple& args)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetLineStipple(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_LINE_STIPPLE);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetLineStippleKHR(
+    const ApiCallInfo& call_info, args::CmdSetLineStippleKHR& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetLineStippleKHR(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_LINE_STIPPLE);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetLineStippleEXT(
+    const ApiCallInfo& call_info, args::CmdSetLineStippleEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetLineStippleEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_LINE_STIPPLE);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetFragmentShadingRateKHR(
+    const ApiCallInfo& call_info, args::CmdSetFragmentShadingRateKHR& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetFragmentShadingRateKHR(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetFragmentShadingRateEnumNV(
+    const ApiCallInfo& call_info, args::CmdSetFragmentShadingRateEnumNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetFragmentShadingRateEnumNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWScalingNV(
+    const ApiCallInfo& call_info, args::CmdSetViewportWScalingNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetViewportWScalingNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDiscardRectangleEXT(
+    const ApiCallInfo& call_info, args::CmdSetDiscardRectangleEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDiscardRectangleEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDiscardRectangleEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetDiscardRectangleEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDiscardRectangleEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_DISCARD_RECTANGLE_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDiscardRectangleModeEXT(
+    const ApiCallInfo& call_info, args::CmdSetDiscardRectangleModeEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDiscardRectangleModeEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_DISCARD_RECTANGLE_MODE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetSampleLocationsEXT(
+    const ApiCallInfo& call_info, args::CmdSetSampleLocationsEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetSampleLocationsEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetViewportShadingRatePaletteNV(
+    const ApiCallInfo& call_info, args::CmdSetViewportShadingRatePaletteNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetViewportShadingRatePaletteNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetCoarseSampleOrderNV(
+    const ApiCallInfo& call_info, args::CmdSetCoarseSampleOrderNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetCoarseSampleOrderNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetExclusiveScissorEnableNV(
+    const ApiCallInfo& call_info, args::CmdSetExclusiveScissorEnableNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetExclusiveScissorEnableNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_ENABLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetExclusiveScissorNV(
+    const ApiCallInfo& call_info, args::CmdSetExclusiveScissorNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetExclusiveScissorNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDepthClampEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetDepthClampEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDepthClampEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_DEPTH_CLAMP_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetPolygonModeEXT(
+    const ApiCallInfo& call_info, args::CmdSetPolygonModeEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetPolygonModeEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_POLYGON_MODE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetRasterizationSamplesEXT(
+    const ApiCallInfo& call_info, args::CmdSetRasterizationSamplesEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetRasterizationSamplesEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_RASTERIZATION_SAMPLES_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetSampleMaskEXT(
+    const ApiCallInfo& call_info, args::CmdSetSampleMaskEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetSampleMaskEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_SAMPLE_MASK_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetAlphaToCoverageEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetAlphaToCoverageEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetAlphaToCoverageEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_ALPHA_TO_COVERAGE_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetAlphaToOneEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetAlphaToOneEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetAlphaToOneEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_ALPHA_TO_ONE_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetLogicOpEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetLogicOpEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetLogicOpEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_LOGIC_OP_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetColorBlendEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetColorBlendEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetColorBlendEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COLOR_BLEND_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetColorBlendEquationEXT(
+    const ApiCallInfo& call_info, args::CmdSetColorBlendEquationEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetColorBlendEquationEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COLOR_BLEND_EQUATION_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetColorWriteMaskEXT(
+    const ApiCallInfo& call_info, args::CmdSetColorWriteMaskEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetColorWriteMaskEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COLOR_WRITE_MASK_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetTessellationDomainOriginEXT(
+    const ApiCallInfo& call_info, args::CmdSetTessellationDomainOriginEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetTessellationDomainOriginEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_TESSELLATION_DOMAIN_ORIGIN_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetRasterizationStreamEXT(
+    const ApiCallInfo& call_info, args::CmdSetRasterizationStreamEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetRasterizationStreamEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_RASTERIZATION_STREAM_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetConservativeRasterizationModeEXT(
+    const ApiCallInfo& call_info, args::CmdSetConservativeRasterizationModeEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetConservativeRasterizationModeEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_CONSERVATIVE_RASTERIZATION_MODE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetExtraPrimitiveOverestimationSizeEXT(
+    const ApiCallInfo& call_info, args::CmdSetExtraPrimitiveOverestimationSizeEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetExtraPrimitiveOverestimationSizeEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_EXTRA_PRIMITIVE_OVERESTIMATION_SIZE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDepthClipEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetDepthClipEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDepthClipEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_DEPTH_CLIP_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetSampleLocationsEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetSampleLocationsEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetSampleLocationsEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetColorBlendAdvancedEXT(
+    const ApiCallInfo& call_info, args::CmdSetColorBlendAdvancedEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetColorBlendAdvancedEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COLOR_BLEND_ADVANCED_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetProvokingVertexModeEXT(
+    const ApiCallInfo& call_info, args::CmdSetProvokingVertexModeEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetProvokingVertexModeEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_PROVOKING_VERTEX_MODE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetLineRasterizationModeEXT(
+    const ApiCallInfo& call_info, args::CmdSetLineRasterizationModeEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetLineRasterizationModeEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetLineStippleEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetLineStippleEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetLineStippleEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_LINE_STIPPLE_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDepthClipNegativeOneToOneEXT(
+    const ApiCallInfo& call_info, args::CmdSetDepthClipNegativeOneToOneEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDepthClipNegativeOneToOneEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_DEPTH_CLIP_NEGATIVE_ONE_TO_ONE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetViewportWScalingEnableNV(
+    const ApiCallInfo& call_info, args::CmdSetViewportWScalingEnableNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetViewportWScalingEnableNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_ENABLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetViewportSwizzleNV(
+    const ApiCallInfo& call_info, args::CmdSetViewportSwizzleNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetViewportSwizzleNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_VIEWPORT_SWIZZLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetCoverageToColorEnableNV(
+    const ApiCallInfo& call_info, args::CmdSetCoverageToColorEnableNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetCoverageToColorEnableNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COVERAGE_TO_COLOR_ENABLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetCoverageToColorLocationNV(
+    const ApiCallInfo& call_info, args::CmdSetCoverageToColorLocationNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetCoverageToColorLocationNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COVERAGE_TO_COLOR_LOCATION_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetCoverageModulationModeNV(
+    const ApiCallInfo& call_info, args::CmdSetCoverageModulationModeNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetCoverageModulationModeNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COVERAGE_MODULATION_MODE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetCoverageModulationTableEnableNV(
+    const ApiCallInfo& call_info, args::CmdSetCoverageModulationTableEnableNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetCoverageModulationTableEnableNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_ENABLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetCoverageModulationTableNV(
+    const ApiCallInfo& call_info, args::CmdSetCoverageModulationTableNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetCoverageModulationTableNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COVERAGE_MODULATION_TABLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetShadingRateImageEnableNV(
+    const ApiCallInfo& call_info, args::CmdSetShadingRateImageEnableNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetShadingRateImageEnableNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_SHADING_RATE_IMAGE_ENABLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetRepresentativeFragmentTestEnableNV(
+    const ApiCallInfo& call_info, args::CmdSetRepresentativeFragmentTestEnableNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetRepresentativeFragmentTestEnableNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_REPRESENTATIVE_FRAGMENT_TEST_ENABLE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetCoverageReductionModeNV(
+    const ApiCallInfo& call_info, args::CmdSetCoverageReductionModeNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetCoverageReductionModeNV(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_COVERAGE_REDUCTION_MODE_NV);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDepthClampRangeEXT(
+    const ApiCallInfo& call_info, args::CmdSetDepthClampRangeEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDepthClampRangeEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_DEPTH_CLAMP_RANGE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetAttachmentFeedbackLoopEnableEXT(
+    const ApiCallInfo& call_info, args::CmdSetAttachmentFeedbackLoopEnableEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetAttachmentFeedbackLoopEnableEXT(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetRayTracingPipelineStackSizeKHR(
+    const ApiCallInfo& call_info, args::CmdSetRayTracingPipelineStackSizeKHR& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetRayTracingPipelineStackSizeKHR(call_info, args);
+
+    LogUnsupportedDynamicState(VK_DYNAMIC_STATE_RAY_TRACING_PIPELINE_STACK_SIZE_KHR);
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetComputeOccupancyPriorityNV(
+    const ApiCallInfo& call_info, args::CmdSetComputeOccupancyPriorityNV& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetComputeOccupancyPriorityNV(call_info, args);
+
+    LogUnsupportedDynamicState("vkCmdSetComputeOccupancyPriorityNV");
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetPrimitiveRestartIndexEXT(
+    const ApiCallInfo& call_info, args::CmdSetPrimitiveRestartIndexEXT& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetPrimitiveRestartIndexEXT(call_info, args);
+
+    LogUnsupportedDynamicState("vkCmdSetPrimitiveRestartIndexEXT");
+}
+
+void VulkanSqliteConsumerExt::Process_vkCmdSetDispatchParametersARM(
+    const ApiCallInfo& call_info, args::CmdSetDispatchParametersARM& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkCmdSetDispatchParametersARM(call_info, args);
+
+    LogUnsupportedDynamicState("vkCmdSetDispatchParametersARM");
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateAccelerationStructureKHR(
@@ -9015,7 +9405,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateAccelerationStructureNV(
     auto& ci = *createInfo->decoded_value;
 
     statements.InsertAccelerationStructureNv(
-        accelStruct, args.device, ci.info.flags, ci.info.type, ci.compactedSize, ci.info.instanceCount, this->block_index_
+        accelStruct,
+        args.device,
+        ci.info.flags,
+        ci.info.type,
+        ci.compactedSize,
+        ci.info.instanceCount,
+        this->block_index_
     );
 
     // TODO parse geometries
@@ -9029,7 +9425,10 @@ void VulkanSqliteConsumerExt::Process_vkDestroyAccelerationStructureKHR(
     VulkanSqliteConsumer::Process_vkDestroyAccelerationStructureKHR(call_info, args);
 
     if (auto id = context.ExtractId(
-            args.accelerationStructure, context.accelerationStructureHandleToId, "accelerationStructure", this->block_index_
+            args.accelerationStructure,
+            context.accelerationStructureHandleToId,
+            "accelerationStructure",
+            this->block_index_
         ))
     {
         statements.DestroyObject(statements.destroyAccelerationStructureUpdateStatement, this->block_index_, *id);
@@ -9438,7 +9837,8 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDeferredOperationKHR(
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyDeferredOperationKHR(call_info, args);
 
-    if (auto id = context.ExtractId(args.operation, context.deferredOperationHandleToId, "operation", this->block_index_))
+    if (auto id =
+            context.ExtractId(args.operation, context.deferredOperationHandleToId, "operation", this->block_index_))
     {
         statements.DestroyObject(statements.destroyDeferredOperationUpdateStatement, this->block_index_, *id);
     }
@@ -9533,23 +9933,22 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineBinariesKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyPipelineBinaryKHR(
-    const ApiCallInfo& call_info,
-    args::DestroyPipelineBinaryKHR& args
+    const ApiCallInfo& call_info, args::DestroyPipelineBinaryKHR& args
 )
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkDestroyPipelineBinaryKHR(call_info, args);
 
-    if (auto id =
-            context.ExtractId(args.pipelineBinary, context.pipelineBinaryHandleToId, "pipelineBinary", this->block_index_))
+    if (auto id = context.ExtractId(
+            args.pipelineBinary, context.pipelineBinaryHandleToId, "pipelineBinary", this->block_index_
+        ))
     {
         statements.DestroyObject(statements.destroyPipelineBinaryUpdateStatement, this->block_index_, *id);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionKHR(
-    const ApiCallInfo& call_info,
-    args::CreateVideoSessionKHR& args
+    const ApiCallInfo& call_info, args::CreateVideoSessionKHR& args
 )
 {
     VulkanSqliteConsumer::Process_vkCreateVideoSessionKHR(call_info, args);
@@ -9623,21 +10022,20 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyVideoSessionKHR(
-    const ApiCallInfo& call_info,
-    args::DestroyVideoSessionKHR& args
+    const ApiCallInfo& call_info, args::DestroyVideoSessionKHR& args
 )
 {
     VulkanSqliteConsumer::Process_vkDestroyVideoSessionKHR(call_info, args);
 
-    if (auto id = context.ExtractId(args.videoSession, context.videoSessionHandleToId, "videoSession", this->block_index_))
+    if (auto id =
+            context.ExtractId(args.videoSession, context.videoSessionHandleToId, "videoSession", this->block_index_))
     {
         statements.DestroyObject(statements.destroyVideoSessionUpdateStatement, this->block_index_, *id);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionParametersKHR(
-    const ApiCallInfo& call_info,
-    args::CreateVideoSessionParametersKHR& args
+    const ApiCallInfo& call_info, args::CreateVideoSessionParametersKHR& args
 )
 {
     VulkanSqliteConsumer::Process_vkCreateVideoSessionParametersKHR(call_info, args);
@@ -9681,12 +10079,13 @@ void VulkanSqliteConsumerExt::Process_vkCreateVideoSessionParametersKHR(
 
     auto templateId = context.GetVideoSessionParametersId(createInfo->videoSessionParametersTemplate, true);
 
-    statements.InsertVideoSessionParameters(params, args.device, ci.flags, templateId, *videoSessionId, this->block_index_);
+    statements.InsertVideoSessionParameters(
+        params, args.device, ci.flags, templateId, *videoSessionId, this->block_index_
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyVideoSessionParametersKHR(
-    const ApiCallInfo& call_info,
-    args::DestroyVideoSessionParametersKHR& args
+    const ApiCallInfo& call_info, args::DestroyVideoSessionParametersKHR& args
 )
 {
     VulkanSqliteConsumer::Process_vkDestroyVideoSessionParametersKHR(call_info, args);
@@ -9703,8 +10102,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyVideoSessionParametersKHR(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateIndirectCommandsLayoutEXT(
-    const ApiCallInfo& call_info,
-    args::CreateIndirectCommandsLayoutEXT& args
+    const ApiCallInfo& call_info, args::CreateIndirectCommandsLayoutEXT& args
 )
 {
     VulkanSqliteConsumer::Process_vkCreateIndirectCommandsLayoutEXT(call_info, args);
@@ -9750,8 +10148,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateIndirectCommandsLayoutEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyIndirectCommandsLayoutEXT(
-    const ApiCallInfo& call_info,
-    args::DestroyIndirectCommandsLayoutEXT& args
+    const ApiCallInfo& call_info, args::DestroyIndirectCommandsLayoutEXT& args
 )
 {
     VulkanSqliteConsumer::Process_vkDestroyIndirectCommandsLayoutEXT(call_info, args);
@@ -9767,10 +10164,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyIndirectCommandsLayoutEXT(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCreateMicromapEXT(
-    const ApiCallInfo& call_info,
-    args::CreateMicromapEXT& args
-)
+void VulkanSqliteConsumerExt::Process_vkCreateMicromapEXT(const ApiCallInfo& call_info, args::CreateMicromapEXT& args)
 {
     VulkanSqliteConsumer::Process_vkCreateMicromapEXT(call_info, args);
 
@@ -9801,14 +10195,19 @@ void VulkanSqliteConsumerExt::Process_vkCreateMicromapEXT(
     auto bufferId = context.GetBufferId(createInfo->buffer, true);
 
     statements.InsertMicromap(
-        micromap, args.device, ci.createFlags, bufferId, ci.offset, ci.size, ci.type, ci.deviceAddress, this->block_index_
+        micromap,
+        args.device,
+        ci.createFlags,
+        bufferId,
+        ci.offset,
+        ci.size,
+        ci.type,
+        ci.deviceAddress,
+        this->block_index_
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkDestroyMicromapEXT(
-    const ApiCallInfo& call_info,
-    args::DestroyMicromapEXT& args
-)
+void VulkanSqliteConsumerExt::Process_vkDestroyMicromapEXT(const ApiCallInfo& call_info, args::DestroyMicromapEXT& args)
 {
     VulkanSqliteConsumer::Process_vkDestroyMicromapEXT(call_info, args);
 
@@ -9819,8 +10218,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyMicromapEXT(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateOpticalFlowSessionNV(
-    const ApiCallInfo& call_info,
-    args::CreateOpticalFlowSessionNV& args
+    const ApiCallInfo& call_info, args::CreateOpticalFlowSessionNV& args
 )
 {
     VulkanSqliteConsumer::Process_vkCreateOpticalFlowSessionNV(call_info, args);
@@ -9866,22 +10264,21 @@ void VulkanSqliteConsumerExt::Process_vkCreateOpticalFlowSessionNV(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyOpticalFlowSessionNV(
-    const ApiCallInfo& call_info,
-    args::DestroyOpticalFlowSessionNV& args
+    const ApiCallInfo& call_info, args::DestroyOpticalFlowSessionNV& args
 )
 {
     VulkanSqliteConsumer::Process_vkDestroyOpticalFlowSessionNV(call_info, args);
 
-    if (auto id =
-            context.ExtractId(args.session, context.opticalFlowSessionHandleToId, "opticalFlowSession", this->block_index_))
+    if (auto id = context.ExtractId(
+            args.session, context.opticalFlowSessionHandleToId, "opticalFlowSession", this->block_index_
+        ))
     {
         statements.DestroyObject(statements.destroyOpticalFlowSessionUpdateStatement, this->block_index_, *id);
     }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelinesARM(
-    const ApiCallInfo& call_info,
-    args::CreateDataGraphPipelinesARM& args
+    const ApiCallInfo& call_info, args::CreateDataGraphPipelinesARM& args
 )
 {
     VulkanSqliteConsumer::Process_vkCreateDataGraphPipelinesARM(call_info, args);
@@ -9967,8 +10364,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelinesARM(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelineSessionARM(
-    const ApiCallInfo& call_info,
-    args::CreateDataGraphPipelineSessionARM& args
+    const ApiCallInfo& call_info, args::CreateDataGraphPipelineSessionARM& args
 )
 {
     VulkanSqliteConsumer::Process_vkCreateDataGraphPipelineSessionARM(call_info, args);
@@ -10018,8 +10414,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateDataGraphPipelineSessionARM(
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDataGraphPipelineSessionARM(
-    const ApiCallInfo& call_info,
-    args::DestroyDataGraphPipelineSessionARM& args
+    const ApiCallInfo& call_info, args::DestroyDataGraphPipelineSessionARM& args
 )
 {
     VulkanSqliteConsumer::Process_vkDestroyDataGraphPipelineSessionARM(call_info, args);
@@ -10033,8 +10428,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDataGraphPipelineSessionARM(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdDispatchDataGraphARM(
-    const ApiCallInfo& call_info,
-    args::CmdDispatchDataGraphARM& args
+    const ApiCallInfo& call_info, args::CmdDispatchDataGraphARM& args
 )
 {
     VulkanSqliteConsumer::Process_vkCmdDispatchDataGraphARM(call_info, args);
@@ -10071,8 +10465,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdDispatchDataGraphARM(
 //////// Determine if we still need to perform custom implementation when handling
 //////// these calls
 void VulkanSqliteConsumerExt::Process_vkCmdBuildAccelerationStructuresIndirectKHR(
-    const ApiCallInfo& call_info,
-    args::CmdBuildAccelerationStructuresIndirectKHR& args
+    const ApiCallInfo& call_info, args::CmdBuildAccelerationStructuresIndirectKHR& args
 )
 {
     // generate the base apiEvents database entries
@@ -10104,8 +10497,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdBuildAccelerationStructuresIndirectKH
 }
 
 void VulkanSqliteConsumerExt::Process_vkGetPipelineCacheData(
-    const ApiCallInfo& call_info,
-    args::GetPipelineCacheData& args
+    const ApiCallInfo& call_info, args::GetPipelineCacheData& args
 )
 {
     // generate the base apiEvents database entries
@@ -10147,10 +10539,7 @@ void VulkanSqliteConsumerExt::Process_vkGetPipelineCacheData(
     */
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdPushConstants(
-    const ApiCallInfo& call_info,
-    args::CmdPushConstants& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdPushConstants(const ApiCallInfo& call_info, args::CmdPushConstants& args)
 {
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCmdPushConstants(call_info, args);
@@ -10773,51 +11162,47 @@ void VulkanSqliteConsumerExt::ProcessTransferCommandResolve2(
 }
 
 // Transfer command implementations
-void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer(
-    const ApiCallInfo& call_info, args::CmdCopyBuffer& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer(const ApiCallInfo& call_info, args::CmdCopyBuffer& args)
 {
     VulkanSqliteConsumer::Process_vkCmdCopyBuffer(call_info, args);
-    ProcessTransferCommandBufferCopy(args.commandBuffer, args.srcBuffer, args.dstBuffer, args.regionCount, &args.pRegions);
+    ProcessTransferCommandBufferCopy(
+        args.commandBuffer, args.srcBuffer, args.dstBuffer, args.regionCount, &args.pRegions
+    );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer2(
-    const ApiCallInfo& call_info, args::CmdCopyBuffer2& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer2(const ApiCallInfo& call_info, args::CmdCopyBuffer2& args)
 {
     VulkanSqliteConsumer::Process_vkCmdCopyBuffer2(call_info, args);
     ProcessTransferCommandBufferCopy2(args.commandBuffer, &args.pCopyBufferInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer2KHR(
-    const ApiCallInfo& call_info, args::CmdCopyBuffer2KHR& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdCopyBuffer2KHR(const ApiCallInfo& call_info, args::CmdCopyBuffer2KHR& args)
 {
     VulkanSqliteConsumer::Process_vkCmdCopyBuffer2KHR(call_info, args);
     ProcessTransferCommandBufferCopy2(args.commandBuffer, &args.pCopyBufferInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdCopyImage(
-    const ApiCallInfo& call_info, args::CmdCopyImage& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdCopyImage(const ApiCallInfo& call_info, args::CmdCopyImage& args)
 {
     VulkanSqliteConsumer::Process_vkCmdCopyImage(call_info, args);
     ProcessTransferCommandImageCopy(
-        args.commandBuffer, args.srcImage, args.srcImageLayout, args.dstImage, args.dstImageLayout, args.regionCount, &args.pRegions
+        args.commandBuffer,
+        args.srcImage,
+        args.srcImageLayout,
+        args.dstImage,
+        args.dstImageLayout,
+        args.regionCount,
+        &args.pRegions
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdCopyImage2(
-    const ApiCallInfo& call_info, args::CmdCopyImage2& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdCopyImage2(const ApiCallInfo& call_info, args::CmdCopyImage2& args)
 {
     VulkanSqliteConsumer::Process_vkCmdCopyImage2(call_info, args);
     ProcessTransferCommandImageCopy2(args.commandBuffer, &args.pCopyImageInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdCopyImage2KHR(
-    const ApiCallInfo& call_info, args::CmdCopyImage2KHR& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdCopyImage2KHR(const ApiCallInfo& call_info, args::CmdCopyImage2KHR& args)
 {
     VulkanSqliteConsumer::Process_vkCmdCopyImage2KHR(call_info, args);
     ProcessTransferCommandImageCopy2(args.commandBuffer, &args.pCopyImageInfo);
@@ -10828,7 +11213,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdCopyBufferToImage(
 )
 {
     VulkanSqliteConsumer::Process_vkCmdCopyBufferToImage(call_info, args);
-    ProcessTransferCommandBufferToImage(args.commandBuffer, args.srcBuffer, args.dstImage, args.dstImageLayout, args.regionCount, &args.pRegions);
+    ProcessTransferCommandBufferToImage(
+        args.commandBuffer, args.srcBuffer, args.dstImage, args.dstImageLayout, args.regionCount, &args.pRegions
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyBufferToImage2(
@@ -10852,7 +11239,9 @@ void VulkanSqliteConsumerExt::Process_vkCmdCopyImageToBuffer(
 )
 {
     VulkanSqliteConsumer::Process_vkCmdCopyImageToBuffer(call_info, args);
-    ProcessTransferCommandImageToBuffer(args.commandBuffer, args.srcImage, args.srcImageLayout, args.dstBuffer, args.regionCount, &args.pRegions);
+    ProcessTransferCommandImageToBuffer(
+        args.commandBuffer, args.srcImage, args.srcImageLayout, args.dstBuffer, args.regionCount, &args.pRegions
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdCopyImageToBuffer2(
@@ -10871,35 +11260,34 @@ void VulkanSqliteConsumerExt::Process_vkCmdCopyImageToBuffer2KHR(
     ProcessTransferCommandImageToBuffer2(args.commandBuffer, &args.pCopyImageToBufferInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdBlitImage(
-    const ApiCallInfo& call_info, args::CmdBlitImage& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdBlitImage(const ApiCallInfo& call_info, args::CmdBlitImage& args)
 {
     VulkanSqliteConsumer::Process_vkCmdBlitImage(call_info, args);
     ProcessTransferCommandBlit(
-        args.commandBuffer, args.srcImage, args.srcImageLayout, args.dstImage, args.dstImageLayout, args.filter, args.regionCount, &args.pRegions
+        args.commandBuffer,
+        args.srcImage,
+        args.srcImageLayout,
+        args.dstImage,
+        args.dstImageLayout,
+        args.filter,
+        args.regionCount,
+        &args.pRegions
     );
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdBlitImage2(
-    const ApiCallInfo& call_info, args::CmdBlitImage2& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdBlitImage2(const ApiCallInfo& call_info, args::CmdBlitImage2& args)
 {
     VulkanSqliteConsumer::Process_vkCmdBlitImage2(call_info, args);
     ProcessTransferCommandBlit2(args.commandBuffer, &args.pBlitImageInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdBlitImage2KHR(
-    const ApiCallInfo& call_info, args::CmdBlitImage2KHR& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdBlitImage2KHR(const ApiCallInfo& call_info, args::CmdBlitImage2KHR& args)
 {
     VulkanSqliteConsumer::Process_vkCmdBlitImage2KHR(call_info, args);
     ProcessTransferCommandBlit2(args.commandBuffer, &args.pBlitImageInfo);
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdResolveImage(
-    const ApiCallInfo& call_info, args::CmdResolveImage& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdResolveImage(const ApiCallInfo& call_info, args::CmdResolveImage& args)
 {
     VulkanSqliteConsumer::Process_vkCmdResolveImage(call_info, args);
 
@@ -10908,7 +11296,11 @@ void VulkanSqliteConsumerExt::Process_vkCmdResolveImage(
         statements.InsertTransferCommand(this->block_index_, context.GetCommandBufferRecordingId(args.commandBuffer));
 
     statements.UpdateTransferCommandImageCopy(
-        instanceId, context.GetImageId(args.srcImage), context.GetImageId(args.dstImage), args.srcImageLayout, args.dstImageLayout
+        instanceId,
+        context.GetImageId(args.srcImage),
+        context.GetImageId(args.dstImage),
+        args.srcImageLayout,
+        args.dstImageLayout
     );
 
     // Insert region data
@@ -10948,9 +11340,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdResolveImage(
     }
 }
 
-void VulkanSqliteConsumerExt::Process_vkCmdResolveImage2(
-    const ApiCallInfo& call_info, args::CmdResolveImage2& args
-)
+void VulkanSqliteConsumerExt::Process_vkCmdResolveImage2(const ApiCallInfo& call_info, args::CmdResolveImage2& args)
 {
     VulkanSqliteConsumer::Process_vkCmdResolveImage2(call_info, args);
     ProcessTransferCommandResolve2(args.commandBuffer, &args.pResolveImageInfo);
