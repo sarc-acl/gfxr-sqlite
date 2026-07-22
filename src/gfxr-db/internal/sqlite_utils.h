@@ -251,6 +251,18 @@ inline int BindOptInt64(sqlite3_stmt* statement, int index, std::optional<int64_
     }
 }
 
+inline std::optional<int64_t> ColumnOptInt64(sqlite3_stmt* statement, int index)
+{
+    if (sqlite3_column_type(statement, index) == SQLITE_NULL)
+    {
+        return std::nullopt;
+    }
+    else
+    {
+        return static_cast<int64_t>(sqlite3_column_int64(statement, index));
+    }
+}
+
 inline int BindOptDouble(sqlite3_stmt* statement, int index, std::optional<double> value)
 {
     if (value.has_value())
