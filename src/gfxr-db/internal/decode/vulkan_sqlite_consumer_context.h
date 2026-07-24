@@ -527,6 +527,9 @@ struct VulkanSqliteConsumerContext final
 
     std::unordered_set<uint64_t> pNextWarnings;
 
+    std::unordered_set<VkDynamicState> dynamicStateWarnings;
+    std::unordered_set<std::string>    unsupportedCommandWarnings;
+
     bool IsDeviceFeatureEnabled(int64_t deviceId, const std::string& feature)
     {
         auto enabledDeviceFeaturesIter = deviceIdToEnabledFeatures.find(deviceId);

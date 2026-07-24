@@ -1031,6 +1031,52 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         db, "INSERT INTO shaderModules VALUES (?, ?, ?, ?, ?, NULL);", &shaderModuleWithStringHandleInsertStatement
     );
     PrepareStatement(db, "INSERT INTO pipelineStages VALUES (?, ?, ?, ?, ?, ?, ?, ?);", &pipelineStageInsertStatement);
+    PrepareStatement(
+        db,
+        "INSERT INTO pipelineStages SELECT ?, ?, flags, stage, shaderModuleId, entryPointName, feedbackFlags,"
+        " createDuration FROM pipelineStages WHERE pipelineId = ? AND stage = ?;",
+        &pipelineStageFromLibraryInsertStatement
+    );
+    PrepareStatement(
+        db,
+        "INSERT INTO pipelineStages SELECT ?, idx, flags, stage, shaderModuleId, entryPointName, feedbackFlags,"
+        " createDuration FROM pipelineStages WHERE pipelineId = ? AND stage != ?;",
+        &pipelineStagesExcludingStageFromLibraryInsertStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT flags, libraryFlags, renderPassId FROM pipelines LEFT JOIN graphicsPipelineInfos"
+        " ON pipelines.id = graphicsPipelineInfos.pipelineId WHERE pipelines.id = ?;",
+        &pipelineLibraryFlagsLookupStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT vertexInputStateId, inputAssemblyStateId FROM graphicsPipelineInfos WHERE pipelineId = ?;",
+        &graphicsPipelineVertexInputStateLookupStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT viewportStateId, rasterizationStateId, tessellationStateId, count(stage)"
+        " FROM graphicsPipelineInfos LEFT JOIN pipelineStages USING(pipelineId)"
+        " WHERE pipelineId = ? AND stage != ?;",
+        &graphicsPipelinePreRasterizationShaderStateLookupStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT depthStencilStateId, count(stage) FROM graphicsPipelineInfos LEFT JOIN pipelineStages"
+        " USING(pipelineId) WHERE pipelineId = ? AND stage = ?;",
+        &graphicsPipelineFragmentShaderStateLookupStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT colorBlendStateId FROM graphicsPipelineInfos WHERE pipelineId = ?;",
+        &graphicsPipelineFragmentOutputStateLookupStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT multisampleStateId FROM graphicsPipelineInfos WHERE pipelineId = ?;",
+        &graphicsPipelineMultisampleStateLookupStatement
+    );
 
     PrepareStatement(db, "INSERT INTO validationCaches VALUES (?, ?, ?, ?, ?, NULL);", &validationCacheInsertStatement);
     PrepareStatement(db, "INSERT INTO pipelineCaches VALUES (?, ?, ?, ?, ?, ?, NULL);", &pipelineCacheInsertStatement);
@@ -1173,6 +1219,12 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     );
     PrepareStatement(
         db, "INSERT OR IGNORE INTO pipelineDynamicStates VALUES (?, ?);", &pipelineDynamicStateInsertStatement
+    );
+    PrepareStatement(
+        db,
+        "INSERT OR IGNORE INTO pipelineDynamicStates SELECT ?, dynamicState FROM pipelineDynamicStates"
+        " WHERE pipelineId = ?;",
+        &pipelineDynamicStateFromLibraryInsertStatement
     );
     PrepareStatement(
         db, "INSERT INTO multisampleStates VALUES (?, ?, ?, ?, ?, ?, ?);", &multisampleStateInsertStatement
@@ -5681,6 +5733,201 @@ void VulkanSqlitePreparedStatements::InsertPipelineStage(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
+void VulkanSqlitePreparedStatements::InsertPipelineStageFromLibrary(
+    const int64_t pipelineId, const uint64_t stageIndex, const int64_t sourcePipelineId, const uint32_t stage
+)
+{
+    auto& statement = pipelineStageFromLibraryInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(stageIndex)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(sourcePipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(stage)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertPipelineStagesExcludingStageFromLibrary(
+    const int64_t pipelineId, const int64_t sourcePipelineId, const uint32_t excludedStage
+)
+{
+    auto& statement = pipelineStagesExcludingStageFromLibraryInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(sourcePipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(excludedStage)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+PipelineLibraryFlagsLookup VulkanSqlitePreparedStatements::LookupPipelineLibraryFlags(const int64_t pipelineId)
+{
+    auto& statement = pipelineLibraryFlagsLookupStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+
+    PipelineLibraryFlagsLookup result;
+    int err = sqlite3_step(statement);
+    if (err == SQLITE_ROW)
+    {
+        result.found = true;
+        result.flags = ColumnOptInt64(statement, 0);
+        result.libraryFlags = ColumnOptInt64(statement, 1);
+        result.renderPassId = ColumnOptInt64(statement, 2);
+    }
+    else if (err != SQLITE_DONE) [[unlikely]]
+    {
+        GFXRECON_SQLITE_LOG_ERROR(
+            "Error %d at offset %d running LookupPipelineLibraryFlags: %s\n",
+            err,
+            sqlite3_error_offset(db),
+            sqlite3_errmsg(db)
+        );
+    }
+    return result;
+}
+
+GraphicsPipelineVertexInputStateLookup VulkanSqlitePreparedStatements::LookupGraphicsPipelineVertexInputState(
+    const int64_t pipelineId
+)
+{
+    auto& statement = graphicsPipelineVertexInputStateLookupStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+
+    GraphicsPipelineVertexInputStateLookup result;
+    int err = sqlite3_step(statement);
+    if (err == SQLITE_ROW)
+    {
+        result.found = true;
+        result.vertexInputStateId = ColumnOptInt64(statement, 0);
+        result.inputAssemblyStateId = ColumnOptInt64(statement, 1);
+    }
+    else if (err != SQLITE_DONE) [[unlikely]]
+    {
+        GFXRECON_SQLITE_LOG_ERROR(
+            "Error %d at offset %d running LookupGraphicsPipelineVertexInputState: %s\n",
+            err,
+            sqlite3_error_offset(db),
+            sqlite3_errmsg(db)
+        );
+    }
+    return result;
+}
+
+GraphicsPipelinePreRasterizationShaderStateLookup
+VulkanSqlitePreparedStatements::LookupGraphicsPipelinePreRasterizationShaderState(
+    const int64_t pipelineId, const uint32_t excludedStage
+)
+{
+    auto& statement = graphicsPipelinePreRasterizationShaderStateLookupStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(excludedStage)));
+
+    GraphicsPipelinePreRasterizationShaderStateLookup result;
+    int err = sqlite3_step(statement);
+    if (err == SQLITE_ROW)
+    {
+        result.found = true;
+        result.viewportStateId = ColumnOptInt64(statement, 0);
+        result.rasterizationStateId = ColumnOptInt64(statement, 1);
+        result.tessellationStateId = ColumnOptInt64(statement, 2);
+        result.numShaderStages = sqlite3_column_int64(statement, 3);
+    }
+    else if (err != SQLITE_DONE) [[unlikely]]
+    {
+        GFXRECON_SQLITE_LOG_ERROR(
+            "Error %d at offset %d running LookupGraphicsPipelinePreRasterizationShaderState: %s\n",
+            err,
+            sqlite3_error_offset(db),
+            sqlite3_errmsg(db)
+        );
+    }
+    return result;
+}
+
+GraphicsPipelineFragmentShaderStateLookup VulkanSqlitePreparedStatements::LookupGraphicsPipelineFragmentShaderState(
+    const int64_t pipelineId, const uint32_t stage
+)
+{
+    auto& statement = graphicsPipelineFragmentShaderStateLookupStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(stage)));
+
+    GraphicsPipelineFragmentShaderStateLookup result;
+    int err = sqlite3_step(statement);
+    if (err == SQLITE_ROW)
+    {
+        result.found = true;
+        result.depthStencilStateId = ColumnOptInt64(statement, 0);
+        result.numShaderStages = sqlite3_column_int64(statement, 1);
+    }
+    else if (err != SQLITE_DONE) [[unlikely]]
+    {
+        GFXRECON_SQLITE_LOG_ERROR(
+            "Error %d at offset %d running LookupGraphicsPipelineFragmentShaderState: %s\n",
+            err,
+            sqlite3_error_offset(db),
+            sqlite3_errmsg(db)
+        );
+    }
+    return result;
+}
+
+GraphicsPipelineFragmentOutputStateLookup VulkanSqlitePreparedStatements::LookupGraphicsPipelineFragmentOutputState(
+    const int64_t pipelineId
+)
+{
+    auto& statement = graphicsPipelineFragmentOutputStateLookupStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+
+    GraphicsPipelineFragmentOutputStateLookup result;
+    int err = sqlite3_step(statement);
+    if (err == SQLITE_ROW)
+    {
+        result.found = true;
+        result.colorBlendStateId = ColumnOptInt64(statement, 0);
+    }
+    else if (err != SQLITE_DONE) [[unlikely]]
+    {
+        GFXRECON_SQLITE_LOG_ERROR(
+            "Error %d at offset %d running LookupGraphicsPipelineFragmentOutputState: %s\n",
+            err,
+            sqlite3_error_offset(db),
+            sqlite3_errmsg(db)
+        );
+    }
+    return result;
+}
+
+GraphicsPipelineMultisampleStateLookup VulkanSqlitePreparedStatements::LookupGraphicsPipelineMultisampleState(
+    const int64_t pipelineId
+)
+{
+    auto& statement = graphicsPipelineMultisampleStateLookupStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+
+    GraphicsPipelineMultisampleStateLookup result;
+    int err = sqlite3_step(statement);
+    if (err == SQLITE_ROW)
+    {
+        result.found = true;
+        result.multisampleStateId = ColumnOptInt64(statement, 0);
+    }
+    else if (err != SQLITE_DONE) [[unlikely]]
+    {
+        GFXRECON_SQLITE_LOG_ERROR(
+            "Error %d at offset %d running LookupGraphicsPipelineMultisampleState: %s\n",
+            err,
+            sqlite3_error_offset(db),
+            sqlite3_errmsg(db)
+        );
+    }
+    return result;
+}
+
 void VulkanSqlitePreparedStatements::InsertValidationCache(
     const format::HandleId validationCache,
     const format::HandleId device,
@@ -6314,6 +6561,17 @@ void VulkanSqlitePreparedStatements::InsertPipelineDynamicState(const int64_t pi
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(dynamicState)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertPipelineDynamicStatesFromLibrary(
+    const int64_t pipelineId, const int64_t sourcePipelineId
+)
+{
+    auto& statement = pipelineDynamicStateFromLibraryInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(pipelineId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(sourcePipelineId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 

@@ -49,34 +49,34 @@ GFXRECON_BEGIN_NAMESPACE(args)
 
 struct CmdPushDescriptorSetWithTemplate
 {
-    format::HandleId                commandBuffer;
-    format::HandleId                descriptorUpdateTemplate;
-    format::HandleId                layout;
-    uint32_t                        set;
+    format::HandleId commandBuffer;
+    format::HandleId descriptorUpdateTemplate;
+    format::HandleId layout;
+    uint32_t set;
     DescriptorUpdateTemplateDecoder pData;
 };
 
 struct CmdPushDescriptorSetWithTemplate2
 {
-    format::HandleId                                                  commandBuffer;
+    format::HandleId commandBuffer;
     StructPointerDecoder<Decoded_VkPushDescriptorSetWithTemplateInfo> pPushDescriptorSetWithTemplateInfo;
 };
 
 struct BuildAccelerationStructuresKHR
 {
-    VkResult                                                        result;
-    format::HandleId                                                device;
-    format::HandleId                                                deferredOperation;
-    uint32_t                                                        infoCount;
+    VkResult result;
+    format::HandleId device;
+    format::HandleId deferredOperation;
+    uint32_t infoCount;
     StructPointerDecoder<Decoded_VkAccelerationStructureBuildGeometryInfoKHR> pInfos;
-    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>   ppBuildRangeInfos;
+    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*> ppBuildRangeInfos;
 };
 
 struct CopyAccelerationStructureKHR
 {
-    VkResult                                                    result;
-    format::HandleId                                            device;
-    format::HandleId                                            deferredOperation;
+    VkResult result;
+    format::HandleId device;
+    format::HandleId deferredOperation;
     StructPointerDecoder<Decoded_VkCopyAccelerationStructureInfoKHR> pInfo;
 };
 
@@ -95,27 +95,25 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
 
     void TrimFinalFrame();
 
-    void UpdateCommandBufferCommands(const ApiCallInfo& call_info, format::HandleId commandBuffer);
+    void UpdateCommandBufferCommands(const ApiCallInfo& callInfo, format::HandleId commandBuffer);
 
-    virtual void ProcessStateBeginMarker(uint64_t frame_number) override;
+    void ProcessStateBeginMarker(uint64_t frameNumber) override;
 
-    virtual void ProcessStateEndMarker(uint64_t frame_number) override;
+    void ProcessStateEndMarker(uint64_t frameNumber) override;
 
-    virtual void ProcessFrameEndMarker(uint64_t frame_number) override;
+    void ProcessFrameEndMarker(uint64_t frameNumber) override;
 
-    virtual void ProcessDisplayMessageCommand(const std::string& message) override;
+    void ProcessDisplayMessageCommand(const std::string& message) override;
 
-    virtual void ProcessFillMemoryCommand(
-        uint64_t memoryId, uint64_t offset, uint64_t size, const uint8_t* data
-    ) override;
+    void ProcessFillMemoryCommand(uint64_t memoryId, uint64_t offset, uint64_t size, const uint8_t* data) override;
 
-    virtual void ProcessResizeWindowCommand(format::HandleId surfaceId, uint32_t width, uint32_t height) override;
+    void ProcessResizeWindowCommand(format::HandleId surfaceId, uint32_t width, uint32_t height) override;
 
-    virtual void ProcessResizeWindowCommand2(
+    void ProcessResizeWindowCommand2(
         format::HandleId surfaceId, uint32_t width, uint32_t height, uint32_t preTransform
     ) override;
 
-    virtual void ProcessCreateHardwareBufferCommand(
+    void ProcessCreateHardwareBufferCommand(
         format::HandleId deviceId,
         format::HandleId memoryId,
         uint64_t bufferId,
@@ -125,60 +123,60 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         uint32_t stride,
         uint64_t usage,
         uint32_t layers,
-        const std::vector<format::HardwareBufferPlaneInfo>& plane_info
+        const std::vector<format::HardwareBufferPlaneInfo>& planeInfo
     ) override;
 
-    virtual void ProcessDestroyHardwareBufferCommand(uint64_t bufferId) override;
+    void ProcessDestroyHardwareBufferCommand(uint64_t bufferId) override;
 
-    virtual void ProcessSetDevicePropertiesCommand(
+    void ProcessSetDevicePropertiesCommand(
         format::HandleId physicalDeviceId,
         uint32_t apiVersion,
-        uint32_t driver_version,
+        uint32_t driverVersion,
         uint32_t vendor_id,
         uint32_t deviceId,
-        uint32_t device_type,
+        uint32_t deviceType,
         const uint8_t pipeline_cache_uuid[format::kUuidSize],
-        const std::string& device_name
+        const std::string& deviceName
     ) override;
 
-    virtual void ProcessSetDeviceMemoryPropertiesCommand(
+    void ProcessSetDeviceMemoryPropertiesCommand(
         format::HandleId physicalDeviceId,
-        const std::vector<format::DeviceMemoryType>& memory_types,
-        const std::vector<format::DeviceMemoryHeap>& memory_heaps
+        const std::vector<format::DeviceMemoryType>& memoryTypes,
+        const std::vector<format::DeviceMemoryHeap>& memoryHeaps
     ) override;
 
-    virtual void ProcessSetOpaqueAddressCommand(
+    void ProcessSetOpaqueAddressCommand(
         format::HandleId deviceId, format::HandleId objectId, uint64_t address
     ) override;
 
-    virtual void ProcessSetRayTracingShaderGroupHandlesCommand(
+    void ProcessSetRayTracingShaderGroupHandlesCommand(
         format::HandleId deviceId, format::HandleId pipelineId, size_t dataSize, const uint8_t* data
     ) override;
 
-    virtual void ProcessSetSwapchainImageStateCommand(
+    void ProcessSetSwapchainImageStateCommand(
         format::HandleId deviceId,
         format::HandleId swapchainId,
-        uint32_t last_presented_image,
-        const std::vector<format::SwapchainImageStateInfo>& image_state
+        uint32_t lastPresentedImage,
+        const std::vector<format::SwapchainImageStateInfo>& imageState
     ) override;
 
-    virtual void ProcessBeginResourceInitCommand(
-        format::HandleId deviceId, uint64_t max_resource_size, uint64_t max_copy_size
+    void ProcessBeginResourceInitCommand(
+        format::HandleId deviceId, uint64_t maxResourceSize, uint64_t maxCopySize
     ) override;
 
-    virtual void ProcessEndResourceInitCommand(format::HandleId deviceId) override;
+    void ProcessEndResourceInitCommand(format::HandleId deviceId) override;
 
-    virtual void ProcessInitBufferCommand(
+    void ProcessInitBufferCommand(
         format::HandleId deviceId, format::HandleId bufferId, uint64_t dataSize, const uint8_t* data
     ) override;
 
-    virtual void ProcessInitImageCommand(
+    void ProcessInitImageCommand(
         format::HandleId deviceId,
         format::HandleId imageId,
         uint64_t dataSize,
         uint32_t aspect,
         uint32_t layout,
-        const std::vector<uint64_t>& level_sizes,
+        const std::vector<uint64_t>& levelSizes,
         const uint8_t* data
     ) override;
 
@@ -186,70 +184,69 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
     virtual void Process_vkCmdPushDescriptorSetWithTemplate(
-        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate& args
+        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
     );
 
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
-    virtual void Process_vkCmdPushDescriptorSetWithTemplateKHR(
-        const ApiCallInfo& call_info,
-        args::CmdPushDescriptorSetWithTemplateKHR& args
+    void Process_vkCmdPushDescriptorSetWithTemplateKHR(
+        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplateKHR& args
     ) override;
 
     // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
     // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
     // (its normal auto-generated logging body) to hook into.
     virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
-        const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
+        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
     );
 
     // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
     // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
     // (its normal auto-generated logging body) to hook into.
     virtual void Process_vkBuildAccelerationStructuresKHR(
-        const ApiCallInfo& call_info, args::BuildAccelerationStructuresKHR& args
+        const ApiCallInfo& callInfo, args::BuildAccelerationStructuresKHR& args
     );
 
     // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
     // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
     // (its normal auto-generated logging body) to hook into.
     virtual void Process_vkCopyAccelerationStructureKHR(
-        const ApiCallInfo& call_info, args::CopyAccelerationStructureKHR& args
+        const ApiCallInfo& callInfo, args::CopyAccelerationStructureKHR& args
     );
 
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
-    virtual void Process_vkUpdateDescriptorSetWithTemplate(
-        const ApiCallInfo& call_info,
-        args::UpdateDescriptorSetWithTemplate& args
+    void Process_vkUpdateDescriptorSetWithTemplate(
+        const ApiCallInfo& callInfo, args::UpdateDescriptorSetWithTemplate& args
     ) override;
 
     // This function is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
-    virtual void Process_vkUpdateDescriptorSetWithTemplateKHR(
-        const ApiCallInfo& call_info,
-        args::UpdateDescriptorSetWithTemplateKHR& args
+    void Process_vkUpdateDescriptorSetWithTemplateKHR(
+        const ApiCallInfo& callInfo, args::UpdateDescriptorSetWithTemplateKHR& args
     ) override;
 
-    virtual void Process_vkCmdBuildAccelerationStructuresIndirectKHR(
-        const ApiCallInfo& call_info,
-        args::CmdBuildAccelerationStructuresIndirectKHR& args
+    void Process_vkCmdBuildAccelerationStructuresIndirectKHR(
+        const ApiCallInfo& callInfo, args::CmdBuildAccelerationStructuresIndirectKHR& args
     ) override;
 
     /// @brief Convert annotations, which are simple {type:enum, key:string, value:string} objects.
-    virtual void ProcessAnnotation(
-        uint64_t block_index, format::AnnotationType type, const std::string& label, const std::string& data
+    void ProcessAnnotation(
+        uint64_t blockIndex, format::AnnotationType type, const std::string& label, const std::string& data
     ) override;
 
   protected:
     VulkanSqliteConsumerContext context;
     VulkanSqlitePreparedStatements statements;
 
-    void FinalizeFrame(uint64_t frame_number);
+    void FinalizeFrame(uint64_t frameNumber);
     void TrimFirstFrame();
 
     void LogUnsupportedPNext(PNextNode* pNext);
     void LogUnsupportedPNext(VkStructureType type);
+
+    void LogUnsupportedDynamicState(VkDynamicState state);
+    void LogUnsupportedDynamicState(const char* commandName);
 
     template <class T>
     inline bool HasData(const gfxrecon::decode::StructPointerDecoder<T>* structPtr)
@@ -300,7 +297,9 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
     // Helper for Array2D case (StructPointerDecoder<T*> where T is the decoded struct type)
     // This version extracts a specific inner array by index from the 2D array structure
     template <class T>
-    inline MetaStructArray<T> GetMetaStructArray2D(const gfxrecon::decode::StructPointerDecoder<T*>* structPtr, size_t index)
+    inline MetaStructArray<T> GetMetaStructArray2D(
+        const gfxrecon::decode::StructPointerDecoder<T*>* structPtr, size_t index
+    )
     {
         if (!HasData(structPtr))
         {
