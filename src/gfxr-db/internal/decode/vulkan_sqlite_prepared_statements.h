@@ -35,6 +35,49 @@ GFXRECON_BEGIN_NAMESPACE(decode)
 
 struct VulkanSqliteConsumerContext;
 
+struct PipelineLibraryFlagsLookup
+{
+    bool found = false;
+    std::optional<int64_t> flags;
+    std::optional<int64_t> libraryFlags;
+    std::optional<int64_t> renderPassId;
+};
+
+struct GraphicsPipelineVertexInputStateLookup
+{
+    bool found = false;
+    std::optional<int64_t> vertexInputStateId;
+    std::optional<int64_t> inputAssemblyStateId;
+};
+
+struct GraphicsPipelinePreRasterizationShaderStateLookup
+{
+    bool found = false;
+    std::optional<int64_t> viewportStateId;
+    std::optional<int64_t> rasterizationStateId;
+    std::optional<int64_t> tessellationStateId;
+    int64_t numShaderStages = 0;
+};
+
+struct GraphicsPipelineFragmentShaderStateLookup
+{
+    bool found = false;
+    std::optional<int64_t> depthStencilStateId;
+    int64_t numShaderStages = 0;
+};
+
+struct GraphicsPipelineFragmentOutputStateLookup
+{
+    bool found = false;
+    std::optional<int64_t> colorBlendStateId;
+};
+
+struct GraphicsPipelineMultisampleStateLookup
+{
+    bool found = false;
+    std::optional<int64_t> multisampleStateId;
+};
+
 struct VulkanSqlitePreparedStatements
 {
     VulkanSqlitePreparedStatements(sqlite3* db) : db(db) {}
@@ -294,6 +337,14 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement shaderModuleInsertStatement;
     SqliteStatement shaderModuleWithStringHandleInsertStatement;
     SqliteStatement pipelineStageInsertStatement;
+    SqliteStatement pipelineStageFromLibraryInsertStatement;
+    SqliteStatement pipelineStagesExcludingStageFromLibraryInsertStatement;
+    SqliteStatement pipelineLibraryFlagsLookupStatement;
+    SqliteStatement graphicsPipelineVertexInputStateLookupStatement;
+    SqliteStatement graphicsPipelinePreRasterizationShaderStateLookupStatement;
+    SqliteStatement graphicsPipelineFragmentShaderStateLookupStatement;
+    SqliteStatement graphicsPipelineFragmentOutputStateLookupStatement;
+    SqliteStatement graphicsPipelineMultisampleStateLookupStatement;
 
     SqliteStatement validationCacheInsertStatement;
     SqliteStatement pipelineCacheInsertStatement;
@@ -330,6 +381,7 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement colorBlendStateAttachmentStateInsertStatement;
     SqliteStatement colorBlendStateAttachmentStateFromLibraryInsertStatement;
     SqliteStatement pipelineDynamicStateInsertStatement;
+    SqliteStatement pipelineDynamicStateFromLibraryInsertStatement;
     SqliteStatement multisampleStateInsertStatement;
     SqliteStatement multisampleStateFromLibraryInsertStatement;
     SqliteStatement multisampleStateSampleMaskInsertStatement;
@@ -598,6 +650,22 @@ struct VulkanSqlitePreparedStatements
         const std::optional<int64_t> feedbackFlags,
         const std::optional<int64_t> createDuration
     );
+    void InsertPipelineStageFromLibrary(
+        const int64_t pipelineId, const uint64_t stageIndex, const int64_t sourcePipelineId, const uint32_t stage
+    );
+    void InsertPipelineStagesExcludingStageFromLibrary(
+        const int64_t pipelineId, const int64_t sourcePipelineId, const uint32_t excludedStage
+    );
+    PipelineLibraryFlagsLookup LookupPipelineLibraryFlags(const int64_t pipelineId);
+    GraphicsPipelineVertexInputStateLookup LookupGraphicsPipelineVertexInputState(const int64_t pipelineId);
+    GraphicsPipelinePreRasterizationShaderStateLookup LookupGraphicsPipelinePreRasterizationShaderState(
+        const int64_t pipelineId, const uint32_t excludedStage
+    );
+    GraphicsPipelineFragmentShaderStateLookup LookupGraphicsPipelineFragmentShaderState(
+        const int64_t pipelineId, const uint32_t stage
+    );
+    GraphicsPipelineFragmentOutputStateLookup LookupGraphicsPipelineFragmentOutputState(const int64_t pipelineId);
+    GraphicsPipelineMultisampleStateLookup LookupGraphicsPipelineMultisampleState(const int64_t pipelineId);
 
     void InsertValidationCache(
         const format::HandleId validationCache,
@@ -777,6 +845,7 @@ struct VulkanSqlitePreparedStatements
     );
     void InsertColorBlendStateAttachmentStateFromLibrary(const int64_t newStateId, const int64_t sourceStateId);
     void InsertPipelineDynamicState(const int64_t pipelineId, const uint32_t dynamicState);
+    void InsertPipelineDynamicStatesFromLibrary(const int64_t pipelineId, const int64_t sourcePipelineId);
     int64_t InsertMultisampleState(
         const int64_t pipelineId,
         const uint32_t rasterizationSamples,

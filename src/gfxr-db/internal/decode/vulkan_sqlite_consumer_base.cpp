@@ -46,7 +46,7 @@ VulkanSqliteConsumerBase::VulkanSqliteConsumerBase(sqlite3* db) : context(db), s
     statements.CreateBasePreparedStatements();
 }
 
-void VulkanSqliteConsumerBase::UpdateCommandBufferCommands(const ApiCallInfo& call_info, format::HandleId commandBuffer)
+void VulkanSqliteConsumerBase::UpdateCommandBufferCommands(const ApiCallInfo& callInfo, format::HandleId commandBuffer)
 {
     auto commandBufferRecordingIdIter = context.commandBufferHandleToRecordingId.find(ToInt64(commandBuffer));
     if (commandBufferRecordingIdIter == context.commandBufferHandleToRecordingId.end())
@@ -175,25 +175,25 @@ void VulkanSqliteConsumerBase::LogUnsupportedDynamicState(const char* commandNam
     }
 }
 
-void VulkanSqliteConsumerBase::ProcessStateBeginMarker(uint64_t frame_number)
+void VulkanSqliteConsumerBase::ProcessStateBeginMarker(uint64_t frameNumber)
 {
     const auto functionId = statements.InsertFunctionName("StateBeginMarker");
-    statements.InsertMetaApiEvent(this->block_index_, functionId, frame_number);
+    statements.InsertMetaApiEvent(this->block_index_, functionId, frameNumber);
 
     // this is the beginning of initial state data, this is not part of the frame that the frame
     // number indicates but represents state of vulkan (optimized) prior to the beginning of the
     // initial frame, so call it frame 1 which will get updated to "NULL" from TrimFirstFrame
-    statements.InsertAPIEventArgument(this->block_index_, 1, "frame_number", "uint64_t", "1");
+    statements.InsertAPIEventArgument(this->block_index_, 1, "frameNumber", "uint64_t", "1");
 }
 
-void VulkanSqliteConsumerBase::FinalizeFrame(uint64_t frame_number)
+void VulkanSqliteConsumerBase::FinalizeFrame(uint64_t frameNumber)
 {
     std::ostringstream updateFrameSql;
     updateFrameSql << "UPDATE frames SET endApiEventId = " << this->block_index_
-                   << " WHERE (frames.id = " << frame_number << ");";
+                   << " WHERE (frames.id = " << frameNumber << ");";
     ExecSQL(context.db, updateFrameSql.str().c_str());
 
-    if (frame_number == 1)
+    if (frameNumber == 1)
     {
         // update the first frame with the actual beginning apiEvents.id
         // the apiEvents.id may be a value greater than 1 due to some meta commands
@@ -205,27 +205,27 @@ void VulkanSqliteConsumerBase::FinalizeFrame(uint64_t frame_number)
         ExecSQL(context.db, updateFrame1Sql.str().c_str());
     }
 
-    if (context.currentFrame == frame_number)
+    if (context.currentFrame == frameNumber)
     {
-        context.currentFrame = frame_number + 1;
+        context.currentFrame = frameNumber + 1;
         statements.InsertFrame(context.currentFrame, this->block_index_);
     }
     else
     {
         GFXRECON_SQLITE_LOG_WARNING(
-            "Finalized frame %" PRIu64 " not matching current frame: %" PRIu64, frame_number, context.currentFrame
+            "Finalized frame %" PRIu64 " not matching current frame: %" PRIu64, frameNumber, context.currentFrame
         );
     }
 }
 
-void VulkanSqliteConsumerBase::ProcessStateEndMarker(uint64_t frame_number)
+void VulkanSqliteConsumerBase::ProcessStateEndMarker(uint64_t frameNumber)
 {
     const auto functionId = statements.InsertFunctionName("StateEndMarker");
-    statements.InsertMetaApiEvent(this->block_index_, functionId, frame_number);
+    statements.InsertMetaApiEvent(this->block_index_, functionId, frameNumber);
 
-    statements.InsertAPIEventArgument(this->block_index_, 1, "frame_number", "uint64_t", std::to_string(frame_number));
+    statements.InsertAPIEventArgument(this->block_index_, 1, "frameNumber", "uint64_t", std::to_string(frameNumber));
 
-    if (context.currentFrame == 1 && frame_number != 1)
+    if (context.currentFrame == 1 && frameNumber != 1)
     {
         // Finalize the initial state frame so it has a valid event range
         ExecSQL(
@@ -234,21 +234,21 @@ void VulkanSqliteConsumerBase::ProcessStateEndMarker(uint64_t frame_number)
         );
         ExecSQL(context.db, "UPDATE frames SET beginApiEventId = (SELECT MIN(id) FROM apiEvents) WHERE id = 1;");
     }
-    if (context.currentFrame != frame_number)
+    if (context.currentFrame != frameNumber)
     {
-        statements.InsertFrame(frame_number, this->block_index_);
+        statements.InsertFrame(frameNumber, this->block_index_);
     }
-    context.currentFrame = frame_number;
+    context.currentFrame = frameNumber;
 }
 
-void VulkanSqliteConsumerBase::ProcessFrameEndMarker(uint64_t frame_number)
+void VulkanSqliteConsumerBase::ProcessFrameEndMarker(uint64_t frameNumber)
 {
     const auto functionId = statements.InsertFunctionName("FrameEndMarker");
-    statements.InsertMetaApiEvent(this->block_index_, functionId, frame_number);
+    statements.InsertMetaApiEvent(this->block_index_, functionId, frameNumber);
 
-    statements.InsertAPIEventArgument(this->block_index_, 1, "frame_number", "uint64_t", std::to_string(frame_number));
+    statements.InsertAPIEventArgument(this->block_index_, 1, "frameNumber", "uint64_t", std::to_string(frameNumber));
 
-    FinalizeFrame(frame_number);
+    FinalizeFrame(frameNumber);
 }
 
 void VulkanSqliteConsumerBase::ProcessDisplayMessageCommand(const std::string& message)
@@ -256,7 +256,7 @@ void VulkanSqliteConsumerBase::ProcessDisplayMessageCommand(const std::string& m
     const auto functionId = statements.InsertFunctionName("DisplayMessageCommand");
     statements.InsertMetaApiEvent(this->block_index_, functionId, context.currentFrame);
 
-    statements.InsertAPIEventArgument(this->block_index_, 1, "frame_number", "TEXT", message);
+    statements.InsertAPIEventArgument(this->block_index_, 1, "frameNumber", "TEXT", message);
 
     statements.InsertDisplayMessage(context.currentFrame, message);
 }
@@ -283,27 +283,7 @@ void VulkanSqliteConsumerBase::ProcessFillMemoryCommand(
     );
     GFXRECON_SQLITE_CHECK_DONE(context.db, sqlite3_step(statement));
 
-    // TODO figure out how to write out the binary data blob
-    /*
-    if (json_options_.dump_binaries)
-    {
-        std::string filename = GenerateFilename("fill_memory.bin");
-        std::string basename = gfxrecon::util::filepath::Join(json_options_.data_sub_dir, filename);
-        std::string filepath = gfxrecon::util::filepath::Join(json_options_.root_dir, basename);
-        if (WriteBinaryFile(filepath, size, data))
-        {
-            FieldToJson(jdata["data"], basename, json_options_);
-        }
-        else
-        {
-            FieldToJson(jdata["data"], "Unable to write file", json_options_);
-        }
-    }
-    else
-    {
-        FieldToJson(jdata["data"], "[Binary data]", json_options_);
-    } });
-    */
+    // TODO - We do not currently do anything with the binary blob, using replay dump API to get buffer data content
 }
 
 void VulkanSqliteConsumerBase::ProcessResizeWindowCommand(format::HandleId surfaceId, uint32_t width, uint32_t height)
@@ -339,7 +319,7 @@ void VulkanSqliteConsumerBase::ProcessCreateHardwareBufferCommand(
     uint32_t stride,
     uint64_t usage,
     uint32_t layers,
-    const std::vector<format::HardwareBufferPlaneInfo>& plane_info
+    const std::vector<format::HardwareBufferPlaneInfo>& planeInfo
 )
 {
     const auto functionId = statements.InsertFunctionName("CreateHardwareBuffer");
@@ -355,7 +335,7 @@ void VulkanSqliteConsumerBase::ProcessCreateHardwareBufferCommand(
     statements.InsertAPIEventArgument(this->block_index_, 8, "usage", "uint64_t", std::to_string(usage));
     statements.InsertAPIEventArgument(this->block_index_, 9, "layers", "uint32_t", std::to_string(layers));
 
-    // TODO possibly do something with the plane_info parameter, not originally captured in the export json consumer
+    // TODO possibly do something with the planeInfo parameter, not originally captured in the export json consumer
 }
 
 void VulkanSqliteConsumerBase::ProcessDestroyHardwareBufferCommand(uint64_t bufferId)
@@ -369,12 +349,12 @@ void VulkanSqliteConsumerBase::ProcessDestroyHardwareBufferCommand(uint64_t buff
 void VulkanSqliteConsumerBase::ProcessSetDevicePropertiesCommand(
     format::HandleId physicalDeviceId,
     uint32_t apiVersion,
-    uint32_t driver_version,
-    uint32_t vendor_id,
+    uint32_t driverVersion,
+    uint32_t vendorId,
     uint32_t deviceId,
-    uint32_t device_type,
-    const uint8_t pipeline_cache_uuid[format::kUuidSize],
-    const std::string& device_name
+    uint32_t deviceType,
+    const uint8_t pipelineCacheUuid[format::kUuidSize],
+    const std::string& deviceName
 )
 {
     const auto functionId = statements.InsertFunctionName("DevicePropertiesCommand");
@@ -385,21 +365,21 @@ void VulkanSqliteConsumerBase::ProcessSetDevicePropertiesCommand(
     );
     statements.InsertAPIEventArgument(this->block_index_, 2, "api version", "uint32_t", std::to_string(apiVersion));
     statements.InsertAPIEventArgument(
-        this->block_index_, 3, "driver version", "uint32_t", std::to_string(driver_version)
+        this->block_index_, 3, "driver version", "uint32_t", std::to_string(driverVersion)
     );
-    statements.InsertAPIEventArgument(this->block_index_, 4, "vendor id", "uint32_t", std::to_string(vendor_id));
+    statements.InsertAPIEventArgument(this->block_index_, 4, "vendor id", "uint32_t", std::to_string(vendorId));
     statements.InsertAPIEventArgument(this->block_index_, 5, "device id", "uint32_t", std::to_string(deviceId));
-    statements.InsertAPIEventArgument(this->block_index_, 6, "device type", "uint32_t", std::to_string(device_type));
+    statements.InsertAPIEventArgument(this->block_index_, 6, "device type", "uint32_t", std::to_string(deviceType));
     statements.InsertAPIEventArgument(
-        this->block_index_, 7, "pipeline cache uuid", "UUID", UUIDToString(format::kUuidSize, pipeline_cache_uuid)
+        this->block_index_, 7, "pipeline cache uuid", "UUID", UUIDToString(format::kUuidSize, pipelineCacheUuid)
     );
-    statements.InsertAPIEventArgument(this->block_index_, 8, "device name", "TEXT", device_name);
+    statements.InsertAPIEventArgument(this->block_index_, 8, "device name", "TEXT", deviceName);
 }
 
 void VulkanSqliteConsumerBase::ProcessSetDeviceMemoryPropertiesCommand(
     format::HandleId physicalDeviceId,
-    const std::vector<format::DeviceMemoryType>& memory_types,
-    const std::vector<format::DeviceMemoryHeap>& memory_heaps
+    const std::vector<format::DeviceMemoryType>& memoryTypes,
+    const std::vector<format::DeviceMemoryHeap>& memoryHeaps
 )
 {
     const auto functionId = statements.InsertFunctionName("SetDeviceMemoryPropertiesCommand");
@@ -463,7 +443,7 @@ void VulkanSqliteConsumerBase::ProcessSetRayTracingShaderGroupHandlesCommand(
 void VulkanSqliteConsumerBase::ProcessSetSwapchainImageStateCommand(
     format::HandleId deviceId,
     format::HandleId swapchainId,
-    uint32_t last_presented_image,
+    uint32_t lastPresentedImage,
     const std::vector<format::SwapchainImageStateInfo>& image_state
 )
 {
@@ -473,7 +453,7 @@ void VulkanSqliteConsumerBase::ProcessSetSwapchainImageStateCommand(
     statements.InsertAPIEventArgument(this->block_index_, 1, "device", "HANDLE", std::to_string(deviceId));
     statements.InsertAPIEventArgument(this->block_index_, 2, "swapchain", "HANDLE", std::to_string(swapchainId));
     statements.InsertAPIEventArgument(
-        this->block_index_, 3, "last presented image", "uint32_t", std::to_string(last_presented_image)
+        this->block_index_, 3, "last presented image", "uint32_t", std::to_string(lastPresentedImage)
     );
 
     // TODO possibly handle the image_state parameter, originally not handled by the export json consumer (exported
@@ -481,7 +461,7 @@ void VulkanSqliteConsumerBase::ProcessSetSwapchainImageStateCommand(
 }
 
 void VulkanSqliteConsumerBase::ProcessBeginResourceInitCommand(
-    format::HandleId deviceId, uint64_t max_resource_size, uint64_t max_copy_size
+    format::HandleId deviceId, uint64_t maxResourceSize, uint64_t maxCopySize
 )
 {
     const auto functionId = statements.InsertFunctionName("BeginResourceInitCommand");
@@ -489,10 +469,10 @@ void VulkanSqliteConsumerBase::ProcessBeginResourceInitCommand(
 
     statements.InsertAPIEventArgument(this->block_index_, 1, "device", "HANDLE", std::to_string(deviceId));
     statements.InsertAPIEventArgument(
-        this->block_index_, 2, "max resource size", "uint64_t", std::to_string(max_resource_size)
+        this->block_index_, 2, "max resource size", "uint64_t", std::to_string(maxResourceSize)
     );
     statements.InsertAPIEventArgument(
-        this->block_index_, 3, "max copy size", "uint64_t", std::to_string(max_copy_size)
+        this->block_index_, 3, "max copy size", "uint64_t", std::to_string(maxCopySize)
     );
 }
 
@@ -515,28 +495,7 @@ void VulkanSqliteConsumerBase::ProcessInitBufferCommand(
     statements.InsertAPIEventArgument(this->block_index_, 2, "buffer", "HANDLE", std::to_string(bufferId));
     statements.InsertAPIEventArgument(this->block_index_, 3, "data size", "uint64_t", std::to_string(dataSize));
 
-    // TODO handle the data argument, need to determine if we should save it to file or attempt to store
-    // it in the database as a blob somewhere
-    /*
-    if (json_options_.dump_binaries)
-    {
-        std::string filename = GenerateFilename("init_buffer.bin");
-        std::string basename = gfxrecon::util::filepath::Join(json_options_.data_sub_dir, filename);
-        std::string filepath = gfxrecon::util::filepath::Join(json_options_.root_dir, basename);
-        if (WriteBinaryFile(filepath, dataSize, data))
-        {
-            FieldToJson(jdata["data"], basename, json_options_);
-        }
-        else
-        {
-            FieldToJson(jdata["data"], "Unable to write file", json_options_);
-        }
-    }
-    else
-    {
-        FieldToJson(jdata["data"], "[Binary data]", json_options_);
-    } });
-    */
+    // TODO - We do not currently do anything with the binary blob, using replay dump API to get buffer data content
 }
 
 void VulkanSqliteConsumerBase::ProcessInitImageCommand(
@@ -558,40 +517,16 @@ void VulkanSqliteConsumerBase::ProcessInitImageCommand(
     statements.InsertAPIEventArgument(this->block_index_, 4, "aspect", "uint32_t", std::to_string(aspect));
     statements.InsertAPIEventArgument(this->block_index_, 5, "layout", "uint32_t", std::to_string(layout));
 
-    // TODO possibly handle the level_sizes parameter, originally not handled by the export json consumer (exported
-    // 'not available')
-
-    // TODO handle the data argument, need to determine if we should save it to file or attempt to store
-    // it in the database as a blob somewhere
-    /*
-    if (json_options_.dump_binaries)
-    {
-        std::string filename = GenerateFilename("init_image.bin");
-        std::string basename = gfxrecon::util::filepath::Join(json_options_.data_sub_dir, filename);
-        std::string filepath = gfxrecon::util::filepath::Join(json_options_.root_dir, basename);
-        if (WriteBinaryFile(filepath, dataSize, data))
-        {
-            FieldToJson(jdata["data"], basename, json_options_);
-        }
-        else
-        {
-            FieldToJson(jdata["data"], "Unable to write file", json_options_);
-        }
-    }
-    else
-    {
-        FieldToJson(jdata["data"], "[Binary data]", json_options_);
-    } });
-    */
+    // TODO - We do not currently do anything with the binary blob, using replay dump API to get image data content
 }
 
 void VulkanSqliteConsumerBase::Process_vkCmdBuildAccelerationStructuresIndirectKHR(
-    const ApiCallInfo& call_info, args::CmdBuildAccelerationStructuresIndirectKHR& args
+    const ApiCallInfo& callInfo, args::CmdBuildAccelerationStructuresIndirectKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCmdBuildAccelerationStructureIndirectKHR");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 
@@ -635,12 +570,12 @@ void VulkanSqliteConsumerBase::ProcessAnnotation(
 }
 
 void VulkanSqliteConsumerBase::Process_vkUpdateDescriptorSetWithTemplate(
-    const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplate& args
+    const ApiCallInfo& callInfo, args::UpdateDescriptorSetWithTemplate& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkUpdateDescriptorSetWithTemplate");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(statements, fieldInfo, 2, "descriptorSet", "VkDescriptorSet", args.descriptorSet);
@@ -658,12 +593,12 @@ void VulkanSqliteConsumerBase::Process_vkUpdateDescriptorSetWithTemplate(
 }
 
 void VulkanSqliteConsumerBase::Process_vkUpdateDescriptorSetWithTemplateKHR(
-    const ApiCallInfo& call_info, args::UpdateDescriptorSetWithTemplateKHR& args
+    const ApiCallInfo& callInfo, args::UpdateDescriptorSetWithTemplateKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkUpdateDescriptorSetWithTemplateKHR");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(statements, fieldInfo, 2, "descriptorSet", "VkDescriptorSet", args.descriptorSet);
@@ -681,12 +616,12 @@ void VulkanSqliteConsumerBase::Process_vkUpdateDescriptorSetWithTemplateKHR(
 }
 
 void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate(
-    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
@@ -702,16 +637,16 @@ void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate(
     FieldToSqlite(statements, fieldInfo, 5, "pData", &args.pData, "const void*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
-    UpdateCommandBufferCommands(call_info, args.commandBuffer);
+    UpdateCommandBufferCommands(callInfo, args.commandBuffer);
 }
 
 void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplateKHR(
-    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplateKHR& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplateKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplateKHR");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     RecordField(
@@ -728,16 +663,16 @@ void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplateKHR(
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
 
-    UpdateCommandBufferCommands(call_info, args.commandBuffer);
+    UpdateCommandBufferCommands(callInfo, args.commandBuffer);
 }
 
 void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate2(
-    const ApiCallInfo& call_info, args::CmdPushDescriptorSetWithTemplate2& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate2");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     FieldToSqlite(
@@ -750,16 +685,16 @@ void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate2(
     );
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
-    UpdateCommandBufferCommands(call_info, args.commandBuffer);
+    UpdateCommandBufferCommands(callInfo, args.commandBuffer);
 }
 
 void VulkanSqliteConsumerBase::Process_vkBuildAccelerationStructuresKHR(
-    const ApiCallInfo& call_info, args::BuildAccelerationStructuresKHR& args
+    const ApiCallInfo& callInfo, args::BuildAccelerationStructuresKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkBuildAccelerationStructuresKHR");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
@@ -780,12 +715,12 @@ void VulkanSqliteConsumerBase::Process_vkBuildAccelerationStructuresKHR(
 }
 
 void VulkanSqliteConsumerBase::Process_vkCopyAccelerationStructureKHR(
-    const ApiCallInfo& call_info, args::CopyAccelerationStructureKHR& args
+    const ApiCallInfo& callInfo, args::CopyAccelerationStructureKHR& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCopyAccelerationStructureKHR");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "device", "VkDevice", args.device);
     RecordField(statements, fieldInfo, 2, "deferredOperation", "VkDeferredOperationKHR", args.deferredOperation);
