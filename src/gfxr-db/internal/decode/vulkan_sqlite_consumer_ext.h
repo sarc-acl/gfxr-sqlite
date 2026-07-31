@@ -986,13 +986,19 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         format::HandleId commandBuffer, StructPointerDecoder<Decoded_VkBindDescriptorSetsInfo>* pBindDescriptorSetsInfo
     );
 
+    // Converts a pipeline bind point to the set of shader stages belonging to it - used when only a bind point
+    // (not stageFlags) is available from the originating Vulkan call.
+    static VkShaderStageFlags StageFlagsForBindPoint(VkPipelineBindPoint bindPoint);
+
     void WriteOrPushDescriptorSet(
         format::HandleId device,
         const Decoded_VkWriteDescriptorSet& descriptorWrite,
         int64_t descriptorSetDst,
         std::optional<int64_t> commandBufferRecordingId,
         int64_t layoutId,
-        bool isPush
+        bool isPush,
+        std::optional<VkShaderStageFlags> pushStageFlags = std::nullopt,
+        std::optional<int64_t> pushPipelineLayoutId = std::nullopt
     );
     void WriteDescriptorSet(format::HandleId device, const Decoded_VkWriteDescriptorSet& descriptorWrite);
     void CopyDescriptorSet(const Decoded_VkCopyDescriptorSet& descriptorCopy);
@@ -1014,7 +1020,8 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         int64_t layoutId,
         format::HandleId descriptorUpdateTemplate,
         const DescriptorUpdateTemplateDecoder* pData,
-        bool isPush
+        bool isPush,
+        std::optional<int64_t> pushPipelineLayoutId = std::nullopt
     );
     void WriteDescriptorSetWithTemplate(
         format::HandleId device,

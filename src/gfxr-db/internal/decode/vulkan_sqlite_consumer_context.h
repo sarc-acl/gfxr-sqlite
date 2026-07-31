@@ -30,6 +30,7 @@
 #include <map>
 #include <memory>
 #include <stack>
+#include <unordered_map>
 #include <unordered_set>
 #include "sqlite3.h"
 
@@ -152,7 +153,7 @@ struct VulkanSqliteConsumerContext final
 
     int64_t currentInstanceId = 0;
     std::map<int64_t, int64_t> instanceHandleToId;
-    
+
     int64_t currentInstanceEnabledLayerId = 0;
 
     int64_t currentInstanceEnabledLayerSettingId = 0;
@@ -303,15 +304,36 @@ struct VulkanSqliteConsumerContext final
     // maps of command buffer recording id -> shader stage -> shader object state ids
     std::map<int64_t, std::map<VkShaderStageFlagBits, int64_t>> commandBufferRecordingShaderObjectBindings;
 
-    // maps of command buffer recording id -> pipeline bind point -> descriptor set index -> descriptor set binding
-    // state id
+    // maps of command buffer recording id -> pipeline bind point -> descriptor set index -> state id
     std::map<int64_t, std::map<VkPipelineBindPoint, std::map<uint32_t, int64_t>>>
         commandBufferRecordingDescriptorSetBindings;
 
-    // map of command buffer recording id -> binding -> array element push descriptor state id
-    // descriptor set index doesn't need to be tracked here, as there can be at most one:
+    // maps command buffer recording id -> pipeline bind point -> descriptor set index -> binding -> array element
+    // -> state id.
+    //
+    // setIndex is tracked here (a pipeline layout can have at most one push-descriptor-flagged set:
     // https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineLayoutCreateInfo.html#VUID-VkPipelineLayoutCreateInfo-pSetLayouts-00293
-    std::map<int64_t, std::map<uint32_t, std::map<uint32_t, int64_t>>> commandBufferRecordingDescriptorSetPushes;
+    // but that invariant only holds within a single pipeline layout, not across the lifetime of a command buffer
+    // recording) specifically so InsertStateDescriptorSetBinding can detect and clear a previously-pushed descriptor
+    // set occupying the same (bindPoint, setIndex) slot, and so InsertStateDescriptorSetPush can do the
+    // mirror-image clear against commandBufferRecordingDescriptorSetBindings. Per the Vulkan spec, binding an
+    // ordinary descriptor set to a (bindPoint, setIndex) slot fully replaces whatever was previously bound there -
+    // an ordinary set or a pushed one — and vice versa.
+    std::
+        map<int64_t, std::map<VkPipelineBindPoint, std::map<uint32_t, std::map<uint32_t, std::map<uint32_t, int64_t>>>>>
+            commandBufferRecordingDescriptorSetPushes;
+
+    // stateId -> the stageFlags/setIndex a push descriptor state was recorded with. Populated by
+    // InsertStateDescriptorSetPush and consulted (in-memory only, no DB read) by InsertOverrideStateGroup, which
+    // needs bindPoint/setIndex to restore a snapshotted push entry into the map above but only has
+    // binding/arrayElement available from the generic StateGroupEntry (which intentionally isn't widened further -
+    // see commandBufferRecordingDescriptorSetPushes's comment).
+    struct DescriptorSetPushStateInfo
+    {
+        VkShaderStageFlags stageFlags;
+        uint32_t setIndex;
+    };
+    std::unordered_map<int64_t, DescriptorSetPushStateInfo> descriptorSetPushStateInfo;
 
     // maps of command buffer recording id -> binding index -> vertex buffer binding state id
     std::map<int64_t, std::map<uint32_t, int64_t>> commandBufferRecordingVertexBindings;
@@ -528,7 +550,7 @@ struct VulkanSqliteConsumerContext final
     std::unordered_set<uint64_t> pNextWarnings;
 
     std::unordered_set<VkDynamicState> dynamicStateWarnings;
-    std::unordered_set<std::string>    unsupportedCommandWarnings;
+    std::unordered_set<std::string> unsupportedCommandWarnings;
 
     bool IsDeviceFeatureEnabled(int64_t deviceId, const std::string& feature)
     {

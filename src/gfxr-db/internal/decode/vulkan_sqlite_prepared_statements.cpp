@@ -293,7 +293,9 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     );
 
     PrepareStatement(
-        db, "INSERT INTO stateDescriptorSetPushes VALUES (?, ?, ?, ?, ?, ?);", &stateDescriptorSetPushInsertStatement
+        db,
+        "INSERT INTO stateDescriptorSetPushes VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+        &stateDescriptorSetPushInsertStatement
     );
 
     PrepareStatement(
@@ -2063,14 +2065,43 @@ int64_t VulkanSqlitePreparedStatements::InsertOverrideStateGroup(
                             entry.stateId;
                         break;
                     case StateType::DESCRIPTOR_SET_BINDING:
-                        context
-                            ->commandBufferRecordingDescriptorSetBindings[parentCommandBufferRecordingId]
-                                                                         [static_cast<VkPipelineBindPoint>(entry.idx)]
-                                                                         [entry.subIndex] = entry.stateId;
+                    {
+                        auto bp = static_cast<VkPipelineBindPoint>(entry.idx);
+                        context->commandBufferRecordingDescriptorSetBindings[parentCommandBufferRecordingId][bp]
+                                                                            [entry.subIndex] = entry.stateId;
+                        // Restoring this binding fully replaces whatever push descriptor set previously occupied
+                        // the same (bindPoint, setIndex) slot.
+                        EraseDescriptorSetSlotIfPresent(
+                            context->commandBufferRecordingDescriptorSetPushes,
+                            parentCommandBufferRecordingId,
+                            bp,
+                            entry.subIndex
+                        );
                         break;
+                    }
                     case StateType::DESCRIPTOR_SET_PUSH:
-                        context->commandBufferRecordingDescriptorSetPushes[parentCommandBufferRecordingId][entry.idx]
-                                                                          [entry.subIndex] = entry.stateId;
+                        // The generic entry only carries binding/arrayElement (entry.idx/entry.subIndex); bindPoint
+                        // and setIndex are recovered from the in-memory side table populated by
+                        // InsertStateDescriptorSetPush, not the DB, since this switch is otherwise pure in-memory.
+                        if (auto pushInfoIter = context->descriptorSetPushStateInfo.find(entry.stateId);
+                            pushInfoIter != context->descriptorSetPushStateInfo.end())
+                        {
+                            const auto setIndex = pushInfoIter->second.setIndex;
+                            ForEachBindPointForStageFlags(pushInfoIter->second.stageFlags, [&](VkPipelineBindPoint bp) {
+                                context
+                                    ->commandBufferRecordingDescriptorSetPushes[parentCommandBufferRecordingId][bp]
+                                                                               [setIndex][entry.idx][entry.subIndex] =
+                                    entry.stateId;
+                                // Restoring this push fully replaces whatever ordinary descriptor set previously
+                                // occupied the same (bindPoint, setIndex) slot.
+                                EraseDescriptorSetSlotIfPresent(
+                                    context->commandBufferRecordingDescriptorSetBindings,
+                                    parentCommandBufferRecordingId,
+                                    bp,
+                                    setIndex
+                                );
+                            });
+                        }
                         break;
                     case StateType::INDEX_BUFFER_BINDING:
                         context->commandBufferRecordingIndexBindings[parentCommandBufferRecordingId] = entry.stateId;
@@ -2617,11 +2648,17 @@ void VulkanSqlitePreparedStatements::InsertStateGroupEntries(
             context->commandBufferRecordingDescriptorSetPushes.find(commandBufferRecordingId);
         descriptorSetPushesIter != context->commandBufferRecordingDescriptorSetPushes.end())
     {
-        for (const auto& [binding, arrayElements] : descriptorSetPushesIter->second)
+        for (const auto& [bindPoint, setIndexes] : descriptorSetPushesIter->second)
         {
-            for (const auto& [arrayElement, stateId] : arrayElements)
+            for (const auto& [setIndex, bindings] : setIndexes)
             {
-                entries.emplace_back(stateId, StateType::DESCRIPTOR_SET_PUSH, binding, arrayElement);
+                for (const auto& [binding, arrayElements] : bindings)
+                {
+                    for (const auto& [arrayElement, stateId] : arrayElements)
+                    {
+                        entries.emplace_back(stateId, StateType::DESCRIPTOR_SET_PUSH, binding, arrayElement);
+                    }
+                }
             }
         }
     }
@@ -3062,33 +3099,14 @@ int64_t VulkanSqlitePreparedStatements::InsertStateDescriptorSetBinding(
     // we store the stage flags but we actually track at the pipeline bind point level since that is
     // what would be reset if somthing is changed. Thus we need to map back to the bind point that the given
     // shader stage flags apply to.
-    if (stageFlags &
-        (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT |
-         VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT | VK_SHADER_STAGE_GEOMETRY_BIT | VK_SHADER_STAGE_FRAGMENT_BIT |
-         VK_SHADER_STAGE_TASK_BIT_EXT | VK_SHADER_STAGE_MESH_BIT_EXT | VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI))
-    {
-        context->commandBufferRecordingDescriptorSetBindings[commandBufferRecordingId][VK_PIPELINE_BIND_POINT_GRAPHICS]
-                                                            [setIndex] = stateId;
-    }
-    if (stageFlags & VK_SHADER_STAGE_COMPUTE_BIT)
-    {
-        context->commandBufferRecordingDescriptorSetBindings[commandBufferRecordingId][VK_PIPELINE_BIND_POINT_COMPUTE]
-                                                            [setIndex] = stateId;
-    }
-    if (stageFlags &
-        (VK_SHADER_STAGE_RAYGEN_BIT_KHR | VK_SHADER_STAGE_ANY_HIT_BIT_KHR | VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR |
-         VK_SHADER_STAGE_MISS_BIT_KHR | VK_SHADER_STAGE_INTERSECTION_BIT_KHR | VK_SHADER_STAGE_CALLABLE_BIT_KHR))
-    {
-        context->commandBufferRecordingDescriptorSetBindings[commandBufferRecordingId]
-                                                            [VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR][setIndex] =
-            stateId;
-    }
-    if (stageFlags & VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI)
-    {
-        context->commandBufferRecordingDescriptorSetBindings[commandBufferRecordingId]
-                                                            [VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI][setIndex] =
-            stateId;
-    }
+    ForEachBindPointForStageFlags(stageFlags, [&](VkPipelineBindPoint bp) {
+        context->commandBufferRecordingDescriptorSetBindings[commandBufferRecordingId][bp][setIndex] = stateId;
+        // Binding an ordinary descriptor set to this (bindPoint, setIndex) slot fully replaces whatever was
+        // previously there, including a push descriptor set.
+        EraseDescriptorSetSlotIfPresent(
+            context->commandBufferRecordingDescriptorSetPushes, commandBufferRecordingId, bp, setIndex
+        );
+    });
 
     context->commandBufferRecordingWithDirtyState.insert(commandBufferRecordingId);
 
@@ -3123,11 +3141,25 @@ int64_t VulkanSqlitePreparedStatements::InsertStateDescriptorSetPush(
     const uint32_t setIndex,
     const uint32_t binding,
     const uint32_t arrayElement,
-    const VkDescriptorType descriptorType
+    const VkDescriptorType descriptorType,
+    const VkShaderStageFlags stageFlags,
+    const int64_t pipelineLayoutId
 )
 {
     auto stateId = InsertStateId(apiEventId);
-    context->commandBufferRecordingDescriptorSetPushes[commandBufferRecordingId][binding][arrayElement] = stateId;
+    // Recorded so InsertOverrideStateGroup can later restore this state into a parent command buffer's map without
+    // a DB read - the generic StateGroupEntry snapshot only carries binding/arrayElement for push entries.
+    context->descriptorSetPushStateInfo[stateId] = { stageFlags, setIndex };
+    ForEachBindPointForStageFlags(stageFlags, [&](VkPipelineBindPoint bp) {
+        context
+            ->commandBufferRecordingDescriptorSetPushes[commandBufferRecordingId][bp][setIndex][binding][arrayElement] =
+            stateId;
+        // Pushing to this (bindPoint, setIndex) slot fully replaces whatever was previously there, including an
+        // ordinary descriptor set binding.
+        EraseDescriptorSetSlotIfPresent(
+            context->commandBufferRecordingDescriptorSetBindings, commandBufferRecordingId, bp, setIndex
+        );
+    });
     context->commandBufferRecordingWithDirtyState.insert(commandBufferRecordingId);
 
     auto& statement = stateDescriptorSetPushInsertStatement;
@@ -3138,6 +3170,8 @@ int64_t VulkanSqlitePreparedStatements::InsertStateDescriptorSetPush(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(binding)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(arrayElement)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(descriptorType)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(stageFlags)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(pipelineLayoutId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return stateId;
 }

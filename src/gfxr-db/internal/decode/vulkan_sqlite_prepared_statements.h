@@ -1388,7 +1388,9 @@ struct VulkanSqlitePreparedStatements
         const uint32_t setIndex,
         const uint32_t binding,
         const uint32_t arrayElement,
-        const VkDescriptorType descriptorType
+        const VkDescriptorType descriptorType,
+        const VkShaderStageFlags stageFlags,
+        const int64_t pipelineLayoutId
     );
 
     int64_t InsertStateVertexInputBindingDescription(
@@ -2000,9 +2002,64 @@ struct VulkanSqlitePreparedStatements
         const std::optional<int64_t> dynamicRenderPassRecordingId,
         const bool indexed
     );
+
+    // Invokes fn(bindPoint) once for each VkPipelineBindPoint whose shader stages overlap stageFlags. A single call
+    // can match more than one bind point (e.g. VkBindDescriptorSetsInfo::stageFlags can span multiple pipeline
+    // types), matching the existing behavior this was extracted from.
+    template <typename Fn>
+    void ForEachBindPointForStageFlags(VkShaderStageFlags stageFlags, Fn&& fn);
+
+    // Erases perRecordingMap[commandBufferRecordingId][bindPoint][setIndex] if present, without inserting empty
+    // placeholder nodes for command buffers/bind points that have no entries yet. Used to implement the mutual
+    // invalidation between ordinary descriptor set bindings and push descriptor sets occupying the same
+    // (bindPoint, setIndex) slot.
+    template <typename OuterMap>
+    static void EraseDescriptorSetSlotIfPresent(
+        OuterMap& perRecordingMap, int64_t commandBufferRecordingId, VkPipelineBindPoint bindPoint, uint32_t setIndex
+    );
 };
 
 // Template implementations (must be in header for instantiation)
+template <typename Fn>
+inline void VulkanSqlitePreparedStatements::ForEachBindPointForStageFlags(VkShaderStageFlags stageFlags, Fn&& fn)
+{
+    if (stageFlags &
+        (VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT |
+         VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT | VK_SHADER_STAGE_GEOMETRY_BIT | VK_SHADER_STAGE_FRAGMENT_BIT |
+         VK_SHADER_STAGE_TASK_BIT_EXT | VK_SHADER_STAGE_MESH_BIT_EXT | VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI))
+    {
+        fn(VK_PIPELINE_BIND_POINT_GRAPHICS);
+    }
+    if (stageFlags & VK_SHADER_STAGE_COMPUTE_BIT)
+    {
+        fn(VK_PIPELINE_BIND_POINT_COMPUTE);
+    }
+    if (stageFlags &
+        (VK_SHADER_STAGE_RAYGEN_BIT_KHR | VK_SHADER_STAGE_ANY_HIT_BIT_KHR | VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR |
+         VK_SHADER_STAGE_MISS_BIT_KHR | VK_SHADER_STAGE_INTERSECTION_BIT_KHR | VK_SHADER_STAGE_CALLABLE_BIT_KHR))
+    {
+        fn(VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR);
+    }
+    if (stageFlags & VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI)
+    {
+        fn(VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI);
+    }
+}
+
+template <typename OuterMap>
+inline void VulkanSqlitePreparedStatements::EraseDescriptorSetSlotIfPresent(
+    OuterMap& perRecordingMap, int64_t commandBufferRecordingId, VkPipelineBindPoint bindPoint, uint32_t setIndex
+)
+{
+    if (auto recordingIter = perRecordingMap.find(commandBufferRecordingId); recordingIter != perRecordingMap.end())
+    {
+        if (auto bindPointIter = recordingIter->second.find(bindPoint); bindPointIter != recordingIter->second.end())
+        {
+            bindPointIter->second.erase(setIndex);
+        }
+    }
+}
+
 template <typename T>
 inline void VulkanSqlitePreparedStatements::RecordField(
     const FieldInfo& fieldInfo,

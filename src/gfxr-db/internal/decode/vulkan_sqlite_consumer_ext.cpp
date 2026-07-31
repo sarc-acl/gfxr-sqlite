@@ -5324,6 +5324,26 @@ void VulkanSqliteConsumerExt::Process_vkDestroyPrivateDataSlotEXT(
     DestroyPrivateDataSlot(args.privateDataSlot);
 }
 
+VkShaderStageFlags VulkanSqliteConsumerExt::StageFlagsForBindPoint(VkPipelineBindPoint bindPoint)
+{
+    switch (bindPoint)
+    {
+        case VK_PIPELINE_BIND_POINT_GRAPHICS:
+            return VK_SHADER_STAGE_ALL_GRAPHICS | VK_SHADER_STAGE_TASK_BIT_EXT | VK_SHADER_STAGE_MESH_BIT_EXT |
+                   VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI;
+        case VK_PIPELINE_BIND_POINT_COMPUTE:
+            return VK_SHADER_STAGE_COMPUTE_BIT;
+        case VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR:
+            return VK_SHADER_STAGE_RAYGEN_BIT_KHR | VK_SHADER_STAGE_ANY_HIT_BIT_KHR |
+                   VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR | VK_SHADER_STAGE_MISS_BIT_KHR |
+                   VK_SHADER_STAGE_INTERSECTION_BIT_KHR | VK_SHADER_STAGE_CALLABLE_BIT_KHR;
+        case VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI:
+            return VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI;
+        default:
+            return 0;
+    }
+}
+
 void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
     const ApiCallInfo& callInfo, args::CmdBindDescriptorSets& args
 )
@@ -5376,29 +5396,12 @@ void VulkanSqliteConsumerExt::Process_vkCmdBindDescriptorSets(
         // we need to generate stage flags based on the pipeline bind point since that is used
         // for filtering and vkCmdBindDescriptorSets does not configure at the stage level
         // we simply gather all stages that apply to the given bind point.
-        VkShaderStageFlags stageFlags = 0;
-        switch (args.pipelineBindPoint)
+        VkShaderStageFlags stageFlags = StageFlagsForBindPoint(args.pipelineBindPoint);
+        if (stageFlags == 0)
         {
-            case VK_PIPELINE_BIND_POINT_GRAPHICS:
-                stageFlags = VK_SHADER_STAGE_ALL_GRAPHICS | VK_SHADER_STAGE_TASK_BIT_EXT |
-                    VK_SHADER_STAGE_MESH_BIT_EXT | VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI;
-                break;
-            case VK_PIPELINE_BIND_POINT_COMPUTE:
-                stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
-                break;
-            case VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR:
-                stageFlags = VK_SHADER_STAGE_RAYGEN_BIT_KHR | VK_SHADER_STAGE_ANY_HIT_BIT_KHR |
-                    VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR | VK_SHADER_STAGE_MISS_BIT_KHR |
-                    VK_SHADER_STAGE_INTERSECTION_BIT_KHR | VK_SHADER_STAGE_CALLABLE_BIT_KHR;
-                break;
-            case VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI:
-                stageFlags = VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI;
-                break;
-            default:
-                LOG_CMD_WARNING(
-                    "Failed to set descriptor set stage flags, unknown pipeline bind point %" PRIi64,
-                    args.pipelineBindPoint
-                );
+            LOG_CMD_WARNING(
+                "Failed to set descriptor set stage flags, unknown pipeline bind point %" PRIi64, args.pipelineBindPoint
+            );
         }
 
         auto stateId = statements.InsertStateDescriptorSetBinding(
@@ -5734,7 +5737,9 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSet(
     int64_t descriptorSetDst, // descriptor set ID for writes, descriptor set index for pushes
     std::optional<int64_t> commandBufferRecordingId,
     int64_t layoutId,
-    bool isPush
+    bool isPush,
+    std::optional<VkShaderStageFlags> pushStageFlags,
+    std::optional<int64_t> pushPipelineLayoutId
 )
 {
     const auto arrayElement = descriptorWrite.decoded_value->dstArrayElement;
@@ -5848,7 +5853,9 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSet(
                 static_cast<uint32_t>(descriptorSetDst),
                 binding,
                 element,
-                descriptorType
+                descriptorType,
+                *pushStageFlags,
+                *pushPipelineLayoutId
             );
         }
 
@@ -6181,7 +6188,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     int64_t layoutId,
     format::HandleId descriptorUpdateTemplate,
     const DescriptorUpdateTemplateDecoder* pData,
-    bool isPush
+    bool isPush,
+    std::optional<int64_t> pushPipelineLayoutId
 )
 {
     auto descriptorUpdateTemplateIter =
@@ -6289,7 +6297,9 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
                     static_cast<uint32_t>(descriptorSetDst),
                     binding,
                     element,
-                    entry.descriptorType
+                    entry.descriptorType,
+                    StageFlagsForBindPoint(descriptorUpdateTemplateInfo->pipelineBindPoint),
+                    *pushPipelineLayoutId
                 );
             }
 
@@ -6559,6 +6569,23 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
 
     auto deviceHandle = context.GetDeviceFromCommandBuffer(commandBuffer);
 
+    VkShaderStageFlags resolvedStageFlags = 0;
+    if (stageFlags.has_value())
+    {
+        resolvedStageFlags = *stageFlags;
+    }
+    else if (bindPoint.has_value())
+    {
+        resolvedStageFlags = StageFlagsForBindPoint(*bindPoint);
+    }
+    else
+    {
+        GFXRECON_SQLITE_LOG_WARNING(
+            "Failed to determine descriptor set push stage flags, neither a pipeline bind point nor stage flags "
+            "were provided"
+        );
+    }
+
     auto [descriptorWritesValid, descriptorWrites, descriptorWritesCount] = GetMetaStructArray(pDescriptorWrites);
     if (descriptorWritesValid)
     {
@@ -6570,7 +6597,9 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
                 set,
                 commandBufferRecordingIter->second,
                 descriptorSetLayoutIter->second,
-                true
+                true,
+                resolvedStageFlags,
+                pipelineLayoutIter->second
             );
         }
     }
@@ -6746,13 +6775,14 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     auto deviceHandle = context.GetDeviceFromCommandBuffer(commandBuffer);
 
     WriteOrPushDescriptorSetWithTemplate(
-        set,
         deviceHandle,
+        set,
         commandBufferRecordingIter->second,
         descriptorSetLayoutIter->second,
         descriptorUpdateTemplate,
         pData,
-        true
+        true,
+        pipelineLayoutIter->second
     );
 }
 
