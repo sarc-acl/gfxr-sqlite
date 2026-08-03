@@ -645,9 +645,12 @@ static void CreateDescriptorSetTables(sqlite3* db)
         "   binding INT NOT NULL,"
         "   arrayElement INT NOT NULL,"
         "   descriptorType INT NOT NULL,"
+        "   stageFlags INT NOT NULL,"
+        "   pipelineLayoutId INT NOT NULL,"
         "   FOREIGN KEY(stateId) REFERENCES stateIds(id),"
         "   FOREIGN KEY(apiEventId) REFERENCES apiEvents(id),"
-        "   FOREIGN KEY(descriptorType) REFERENCES VkDescriptorType(value)) STRICT;"
+        "   FOREIGN KEY(descriptorType) REFERENCES VkDescriptorType(value),"
+        "   FOREIGN KEY(pipelineLayoutId) REFERENCES pipelineLayouts(id)) STRICT;"
     );
 
     ExecSQL(
