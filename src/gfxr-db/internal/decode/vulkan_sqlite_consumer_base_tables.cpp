@@ -210,18 +210,18 @@ static void CreateVulkanObjectTables(sqlite3* db)
     // TODO Maybe this should be a file? export JSON consumer wrote the blob to disk
     // optionally we could skip the data and not display it to the user, or if we do,
     // as a separate consumer load?
-    // Note: There can be multiple load memory commands so we cannot make memoryId
+    // Note: There can be multiple load memory commands so we cannot make id
     // unique or primary key which could also have implications to writing data to
     // a file. Offset/Size is used to write into a subset of the memory.
     ExecSQL(
         db,
         "CREATE TABLE memory("
-        "   memoryId INT NOT NULL,"
+        "   id INT NOT NULL,"
         "   offset INT NOT NULL,"
         "   size INT NOT NULL,"
         "   data BLOB,"
-        "   createFrame INT,"
-        "   FOREIGN KEY(createFrame) REFERENCES frames(id)) STRICT;"
+        "   createFrameId INT,"
+        "   FOREIGN KEY(createFrameId) REFERENCES frames(id)) STRICT;"
     );
 
     ExecSQL(
@@ -657,9 +657,9 @@ static void CreateCmdDrawRecordingTables(sqlite3* db)
         db,
         "CREATE TABLE cmdDrawRecordingIndirectInfos("
         "   cmdDrawRecordingId INT NOT NULL,"
-        "   indirectBuffer INT,"
+        "   indirectBufferId INT,"
         "   indirectBufferOffset INT,"
-        "   indirectCountBuffer INT,"
+        "   indirectCountBufferId INT,"
         "   indirectCountBufferOffset INT,"
         "   indirectCountOffset INT,"
         "   indirectDrawCount INT,"
@@ -667,8 +667,8 @@ static void CreateCmdDrawRecordingTables(sqlite3* db)
         "   indirectStride INT,"
         "   indirectVertexStride INT,"
         "   FOREIGN KEY(cmdDrawRecordingId) REFERENCES cmdDrawRecordings(id),"
-        "   FOREIGN KEY(indirectBuffer) REFERENCES buffers(id),"
-        "   FOREIGN KEY(indirectCountBuffer) REFERENCES buffers(id)) STRICT;"
+        "   FOREIGN KEY(indirectBufferId) REFERENCES buffers(id),"
+        "   FOREIGN KEY(indirectCountBufferId) REFERENCES buffers(id)) STRICT;"
     );
 
     ExecSQL(
@@ -703,10 +703,10 @@ static void CreateCmdDispatchRecordingTables(sqlite3* db)
         db,
         "CREATE TABLE cmdDispatchRecordingIndirectInfos("
         "   cmdDispatchRecordingId INT NOT NULL,"
-        "   indirectBuffer INT,"
+        "   indirectBufferId INT,"
         "   indirectBufferOffset INT,"
         "   FOREIGN KEY(cmdDispatchRecordingId) REFERENCES cmdDispatchRecordings(id),"
-        "   FOREIGN KEY(indirectBuffer) REFERENCES buffers(id)) STRICT;"
+        "   FOREIGN KEY(indirectBufferId) REFERENCES buffers(id)) STRICT;"
     );
 
     ExecSQL(
@@ -753,15 +753,15 @@ static void CreateCmdMeshTaskRecordingTables(sqlite3* db)
         db,
         "CREATE TABLE cmdMeshTaskRecordingIndirectInfos("
         "   cmdMeshTaskRecordingId INT NOT NULL,"
-        "   indirectBuffer INT,"
+        "   indirectBufferId INT,"
         "   indirectBufferOffset INT NOT NULL,"
-        "   indirectCountBuffer INT,"
+        "   indirectCountBufferId INT,"
         "   indirectCountBufferOffset INT,"
         "   indirectDrawCount INT,"
         "   indirectMaxDrawCount INT,"
         "   indirectStride INT NOT NULL,"
-        "   FOREIGN KEY(indirectBuffer) REFERENCES buffers(id),"
-        "   FOREIGN KEY(indirectCountBuffer) REFERENCES buffers(id)) STRICT;"
+        "   FOREIGN KEY(indirectBufferId) REFERENCES buffers(id),"
+        "   FOREIGN KEY(indirectCountBufferId) REFERENCES buffers(id)) STRICT;"
     );
 
     ExecSQL(
@@ -798,10 +798,10 @@ static void CreateCmdClusterRecordingTables(sqlite3* db)
         db,
         "CREATE TABLE cmdClusterRecordingIndirectInfos("
         "   cmdClusterRecordingId INT NOT NULL,"
-        "   indirectBuffer INT,"
+        "   indirectBufferId INT,"
         "   indirectBufferOffset INT NOT NULL,"
         "   FOREIGN KEY(cmdClusterRecordingId) REFERENCES cmdClusterRecordings(id),"
-        "   FOREIGN KEY(indirectBuffer) REFERENCES buffers(id)) STRICT;"
+        "   FOREIGN KEY(indirectBufferId) REFERENCES buffers(id)) STRICT;"
     );
 
     ExecSQL(
