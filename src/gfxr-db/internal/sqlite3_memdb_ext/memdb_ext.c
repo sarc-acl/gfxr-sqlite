@@ -797,6 +797,8 @@ static int memdbCurrentTimeInt64(sqlite3_vfs *pVfs, sqlite3_int64 *p){
   return ORIGVFS(pVfs)->xCurrentTimeInt64(ORIGVFS(pVfs), p);
 }
 
+#if !MARK_MEMDB_CHANGES
+
 /*
 ** Translate a database connection pointer and schema name into a
 ** MemFile pointer.
@@ -814,7 +816,6 @@ static MemFile *memdbFromDbSchema(sqlite3 *db, const char *zSchema){
   return p;
 }
 
-#if !MARK_MEMDB_CHANGES
 
 /*
 ** Return the serialization of a database
