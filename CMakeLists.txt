@@ -80,7 +80,7 @@ if (MSVC)
     target_compile_options(gfxr-sqlite-library PUBLIC /W4 /wd4100 /wd4127 /wd4505)
     target_compile_definitions(gfxr-sqlite-library PUBLIC _CRT_SECURE_NO_WARNINGS)
 else ()
-    target_compile_options(gfxr-sqlite-library PUBLIC -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function)
+    target_compile_options(gfxr-sqlite-library PUBLIC -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-unused-function -Wno-missing-field-initializers)
 endif ()
 
 if (APPLE)
