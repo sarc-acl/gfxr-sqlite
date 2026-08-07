@@ -513,7 +513,7 @@ static void CreateDescriptorSetTables(sqlite3* db)
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   handle INT NOT NULL,"
         "   descriptorPoolId INT NOT NULL,"
-        "   descriptorSetLayoutId INT,"
+        "   descriptorSetLayoutId INT NOT NULL,"
         "   allocateApiEventId INT NOT NULL,"
         "   freeApiEventId INT,"
         "   FOREIGN KEY(descriptorPoolId) REFERENCES descriptorPools(id),"

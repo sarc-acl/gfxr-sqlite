@@ -4855,6 +4855,7 @@ void VulkanSqliteConsumerExt::Process_vkAllocateDescriptorSets(
     for (size_t i = 0; i < std::min(descriptorSetCount, descriptorSetLayoutCount); ++i)
     {
         auto layout = descriptorSetLayouts[i];
+        // layoutId must not be NULL per VUID-VkDescriptorSetAllocateInfo-pSetLayouts-parameter
         auto layoutId = context.GetDescriptorSetLayoutId(layout);
 
         auto descriptorSet = descriptorSets[i];
@@ -5330,13 +5331,13 @@ VkShaderStageFlags VulkanSqliteConsumerExt::StageFlagsForBindPoint(VkPipelineBin
     {
         case VK_PIPELINE_BIND_POINT_GRAPHICS:
             return VK_SHADER_STAGE_ALL_GRAPHICS | VK_SHADER_STAGE_TASK_BIT_EXT | VK_SHADER_STAGE_MESH_BIT_EXT |
-                   VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI;
+                VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI;
         case VK_PIPELINE_BIND_POINT_COMPUTE:
             return VK_SHADER_STAGE_COMPUTE_BIT;
         case VK_PIPELINE_BIND_POINT_RAY_TRACING_KHR:
             return VK_SHADER_STAGE_RAYGEN_BIT_KHR | VK_SHADER_STAGE_ANY_HIT_BIT_KHR |
-                   VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR | VK_SHADER_STAGE_MISS_BIT_KHR |
-                   VK_SHADER_STAGE_INTERSECTION_BIT_KHR | VK_SHADER_STAGE_CALLABLE_BIT_KHR;
+                VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR | VK_SHADER_STAGE_MISS_BIT_KHR |
+                VK_SHADER_STAGE_INTERSECTION_BIT_KHR | VK_SHADER_STAGE_CALLABLE_BIT_KHR;
         case VK_PIPELINE_BIND_POINT_SUBPASS_SHADING_HUAWEI:
             return VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI;
         default:
