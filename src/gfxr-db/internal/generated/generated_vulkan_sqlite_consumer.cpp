@@ -12816,54 +12816,6 @@ void VulkanSqliteConsumer::Process_vkCmdInsertDebugUtilsLabelEXT(
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
-    auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
-    if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
-    {
-        GFXRECON_SQLITE_LOG_WARNING(
-            "Failed to insert tracked command, failed to find command buffer recording for command buffer with handle %" PRIi64,
-            args.commandBuffer
-        );
-        return;
-    }
-    std::optional<int64_t> renderPassRecordingId = std::nullopt;
-    std::optional<int64_t> renderSubpassRecordingId = std::nullopt;
-    std::optional<int64_t> dynamicRenderPassRecordingId = std::nullopt;
-
-    std::optional<int64_t> deviceId = std::nullopt;
-    auto deviceIdIter = context.commandBufferHandleToDeviceId.find(ToInt64(args.commandBuffer));
-    if (deviceIdIter != context.commandBufferHandleToDeviceId.end())
-    {
-        deviceId = deviceIdIter->second;
-    }
-    if (deviceId.has_value() && context.IsDeviceFeatureEnabled(deviceId.value(), "dynamicRendering"))
-    {
-        auto commandBufferDynamicRenderPassStackIter = context.commandBufferHandleToDynamicRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));
-        if (commandBufferDynamicRenderPassStackIter != context.commandBufferHandleToDynamicRenderPassRecordingIdStack.end())
-        {
-            if (!commandBufferDynamicRenderPassStackIter->second.empty())
-            {
-                dynamicRenderPassRecordingId = commandBufferDynamicRenderPassStackIter->second.top();
-            }
-        }
-    }
-
-    if (!dynamicRenderPassRecordingId.has_value())
-    {
-        auto commandBufferRenderPassStackIter = context.commandBufferHandleToRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));
-        if (commandBufferRenderPassStackIter != context.commandBufferHandleToRenderPassRecordingIdStack.end())
-        {
-            if (!commandBufferRenderPassStackIter->second.empty())
-            {
-                renderPassRecordingId = commandBufferRenderPassStackIter->second.top();
-                auto renderSubpassRecordingIter = context.renderPassRecordingIdToRenderSubpassRecordingId.find(renderPassRecordingId.value());
-                if (renderSubpassRecordingIter != context.renderPassRecordingIdToRenderSubpassRecordingId.end())
-                {
-                    renderSubpassRecordingId = renderSubpassRecordingIter->second;
-                }
-            }
-        }
-    }
-    statements.InsertTrackedCmdCommand(this->block_index_, commandBufferRecordingIter->second, renderPassRecordingId, renderSubpassRecordingId, dynamicRenderPassRecordingId);
 }
 
 void VulkanSqliteConsumer::Process_vkCreateDebugUtilsMessengerEXT(

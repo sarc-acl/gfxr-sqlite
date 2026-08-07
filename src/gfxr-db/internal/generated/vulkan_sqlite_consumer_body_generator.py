@@ -270,7 +270,6 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             "vkCmdExecuteGeneratedCommandsEXT",
             "vkCmdExecuteGeneratedCommandsNV",
             "vkCmdFillBuffer",
-            "vkCmdInsertDebugUtilsLabelEXT",
             "vkCmdPipelineBarrier",
             "vkCmdPipelineBarrier2",
             "vkCmdPipelineBarrier2KHR",
