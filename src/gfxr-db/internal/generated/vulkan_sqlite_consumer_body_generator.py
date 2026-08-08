@@ -220,34 +220,12 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             "vkCmdBindIndexBuffer2"
         })
 
-        # Transfer commands that have specialized instance tables for querying src/dst resources.
-        # These include buffer copies, image copies, buffer-image copies, and blit operations.
-        self.transferCommands = make_function_list({
-            "vkCmdCopyBuffer",
-            "vkCmdCopyBuffer2",
-            "vkCmdCopyBuffer2KHR",
-            "vkCmdCopyImage",
-            "vkCmdCopyImage2",
-            "vkCmdCopyImage2KHR",
-            "vkCmdCopyBufferToImage",
-            "vkCmdCopyBufferToImage2",
-            "vkCmdCopyBufferToImage2KHR",
-            "vkCmdCopyImageToBuffer",
-            "vkCmdCopyImageToBuffer2",
-            "vkCmdCopyImageToBuffer2KHR",
-            "vkCmdBlitImage",
-            "vkCmdBlitImage2",
-            "vkCmdBlitImage2KHR",
-            "vkCmdResolveImage",
-            "vkCmdResolveImage2",
-            "vkCmdResolveImage2KHR"
-        })
-
         # Commands that are important enough to be displayed as nodes in the command tree.
         # These are synchronization commands, queries, and other miscellaneous operations.
         # Getters and bind commands, as well as vkCmdPushConstants, should instead be parsed and
         # shown in the pipeline view.
-        # Note: Transfer commands (buffer/image copies, blits) have been moved to self.transferCommands
+        # Note: Transfer commands (buffer/image copies, blits) are fully overridden in
+        # VulkanSqliteConsumerExt (vulkan_sqlite_consumer_ext.cpp) and are not in this list
         # Note: Acceleration structure operations have specialized tables and are not in this list
         self.trackedCommands = make_function_list({
             "vkCmdBeginQuery",
@@ -362,6 +340,78 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             '''
         )
         write(namespace, file=self.outFile)
+
+        # Shared by every command in trackedCommands: looks up the command buffer recording and its
+        # enclosing (sub)render pass, then inserts a single TrackedCmdCommand row. Factored out here
+        # since this exact sequence was previously inlined verbatim into every trackedCommands
+        # Process_* member function. Built from the same make_command_buffer_recording /
+        # make_renderpass_recording_from_command_buffer_recording helpers used for other per-command
+        # bodies, just against a "commandBuffer" parameter instead of "args.commandBuffer".
+        trackedCmdBody = textwrap.indent(inspect.cleandoc(
+            self.make_command_buffer_recording('insert tracked command', command_buffer_expr='commandBuffer')
+        ), '    ')
+        trackedCmdBody += '\n'
+        trackedCmdBody += textwrap.indent(inspect.cleandoc(
+            self.make_renderpass_recording_from_command_buffer_recording(False, command_buffer_expr='commandBuffer')
+        ), '    ')
+        trackedCmdBody += '\n'
+        trackedCmdBody += textwrap.indent(inspect.cleandoc(
+            '''
+            statements.InsertTrackedCmdCommand(block_index, commandBufferRecordingIter->second, renderPassRecordingId, renderSubpassRecordingId, dynamicRenderPassRecordingId);
+            '''
+        ), '    ')
+
+        trackedCmdHelper = inspect.cleandoc(
+            '''
+            namespace
+            {
+            void RecordTrackedCmdCommand(
+                VulkanSqliteConsumerContext&    context,
+                VulkanSqlitePreparedStatements& statements,
+                uint64_t                        block_index,
+                format::HandleId                commandBuffer)
+            {
+            '''
+        )
+        trackedCmdHelper += '\n' + trackedCmdBody + '\n'
+        trackedCmdHelper += inspect.cleandoc(
+            '''
+            }
+            } // namespace
+
+            '''
+        )
+        write(trackedCmdHelper, file=self.outFile)
+
+        # Shared by every command in trackedDeviceCommands: resolves the device handle to its
+        # database id and inserts a single TrackedDeviceCommand row. Factored out here since this
+        # exact sequence was previously inlined verbatim into every trackedDeviceCommands Process_*
+        # member function.
+        trackedDeviceCmdHelper = inspect.cleandoc(
+            '''
+            namespace
+            {
+            void RecordTrackedDeviceCommand(
+                VulkanSqliteConsumerContext&    context,
+                VulkanSqlitePreparedStatements& statements,
+                uint64_t                        block_index,
+                format::HandleId                device)
+            {
+                auto deviceId = context.GetDeviceId(device);
+                if (!deviceId.has_value())
+                {
+                    GFXRECON_SQLITE_LOG_WARNING("Failed to insert device command, unknown device handle");
+                }
+                else
+                {
+                    statements.InsertTrackedDeviceCommand(*deviceId, block_index);
+                }
+            }
+            } // namespace
+
+            '''
+        )
+        write(trackedDeviceCmdHelper, file=self.outFile)
 
         # Each code generator is passed a blacklist like framework\generated\vulkan_generators\blacklists.json
         # of functions and structures not to generate code for. We need all functions and structs to be generated
@@ -559,8 +609,8 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             }}
         '''
 
-    def make_command_buffer_recording(self, action):
-        return f'''
+    def make_command_buffer_recording(self, action, command_buffer_expr='args.commandBuffer'):
+        value = f'''
             auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
             if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
             {{
@@ -571,8 +621,11 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 return;
             }}
         '''
+        if command_buffer_expr != 'args.commandBuffer':
+            value = value.replace('args.commandBuffer', command_buffer_expr)
+        return value
 
-    def make_renderpass_recording_from_command_buffer_recording(self, warnOnMissingRenderpass):
+    def make_renderpass_recording_from_command_buffer_recording(self, warnOnMissingRenderpass, command_buffer_expr='args.commandBuffer'):
         """
             Requires previous call to self.make_command_buffer_recording()
         """
@@ -669,6 +722,8 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             }
             '''
 
+        if command_buffer_expr != 'args.commandBuffer':
+            value = value.replace('args.commandBuffer', command_buffer_expr)
         return value
 
     # Decoder wrapper classes whose FieldToSqlite/GetHandle/GetMetaStructPointer/etc. overloads take a
@@ -775,31 +830,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto [surfaceValid, surface] = GetHandle(&args.pSurface);
-                    if (!surfaceValid)
-                    {
-                        if (args.result == VK_SUCCESS)
-                        {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to create surface, invalid pSurface handle");
-                        }
-                        return;
-                    }
-
-                    auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
-                    if (!createInfoValid)
-                    {
-                        if (args.result == VK_SUCCESS)
-                        {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to create surface, invalid pCreateInfo struct");
-                        }
-                        return;
-                    }
-
-                    LogUnsupportedPNext(createInfo->pNext);
-
-                    auto createInfoType = createInfo->decoded_value->sType;
-
-                    statements.InsertSurface(ToInt64(surface), createInfoType, this->block_index_);
+                    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
                 '''
             ), '    ')
         if name in self.destroySurface:
@@ -1166,33 +1197,18 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             ), '    ')
         if name in self.trackedCommands:
             body += '\n'
-            body += textwrap.indent(inspect.cleandoc(self.make_command_buffer_recording('insert tracked command')), '    ')
-            body += '\n'
-            body += textwrap.indent(inspect.cleandoc(self.make_renderpass_recording_from_command_buffer_recording(False)), '    ')
-            body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                   statements.InsertTrackedCmdCommand(this->block_index_, commandBufferRecordingIter->second, renderPassRecordingId, renderSubpassRecordingId, dynamicRenderPassRecordingId);
+                    RecordTrackedCmdCommand(context, statements, this->block_index_, args.commandBuffer);
                 '''
             ), '    ')
         if name in self.trackedDeviceCommands:
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    auto deviceId = context.GetDeviceId(args.device);
-                    if (!deviceId.has_value())
-                    {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to insert device command, unknown device handle");
-                    }
-                    else
-                    {
-                        statements.InsertTrackedDeviceCommand(*deviceId, this->block_index_);
-                    }
+                    RecordTrackedDeviceCommand(context, statements, this->block_index_, args.device);
                 '''
             ), '    ')
-        if name in self.transferCommands:
-            body += '\n'
-            body += textwrap.indent(inspect.cleandoc(self.make_command_buffer_recording('insert transfer command')), '    ')
         if self.is_draw_cmd(name):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(self.make_command_buffer_recording('insert cmd draw recording')), '    ')
