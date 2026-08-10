@@ -19,6 +19,7 @@
 
 #include "util/defines.h"
 #include "decode/annotation_handler.h"
+#include "decode/consumer_utils.h"
 #include "encode/vulkan_handle_wrapper_util.h"
 #include "format/platform_types.h"
 #include "generated/generated_vulkan_consumer.h"
@@ -398,6 +399,43 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
             return { false, 0 };
         }
         return { true, *decodedHandle };
+    }
+
+    // Shared by every vkCreate*SurfaceKHR/EXT variant (Win32, Xlib, Xcb, Wayland, Android, ...): they
+    // all share the same (VkInstance, pCreateInfo, pAllocator, pSurface) -> VkResult shape, differing
+    // only in the platform-specific pCreateInfo struct type.
+    template <class T>
+    inline void RecordCreateSurface(
+        const gfxrecon::decode::HandlePointerDecoder<VkSurfaceKHR>* pSurface,
+        const gfxrecon::decode::StructPointerDecoder<T>*            pCreateInfo,
+        VkResult                                                    result
+    )
+    {
+        auto [surfaceValid, surface] = GetHandle(pSurface);
+        if (!surfaceValid)
+        {
+            if (result == VK_SUCCESS)
+            {
+                GFXRECON_SQLITE_LOG_WARNING("Failed to create surface, invalid pSurface handle");
+            }
+            return;
+        }
+
+        auto [createInfoValid, createInfo] = GetMetaStructPointer(pCreateInfo);
+        if (!createInfoValid)
+        {
+            if (result == VK_SUCCESS)
+            {
+                GFXRECON_SQLITE_LOG_WARNING("Failed to create surface, invalid pCreateInfo struct");
+            }
+            return;
+        }
+
+        LogUnsupportedPNext(createInfo->pNext);
+
+        auto createInfoType = createInfo->decoded_value->sType;
+
+        statements.InsertSurface(gfxrecon::decode::ToInt64(surface), createInfoType, this->block_index_);
     }
 
     using HandleArray = std::tuple<bool, gfxrecon::format::HandleId*, uint64_t>;
