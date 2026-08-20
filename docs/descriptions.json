@@ -1,0 +1,100 @@
+﻿{
+  "files": [
+    {
+      "label": "Database Overview",
+      "path": "GFXRDatabase.excalidraw",
+      "summary": "The full GFXR-to-SQLite schema and the relationships between every table.",
+      "description": [
+        "A comprehensive view of every table in the GFXR database, their columns, and the foreign-key relationships that tie them together. Use this diagram as the canonical reference when writing queries, designing ETL steps, or onboarding to the data model.",
+        "Column types are not indicated here except for when a column references an enum table. In those cases the enum type is listed after the column name in (parentheses). Enum tables are not explicitly shown in the diagram as displaying them would clutter an already busy view. Most foreign key references are shown via a line and arrow connection, except where adding one would make the diagram unreadable. In most cases those references that are not shown are called out with a note.",
+        "Each section of the diagram will be covered in detail using <em>the navigation buttons to the right</em>."
+      ]
+    },
+    {
+      "label": "Core GFXR Data",
+      "path": "GFXRCoreDataTables.excalidraw",
+      "summary": "The core data tables that anchor everything else in the schema.",
+      "description": [
+        "Core GFXR Data tables include frame and low-level API event tracking. This is essentially the raw data of the GFXR file. In <a href=\"https://github.com/LunarG/gfxreconstruct\">GFXReconstruct</a> terminology, <code>apiEvent</code> is equivalent to a block index. As such, this will include both Vulkan commands and GFXReconstruct meta events.",
+        "API event tracking includes the function name, all of the command arguments that were passed to the original function call and its return value. Note that the value members here are all <code>TEXT</code> columns. They have a type field that contains a <code>TEXT</code> column describing the type of the value field. This is intended only for recursive display of function call arguments and not for typed comparison. It is difficult to work with these tables directly within queries, as they require recursive joins and lack typed columns. The rest of the database design is intended to structure this information for more useful and efficient queries.",
+        "Each apiEvent has a apiEventType that indicates if the apiEvent is a Vulkan command or a GFXReconstruct meta command. GFXReconstruct uses meta commands to record pre-capture trim state restoration commands (such as <code>FillMemoryCommand</code>) and to track frame markers (<code>FrameEndMarker</code>). These can be useful, if not required, to be supported by the implementing applications. <a href=\"#\" class=\"run-query-link\" data-query=\"SELECT * FROM apiEvents\nJOIN functionNames ON functionNameId = functionNames.id\nJOIN apiEventTypes ON apiEventTypeId = apiEventTypes.id AND apiEventTypes.name = 'META_COMMAND';\">Try a META_COMMAND query</a>",
+        "Database versioning is handled through the standard SQLite <code>PRAGMA user_version</code>. <br> The encoding formula is: <code>(GFXR_DB_VERSION_MAJOR * 10000) + (GFXR_DB_VERSION_MINOR * 100) + GFXR_DB_VERSION_PATCH</code>.",
+        "GFXReconstruct metaData, annotations, and displayMessages are all specific to .gfxr files and do not represent Vulkan constructs."
+      ]
+    },
+    {
+      "label": "Debug Utils/Markers",
+      "path": "DebugUtilsTables.excalidraw",
+      "summary": "The data tables used to track debug marker and debug utils extensions.",
+      "description": [
+        "<strong>Debug names, tags, and labels</strong> tracking for both the debug marker and debug utils extensions.",
+        "Debug markers and labels are both stored as <code>debugLabels</code> in the database as these serve the same purpose to graphics tooling. Note that they have a lifecycle via <code>beginApiEvent</code> and <code>endApiEvent</code>. This provides grouping information to allow for nested commands within a debug label group. Insertion labels will have matching begin/end apiEvent values as their \"group\" is the label itself.",
+        "Binary data for <code>debugTags</code>, <code>debugReportCallbacks</code>, and <code>debugMessengers</code> is not inserted into the <code>gfxr-sqlite</code> database. Instead it should be retrieved from the .gfxr file directly if needed by the implementing application.",
+        "<code>debugReportCallbacks</code> do not contain the function pointer address of the callback, as it would not be relevant in any future replay and the function itself is not <em>something</em> that can be decoded from from <code>.gfxr</code> files at database creation time."
+      ]
+    },
+    {
+      "label": "Command Tree Relevant Data",
+      "path": "CommandTreeRelevantTables.excalidraw",
+      "summary": "Tables that participate in command-tree traversal and analysis.",
+      "description": [
+        "The slice of the schema relevant to command-tree work: the tables that describe commands, draws, dispatches, state groups, and the parent/child links between them.",
+        "Reference for command-tree visualization, traversal queries, and any analysis that needs to walk from a capture down through individual draw calls."
+      ]
+    },
+    {
+      "label": "Vulkan Enum Types",
+      "path": "VulkanEnumTypeTables.excalidraw",
+      "summary": "Tables that enumerate and decode Vulkan enum values used throughout the schema.",
+      "description": [
+        "The slice of the schema that captures Vulkan enum types and their values, providing the lookup tables used to decode the numeric enum fields stored elsewhere in the database.",
+        "Reference for translating raw enum values into human-readable Vulkan constants when writing queries or reports."
+      ]
+    },
+    {
+      "label": "Pipeline State",
+      "path": "PipelineStateTables.excalidraw",
+      "summary": "Tables that describe pipeline objects and their static configuration.",
+      "description": [
+        "The tables that record graphics and compute pipeline static state configuration: shader stages, fixed-function state, and parameters set at pipeline-creation time.",
+        "Reference for correlating draws and dispatches with the pipeline state that was bound when they executed."
+      ]
+    },
+    {
+      "label": "Lifecycle Tracking",
+      "path": "LifecycleTrackingTables.excalidraw",
+      "summary": "Tables that track the creation, use, and destruction of resources.",
+      "description": [
+        "The slice of the schema concerned with object lifetimes: when handles are created, how they are used over the course of a capture, and when they are destroyed.",
+        "Reference for lifetime analysis, leak detection, and use-after-free investigations across a capture."
+      ]
+    },
+    {
+      "label": "Relevant Command Tracking",
+      "path": "RelevantCommandTrackingTables.excalidraw",
+      "summary": "Tables that track the commands relevant to a given analysis.",
+      "description": [
+        "Commands that aren't typical draw/dispatch operations but still need to be displayed in the command tree.",
+        "Reference for investigating transfer and other non-draw/dispatch commands across a capture."
+      ]
+    },
+    {
+      "label": "Acceleration Structure Build Tracking",
+      "path": "AccelerationStructureBuildTrackingTables.excalidraw",
+      "summary": "Tables that track ray-tracing acceleration structure builds.",
+      "description": [
+        "The slice of the schema dedicated to acceleration structure build/copy operations: their inputs and the resulting structures used by ray-tracing workloads.",
+        "Reference for analyzing acceleration structure construction and its relationship to ray-tracing draws and dispatches."
+      ]
+    },
+    {
+      "label": "Draw/Dispatch State Tracking",
+      "path": "DrawDispatchStateTracking.excalidraw",
+      "summary": "Tables that track the state bound at each draw and dispatch.",
+      "description": [
+        "The tables that capture the state in effect at the moment each draw or dispatch executes: bound pipelines, descriptor sets, vertex/index buffers, and other dynamic state.",
+        "Reference for reconstructing the full GPU state for any given draw or dispatch call."
+      ]
+    }
+  ]
+}
