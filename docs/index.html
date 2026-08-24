@@ -254,6 +254,22 @@
       color: #666;
     }
 
+    /* "Run this query" links embedded in description text (descriptions.json) */
+    .run-query-link {
+      display: inline-block;
+      margin: 0.4rem 0 0;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.85rem;
+      color: #1971c2;
+      background: #eef3f8;
+      border: 1px solid #cfe0ef;
+      border-radius: 6px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .run-query-link:hover { background: #dfeaf5; border-color: #1971c2; }
+    .run-query-link::before { content: "▶"; margin-right: 0.35em; font-size: 0.75em; }
+
     @media (max-width: 800px) {
       .viewer-section { flex-direction: column; height: auto; }
       .viewer { height: 65vh; }
@@ -308,152 +324,44 @@
 
     const h = React.createElement;
 
-    const FILES = [
-      {
-        label: "Database Overview",
-        path:  "GFXRDatabase.excalidraw",
-        summary: "The full GFXR-to-SQLite schema and the relationships between every table.",
-        description: () => [
-          h("p", { key: 1 },
-            "A comprehensive view of every table in the GFXR database, ",
-            "their columns, and the foreign-key relationships that tie them ",
-            "together. Use this diagram as the canonical reference when ",
-            "writing queries, designing ETL steps, or onboarding to the ",
-            "data model."),
-          h("p", { key: 2 },
-            "Includes capture metadata, frame/draw/dispatch records, ",
-            "command buffers, resource lifetimes, and the descriptor / ",
-            "binding state tables."),
-        ],
-      },
-      {
-        label: "Core GFXR Data",
-        path:  "GFXRCoreDataTables.excalidraw",
-        summary: "The core data tables that anchor everything else in the schema.",
-        description: () => [
-          h("p", { key: 1 },
-            "A focused subset of the database showing the core entities that ",
-            "the rest of the schema hangs off of. Start here when learning ",
-            "the data model -- once these are understood, the auxiliary tables ",
-            "become straightforward."),
-          h("p", { key: 2 },
-            "Typically the place to look first when answering ",
-            "\"what are the primary keys and how do records correlate ",
-            "across captures?\""),
-        ],
-      },
-      {
-        label: "Debug Utils/Markers",
-        path:  "DebugUtilsTables.excalidraw",
-        summary: "The data tables used to track debug marker and debug utils extensions.",
-        description: () => [
-          h("p", { key: 1 },
-            "A focused subset of the database showing debug names, tags, and labels ",
-            "tracking for both the debug marker and debug utils extensions."),
-          h("p", { key: 2 },
-            "Some notes on binary blobs not being stored in the gfxr sqlite db."),
-        ],
-      },
-      {
-        label: "Command Tree Relevant Data",
-        path:  "CommandTreeRelevantTables.excalidraw",
-        summary: "Tables that participate in command-tree traversal and analysis.",
-        description: () => [
-          h("p", { key: 1 },
-            "The slice of the schema relevant to command-tree work: the ",
-            "tables that describe commands, draws, dispatches, state groups, ",
-            "and the parent/child links between them."),
-          h("p", { key: 2 },
-            "Reference for command-tree visualization, traversal queries, ",
-            "and any analysis that needs to walk from a capture down through ",
-            "individual draw calls."),
-        ],
-      },
-      {
-        label: "Vulkan Enum Types",
-        path:  "VulkanEnumTypeTables.excalidraw",
-        summary: "Tables that enumerate and decode Vulkan enum values used throughout the schema.",
-        description: () => [
-          h("p", { key: 1 },
-            "The slice of the schema that captures Vulkan enum types and their ",
-            "values, providing the lookup tables used to decode the numeric ",
-            "enum fields stored elsewhere in the database."),
-          h("p", { key: 2 },
-            "Reference for translating raw enum values into human-readable ",
-            "Vulkan constants when writing queries or reports."),
-        ],
-      },
-      {
-        label: "Pipeline State",
-        path:  "PipelineStateTables.excalidraw",
-        summary: "Tables that describe pipeline objects and their static configuration.",
-        description: () => [
-          h("p", { key: 1 },
-            "The tables that record graphics and compute pipeline static state configuration: ",
-            "shader stages, fixed-function configuration, and the parameters ",
-            "fixed at pipeline-creation time."),
-          h("p", { key: 2 },
-            "Reference for correlating draws and dispatches with the pipeline ",
-            "state that was bound when they executed."),
-        ],
-      },
-      {
-        label: "Lifecycle Tracking",
-        path:  "LifecycleTrackingTables.excalidraw",
-        summary: "Tables that track the creation, use, and destruction of resources.",
-        description: () => [
-          h("p", { key: 1 },
-            "The slice of the schema concerned with object lifetimes: when ",
-            "handles are created, how they are used over the course of a ",
-            "capture, and when they are destroyed."),
-          h("p", { key: 2 },
-            "Reference for lifetime analysis, leak detection, and use-after-free ",
-            "investigations across a capture."),
-        ],
-      },
-      {
-        label: "Relevant Command Tracking",
-        path:  "RelevantCommandTrackingTables.excalidraw",
-        summary: "Tables that track the commands relevant to a given analysis.",
-        description: () => [
-          h("p", { key: 1 },
-            "The slice of the schema that record commands are relevant to track ",
-            "which are not typical draw/dispatch operations but still need to be ", 
-            "displayed in the command tree."),
-          h("p", { key: 2 },
-            "Reference for analyzing transfer and other relevant command ",
-            "investigations across a capture."),
-        ],
-      },
-      {
-        label: "Acceleration Structure Build Tracking",
-        path:  "AccelerationStructureBuildTrackingTables.excalidraw",
-        summary: "Tables that track ray-tracing acceleration structure builds.",
-        description: () => [
-          h("p", { key: 1 },
-            "The slice of the schema dedicated to acceleration structure ",
-            "build/copy operations: including their inputs, and the resulting ",
-            "structures used by ray-tracing workloads."),
-          h("p", { key: 2 },
-            "Reference for analyzing acceleration structure construction and ",
-            "its relationship to ray-tracing draws and dispatches."),
-        ],
-      },
-      {
-        label: "Draw/Dispatch State Tracking",
-        path:  "DrawDispatchStateTracking.excalidraw",
-        summary: "Tables that track the state bound at each draw and dispatch.",
-        description: () => [
-          h("p", { key: 1 },
-            "The tables that capture the state in effect at the moment each ",
-            "draw or dispatch executes: bound pipelines, descriptor sets, ",
-            "vertex/index buffers, and other dynamic state."),
-          h("p", { key: 2 },
-            "Reference for reconstructing the full GPU state for any given ",
-            "draw or dispatch call."),
-        ],
-      },
-    ];
+    const DESCRIPTIONS_FILE = "descriptions.json";
+    let FILES = [];
+
+    const loadDescriptions = async () => {
+      const res = await fetch(`./${DESCRIPTIONS_FILE}`, { cache: "no-cache" });
+      if (!res.ok) throw new Error(`Failed to load ${DESCRIPTIONS_FILE}: ${res.status}`);
+      const data = await res.json();
+      FILES = data.files.map((f) => ({
+        ...f,
+        // Convert description: string[] back into a React-rendering function.
+        // HTML markup is allowed (dangerouslySetInnerHTML) so the descriptions
+        // can use inline formatting like <strong>, <em>, and <span style="...">
+        // without pulling in an external dependency. The descriptions are
+        // committed source, so XSS is a non-issue.
+        description() {
+          return f.description.map((paragraph, i) =>
+            h("p", {
+              key: i + 1,
+              dangerouslySetInnerHTML: { __html: paragraph },
+            })
+          );
+        },
+      }));
+    };
+
+    // Wait for descriptions to load before rendering the app so the sidebar
+    // and info card have data to display immediately on first paint.
+    const main = async () => {
+      try {
+        await loadDescriptions();
+        createRoot(document.getElementById("app")).render(h(App));
+      } catch (e) {
+        console.error(e);
+        document.getElementById("app").innerHTML =
+          `<div class="status-overlay">${e.message ?? String(e)}</div>`;
+      }
+    };
+    main();
 
     const fetchScene = async (path) => {
       // cache: "no-cache" forces revalidation so edits to the .excalidraw
@@ -529,8 +437,10 @@
       return last; // null => no result-producing statement (e.g. a bare CREATE)
     };
 
-    const QueryWidget = () => {
-      const [sql, setSql] = React.useState(DEFAULT_QUERY);
+    // `sql`/`setSql` are lifted to App so "run this query" links in the
+    // description text (see descriptions.json + App's info-body onClick
+    // handler below) can preset the field from outside this component.
+    const QueryWidget = ({ sql, setSql }) => {
       const [running, setRunning] = React.useState(false);
       const [result, setResult] = React.useState(null);
       const [error, setError] = React.useState(null);
@@ -558,7 +468,7 @@
         }
       };
 
-      return h("section", { className: "query-card" },
+      return h("section", { className: "query-card", id: "query-widget" },
         h("div", { className: "info-eyebrow" }, "Try it"),
         h("h2", { className: "info-title" }, "Query a demo database"),
         h("p", { className: "info-summary" },
@@ -619,6 +529,20 @@
       const [status, setStatus] = React.useState("loading"); // loading | ready | error
       const [errorMsg, setErrorMsg] = React.useState(null);
       const [zoomPct, setZoomPct] = React.useState(100);
+      const [sql, setSql] = React.useState(DEFAULT_QUERY);
+
+      // Descriptions (descriptions.json) can embed
+      // `<a class="run-query-link" data-query="...">` to preset the query
+      // widget below. Delegated so it works on the raw HTML injected via
+      // dangerouslySetInnerHTML, which React never sees as elements.
+      const onInfoBodyClick = (e) => {
+        const link = e.target.closest(".run-query-link");
+        if (!link) return;
+        e.preventDefault();
+        setSql(link.dataset.query ?? "");
+        document.getElementById("query-widget")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      };
 
       const stageRef    = React.useRef(null);
       const panZoomRef  = React.useRef(null);
@@ -637,8 +561,8 @@
         }
         if (stageRef.current) stageRef.current.innerHTML = "";
 
-        const mount = async () => {
-          try {
+      const mount = async () => {
+        try {
             let svgString = svgCacheRef.current.get(currentPath);
             if (!svgString) {
               const scene = await fetchScene(currentPath);
@@ -737,9 +661,9 @@
           h("h2", { className: "info-title" }, current.label),
           h("div", { className: "info-filename" }, current.path),
           current.summary && h("p", { className: "info-summary" }, current.summary),
-          h("div", { className: "info-body" }, ...current.description())
+          h("div", { className: "info-body", onClick: onInfoBodyClick }, ...current.description())
         ),
-        h(QueryWidget)
+        h(QueryWidget, { sql, setSql })
       );
     };
 
