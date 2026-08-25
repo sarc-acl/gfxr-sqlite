@@ -1,0 +1,122 @@
+name: Package Build
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # lets us manually trigger builds from a branch
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, ubuntu-22.04, macos-15] # github hosted runners
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Use Python 3.x
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11.9' # this version is cached on windows-2022 and macos-14 so it will be faster to install
+
+      # cache the GFXR submodule + builds based on submodule commit SHA
+      - name: Get GFXR submodule commit sha
+        shell: bash
+        run: |
+          echo "gfxr_submodule_sha=$(git rev-parse HEAD:external/gfxreconstruct)" >> "$GITHUB_ENV"
+
+      # note: the cache key is not enough to match.  the paths need to match the save action as well.
+      - name: Use GFXR cache
+        id: use-gfxr-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            external/gfxreconstruct/*
+            !external/gfxreconstruct/.git
+            !external/gfxreconstruct/android
+          key: ${{ runner.os }}-${{ runner.arch }}-gfxr-${{ env.gfxr_submodule_sha }}
+
+      # init/update the GFXR submodule IFF not already in the cache
+      - name: Build Dependencies - updating GFXR submodule
+        if: steps.use-gfxr-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          git submodule update --init --recursive external/gfxreconstruct
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build GFXR
+        if: steps.use-gfxr-cache.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          python3 scripts/build_dependencies.py -j 4
+
+      # only save what we need to keep the cache size down
+      - name: Save GFXR cache
+        if: steps.use-gfxr-cache.outputs.cache-hit != 'true' # only save if not already cached
+        id: save-gfxr-cache
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            external/gfxreconstruct/*
+            !external/gfxreconstruct/.git
+            !external/gfxreconstruct/android
+          key: ${{ runner.os }}-${{ runner.arch }}-gfxr-${{ env.gfxr_submodule_sha }}
+
+      - name: Build
+        shell: bash
+        run: |
+          python3 scripts/build.py --skip-deps
+
+      - name: Unit tests
+        shell: bash
+        run: |
+          set -e
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            out/build/Release/gfxr-sqlite-test.exe
+          else
+            out/build/gfxr-sqlite-test
+          fi
+
+      - name: Upload Linux artifacts
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v6
+        with:
+          name: linux-gfxr-sqlite
+          retention-days: 7
+          path: |
+            out/build/gfxr-sqlite
+            out/build/libgfxr-sqlite-library.a
+
+      - name: Upload macOS arm64 artifacts
+        if: runner.os == 'macOS' && runner.arch == 'ARM64'
+        uses: actions/upload-artifact@v6
+        with:
+          name: macos-arm64-gfxr-sqlite
+          path: |
+            out/build/gfxr-sqlite
+            out/build/libgfxr-sqlite-library.a
+
+      - name: Upload Windows artifacts
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v6
+        with:
+          name: windows-gfxr-sqlite
+          retention-days: 7
+          path: |
+            out/build/Release/gfxr-sqlite.exe
+            out/build/Release/gfxr-sqlite-library.lib
