@@ -99,7 +99,7 @@ The output `.sqlite3` file can be opened with any SQLite client. Schema document
 
 ## Example queries
 
-The schema captures Vulkan API events under `apiEvents`, with each event's Vulkan function name resolved through the `functionNames` lookup table. Higher-level structure tables (`frames`, `queueSubmits`, `commandBufferRecordings`, `commandBufferCommands`, etc.) reference `apiEvents` by id. The patterns below illustrate the most common joins.
+The schema captures Vulkan API events under `apiEvents`, with each event's Vulkan function name resolved through the `functionNames` lookup table. Higher-level structure tables (`frames`, `queueSubmits`, `commandBufferRecordings`, `commandBufferCommands`, etc.) reference `apiEvents` by id. The patterns below illustrate the most common joins. More advanced documentation on the schema and example queries can be found at https://sarc-acl.github.io/gfxr-sqlite/
 
 ### List frames
 
