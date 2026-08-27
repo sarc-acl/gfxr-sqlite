@@ -51,7 +51,8 @@ void VulkanSqliteConsumerBase::UpdateCommandBufferCommands(const ApiCallInfo& ca
     auto commandBufferRecordingIdIter = context.commandBufferHandleToRecordingId.find(ToInt64(commandBuffer));
     if (commandBufferRecordingIdIter == context.commandBufferHandleToRecordingId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            callInfo.index,
             "Failed to update command buffer commands, failed to find command buffer recording for "
             "command buffer %" PRIu64,
             commandBuffer
@@ -145,7 +146,8 @@ void VulkanSqliteConsumerBase::LogUnsupportedPNext(VkStructureType type)
     auto [warningIter, inserted] = context.pNextWarnings.insert(type);
     if (inserted)
     {
-        GFXRECON_SQLITE_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Unsupported pNext structure VkStructureType %d (%s)",
             type,
             gfxrecon::util::ToString(type, gfxrecon::util::kToString_Unformatted, 0, 0).c_str()
@@ -158,7 +160,8 @@ void VulkanSqliteConsumerBase::LogUnsupportedDynamicState(VkDynamicState state)
     auto [warningIter, inserted] = context.dynamicStateWarnings.insert(state);
     if (inserted)
     {
-        GFXRECON_SQLITE_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Unsupported dynamic state VkDynamicState %d (%s)",
             state,
             gfxrecon::util::ToString(state, gfxrecon::util::kToString_Unformatted, 0, 0).c_str()
@@ -171,7 +174,7 @@ void VulkanSqliteConsumerBase::LogUnsupportedDynamicState(const char* commandNam
     auto [warningIter, inserted] = context.unsupportedCommandWarnings.insert(commandName);
     if (inserted)
     {
-        GFXRECON_SQLITE_LOG_WARNING("Unsupported dynamic state command %s", commandName);
+        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Unsupported dynamic state command %s", commandName);
     }
 }
 
@@ -212,8 +215,11 @@ void VulkanSqliteConsumerBase::FinalizeFrame(uint64_t frameNumber)
     }
     else
     {
-        GFXRECON_SQLITE_LOG_WARNING(
-            "Finalized frame %" PRIu64 " not matching current frame: %" PRIu64, frameNumber, context.currentFrame
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
+            "Finalized frame %" PRIu64 " not matching current frame: %" PRIu64,
+            frameNumber,
+            context.currentFrame
         );
     }
 }
@@ -550,7 +556,7 @@ void VulkanSqliteConsumerBase::ProcessAnnotation(
     statements.InsertMetaApiEvent(blockIndex, functionId, context.currentFrame);
 
     auto annotationId = ++context.currentAnnotationId;
-    auto typeString = AnnotationTypeToString(type);
+    auto typeString = AnnotationTypeToString(blockIndex, type);
 
     auto& statement = statements.annotationInsertStatement;
     GFXRECON_SQLITE_CHECK(context.db, sqlite3_reset(statement));

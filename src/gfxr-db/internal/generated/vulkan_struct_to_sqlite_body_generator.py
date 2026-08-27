@@ -139,7 +139,7 @@ class VulkanStructToSqliteBodyGenerator(VulkanBaseGenerator):
         body += "\n"
         body += inspect.cleandoc('''
                             default:
-                                GFXRECON_SQLITE_LOG_WARNING("Unknown pnext node type: %u.", (unsigned) s_type);
+                                GFXRECON_SQLITE_LOG_WARNING_AT(fieldInfo.eventId, "Unknown pnext node type: %u.", (unsigned) s_type);
                         }
                     }
                 }

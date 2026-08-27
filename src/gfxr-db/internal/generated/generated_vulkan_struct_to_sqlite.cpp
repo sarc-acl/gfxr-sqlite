@@ -30666,7 +30666,7 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_EXT: { InsertPNext_VkPhysicalDeviceMeshShaderFeaturesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_EXT: { InsertPNext_VkPhysicalDeviceMeshShaderPropertiesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             default:
-                GFXRECON_SQLITE_LOG_WARNING("Unknown pnext node type: %u.", (unsigned) s_type);
+                GFXRECON_SQLITE_LOG_WARNING_AT(fieldInfo.eventId, "Unknown pnext node type: %u.", (unsigned) s_type);
         }
     }
 }
