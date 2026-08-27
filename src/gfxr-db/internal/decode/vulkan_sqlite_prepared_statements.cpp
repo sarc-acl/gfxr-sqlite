@@ -2245,7 +2245,9 @@ int64_t VulkanSqlitePreparedStatements::InsertOverrideStateGroup(
                             entry.stateId;
                         break;
                     default:
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to properly override state instance, invalid stateType");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(
+                            context->currentBlockIndex, "Failed to properly override state instance, invalid stateType"
+                        );
                 }
             }
         }
@@ -5191,8 +5193,8 @@ void VulkanSqlitePreparedStatements::InsertDebugLabelQueueBegin(
     auto queueId = context->GetQueueId(queue);
     if (!queueId)
     {
-        GFXRECON_SQLITE_LOG_WARNING(
-            "<%" PRIu64 ">- Failed to create queue debug label, no queue found for handle %" PRIu64, apiEventId, queue
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            apiEventId, "Failed to create queue debug label, no queue found for handle %" PRIu64, queue
         );
         return;
     }
@@ -5222,8 +5224,8 @@ void VulkanSqlitePreparedStatements::InsertDebugLabelQueueInsert(
     auto queueId = context->GetQueueId(queue);
     if (!queueId)
     {
-        GFXRECON_SQLITE_LOG_WARNING(
-            "<%" PRIu64 ">- Failed to insert queue debug label, no queue found for handle %" PRIu64, apiEventId, queue
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            apiEventId, "Failed to insert queue debug label, no queue found for handle %" PRIu64, queue
         );
         return;
     }

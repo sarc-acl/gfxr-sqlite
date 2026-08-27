@@ -23,6 +23,7 @@
 #include "sqlite3.h"
 
 #include <algorithm>
+#include <cinttypes>
 #include <cstddef>
 #include <iomanip>
 #include <optional>
@@ -36,6 +37,11 @@
 
 #define GFXRECON_SQLITE_LOG_WARNING_ONCE(message, ...) \
     GFXRECON_LOG_WARNING_ONCE("SQLite Consumer - " message, ##__VA_ARGS__);
+
+// Prefixes the message with the gfxr block index the warning pertains to, e.g.:
+// SQLite Consumer - <4087>- Failed to find queue, no queue data
+#define GFXRECON_SQLITE_LOG_WARNING_AT(blockIndex, message, ...) \
+    GFXRECON_SQLITE_LOG_WARNING("<%" PRIu64 ">- " message, static_cast<uint64_t>(blockIndex), ##__VA_ARGS__)
 
 #define GFXRECON_SQLITE_CHECK(db, statement)              \
     do                                                    \

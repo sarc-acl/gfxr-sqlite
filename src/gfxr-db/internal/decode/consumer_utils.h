@@ -35,7 +35,7 @@
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
 
-inline std::string AnnotationTypeToString(const format::AnnotationType& type)
+inline std::string AnnotationTypeToString(uint64_t blockIndex, const format::AnnotationType& type)
 {
     std::string str;
     switch (type)
@@ -54,8 +54,8 @@ inline std::string AnnotationTypeToString(const format::AnnotationType& type)
             break;
         default:
             str.assign("OUT_OF_RANGE_ERROR");
-            GFXRECON_SQLITE_LOG_WARNING(
-                "format::AnnotationType with out of range value: %lu", static_cast<long unsigned>(type)
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                blockIndex, "format::AnnotationType with out of range value: %lu", static_cast<long unsigned>(type)
             );
             break;
     }
@@ -74,6 +74,20 @@ inline std::string UUIDToString(uint32_t size, const uint8_t* uuid)
 }
 
 /**
+ * gfxreconstruct's trimmed-capture state writer synthesises a queue, a command pool and a command
+ * buffer with fixed handle IDs at the top of the uint64 range (see
+ * WriteCommandProcessingCreateCommands in vulkan_state_writer.cpp) when it needs to replay
+ * query pool state. These are legitimate handles, not corruption, and the same IDs are reused
+ * across state-writer passes within a single capture.
+ */
+inline bool IsStateSetupTempHandle(const gfxrecon::format::HandleId handle)
+{
+    return handle == gfxrecon::encode::vulkan_wrappers::kTempQueueId ||
+           handle == gfxrecon::encode::vulkan_wrappers::kTempCommandPoolId ||
+           handle == gfxrecon::encode::vulkan_wrappers::kTempCommandBufferId;
+}
+
+/**
  * Sqlite does not support unsigned 64 bit values, and gfxreconstruct uses some known
  * constants that are at the top of the uint64 value range.
  * This function checks for those known values (skipping the warning in these cases)
@@ -84,9 +98,7 @@ inline std::string UUIDToString(uint32_t size, const uint8_t* uuid)
  */
 inline int64_t ToInt64(const gfxrecon::format::HandleId handle)
 {
-    if (handle != gfxrecon::encode::vulkan_wrappers::kTempQueueId &&
-        handle != gfxrecon::encode::vulkan_wrappers::kTempCommandPoolId &&
-        handle != gfxrecon::encode::vulkan_wrappers::kTempCommandBufferId)
+    if (!IsStateSetupTempHandle(handle))
     {
         if (handle > static_cast<uint64_t>(std::numeric_limits<int64_t>::max()))
         {

@@ -533,7 +533,9 @@ void FieldToSqlite(
                 FieldToSqlite(statements, memberInfo, 4, "f64", decoded_value.f64, "double");
                 break;
             case VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_MAX_ENUM_KHR:
-                GFXRECON_SQLITE_LOG_WARNING("Invalid format: VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_MAX_ENUM_KHR");
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    memberInfo.eventId, "Invalid format: VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_MAX_ENUM_KHR"
+                );
         }
     }
     else
@@ -728,11 +730,13 @@ void FieldToSqlite(
                 break;
             case VK_DESCRIPTOR_TYPE_PARTITIONED_ACCELERATION_STRUCTURE_NV:
             case VK_DESCRIPTOR_TYPE_MUTABLE_EXT:
-                GFXRECON_SQLITE_LOG_WARNING("Descriptor type not supported at " __FILE__ ", line: %d.", __LINE__);
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    memberInfo.eventId, "Descriptor type not supported at " __FILE__ ", line: %d.", __LINE__
+                );
                 break;
 
             case VK_DESCRIPTOR_TYPE_MAX_ENUM:
-                GFXRECON_SQLITE_LOG_WARNING("Invalid descriptor type: VK_DESCRIPTOR_TYPE_MAX_ENUM");
+                GFXRECON_SQLITE_LOG_WARNING_AT(memberInfo.eventId, "Invalid descriptor type: VK_DESCRIPTOR_TYPE_MAX_ENUM");
                 break;
         }
         FieldToSqlite(statements, memberInfo, 8, "pNext", meta_struct.pNext);
@@ -777,7 +781,9 @@ void FieldToSqlite(
                 FieldToSqlite(statements, memberInfo, 5, "valueString", meta_struct.valueString, "const char*");
                 break;
             case VK_PERFORMANCE_VALUE_TYPE_MAX_ENUM_INTEL:
-                GFXRECON_SQLITE_LOG_WARNING("Invalid performance value type: VK_PERFORMANCE_VALUE_TYPE_MAX_ENUM_INTEL");
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    memberInfo.eventId, "Invalid performance value type: VK_PERFORMANCE_VALUE_TYPE_MAX_ENUM_INTEL"
+                );
         }
     }
     else

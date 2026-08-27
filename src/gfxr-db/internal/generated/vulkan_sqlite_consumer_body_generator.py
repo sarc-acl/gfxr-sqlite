@@ -348,11 +348,15 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
         # make_renderpass_recording_from_command_buffer_recording helpers used for other per-command
         # bodies, just against a "commandBuffer" parameter instead of "args.commandBuffer".
         trackedCmdBody = textwrap.indent(inspect.cleandoc(
-            self.make_command_buffer_recording('insert tracked command', command_buffer_expr='commandBuffer')
+            self.make_command_buffer_recording(
+                'insert tracked command', command_buffer_expr='commandBuffer', block_index_expr='block_index'
+            )
         ), '    ')
         trackedCmdBody += '\n'
         trackedCmdBody += textwrap.indent(inspect.cleandoc(
-            self.make_renderpass_recording_from_command_buffer_recording(False, command_buffer_expr='commandBuffer')
+            self.make_renderpass_recording_from_command_buffer_recording(
+                False, command_buffer_expr='commandBuffer', block_index_expr='block_index'
+            )
         ), '    ')
         trackedCmdBody += '\n'
         trackedCmdBody += textwrap.indent(inspect.cleandoc(
@@ -400,7 +404,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 auto deviceId = context.GetDeviceId(device);
                 if (!deviceId.has_value())
                 {
-                    GFXRECON_SQLITE_LOG_WARNING("Failed to insert device command, unknown device handle");
+                    GFXRECON_SQLITE_LOG_WARNING_AT(block_index, "Failed to insert device command, unknown device handle");
                 }
                 else
                 {
@@ -604,17 +608,17 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             auto commandPoolIter = context.commandPoolHandleToId.find(ToInt64(args.commandPool));
             if (commandPoolIter == context.commandPoolHandleToId.end())
             {{
-                GFXRECON_SQLITE_LOG_WARNING("Failed to {action}, failed to find command pool for handle %" PRIi64, args.commandPool);
+                GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to {action}, failed to find command pool for handle %" PRIi64, args.commandPool);
                 return;
             }}
         '''
 
-    def make_command_buffer_recording(self, action, command_buffer_expr='args.commandBuffer'):
+    def make_command_buffer_recording(self, action, command_buffer_expr='args.commandBuffer', block_index_expr='call_info.index'):
         value = f'''
             auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
             if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
             {{
-                GFXRECON_SQLITE_LOG_WARNING(
+                GFXRECON_SQLITE_LOG_WARNING_AT({block_index_expr},
                     "Failed to {action}, failed to find command buffer recording for command buffer with handle %" PRIi64,
                     args.commandBuffer
                 );
@@ -625,7 +629,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             value = value.replace('args.commandBuffer', command_buffer_expr)
         return value
 
-    def make_renderpass_recording_from_command_buffer_recording(self, warnOnMissingRenderpass, command_buffer_expr='args.commandBuffer'):
+    def make_renderpass_recording_from_command_buffer_recording(self, warnOnMissingRenderpass, command_buffer_expr='args.commandBuffer', block_index_expr='call_info.index'):
         """
             Requires previous call to self.make_command_buffer_recording()
         """
@@ -640,7 +644,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             auto commandBufferLevelIter = context.commandBufferHandleToLevel.find(ToInt64(args.commandBuffer));
             if (commandBufferLevelIter == context.commandBufferHandleToLevel.end())
             {
-                GFXRECON_SQLITE_LOG_WARNING(
+                GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                     "Failed to find command buffer level for command buffer with handle %" PRIi64 ", assuming Primary",
                     args.commandBuffer
                 );
@@ -684,7 +688,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             value += '''
                         else
                         {
-                            GFXRECON_SQLITE_LOG_WARNING(
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                 "Failed to find render subpass recording from render pass recording %" PRIu64 ", expected at least one implicit subpass, "
                                 "setting foreign key to NULL",
                                 renderPassRecordingId.value()
@@ -695,7 +699,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     {
                         if (commandBufferLevel == VK_COMMAND_BUFFER_LEVEL_PRIMARY)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING(
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                 "Failed to find render pass recording for command buffer with handle %" PRIi64 " stack is empty, expected at least one render pass, "
                                 "setting foreign keys to NULL",
                                 args.commandBuffer
@@ -707,7 +711,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 {
                     if (commandBufferLevel == VK_COMMAND_BUFFER_LEVEL_PRIMARY)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to find render pass recording stack for command buffer with handle %" PRIi64 ", setting foreign keys to NULL",
                             args.commandBuffer
                         );
@@ -724,6 +728,8 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
 
         if command_buffer_expr != 'args.commandBuffer':
             value = value.replace('args.commandBuffer', command_buffer_expr)
+        if block_index_expr != 'call_info.index':
+            value = value.replace('call_info.index', block_index_expr)
         return value
 
     # Decoder wrapper classes whose FieldToSqlite/GetHandle/GetMetaStructPointer/etc. overloads take a
@@ -842,7 +848,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     {
                         if (args.surface != format::kNullHandleId)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to destroy surface, no surface found with handle %" PRIi64, args.surface);
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to destroy surface, no surface found with handle %" PRIi64, args.surface);
                         }
                         return;
                     }
@@ -861,7 +867,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto pipelineIter = context.pipelineHandleToId.find(ToInt64(args.pipeline));
                     if (pipelineIter == context.pipelineHandleToId.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to bind pipeline, failed to find pipeline for handle %" PRIi64,
                             args.pipeline
                         );
@@ -907,7 +913,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         case VK_PIPELINE_BIND_POINT_MAX_ENUM:
                             // do nothing
                         default:
-                            GFXRECON_SQLITE_LOG_WARNING(
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                 "Failed to clear shader stages on pipeline binding, unsupported bind point %" PRIu64,
                                 args.pipelineBindPoint
                             );
@@ -938,7 +944,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto [stagesValid, stages, stagesCount] = GetPointerArray(&args.pStages);
                     if (!stagesValid)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to bind shader objects, invalid pStages");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to bind shader objects, invalid pStages");
                         return;
                     }
                 '''
@@ -948,7 +954,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += textwrap.indent(inspect.cleandoc(
                 '''
                     if (shadersValid && shadersCount != stagesCount) {
-                        GFXRECON_SQLITE_LOG_WARNING("pShaders and pStages counts do not match, using min");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "pShaders and pStages counts do not match, using min");
                     }
                     std::unordered_set<VkPipelineBindPoint> bindPointsToClear;
                     for (size_t i = 0; i < (shadersValid ? std::min(shadersCount, stagesCount) : stagesCount); ++i)
@@ -1001,7 +1007,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                                     break;
                                 }
                             default:
-                                GFXRECON_SQLITE_LOG_WARNING(
+                                GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                     "Failed to clear bind points, unsupported shader stage %" PRIu64,
                                     stage
                                 );
@@ -1011,7 +1017,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                             auto shaderIter = context.shaderObjectHandleToId.find(ToInt64(shader));
                             if (shaderIter == context.shaderObjectHandleToId.end())
                             {
-                                GFXRECON_SQLITE_LOG_WARNING(
+                                GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                     "Failed to bind shader, failed to find shader with handle %" PRIi64,
                                     shader
                                 );
@@ -1059,14 +1065,14 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto [buffersValid, buffers, buffersCount] = GetHandleArray(&args.pBuffers);
                     if (!buffersValid)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pBuffers");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to bind vertex buffers, invalid pBuffers");
                         return;
                     }
 
                     auto [offsetsValid, offsets, offsetsCount] = GetPointerArray(&args.pOffsets);
                     if (!offsetsValid)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to bind vertex buffers, invalid pOffsets");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to bind vertex buffers, invalid pOffsets");
                         return;
                     }
                 '''
@@ -1085,7 +1091,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += textwrap.indent(inspect.cleandoc(
                 '''
                     if (buffersCount != offsetsCount) {
-                        GFXRECON_SQLITE_LOG_WARNING("pBuffer and pOffset counts do not match, using min");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "pBuffer and pOffset counts do not match, using min");
                     }
                     for (size_t i = 0; i < std::min(buffersCount, offsetsCount); ++i)
                     {
@@ -1129,7 +1135,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                             auto bufferIter = context.bufferHandleToId.find(ToInt64(buffer));
                             if (bufferIter == context.bufferHandleToId.end())
                             {
-                                GFXRECON_SQLITE_LOG_WARNING(
+                                GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                     "Failed to bind vertex buffer, failed to find buffer with handle %" PRIi64,
                                     buffer
                                 );
@@ -1164,7 +1170,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         auto bufferIter = context.bufferHandleToId.find(ToInt64(args.buffer));
                         if (bufferIter == context.bufferHandleToId.end())
                         {
-                            GFXRECON_SQLITE_LOG_WARNING(
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                 "Failed to bind index buffer, failed to find buffer with handle %" PRIi64,
                                 args.commandBuffer
                             );
@@ -1435,7 +1441,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     {
                         if (args.result == VK_SUCCESS)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to create command pool, invalid pCommandPool");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create command pool, invalid pCommandPool");
                         }
                         return;
                     }
@@ -1445,7 +1451,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     {
                         if (args.result == VK_SUCCESS)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to create command pool, invalid pCreateInfo");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create command pool, invalid pCreateInfo");
                         }
                         return;
                     }
@@ -1493,6 +1499,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                             context.commandBufferHandleToLevel.erase(commandBufferHandle);
                             context.commandBufferHandleToDeviceId.erase(commandBufferHandle);
                         }
+                        context.commandPoolHandleToCommandBufferHandles.erase(commandPoolCommandBufferHandlesIter);
                     }
                     statements.DestroyObject(statements.destroyCommandPoolUpdateStatement, this->block_index_, commandPoolIter->second);
                     context.commandPoolHandleToId.erase(commandPoolIter);
@@ -1515,7 +1522,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     {
                         if (args.result == VK_SUCCESS)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to allocate command buffers, invalid pCommandBuffers");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to allocate command buffers, invalid pCommandBuffers");
                         }
                         return;
                     }
@@ -1525,7 +1532,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     {
                         if (args.result == VK_SUCCESS)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to allocate command buffers, invalid pAllocateInfo");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to allocate command buffers, invalid pAllocateInfo");
                         }
                         return;
                     }
@@ -1548,7 +1555,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pBeginInfo);
                     if (!beginInfoValid)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to create command buffer recording, invalid pBeginInfo");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create command buffer recording, invalid pBeginInfo");
                         return;
                     }
 
@@ -1573,7 +1580,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto commandBufferIter = context.commandBufferHandleToId.find(commandBufferHandle);
                     if (commandBufferIter == context.commandBufferHandleToId.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to find command buffer for handle %" PRIi64 ", setting foreign key to NULL", args.commandBuffer
                         );
                         return;
@@ -1624,7 +1631,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                 auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
                 if (!commandBuffersValid)
                 {
-                    GFXRECON_SQLITE_LOG_WARNING("Failed to free command buffers, invalid pCommandBuffers");
+                    GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to free command buffers, invalid pCommandBuffers");
                     return;
                 }
 
@@ -1646,7 +1653,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     if (commandBufferIter == context.commandBufferHandleToId.end()) {
                         if (commandBuffer != format::kNullHandleId)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING(
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                 "Failed to free command buffer, no active command buffer found for handle %" PRIi64,
                                 commandBuffer
                             );
@@ -1687,7 +1694,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto [beginInfoValid, beginInfo] = GetMetaStructPointer(&args.pRenderPassBegin);
                     if (!beginInfoValid)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to create render pass recording, invalid pBeginInfo");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create render pass recording, invalid pBeginInfo");
                         return;
                     }
 
@@ -1777,7 +1784,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
                         if (!subpassBeginInfoValid)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to create render subpass recording, invalid pSubpassBeginInfo");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create render subpass recording, invalid pSubpassBeginInfo");
                             return;
                         }
 
@@ -1801,7 +1808,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto renderPassRecordingStackIter = context.commandBufferHandleToRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));
                     if (renderPassRecordingStackIter == context.commandBufferHandleToRenderPassRecordingIdStack.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end previous subpass and create next subpass, "
                             "failed to find render pass recording stack for command buffer with handle %" PRIi64,
                             args.commandBuffer
@@ -1810,7 +1817,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     }
                     if (renderPassRecordingStackIter->second.empty())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end previous subpass and create next subpass, "
                             " render subpass recording stack for command buffer with handle %" PRIi64 " is empty, "
                             "expecting a render pass recording for next render pass event",
@@ -1823,7 +1830,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto subpassRecordingIter = context.renderPassRecordingIdToRenderSubpassRecordingId.find(renderPassRecordingId);
                     if (subpassRecordingIter == context.renderPassRecordingIdToRenderSubpassRecordingId.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end previous subpass, failed to find subpass pass recording for render pass recording %" PRIu64,
                             renderPassRecordingStackIter->second.top()
                         );
@@ -1846,7 +1853,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         auto [subpassBeginInfoValid, subpassBeginInfo] = GetMetaStructPointer(&args.pSubpassBeginInfo);
                         if (!subpassBeginInfoValid)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to create next subpass, invalid pSubpassBeginInfo");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create next subpass, invalid pSubpassBeginInfo");
                             return;
                         }
 
@@ -1855,7 +1862,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
                         if (!subpassEndInfoValid)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to create create next subpass, invalid pSubpassEndInfo");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create create next subpass, invalid pSubpassEndInfo");
                             return;
                         }
 
@@ -1879,7 +1886,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto renderPassRecordingIdStackIter = context.commandBufferHandleToRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));
                     if (renderPassRecordingIdStackIter == context.commandBufferHandleToRenderPassRecordingIdStack.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end render pass recording, failed to find render pass recording stack for command buffer %" PRIu64,
                             args.commandBuffer
                         );
@@ -1887,7 +1894,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     }
                     if (renderPassRecordingIdStackIter->second.empty())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end render pass recording, render pass recording stack for command buffer %" PRIu64 " is empty, "
                             "expected prior render pass begin",
                             args.commandBuffer
@@ -1901,7 +1908,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto subpassRecordingIter = context.renderPassRecordingIdToRenderSubpassRecordingId.find(renderPassRecordingId);
                     if (subpassRecordingIter == context.renderPassRecordingIdToRenderSubpassRecordingId.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end render subpass recording, render pass recording stack for render pass %" PRIu64 " is empty, "
                             "expected implicit first subpass",
                             renderPassRecordingId
@@ -1918,7 +1925,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto subpassIndexRemoved = context.renderPassRecordingIdToSubpassIndex.erase(renderPassRecordingId);
                     if (!subpassIndexRemoved)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to cleanup render subpass index for render pass recording %" PRIu64 ", expected implicit first subpass",
                             renderPassRecordingId
                         );
@@ -1927,7 +1934,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     renderPassRecordingIdStackIter->second.pop();
                     if (!renderPassRecordingIdStackIter->second.empty())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to cleanup render pass recording stack for command buffer %" PRIu64 ", expected stack to be empty after end render pass api event",
                             args.commandBuffer
                         );
@@ -1947,7 +1954,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         auto [subpassEndInfoValid, subpassEndInfo] = GetMetaStructPointer(&args.pSubpassEndInfo);
                         if (!subpassEndInfoValid)
                         {
-                            GFXRECON_SQLITE_LOG_WARNING("Failed to process end subpass, invalid pSubpassEndInfo");
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to process end subpass, invalid pSubpassEndInfo");
                             return;
                         }
 
@@ -1961,7 +1968,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto [renderingInfoValid, renderingInfo] = GetMetaStructPointer(&args.pRenderingInfo);
                     if (!renderingInfoValid)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to create dynamic render pass recording, invalid pRenderingInfo");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to create dynamic render pass recording, invalid pRenderingInfo");
                         return;
                     }
 
@@ -2087,7 +2094,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto dynamicRenderPassRecordingIdStackIter = context.commandBufferHandleToDynamicRenderPassRecordingIdStack.find(ToInt64(args.commandBuffer));
                     if (dynamicRenderPassRecordingIdStackIter == context.commandBufferHandleToDynamicRenderPassRecordingIdStack.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end render pass recording, failed to find dynamic render pass recording stack for command buffer %" PRIu64,
                             args.commandBuffer
                         );
@@ -2095,7 +2102,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     }
                     if (dynamicRenderPassRecordingIdStackIter->second.empty())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to end dynamic render pass recording, dynamic render pass recording stack for command buffer %" PRIu64 " is empty, "
                             "expected prior dynamic render pass begin",
                             args.commandBuffer
@@ -2109,7 +2116,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     dynamicRenderPassRecordingIdStackIter->second.pop();
                     if (!dynamicRenderPassRecordingIdStackIter->second.empty())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to cleanup dynamic render pass recording stack for command buffer %" PRIu64 ", expected stack to be empty after end dynamic render pass api event",
                             args.commandBuffer
                         );
@@ -2127,7 +2134,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto [commandBuffersValid, commandBuffers, commandBuffersCount] = GetHandleArray(&args.pCommandBuffers);
                     if (!commandBuffersValid)
                     {
-                        GFXRECON_SQLITE_LOG_WARNING("Failed to insert secondary command buffer execution, invalid pCommandBuffers");
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index, "Failed to insert secondary command buffer execution, invalid pCommandBuffers");
                         return;
                     }
 
@@ -2135,7 +2142,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                     auto parentCommandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(parentCommandBufferHandle);
                     if (parentCommandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
                     {
-                        GFXRECON_SQLITE_LOG_WARNING(
+                        GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                             "Failed to insert secondary command buffer, failed to find command buffer recording for parent command buffer with handle %" PRIi64,
                             args.commandBuffer
                         );
@@ -2153,7 +2160,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         auto renderSubpassRecordingIter = context.renderPassRecordingIdToRenderSubpassRecordingId.find(renderPassRecordingId.value());
                         if (renderSubpassRecordingIter == context.renderPassRecordingIdToRenderSubpassRecordingId.end())
                         {
-                            GFXRECON_SQLITE_LOG_WARNING(
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                 "Failed to find render subpass recording from render pass recording %" PRIu64 ", expected at least one implicit subpass, "
                                 "setting foreign key to NULL",
                                 renderPassRecordingId.value()
@@ -2181,7 +2188,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
                         auto secondaryCommandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(secondaryCommandBuffer));
                         if (secondaryCommandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
                         {
-                            GFXRECON_SQLITE_LOG_WARNING(
+                            GFXRECON_SQLITE_LOG_WARNING_AT(call_info.index,
                                 "Failed to insert secondary command buffer execution, failed to find secondary command buffer recording for command buffer with handle %" PRIi64,
                                 secondaryCommandBuffer
                             );

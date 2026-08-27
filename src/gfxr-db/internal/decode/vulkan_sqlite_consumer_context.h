@@ -126,6 +126,11 @@ struct VulkanSqliteConsumerContext final
 
     uint64_t currentFrame = 0;
 
+    // Mirrors ApiDecoder::SetCurrentBlockIndex so log messages raised from code paths with no
+    // ApiCallInfo in scope (Context helpers, VulkanSqlitePreparedStatements) can still report which
+    // gfxr block they pertain to.
+    uint64_t currentBlockIndex = 0;
+
     int64_t currentAnnotationId = 0;
     int64_t currentDisplayMessageId = 0;
     int64_t currentStructId = 0;
@@ -907,12 +912,8 @@ struct VulkanSqliteConsumerContext final
         auto iter = handleToId.find(ToInt64(handle));
         if (iter == handleToId.end())
         {
-            GFXRECON_SQLITE_LOG_WARNING(
-                "<%" PRIu64 ">- Failed to destroy %s, no %s found with handle %" PRIu64,
-                blockIndex,
-                typeName,
-                typeName,
-                handle
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                blockIndex, "Failed to destroy %s, no %s found with handle %" PRIu64, typeName, typeName, handle
             );
             return std::nullopt;
         }
@@ -931,8 +932,8 @@ struct VulkanSqliteConsumerContext final
         {
             if (!allowNull)
             {
-                GFXRECON_SQLITE_LOG_WARNING(
-                    "Null %s handle provided when not allowed; still setting foreign key to NULL", type
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    currentBlockIndex, "Null %s handle provided when not allowed; still setting foreign key to NULL", type
                 );
             }
             return id;
@@ -940,8 +941,8 @@ struct VulkanSqliteConsumerContext final
         auto bufferIter = handleToId.find(ToInt64(handle));
         if (bufferIter == handleToId.end())
         {
-            GFXRECON_SQLITE_LOG_WARNING(
-                "Failed to find %s for handle %" PRIu64 ", setting foreign key to NULL", type, handle
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                currentBlockIndex, "Failed to find %s for handle %" PRIu64 ", setting foreign key to NULL", type, handle
             );
         }
         else

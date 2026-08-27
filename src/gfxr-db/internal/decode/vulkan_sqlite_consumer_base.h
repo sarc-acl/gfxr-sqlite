@@ -98,6 +98,15 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
 
     void UpdateCommandBufferCommands(const ApiCallInfo& callInfo, format::HandleId commandBuffer);
 
+    // Mirror the block index onto context so warnings raised from code with no ApiCallInfo in scope
+    // (Context helpers, VulkanSqlitePreparedStatements) can still report which gfxr block they
+    // pertain to.
+    void SetCurrentBlockIndex(uint64_t block_index) override
+    {
+        VulkanConsumer::SetCurrentBlockIndex(block_index);
+        context.currentBlockIndex = block_index;
+    }
+
     void ProcessStateBeginMarker(uint64_t frameNumber) override;
 
     void ProcessStateEndMarker(uint64_t frameNumber) override;
@@ -416,7 +425,7 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         {
             if (result == VK_SUCCESS)
             {
-                GFXRECON_SQLITE_LOG_WARNING("Failed to create surface, invalid pSurface handle");
+                GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create surface, invalid pSurface handle");
             }
             return;
         }
@@ -426,7 +435,9 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         {
             if (result == VK_SUCCESS)
             {
-                GFXRECON_SQLITE_LOG_WARNING("Failed to create surface, invalid pCreateInfo struct");
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_, "Failed to create surface, invalid pCreateInfo struct"
+                );
             }
             return;
         }
