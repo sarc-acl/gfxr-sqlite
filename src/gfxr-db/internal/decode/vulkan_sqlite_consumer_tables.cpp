@@ -89,10 +89,10 @@ static void CreateDebugTables(sqlite3* db)
         db,
         "CREATE TABLE queueDebugLabels("
         "   apiEventId INTEGER NOT NULL,"
-        "   labelId INTEGER  NOT NULL,"
+        "   debugLabelId INTEGER  NOT NULL,"
         "   queueId INTEGER NOT NULL,"
         "   FOREIGN KEY(apiEventId) REFERENCES apiEvents(id),"
-        "   FOREIGN KEY(labelId) REFERENCES debugLabels(id),"
+        "   FOREIGN KEY(debugLabelId) REFERENCES debugLabels(id),"
         "   FOREIGN KEY(queueId) REFERENCES queues(id)) STRICT;"
     );
 
