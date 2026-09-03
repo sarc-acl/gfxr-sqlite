@@ -2937,6 +2937,10 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
         const ApiCallInfo&                          call_info,
         args::CmdSetComputeOccupancyPriorityNV&     args) override;
 
+    virtual void Process_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT(
+        const ApiCallInfo&                          call_info,
+        args::GetPhysicalDeviceCooperativeMatrixProperties2EXT& args) override;
+
     virtual void Process_vkCmdSetPrimitiveRestartIndexEXT(
         const ApiCallInfo&                          call_info,
         args::CmdSetPrimitiveRestartIndexEXT&       args) override;
