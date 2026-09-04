@@ -16307,6 +16307,22 @@ void VulkanSqliteConsumer::Process_vkCmdSetComputeOccupancyPriorityNV(
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
 }
+void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceCooperativeMatrixProperties2EXT(
+    const ApiCallInfo&                          call_info,
+    args::GetPhysicalDeviceCooperativeMatrixProperties2EXT& args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkGetPhysicalDeviceCooperativeMatrixProperties2EXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
+    FieldToSqlite(statements, fieldInfo, 2, "pCooperativeMatrixInfo", &args.pCooperativeMatrixInfo, "const VkPhysicalDeviceCooperativeMatrixInfo2EXT*");
+    FieldToSqlite(statements, fieldInfo, 3, "pPropertyCount", args.pPropertyCount, "uint32_t*");
+    FieldToSqlite(statements, fieldInfo, 4, "pProperties", &args.pProperties, "VkCooperativeMatrixProperties2EXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
+}
 void VulkanSqliteConsumer::Process_vkCmdSetPrimitiveRestartIndexEXT(
     const ApiCallInfo&                          call_info,
     args::CmdSetPrimitiveRestartIndexEXT&       args)

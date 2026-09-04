@@ -2437,6 +2437,18 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(header);
+                if(pFeatures->cooperativeMatrixProperties2) { enabledFeatureNames.emplace_back("cooperativeMatrixProperties2"); }
+                if(pFeatures->cooperativeMatrixReductions) { enabledFeatureNames.emplace_back("cooperativeMatrixReductions"); }
+                if(pFeatures->cooperativeMatrixConversions) { enabledFeatureNames.emplace_back("cooperativeMatrixConversions"); }
+                if(pFeatures->cooperativeMatrixPerElementOperations) { enabledFeatureNames.emplace_back("cooperativeMatrixPerElementOperations"); }
+                if(pFeatures->cooperativeMatrixGetCoordinate) { enabledFeatureNames.emplace_back("cooperativeMatrixGetCoordinate"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT>():
             {
                 // clang-format off
@@ -2491,11 +2503,27 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceImageTilingControlFeaturesEXT>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT*>(header);
+                if(pFeatures->imageTilingControl) { enabledFeatureNames.emplace_back("imageTilingControl"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV>():
             {
                 // clang-format off
                 const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(header);
                 if(pFeatures->cooperativeMatrixDecodeVector) { enabledFeatureNames.emplace_back("cooperativeMatrixDecodeVector"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDevicePrivateDataBaseHandleFeaturesNV>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(header);
+                if(pFeatures->privateDataBaseHandle) { enabledFeatureNames.emplace_back("privateDataBaseHandle"); }
                 // clang-format on
                 break;
             }

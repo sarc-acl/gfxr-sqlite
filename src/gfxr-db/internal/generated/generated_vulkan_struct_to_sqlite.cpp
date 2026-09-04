@@ -21155,6 +21155,61 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
     }
 }
 
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkCooperativeMatrixProperties2EXT* data, std::string_view typeName)
+{
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    if (data && data->decoded_value)
+    {
+        [[maybe_unused]] const VkCooperativeMatrixProperties2EXT& decoded_value = *data->decoded_value;
+        [[maybe_unused]] const Decoded_VkCooperativeMatrixProperties2EXT& meta_struct = *data;
+        FieldInfo memberInfo = {.eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0};
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "MGranularity", decoded_value.MGranularity, "uint32_t");
+        FieldToSqlite(statements, memberInfo, 3, "NGranularity", decoded_value.NGranularity, "uint32_t");
+        FieldToSqlite(statements, memberInfo, 4, "KGranularity", decoded_value.KGranularity, "uint32_t");
+        FieldToSqlite(statements, memberInfo, 5, "AType", decoded_value.AType, "VkComponentTypeKHR");
+        FieldToSqlite(statements, memberInfo, 6, "BType", decoded_value.BType, "VkComponentTypeKHR");
+        FieldToSqlite(statements, memberInfo, 7, "CType", decoded_value.CType, "VkComponentTypeKHR");
+        FieldToSqlite(statements, memberInfo, 8, "ResultType", decoded_value.ResultType, "VkComponentTypeKHR");
+        FieldToSqlite(statements, memberInfo, 9, "pNext", meta_struct.pNext);
+    }
+}
+
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkPhysicalDeviceCooperativeMatrixInfo2EXT* data, std::string_view typeName)
+{
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    if (data && data->decoded_value)
+    {
+        [[maybe_unused]] const VkPhysicalDeviceCooperativeMatrixInfo2EXT& decoded_value = *data->decoded_value;
+        [[maybe_unused]] const Decoded_VkPhysicalDeviceCooperativeMatrixInfo2EXT& meta_struct = *data;
+        FieldInfo memberInfo = {.eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0};
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "scope", decoded_value.scope, "VkScopeKHR");
+        FieldToSqlite(statements, memberInfo, 3, "invocations", decoded_value.invocations, "uint32_t");
+        FieldToSqlite(statements, memberInfo, 4, "subgroupSize", decoded_value.subgroupSize, "uint32_t");
+        FieldToSqlite(statements, memberInfo, 5, "flags", VkCooperativeMatrixFlagsEXT_t(), decoded_value.flags, "VkCooperativeMatrixFlagsEXT");
+        FieldToSqlite(statements, memberInfo, 6, "pNext", meta_struct.pNext);
+    }
+}
+
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT* data, std::string_view typeName)
+{
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    if (data && data->decoded_value)
+    {
+        [[maybe_unused]] const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT& decoded_value = *data->decoded_value;
+        [[maybe_unused]] const Decoded_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT& meta_struct = *data;
+        FieldInfo memberInfo = {.eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0};
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "cooperativeMatrixProperties2", static_cast<bool>(decoded_value.cooperativeMatrixProperties2), "VkBool32");
+        FieldToSqlite(statements, memberInfo, 3, "cooperativeMatrixReductions", static_cast<bool>(decoded_value.cooperativeMatrixReductions), "VkBool32");
+        FieldToSqlite(statements, memberInfo, 4, "cooperativeMatrixConversions", static_cast<bool>(decoded_value.cooperativeMatrixConversions), "VkBool32");
+        FieldToSqlite(statements, memberInfo, 5, "cooperativeMatrixPerElementOperations", static_cast<bool>(decoded_value.cooperativeMatrixPerElementOperations), "VkBool32");
+        FieldToSqlite(statements, memberInfo, 6, "cooperativeMatrixGetCoordinate", static_cast<bool>(decoded_value.cooperativeMatrixGetCoordinate), "VkBool32");
+        FieldToSqlite(statements, memberInfo, 7, "pNext", meta_struct.pNext);
+    }
+}
+
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT* data, std::string_view typeName)
 {
     const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
@@ -21287,6 +21342,34 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
     }
 }
 
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkPhysicalDeviceImageTilingControlFeaturesEXT* data, std::string_view typeName)
+{
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    if (data && data->decoded_value)
+    {
+        [[maybe_unused]] const VkPhysicalDeviceImageTilingControlFeaturesEXT& decoded_value = *data->decoded_value;
+        [[maybe_unused]] const Decoded_VkPhysicalDeviceImageTilingControlFeaturesEXT& meta_struct = *data;
+        FieldInfo memberInfo = {.eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0};
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "imageTilingControl", static_cast<bool>(decoded_value.imageTilingControl), "VkBool32");
+        FieldToSqlite(statements, memberInfo, 3, "pNext", meta_struct.pNext);
+    }
+}
+
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkImageTilingControlCreateInfoEXT* data, std::string_view typeName)
+{
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    if (data && data->decoded_value)
+    {
+        [[maybe_unused]] const VkImageTilingControlCreateInfoEXT& decoded_value = *data->decoded_value;
+        [[maybe_unused]] const Decoded_VkImageTilingControlCreateInfoEXT& meta_struct = *data;
+        FieldInfo memberInfo = {.eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0};
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "tilingControl", decoded_value.tilingControl, "VkImageTilingControlEXT");
+        FieldToSqlite(statements, memberInfo, 3, "pNext", meta_struct.pNext);
+    }
+}
+
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV* data, std::string_view typeName)
 {
     const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
@@ -21297,6 +21380,20 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
         FieldInfo memberInfo = {.eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0};
         FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
         FieldToSqlite(statements, memberInfo, 2, "cooperativeMatrixDecodeVector", static_cast<bool>(decoded_value.cooperativeMatrixDecodeVector), "VkBool32");
+        FieldToSqlite(statements, memberInfo, 3, "pNext", meta_struct.pNext);
+    }
+}
+
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const Decoded_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV* data, std::string_view typeName)
+{
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    if (data && data->decoded_value)
+    {
+        [[maybe_unused]] const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV& decoded_value = *data->decoded_value;
+        [[maybe_unused]] const Decoded_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV& meta_struct = *data;
+        FieldInfo memberInfo = {.eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0};
+        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
+        FieldToSqlite(statements, memberInfo, 2, "privateDataBaseHandle", static_cast<bool>(decoded_value.privateDataBaseHandle), "VkBool32");
         FieldToSqlite(statements, memberInfo, 3, "pNext", meta_struct.pNext);
     }
 }
@@ -29717,6 +29814,17 @@ void InsertPNext_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(VulkanSqlite
     FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
 }
 
+void InsertPNext_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
+{
+    static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT";
+
+    // generate the structMembers entries
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(data->GetMetaStructPointer());
+    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
+    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+}
+
 void InsertPNext_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT";
@@ -29816,6 +29924,28 @@ void InsertPNext_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VulkanSqlitePr
     FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
 }
 
+void InsertPNext_VkPhysicalDeviceImageTilingControlFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
+{
+    static constexpr std::string_view name = "VkPhysicalDeviceImageTilingControlFeaturesEXT";
+
+    // generate the structMembers entries
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageTilingControlFeaturesEXT*>(data->GetMetaStructPointer());
+    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
+    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+}
+
+void InsertPNext_VkImageTilingControlCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
+{
+    static constexpr std::string_view name = "VkImageTilingControlCreateInfoEXT";
+
+    // generate the structMembers entries
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    const auto* pnext = reinterpret_cast<const Decoded_VkImageTilingControlCreateInfoEXT*>(data->GetMetaStructPointer());
+    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
+    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+}
+
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV";
@@ -29823,6 +29953,17 @@ void InsertPNext_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(VulkanS
     // generate the structMembers entries
     const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(data->GetMetaStructPointer());
+    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
+    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+}
+
+void InsertPNext_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
+{
+    static constexpr std::string_view name = "VkPhysicalDevicePrivateDataBaseHandleFeaturesNV";
+
+    // generate the structMembers entries
+    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(data->GetMetaStructPointer());
     FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
     FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
 }
@@ -30647,6 +30788,7 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC: { InsertPNext_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT: { InsertPNext_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV: { InsertPNext_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(statements, fieldInfo, fieldIndex, fieldName, data); break; }
+            case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT: { InsertPNext_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT: { InsertPNext_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT: { InsertPNext_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE: { InsertPNext_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(statements, fieldInfo, fieldIndex, fieldName, data); break; }
@@ -30656,7 +30798,10 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
             case VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_NEURAL_STATISTICS_CREATE_INFO_ARM: { InsertPNext_VkDataGraphPipelineNeuralStatisticsCreateInfoARM(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM: { InsertPNext_VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT: { InsertPNext_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
+            case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT: { InsertPNext_VkPhysicalDeviceImageTilingControlFeaturesEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
+            case VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT: { InsertPNext_VkImageTilingControlCreateInfoEXT(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV: { InsertPNext_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(statements, fieldInfo, fieldIndex, fieldName, data); break; }
+            case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV: { InsertPNext_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR: { InsertPNext_VkWriteDescriptorSetAccelerationStructureKHR(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR: { InsertPNext_VkPhysicalDeviceAccelerationStructureFeaturesKHR(statements, fieldInfo, fieldIndex, fieldName, data); break; }
             case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR: { InsertPNext_VkPhysicalDeviceAccelerationStructurePropertiesKHR(statements, fieldInfo, fieldIndex, fieldName, data); break; }
