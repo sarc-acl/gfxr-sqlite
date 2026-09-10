@@ -17,6 +17,8 @@
 #include "create_db_helper.h"
 
 #include <cstdint>
+#include <cctype>
+#include <fstream>
 #include <string>
 #include <sstream>
 
@@ -24,6 +26,7 @@
 
 // gfxreconstruct header
 #include PROJECT_VERSION_HEADER_FILE
+#include "apidump/apidump_processor.h"
 #include "decode/file_processor.h"
 #include "decode/decode_api_detection.h"
 #include "generated/generated_vulkan_decoder.h"
@@ -130,6 +133,40 @@ namespace gfxrSqlite
         GFXRECON_SQLITE_LOG_ERROR("configSqLite3 failed");
     }
 
+    /** Whether the input is an api dump rather than a gfxr capture.
+     *
+     * Extension first, then a content sniff, because the profile folder names these .apidump while
+     * the layer itself writes .json. DetectAPIs would reject either as a malformed gfxr, so the
+     * branch has to happen before it.
+     */
+    bool isApiDumpFile(const std::string& filename)
+    {
+        if (filename.size() >= 8 && filename.compare(filename.size() - 8, 8, ".apidump") == 0)
+        {
+            return true;
+        }
+
+        std::ifstream input(filename, std::ios::binary);
+        if (!input.is_open())
+        {
+            return false;
+        }
+
+        char c = 0;
+        while (input.get(c))
+        {
+            if (std::isspace(static_cast<unsigned char>(c)) != 0)
+            {
+                continue;
+            }
+
+            // An api dump is a JSON array of frames; a gfxr capture starts with a binary magic.
+            return c == '[';
+        }
+
+        return false;
+    }
+
     void CreateDBHelper::createDatabase()
     {
         gfxrSqlite::DebugLogDuration log("OpenWorker::DoExecute");
@@ -181,6 +218,13 @@ namespace gfxrSqlite
             return;
         }
         const auto& inputFilename = m_inputFilename.value();
+
+        if (isApiDumpFile(inputFilename))
+        {
+            createDatabaseFromApiDump(inputFilename);
+            return;
+        }
+
         bool detected_d3d12 = false;
         bool detected_vulkan = false;
         bool detected_openxr = false;
@@ -279,6 +323,57 @@ namespace gfxrSqlite
 
             SetError(errMsg.str());
             return;
+        }
+    }
+
+
+    void CreateDBHelper::createDatabaseFromApiDump(const std::string& inputFilename)
+    {
+        int err = sqlite3_open(m_dbFilename.c_str(), &m_db);
+        if (err)
+        {
+            std::ostringstream errMsg;
+            errMsg << "Failed to create database: " << sqlite3_errmsg(m_db);
+            SetError(errMsg.str());
+            return;
+        }
+
+        if (m_enforceForeignKeys)
+        {
+            gfxrecon::decode::ExecSQL(m_db, "PRAGMA foreign_keys = ON");
+        }
+
+        std::string readError;
+
+        {
+            // Identical to the gfxr path from here down: the same consumer, the same decoder, the
+            // same finalisation. Only the thing feeding the decoder differs.
+            gfxrecon::decode::VulkanSqliteConsumerExt sqlite_consumer(m_db);
+            gfxrecon::decode::VulkanDecoder           decoder;
+            decoder.AddConsumer(&sqlite_consumer);
+
+            const std::string vulkan_version{ std::to_string(VK_VERSION_MAJOR(VK_HEADER_VERSION_COMPLETE)) + "." +
+                                              std::to_string(VK_VERSION_MINOR(VK_HEADER_VERSION_COMPLETE)) + "." +
+                                              std::to_string(VK_VERSION_PATCH(VK_HEADER_VERSION_COMPLETE)) };
+            sqlite_consumer.Initialize(GetProjectVersionString(), vulkan_version, inputFilename);
+
+            gfxrecon::decode::ApiDumpProcessor processor(decoder);
+            const bool                         ok = processor.ProcessFile(inputFilename, readError);
+
+            GFXRECON_LOG_INFO("Converted api dump: %s", processor.DescribeConversion().c_str());
+
+            sqlite_consumer.PostInitialize();
+
+            // As on the gfxr path, frame delimitation leaves a trailing empty frame behind.
+            sqlite_consumer.TrimFinalFrame();
+
+            if (!ok)
+            {
+                // A capture cut short by the app being killed is the common case, and everything
+                // before the truncation is already in the database, so the rows are kept and the
+                // problem is reported rather than discarding the conversion.
+                GFXRECON_LOG_WARNING("Api dump ended early: %s", readError.c_str());
+            }
         }
     }
 

@@ -44,6 +44,13 @@ generate_targets = [
     'generated_vulkan_struct_to_sqlite.cpp',
     'generated_vulkan_enum_to_sqlite.h',
     'generated_vulkan_enum_to_sqlite.cpp',
+    'generated_vulkan_enum_from_string.h',
+    'generated_vulkan_enum_from_string.cpp',
+    'generated_vulkan_struct_from_apidump.h',
+    'generated_vulkan_struct_from_apidump.cpp',
+    'generated_vulkan_pnext_from_apidump.cpp',
+    'generated_vulkan_apidump_dispatch.h',
+    'generated_vulkan_apidump_dispatch.cpp',
     'generated_vulkan_process_features.cpp'
 ]
 
