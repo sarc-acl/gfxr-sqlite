@@ -748,6 +748,11 @@ struct VulkanSqliteConsumerContext final
         return GetId(physicalDevice, physicalDeviceHandleToId, "physical device", allowNull);
     }
 
+    std::optional<int64_t> GetSurfaceId(format::HandleId surface, bool allowNull = false) const
+    {
+        return GetId(surface, surfaceHandleToId, "surface", allowNull);
+    }
+
     std::optional<int64_t> GetQueueId(format::HandleId queue, bool allowNull = false) const
     {
         return GetId(queue, queueHandleToId, "queue", allowNull);

@@ -7445,6 +7445,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(const ApiCallInfo& ca
     statements.InsertSwapchain(
         swapchain,
         args.device,
+        context.GetSurfaceId(createInfo->surface, true),
         ci.flags,
         ci.minImageCount,
         ci.imageFormat,
@@ -7504,6 +7505,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
 
         LogUnsupportedPNext(createInfo.pNext);
 
+        auto surfaceId = context.GetSurfaceId(createInfo.surface, true);
         auto flags = createInfo.decoded_value->flags;
         auto minImageCount = createInfo.decoded_value->minImageCount;
         auto imageFormat = createInfo.decoded_value->imageFormat;
@@ -7530,6 +7532,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateSharedSwapchainsKHR(
         statements.InsertSwapchain(
             swapchain,
             args.device,
+            surfaceId,
             flags,
             minImageCount,
             imageFormat,
