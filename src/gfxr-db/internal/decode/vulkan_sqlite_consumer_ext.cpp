@@ -865,6 +865,74 @@ void VulkanSqliteConsumerExt::Process_vkEnumeratePhysicalDevices(
     }
 }
 
+void VulkanSqliteConsumerExt::Process_vkGetPhysicalDeviceProperties(
+    const ApiCallInfo& callInfo, args::GetPhysicalDeviceProperties& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties(callInfo, args);
+
+    auto [propertiesValid, properties] = GetMetaStructPointer(&args.pProperties);
+    if (!propertiesValid || !properties->decoded_value)
+    {
+        return;
+    }
+
+    RecordPhysicalDeviceProperties(args.physicalDevice, *properties->decoded_value);
+}
+
+void VulkanSqliteConsumerExt::Process_vkGetPhysicalDeviceProperties2(
+    const ApiCallInfo& callInfo, args::GetPhysicalDeviceProperties2& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties2(callInfo, args);
+
+    auto [propertiesValid, properties] = GetMetaStructPointer(&args.pProperties);
+    if (!propertiesValid || !properties->decoded_value)
+    {
+        return;
+    }
+
+    RecordPhysicalDeviceProperties(args.physicalDevice, properties->decoded_value->properties);
+}
+
+void VulkanSqliteConsumerExt::Process_vkGetPhysicalDeviceProperties2KHR(
+    const ApiCallInfo& callInfo, args::GetPhysicalDeviceProperties2KHR& args
+)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties2KHR(callInfo, args);
+
+    auto [propertiesValid, properties] = GetMetaStructPointer(&args.pProperties);
+    if (!propertiesValid || !properties->decoded_value)
+    {
+        return;
+    }
+
+    RecordPhysicalDeviceProperties(args.physicalDevice, properties->decoded_value->properties);
+}
+
+void VulkanSqliteConsumerExt::RecordPhysicalDeviceProperties(
+    format::HandleId physicalDevice, const VkPhysicalDeviceProperties& properties
+)
+{
+    auto physicalDeviceId = context.GetPhysicalDeviceId(physicalDevice);
+    if (!physicalDeviceId)
+    {
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
+            "Failed to find physical device for handle %" PRIu64 ", dropping VkPhysicalDeviceProperties",
+            physicalDevice
+        );
+        return;
+    }
+
+    statements.UpdatePhysicalDeviceProperties(*physicalDeviceId, properties);
+    statements.InsertPhysicalDeviceLimits(*physicalDeviceId, properties.limits);
+    statements.InsertPhysicalDeviceSparseProperties(*physicalDeviceId, properties.sparseProperties);
+}
+
 void VulkanSqliteConsumerExt::Process_vkCreateDevice(const ApiCallInfo& callInfo, args::CreateDevice& args)
 {
     // generate the base apiEvents database entries

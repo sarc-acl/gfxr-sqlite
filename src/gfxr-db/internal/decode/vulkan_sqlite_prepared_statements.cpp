@@ -985,7 +985,19 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         "endDynamicRenderPassRecordingId = ? WHERE (debugLabels.id = ?);",
         &debugLabelCmdEndUpdateStatement
     );
-    PrepareStatement(db, "INSERT INTO physicalDevices VALUES (?, ?, ?, ?);", &physicalDeviceInsertStatement);
+    PrepareStatement(
+        db,
+        "INSERT INTO physicalDevices (id, handle, instanceId, enumerateApiEventId) VALUES (?, ?, ?, ?);",
+        &physicalDeviceInsertStatement
+    );
+    // VkPhysicalDeviceProperties arrives later via vkGetPhysicalDeviceProperties[2], so it fills in the
+    // row created above rather than being inserted with it.
+    PrepareStatement(
+        db,
+        "UPDATE physicalDevices SET apiVersion = ?, driverVersion = ?, vendorID = ?, deviceID = ?, deviceType = ?, "
+        "deviceName = ?, pipelineCacheUUID = ? WHERE (physicalDevices.id = ?);",
+        &physicalDevicePropertiesUpdateStatement
+    );
     PrepareStatement(db, "INSERT INTO queues VALUES (?, ?, ?, ?, ?, ?, ?);", &queueInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmits VALUES (?, ?, ?, ?, ?);", &queueSubmitInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmitBatches VALUES (?, ?, ?, ?, ?);", &queueSubmitBatchInsertStatement);
@@ -1316,6 +1328,56 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         db,
         "INSERT INTO cmdDataGraphDispatchRecordingInfos VALUES (?, ?);",
         &cmdDataGraphDispatchRecordingInfoInsertStatement
+    );
+
+    PrepareStatement(
+        db,
+        "INSERT OR IGNORE INTO physicalDeviceLimits (physicalDeviceId, maxImageDimension1D, maxImageDimension2D, "
+        "maxImageDimension3D, maxImageDimensionCube, maxImageArrayLayers, maxTexelBufferElements, "
+        "maxUniformBufferRange, maxStorageBufferRange, maxPushConstantsSize, maxMemoryAllocationCount, "
+        "maxSamplerAllocationCount, bufferImageGranularity, sparseAddressSpaceSize, maxBoundDescriptorSets, "
+        "maxPerStageDescriptorSamplers, maxPerStageDescriptorUniformBuffers, "
+        "maxPerStageDescriptorStorageBuffers, maxPerStageDescriptorSampledImages, "
+        "maxPerStageDescriptorStorageImages, maxPerStageDescriptorInputAttachments, maxPerStageResources, "
+        "maxDescriptorSetSamplers, maxDescriptorSetUniformBuffers, maxDescriptorSetUniformBuffersDynamic, "
+        "maxDescriptorSetStorageBuffers, maxDescriptorSetStorageBuffersDynamic, "
+        "maxDescriptorSetSampledImages, maxDescriptorSetStorageImages, maxDescriptorSetInputAttachments, "
+        "maxVertexInputAttributes, maxVertexInputBindings, maxVertexInputAttributeOffset, "
+        "maxVertexInputBindingStride, maxVertexOutputComponents, maxTessellationGenerationLevel, "
+        "maxTessellationPatchSize, maxTessellationControlPerVertexInputComponents, "
+        "maxTessellationControlPerVertexOutputComponents, maxTessellationControlPerPatchOutputComponents, "
+        "maxTessellationControlTotalOutputComponents, maxTessellationEvaluationInputComponents, "
+        "maxTessellationEvaluationOutputComponents, maxGeometryShaderInvocations, "
+        "maxGeometryInputComponents, maxGeometryOutputComponents, maxGeometryOutputVertices, "
+        "maxGeometryTotalOutputComponents, maxFragmentInputComponents, maxFragmentOutputAttachments, "
+        "maxFragmentDualSrcAttachments, maxFragmentCombinedOutputResources, maxComputeSharedMemorySize, "
+        "maxComputeWorkGroupCountX, maxComputeWorkGroupCountY, maxComputeWorkGroupCountZ, "
+        "maxComputeWorkGroupInvocations, maxComputeWorkGroupSizeX, maxComputeWorkGroupSizeY, "
+        "maxComputeWorkGroupSizeZ, subPixelPrecisionBits, subTexelPrecisionBits, mipmapPrecisionBits, "
+        "maxDrawIndexedIndexValue, maxDrawIndirectCount, maxSamplerLodBias, maxSamplerAnisotropy, "
+        "maxViewports, maxViewportDimensionsWidth, maxViewportDimensionsHeight, viewportBoundsRangeMin, "
+        "viewportBoundsRangeMax, viewportSubPixelBits, minMemoryMapAlignment, minTexelBufferOffsetAlignment, "
+        "minUniformBufferOffsetAlignment, minStorageBufferOffsetAlignment, minTexelOffset, maxTexelOffset, "
+        "minTexelGatherOffset, maxTexelGatherOffset, minInterpolationOffset, maxInterpolationOffset, "
+        "subPixelInterpolationOffsetBits, maxFramebufferWidth, maxFramebufferHeight, maxFramebufferLayers, "
+        "framebufferColorSampleCounts, framebufferDepthSampleCounts, framebufferStencilSampleCounts, "
+        "framebufferNoAttachmentsSampleCounts, maxColorAttachments, sampledImageColorSampleCounts, "
+        "sampledImageIntegerSampleCounts, sampledImageDepthSampleCounts, sampledImageStencilSampleCounts, "
+        "storageImageSampleCounts, maxSampleMaskWords, timestampComputeAndGraphics, timestampPeriod, "
+        "maxClipDistances, maxCullDistances, maxCombinedClipAndCullDistances, discreteQueuePriorities, "
+        "pointSizeRangeMin, pointSizeRangeMax, lineWidthRangeMin, lineWidthRangeMax, pointSizeGranularity, "
+        "lineWidthGranularity, strictLines, standardSampleLocations, optimalBufferCopyOffsetAlignment, "
+        "optimalBufferCopyRowPitchAlignment, nonCoherentAtomSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+        "?, ?, ?, ?, ?);",
+        &physicalDeviceLimitsInsertStatement
+    );
+    PrepareStatement(
+        db,
+        "INSERT OR IGNORE INTO physicalDeviceSparseProperties VALUES (?, ?, ?, ?, ?, ?);",
+        &physicalDeviceSparsePropertiesInsertStatement
     );
 
     PrepareStatement(db, "INSERT INTO displays VALUES (?, ?, ?, ?);", &displayInsertStatement);
@@ -5368,6 +5430,194 @@ int64_t VulkanSqlitePreparedStatements::InsertPhysicalDevice(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return physicalDeviceId;
+}
+
+void VulkanSqlitePreparedStatements::UpdatePhysicalDeviceProperties(
+    const int64_t physicalDeviceId, const VkPhysicalDeviceProperties& properties
+)
+{
+    // UPDATE physicalDevices SET apiVersion = ?, driverVersion = ?, vendorID = ?, deviceID = ?, deviceType = ?,
+    //   deviceName = ?, pipelineCacheUUID = ? WHERE (physicalDevices.id = ?)
+    auto uuid = uuid_to_string(sizeof(properties.pipelineCacheUUID), properties.pipelineCacheUUID);
+    auto& statement = physicalDevicePropertiesUpdateStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(properties.apiVersion)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(properties.driverVersion)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(properties.vendorID)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(properties.deviceID)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(properties.deviceType)));
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_text(statement, 6, properties.deviceName, -1, SQLITE_TRANSIENT)
+    );
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 7, uuid.c_str(), -1, SQLITE_TRANSIENT));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertPhysicalDeviceLimits(
+    const int64_t physicalDeviceId, const VkPhysicalDeviceLimits& limits
+)
+{
+    auto& statement = physicalDeviceLimitsInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(limits.maxImageDimension1D)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(limits.maxImageDimension2D)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(limits.maxImageDimension3D)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(limits.maxImageDimensionCube)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(limits.maxImageArrayLayers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(limits.maxTexelBufferElements)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(limits.maxUniformBufferRange)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(limits.maxStorageBufferRange)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 10, static_cast<sqlite_int64>(limits.maxPushConstantsSize)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 11, static_cast<sqlite_int64>(limits.maxMemoryAllocationCount)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 12, static_cast<sqlite_int64>(limits.maxSamplerAllocationCount)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 13, static_cast<sqlite_int64>(limits.bufferImageGranularity)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 14, static_cast<sqlite_int64>(limits.sparseAddressSpaceSize)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 15, static_cast<sqlite_int64>(limits.maxBoundDescriptorSets)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(limits.maxPerStageDescriptorSamplers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 17, static_cast<sqlite_int64>(limits.maxPerStageDescriptorUniformBuffers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(limits.maxPerStageDescriptorStorageBuffers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 19, static_cast<sqlite_int64>(limits.maxPerStageDescriptorSampledImages)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 20, static_cast<sqlite_int64>(limits.maxPerStageDescriptorStorageImages)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 21, static_cast<sqlite_int64>(limits.maxPerStageDescriptorInputAttachments)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 22, static_cast<sqlite_int64>(limits.maxPerStageResources)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 23, static_cast<sqlite_int64>(limits.maxDescriptorSetSamplers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 24, static_cast<sqlite_int64>(limits.maxDescriptorSetUniformBuffers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 25, static_cast<sqlite_int64>(limits.maxDescriptorSetUniformBuffersDynamic)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 26, static_cast<sqlite_int64>(limits.maxDescriptorSetStorageBuffers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 27, static_cast<sqlite_int64>(limits.maxDescriptorSetStorageBuffersDynamic)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 28, static_cast<sqlite_int64>(limits.maxDescriptorSetSampledImages)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 29, static_cast<sqlite_int64>(limits.maxDescriptorSetStorageImages)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 30, static_cast<sqlite_int64>(limits.maxDescriptorSetInputAttachments)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 31, static_cast<sqlite_int64>(limits.maxVertexInputAttributes)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 32, static_cast<sqlite_int64>(limits.maxVertexInputBindings)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 33, static_cast<sqlite_int64>(limits.maxVertexInputAttributeOffset)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 34, static_cast<sqlite_int64>(limits.maxVertexInputBindingStride)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 35, static_cast<sqlite_int64>(limits.maxVertexOutputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 36, static_cast<sqlite_int64>(limits.maxTessellationGenerationLevel)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 37, static_cast<sqlite_int64>(limits.maxTessellationPatchSize)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 38, static_cast<sqlite_int64>(limits.maxTessellationControlPerVertexInputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 39, static_cast<sqlite_int64>(limits.maxTessellationControlPerVertexOutputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 40, static_cast<sqlite_int64>(limits.maxTessellationControlPerPatchOutputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 41, static_cast<sqlite_int64>(limits.maxTessellationControlTotalOutputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 42, static_cast<sqlite_int64>(limits.maxTessellationEvaluationInputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 43, static_cast<sqlite_int64>(limits.maxTessellationEvaluationOutputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 44, static_cast<sqlite_int64>(limits.maxGeometryShaderInvocations)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 45, static_cast<sqlite_int64>(limits.maxGeometryInputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 46, static_cast<sqlite_int64>(limits.maxGeometryOutputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 47, static_cast<sqlite_int64>(limits.maxGeometryOutputVertices)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 48, static_cast<sqlite_int64>(limits.maxGeometryTotalOutputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 49, static_cast<sqlite_int64>(limits.maxFragmentInputComponents)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 50, static_cast<sqlite_int64>(limits.maxFragmentOutputAttachments)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 51, static_cast<sqlite_int64>(limits.maxFragmentDualSrcAttachments)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 52, static_cast<sqlite_int64>(limits.maxFragmentCombinedOutputResources)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 53, static_cast<sqlite_int64>(limits.maxComputeSharedMemorySize)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 54, static_cast<sqlite_int64>(limits.maxComputeWorkGroupCount[0])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 55, static_cast<sqlite_int64>(limits.maxComputeWorkGroupCount[1])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 56, static_cast<sqlite_int64>(limits.maxComputeWorkGroupCount[2])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 57, static_cast<sqlite_int64>(limits.maxComputeWorkGroupInvocations)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 58, static_cast<sqlite_int64>(limits.maxComputeWorkGroupSize[0])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 59, static_cast<sqlite_int64>(limits.maxComputeWorkGroupSize[1])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 60, static_cast<sqlite_int64>(limits.maxComputeWorkGroupSize[2])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 61, static_cast<sqlite_int64>(limits.subPixelPrecisionBits)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 62, static_cast<sqlite_int64>(limits.subTexelPrecisionBits)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 63, static_cast<sqlite_int64>(limits.mipmapPrecisionBits)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 64, static_cast<sqlite_int64>(limits.maxDrawIndexedIndexValue)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 65, static_cast<sqlite_int64>(limits.maxDrawIndirectCount)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 66, limits.maxSamplerLodBias));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 67, limits.maxSamplerAnisotropy));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 68, static_cast<sqlite_int64>(limits.maxViewports)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 69, static_cast<sqlite_int64>(limits.maxViewportDimensions[0])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 70, static_cast<sqlite_int64>(limits.maxViewportDimensions[1])));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 71, limits.viewportBoundsRange[0]));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 72, limits.viewportBoundsRange[1]));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 73, static_cast<sqlite_int64>(limits.viewportSubPixelBits)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 74, static_cast<sqlite_int64>(limits.minMemoryMapAlignment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 75, static_cast<sqlite_int64>(limits.minTexelBufferOffsetAlignment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 76, static_cast<sqlite_int64>(limits.minUniformBufferOffsetAlignment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 77, static_cast<sqlite_int64>(limits.minStorageBufferOffsetAlignment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 78, static_cast<sqlite_int64>(limits.minTexelOffset)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 79, static_cast<sqlite_int64>(limits.maxTexelOffset)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 80, static_cast<sqlite_int64>(limits.minTexelGatherOffset)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 81, static_cast<sqlite_int64>(limits.maxTexelGatherOffset)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 82, limits.minInterpolationOffset));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 83, limits.maxInterpolationOffset));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 84, static_cast<sqlite_int64>(limits.subPixelInterpolationOffsetBits)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 85, static_cast<sqlite_int64>(limits.maxFramebufferWidth)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 86, static_cast<sqlite_int64>(limits.maxFramebufferHeight)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 87, static_cast<sqlite_int64>(limits.maxFramebufferLayers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 88, static_cast<sqlite_int64>(limits.framebufferColorSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 89, static_cast<sqlite_int64>(limits.framebufferDepthSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 90, static_cast<sqlite_int64>(limits.framebufferStencilSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 91, static_cast<sqlite_int64>(limits.framebufferNoAttachmentsSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 92, static_cast<sqlite_int64>(limits.maxColorAttachments)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 93, static_cast<sqlite_int64>(limits.sampledImageColorSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 94, static_cast<sqlite_int64>(limits.sampledImageIntegerSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 95, static_cast<sqlite_int64>(limits.sampledImageDepthSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 96, static_cast<sqlite_int64>(limits.sampledImageStencilSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 97, static_cast<sqlite_int64>(limits.storageImageSampleCounts)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 98, static_cast<sqlite_int64>(limits.maxSampleMaskWords)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 99, static_cast<sqlite_int64>(static_cast<bool>(limits.timestampComputeAndGraphics))));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 100, limits.timestampPeriod));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 101, static_cast<sqlite_int64>(limits.maxClipDistances)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 102, static_cast<sqlite_int64>(limits.maxCullDistances)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 103, static_cast<sqlite_int64>(limits.maxCombinedClipAndCullDistances)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 104, static_cast<sqlite_int64>(limits.discreteQueuePriorities)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 105, limits.pointSizeRange[0]));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 106, limits.pointSizeRange[1]));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 107, limits.lineWidthRange[0]));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 108, limits.lineWidthRange[1]));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 109, limits.pointSizeGranularity));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 110, limits.lineWidthGranularity));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 111, static_cast<sqlite_int64>(static_cast<bool>(limits.strictLines))));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 112, static_cast<sqlite_int64>(static_cast<bool>(limits.standardSampleLocations))));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 113, static_cast<sqlite_int64>(limits.optimalBufferCopyOffsetAlignment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 114, static_cast<sqlite_int64>(limits.optimalBufferCopyRowPitchAlignment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 115, static_cast<sqlite_int64>(limits.nonCoherentAtomSize)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertPhysicalDeviceSparseProperties(
+    const int64_t physicalDeviceId, const VkPhysicalDeviceSparseProperties& sparseProperties
+)
+{
+    auto& statement = physicalDeviceSparsePropertiesInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK(
+        db,
+        sqlite3_bind_int64(
+            statement, 2, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyStandard2DBlockShape))
+        )
+    );
+    GFXRECON_SQLITE_CHECK(
+        db,
+        sqlite3_bind_int64(
+            statement,
+            3,
+            static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyStandard2DMultisampleBlockShape))
+        )
+    );
+    GFXRECON_SQLITE_CHECK(
+        db,
+        sqlite3_bind_int64(
+            statement, 4, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyStandard3DBlockShape))
+        )
+    );
+    GFXRECON_SQLITE_CHECK(
+        db,
+        sqlite3_bind_int64(
+            statement, 5, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyAlignedMipSize))
+        )
+    );
+    GFXRECON_SQLITE_CHECK(
+        db,
+        sqlite3_bind_int64(
+            statement, 6, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyNonResidentStrict))
+        )
+    );
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertQueue(
