@@ -1332,51 +1332,12 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
 
     PrepareStatement(
         db,
-        "INSERT OR IGNORE INTO physicalDeviceLimits (physicalDeviceId, maxImageDimension1D, maxImageDimension2D, "
-        "maxImageDimension3D, maxImageDimensionCube, maxImageArrayLayers, maxTexelBufferElements, "
-        "maxUniformBufferRange, maxStorageBufferRange, maxPushConstantsSize, maxMemoryAllocationCount, "
-        "maxSamplerAllocationCount, bufferImageGranularity, sparseAddressSpaceSize, maxBoundDescriptorSets, "
-        "maxPerStageDescriptorSamplers, maxPerStageDescriptorUniformBuffers, "
-        "maxPerStageDescriptorStorageBuffers, maxPerStageDescriptorSampledImages, "
-        "maxPerStageDescriptorStorageImages, maxPerStageDescriptorInputAttachments, maxPerStageResources, "
-        "maxDescriptorSetSamplers, maxDescriptorSetUniformBuffers, maxDescriptorSetUniformBuffersDynamic, "
-        "maxDescriptorSetStorageBuffers, maxDescriptorSetStorageBuffersDynamic, "
-        "maxDescriptorSetSampledImages, maxDescriptorSetStorageImages, maxDescriptorSetInputAttachments, "
-        "maxVertexInputAttributes, maxVertexInputBindings, maxVertexInputAttributeOffset, "
-        "maxVertexInputBindingStride, maxVertexOutputComponents, maxTessellationGenerationLevel, "
-        "maxTessellationPatchSize, maxTessellationControlPerVertexInputComponents, "
-        "maxTessellationControlPerVertexOutputComponents, maxTessellationControlPerPatchOutputComponents, "
-        "maxTessellationControlTotalOutputComponents, maxTessellationEvaluationInputComponents, "
-        "maxTessellationEvaluationOutputComponents, maxGeometryShaderInvocations, "
-        "maxGeometryInputComponents, maxGeometryOutputComponents, maxGeometryOutputVertices, "
-        "maxGeometryTotalOutputComponents, maxFragmentInputComponents, maxFragmentOutputAttachments, "
-        "maxFragmentDualSrcAttachments, maxFragmentCombinedOutputResources, maxComputeSharedMemorySize, "
-        "maxComputeWorkGroupCountX, maxComputeWorkGroupCountY, maxComputeWorkGroupCountZ, "
-        "maxComputeWorkGroupInvocations, maxComputeWorkGroupSizeX, maxComputeWorkGroupSizeY, "
-        "maxComputeWorkGroupSizeZ, subPixelPrecisionBits, subTexelPrecisionBits, mipmapPrecisionBits, "
-        "maxDrawIndexedIndexValue, maxDrawIndirectCount, maxSamplerLodBias, maxSamplerAnisotropy, "
-        "maxViewports, maxViewportDimensionsWidth, maxViewportDimensionsHeight, viewportBoundsRangeMin, "
-        "viewportBoundsRangeMax, viewportSubPixelBits, minMemoryMapAlignment, minTexelBufferOffsetAlignment, "
-        "minUniformBufferOffsetAlignment, minStorageBufferOffsetAlignment, minTexelOffset, maxTexelOffset, "
-        "minTexelGatherOffset, maxTexelGatherOffset, minInterpolationOffset, maxInterpolationOffset, "
-        "subPixelInterpolationOffsetBits, maxFramebufferWidth, maxFramebufferHeight, maxFramebufferLayers, "
-        "framebufferColorSampleCounts, framebufferDepthSampleCounts, framebufferStencilSampleCounts, "
-        "framebufferNoAttachmentsSampleCounts, maxColorAttachments, sampledImageColorSampleCounts, "
-        "sampledImageIntegerSampleCounts, sampledImageDepthSampleCounts, sampledImageStencilSampleCounts, "
-        "storageImageSampleCounts, maxSampleMaskWords, timestampComputeAndGraphics, timestampPeriod, "
-        "maxClipDistances, maxCullDistances, maxCombinedClipAndCullDistances, discreteQueuePriorities, "
-        "pointSizeRangeMin, pointSizeRangeMax, lineWidthRangeMin, lineWidthRangeMax, pointSizeGranularity, "
-        "lineWidthGranularity, strictLines, standardSampleLocations, optimalBufferCopyOffsetAlignment, "
-        "optimalBufferCopyRowPitchAlignment, nonCoherentAtomSize) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-        "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-        "?, ?, ?, ?, ?);",
+        "INSERT OR IGNORE INTO physicalDeviceLimits (physicalDeviceId, name, value) VALUES (?, ?, ?);",
         &physicalDeviceLimitsInsertStatement
     );
     PrepareStatement(
         db,
-        "INSERT OR IGNORE INTO physicalDeviceSparseProperties VALUES (?, ?, ?, ?, ?, ?);",
+        "INSERT OR IGNORE INTO physicalDeviceSparseProperties (physicalDeviceId, name, value) VALUES (?, ?, ?);",
         &physicalDeviceSparsePropertiesInsertStatement
     );
 
@@ -5454,128 +5415,634 @@ void VulkanSqlitePreparedStatements::UpdatePhysicalDeviceProperties(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
+namespace
+{
+// Binds and executes one (physicalDeviceId, name, value) row of the EAV-shaped physicalDeviceLimits /
+// physicalDeviceSparseProperties tables - see the CREATE TABLE comment in
+// CreatePhysicalDevicePropertiesTables (vulkan_sqlite_consumer_tables.cpp) for why these two tables are
+// shaped this way instead of one column per VkPhysicalDeviceLimits/VkPhysicalDeviceSparseProperties field.
+void BindPhysicalDevicePropertyValue(
+    sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, int64_t value
+)
+{
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(value)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void BindPhysicalDevicePropertyValue(
+    sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, double value
+)
+{
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 3, value));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+} // namespace
+
 void VulkanSqlitePreparedStatements::InsertPhysicalDeviceLimits(
     const int64_t physicalDeviceId, const VkPhysicalDeviceLimits& limits
 )
 {
     auto& statement = physicalDeviceLimitsInsertStatement;
-    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(limits.maxImageDimension1D)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(limits.maxImageDimension2D)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(limits.maxImageDimension3D)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(limits.maxImageDimensionCube)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(limits.maxImageArrayLayers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(limits.maxTexelBufferElements)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(limits.maxUniformBufferRange)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(limits.maxStorageBufferRange)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 10, static_cast<sqlite_int64>(limits.maxPushConstantsSize)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 11, static_cast<sqlite_int64>(limits.maxMemoryAllocationCount)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 12, static_cast<sqlite_int64>(limits.maxSamplerAllocationCount)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 13, static_cast<sqlite_int64>(limits.bufferImageGranularity)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 14, static_cast<sqlite_int64>(limits.sparseAddressSpaceSize)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 15, static_cast<sqlite_int64>(limits.maxBoundDescriptorSets)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(limits.maxPerStageDescriptorSamplers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 17, static_cast<sqlite_int64>(limits.maxPerStageDescriptorUniformBuffers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(limits.maxPerStageDescriptorStorageBuffers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 19, static_cast<sqlite_int64>(limits.maxPerStageDescriptorSampledImages)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 20, static_cast<sqlite_int64>(limits.maxPerStageDescriptorStorageImages)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 21, static_cast<sqlite_int64>(limits.maxPerStageDescriptorInputAttachments)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 22, static_cast<sqlite_int64>(limits.maxPerStageResources)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 23, static_cast<sqlite_int64>(limits.maxDescriptorSetSamplers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 24, static_cast<sqlite_int64>(limits.maxDescriptorSetUniformBuffers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 25, static_cast<sqlite_int64>(limits.maxDescriptorSetUniformBuffersDynamic)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 26, static_cast<sqlite_int64>(limits.maxDescriptorSetStorageBuffers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 27, static_cast<sqlite_int64>(limits.maxDescriptorSetStorageBuffersDynamic)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 28, static_cast<sqlite_int64>(limits.maxDescriptorSetSampledImages)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 29, static_cast<sqlite_int64>(limits.maxDescriptorSetStorageImages)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 30, static_cast<sqlite_int64>(limits.maxDescriptorSetInputAttachments)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 31, static_cast<sqlite_int64>(limits.maxVertexInputAttributes)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 32, static_cast<sqlite_int64>(limits.maxVertexInputBindings)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 33, static_cast<sqlite_int64>(limits.maxVertexInputAttributeOffset)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 34, static_cast<sqlite_int64>(limits.maxVertexInputBindingStride)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 35, static_cast<sqlite_int64>(limits.maxVertexOutputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 36, static_cast<sqlite_int64>(limits.maxTessellationGenerationLevel)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 37, static_cast<sqlite_int64>(limits.maxTessellationPatchSize)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 38, static_cast<sqlite_int64>(limits.maxTessellationControlPerVertexInputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 39, static_cast<sqlite_int64>(limits.maxTessellationControlPerVertexOutputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 40, static_cast<sqlite_int64>(limits.maxTessellationControlPerPatchOutputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 41, static_cast<sqlite_int64>(limits.maxTessellationControlTotalOutputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 42, static_cast<sqlite_int64>(limits.maxTessellationEvaluationInputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 43, static_cast<sqlite_int64>(limits.maxTessellationEvaluationOutputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 44, static_cast<sqlite_int64>(limits.maxGeometryShaderInvocations)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 45, static_cast<sqlite_int64>(limits.maxGeometryInputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 46, static_cast<sqlite_int64>(limits.maxGeometryOutputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 47, static_cast<sqlite_int64>(limits.maxGeometryOutputVertices)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 48, static_cast<sqlite_int64>(limits.maxGeometryTotalOutputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 49, static_cast<sqlite_int64>(limits.maxFragmentInputComponents)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 50, static_cast<sqlite_int64>(limits.maxFragmentOutputAttachments)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 51, static_cast<sqlite_int64>(limits.maxFragmentDualSrcAttachments)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 52, static_cast<sqlite_int64>(limits.maxFragmentCombinedOutputResources)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 53, static_cast<sqlite_int64>(limits.maxComputeSharedMemorySize)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 54, static_cast<sqlite_int64>(limits.maxComputeWorkGroupCount[0])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 55, static_cast<sqlite_int64>(limits.maxComputeWorkGroupCount[1])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 56, static_cast<sqlite_int64>(limits.maxComputeWorkGroupCount[2])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 57, static_cast<sqlite_int64>(limits.maxComputeWorkGroupInvocations)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 58, static_cast<sqlite_int64>(limits.maxComputeWorkGroupSize[0])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 59, static_cast<sqlite_int64>(limits.maxComputeWorkGroupSize[1])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 60, static_cast<sqlite_int64>(limits.maxComputeWorkGroupSize[2])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 61, static_cast<sqlite_int64>(limits.subPixelPrecisionBits)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 62, static_cast<sqlite_int64>(limits.subTexelPrecisionBits)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 63, static_cast<sqlite_int64>(limits.mipmapPrecisionBits)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 64, static_cast<sqlite_int64>(limits.maxDrawIndexedIndexValue)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 65, static_cast<sqlite_int64>(limits.maxDrawIndirectCount)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 66, limits.maxSamplerLodBias));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 67, limits.maxSamplerAnisotropy));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 68, static_cast<sqlite_int64>(limits.maxViewports)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 69, static_cast<sqlite_int64>(limits.maxViewportDimensions[0])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 70, static_cast<sqlite_int64>(limits.maxViewportDimensions[1])));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 71, limits.viewportBoundsRange[0]));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 72, limits.viewportBoundsRange[1]));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 73, static_cast<sqlite_int64>(limits.viewportSubPixelBits)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 74, static_cast<sqlite_int64>(limits.minMemoryMapAlignment)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 75, static_cast<sqlite_int64>(limits.minTexelBufferOffsetAlignment)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 76, static_cast<sqlite_int64>(limits.minUniformBufferOffsetAlignment)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 77, static_cast<sqlite_int64>(limits.minStorageBufferOffsetAlignment)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 78, static_cast<sqlite_int64>(limits.minTexelOffset)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 79, static_cast<sqlite_int64>(limits.maxTexelOffset)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 80, static_cast<sqlite_int64>(limits.minTexelGatherOffset)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 81, static_cast<sqlite_int64>(limits.maxTexelGatherOffset)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 82, limits.minInterpolationOffset));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 83, limits.maxInterpolationOffset));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 84, static_cast<sqlite_int64>(limits.subPixelInterpolationOffsetBits)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 85, static_cast<sqlite_int64>(limits.maxFramebufferWidth)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 86, static_cast<sqlite_int64>(limits.maxFramebufferHeight)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 87, static_cast<sqlite_int64>(limits.maxFramebufferLayers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 88, static_cast<sqlite_int64>(limits.framebufferColorSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 89, static_cast<sqlite_int64>(limits.framebufferDepthSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 90, static_cast<sqlite_int64>(limits.framebufferStencilSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 91, static_cast<sqlite_int64>(limits.framebufferNoAttachmentsSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 92, static_cast<sqlite_int64>(limits.maxColorAttachments)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 93, static_cast<sqlite_int64>(limits.sampledImageColorSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 94, static_cast<sqlite_int64>(limits.sampledImageIntegerSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 95, static_cast<sqlite_int64>(limits.sampledImageDepthSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 96, static_cast<sqlite_int64>(limits.sampledImageStencilSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 97, static_cast<sqlite_int64>(limits.storageImageSampleCounts)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 98, static_cast<sqlite_int64>(limits.maxSampleMaskWords)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 99, static_cast<sqlite_int64>(static_cast<bool>(limits.timestampComputeAndGraphics))));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 100, limits.timestampPeriod));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 101, static_cast<sqlite_int64>(limits.maxClipDistances)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 102, static_cast<sqlite_int64>(limits.maxCullDistances)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 103, static_cast<sqlite_int64>(limits.maxCombinedClipAndCullDistances)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 104, static_cast<sqlite_int64>(limits.discreteQueuePriorities)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 105, limits.pointSizeRange[0]));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 106, limits.pointSizeRange[1]));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 107, limits.lineWidthRange[0]));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 108, limits.lineWidthRange[1]));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 109, limits.pointSizeGranularity));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 110, limits.lineWidthGranularity));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 111, static_cast<sqlite_int64>(static_cast<bool>(limits.strictLines))));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 112, static_cast<sqlite_int64>(static_cast<bool>(limits.standardSampleLocations))));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 113, static_cast<sqlite_int64>(limits.optimalBufferCopyOffsetAlignment)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 114, static_cast<sqlite_int64>(limits.optimalBufferCopyRowPitchAlignment)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 115, static_cast<sqlite_int64>(limits.nonCoherentAtomSize)));
-    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimension1D", static_cast<int64_t>(limits.maxImageDimension1D)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimension2D", static_cast<int64_t>(limits.maxImageDimension2D)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimension3D", static_cast<int64_t>(limits.maxImageDimension3D)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimensionCube", static_cast<int64_t>(limits.maxImageDimensionCube)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageArrayLayers", static_cast<int64_t>(limits.maxImageArrayLayers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxTexelBufferElements", static_cast<int64_t>(limits.maxTexelBufferElements)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxUniformBufferRange", static_cast<int64_t>(limits.maxUniformBufferRange)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxStorageBufferRange", static_cast<int64_t>(limits.maxStorageBufferRange)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxPushConstantsSize", static_cast<int64_t>(limits.maxPushConstantsSize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxMemoryAllocationCount",
+        static_cast<int64_t>(limits.maxMemoryAllocationCount)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxSamplerAllocationCount",
+        static_cast<int64_t>(limits.maxSamplerAllocationCount)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "bufferImageGranularity", static_cast<int64_t>(limits.bufferImageGranularity)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "sparseAddressSpaceSize", static_cast<int64_t>(limits.sparseAddressSpaceSize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxBoundDescriptorSets", static_cast<int64_t>(limits.maxBoundDescriptorSets)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorSamplers",
+        static_cast<int64_t>(limits.maxPerStageDescriptorSamplers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorUniformBuffers",
+        static_cast<int64_t>(limits.maxPerStageDescriptorUniformBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorStorageBuffers",
+        static_cast<int64_t>(limits.maxPerStageDescriptorStorageBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorSampledImages",
+        static_cast<int64_t>(limits.maxPerStageDescriptorSampledImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorStorageImages",
+        static_cast<int64_t>(limits.maxPerStageDescriptorStorageImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorInputAttachments",
+        static_cast<int64_t>(limits.maxPerStageDescriptorInputAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxPerStageResources", static_cast<int64_t>(limits.maxPerStageResources)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetSamplers",
+        static_cast<int64_t>(limits.maxDescriptorSetSamplers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetUniformBuffers",
+        static_cast<int64_t>(limits.maxDescriptorSetUniformBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetUniformBuffersDynamic",
+        static_cast<int64_t>(limits.maxDescriptorSetUniformBuffersDynamic)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetStorageBuffers",
+        static_cast<int64_t>(limits.maxDescriptorSetStorageBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetStorageBuffersDynamic",
+        static_cast<int64_t>(limits.maxDescriptorSetStorageBuffersDynamic)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetSampledImages",
+        static_cast<int64_t>(limits.maxDescriptorSetSampledImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetStorageImages",
+        static_cast<int64_t>(limits.maxDescriptorSetStorageImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetInputAttachments",
+        static_cast<int64_t>(limits.maxDescriptorSetInputAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexInputAttributes",
+        static_cast<int64_t>(limits.maxVertexInputAttributes)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxVertexInputBindings", static_cast<int64_t>(limits.maxVertexInputBindings)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexInputAttributeOffset",
+        static_cast<int64_t>(limits.maxVertexInputAttributeOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexInputBindingStride",
+        static_cast<int64_t>(limits.maxVertexInputBindingStride)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexOutputComponents",
+        static_cast<int64_t>(limits.maxVertexOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationGenerationLevel",
+        static_cast<int64_t>(limits.maxTessellationGenerationLevel)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationPatchSize",
+        static_cast<int64_t>(limits.maxTessellationPatchSize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlPerVertexInputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlPerVertexInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlPerVertexOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlPerVertexOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlPerPatchOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlPerPatchOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlTotalOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlTotalOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationEvaluationInputComponents",
+        static_cast<int64_t>(limits.maxTessellationEvaluationInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationEvaluationOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationEvaluationOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryShaderInvocations",
+        static_cast<int64_t>(limits.maxGeometryShaderInvocations)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryInputComponents",
+        static_cast<int64_t>(limits.maxGeometryInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryOutputComponents",
+        static_cast<int64_t>(limits.maxGeometryOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryOutputVertices",
+        static_cast<int64_t>(limits.maxGeometryOutputVertices)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryTotalOutputComponents",
+        static_cast<int64_t>(limits.maxGeometryTotalOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentInputComponents",
+        static_cast<int64_t>(limits.maxFragmentInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentOutputAttachments",
+        static_cast<int64_t>(limits.maxFragmentOutputAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentDualSrcAttachments",
+        static_cast<int64_t>(limits.maxFragmentDualSrcAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentCombinedOutputResources",
+        static_cast<int64_t>(limits.maxFragmentCombinedOutputResources)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeSharedMemorySize",
+        static_cast<int64_t>(limits.maxComputeSharedMemorySize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupCountX",
+        static_cast<int64_t>(limits.maxComputeWorkGroupCount[0])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupCountY",
+        static_cast<int64_t>(limits.maxComputeWorkGroupCount[1])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupCountZ",
+        static_cast<int64_t>(limits.maxComputeWorkGroupCount[2])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupInvocations",
+        static_cast<int64_t>(limits.maxComputeWorkGroupInvocations)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupSizeX",
+        static_cast<int64_t>(limits.maxComputeWorkGroupSize[0])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupSizeY",
+        static_cast<int64_t>(limits.maxComputeWorkGroupSize[1])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupSizeZ",
+        static_cast<int64_t>(limits.maxComputeWorkGroupSize[2])
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "subPixelPrecisionBits", static_cast<int64_t>(limits.subPixelPrecisionBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "subTexelPrecisionBits", static_cast<int64_t>(limits.subTexelPrecisionBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "mipmapPrecisionBits", static_cast<int64_t>(limits.mipmapPrecisionBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDrawIndexedIndexValue",
+        static_cast<int64_t>(limits.maxDrawIndexedIndexValue)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxDrawIndirectCount", static_cast<int64_t>(limits.maxDrawIndirectCount)
+    );
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "maxSamplerLodBias", limits.maxSamplerLodBias);
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxSamplerAnisotropy", limits.maxSamplerAnisotropy
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxViewports", static_cast<int64_t>(limits.maxViewports)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxViewportDimensionsWidth",
+        static_cast<int64_t>(limits.maxViewportDimensions[0])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxViewportDimensionsHeight",
+        static_cast<int64_t>(limits.maxViewportDimensions[1])
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "viewportBoundsRangeMin", limits.viewportBoundsRange[0]
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "viewportBoundsRangeMax", limits.viewportBoundsRange[1]
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "viewportSubPixelBits", static_cast<int64_t>(limits.viewportSubPixelBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minMemoryMapAlignment", static_cast<int64_t>(limits.minMemoryMapAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "minTexelBufferOffsetAlignment",
+        static_cast<int64_t>(limits.minTexelBufferOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "minUniformBufferOffsetAlignment",
+        static_cast<int64_t>(limits.minUniformBufferOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "minStorageBufferOffsetAlignment",
+        static_cast<int64_t>(limits.minStorageBufferOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minTexelOffset", static_cast<int64_t>(limits.minTexelOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxTexelOffset", static_cast<int64_t>(limits.maxTexelOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minTexelGatherOffset", static_cast<int64_t>(limits.minTexelGatherOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxTexelGatherOffset", static_cast<int64_t>(limits.maxTexelGatherOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minInterpolationOffset", limits.minInterpolationOffset
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxInterpolationOffset", limits.maxInterpolationOffset
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "subPixelInterpolationOffsetBits",
+        static_cast<int64_t>(limits.subPixelInterpolationOffsetBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxFramebufferWidth", static_cast<int64_t>(limits.maxFramebufferWidth)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxFramebufferHeight", static_cast<int64_t>(limits.maxFramebufferHeight)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxFramebufferLayers", static_cast<int64_t>(limits.maxFramebufferLayers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferColorSampleCounts",
+        static_cast<int64_t>(limits.framebufferColorSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferDepthSampleCounts",
+        static_cast<int64_t>(limits.framebufferDepthSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferStencilSampleCounts",
+        static_cast<int64_t>(limits.framebufferStencilSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferNoAttachmentsSampleCounts",
+        static_cast<int64_t>(limits.framebufferNoAttachmentsSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxColorAttachments", static_cast<int64_t>(limits.maxColorAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageColorSampleCounts",
+        static_cast<int64_t>(limits.sampledImageColorSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageIntegerSampleCounts",
+        static_cast<int64_t>(limits.sampledImageIntegerSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageDepthSampleCounts",
+        static_cast<int64_t>(limits.sampledImageDepthSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageStencilSampleCounts",
+        static_cast<int64_t>(limits.sampledImageStencilSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "storageImageSampleCounts",
+        static_cast<int64_t>(limits.storageImageSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxSampleMaskWords", static_cast<int64_t>(limits.maxSampleMaskWords)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "timestampComputeAndGraphics",
+        static_cast<int64_t>(static_cast<bool>(limits.timestampComputeAndGraphics))
+    );
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "timestampPeriod", limits.timestampPeriod);
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxClipDistances", static_cast<int64_t>(limits.maxClipDistances)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxCullDistances", static_cast<int64_t>(limits.maxCullDistances)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxCombinedClipAndCullDistances",
+        static_cast<int64_t>(limits.maxCombinedClipAndCullDistances)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "discreteQueuePriorities", static_cast<int64_t>(limits.discreteQueuePriorities)
+    );
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "pointSizeRangeMin", limits.pointSizeRange[0]);
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "pointSizeRangeMax", limits.pointSizeRange[1]);
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "lineWidthRangeMin", limits.lineWidthRange[0]);
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "lineWidthRangeMax", limits.lineWidthRange[1]);
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "pointSizeGranularity", limits.pointSizeGranularity
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "lineWidthGranularity", limits.lineWidthGranularity
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "strictLines", static_cast<int64_t>(static_cast<bool>(limits.strictLines))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "standardSampleLocations",
+        static_cast<int64_t>(static_cast<bool>(limits.standardSampleLocations))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "optimalBufferCopyOffsetAlignment",
+        static_cast<int64_t>(limits.optimalBufferCopyOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "optimalBufferCopyRowPitchAlignment",
+        static_cast<int64_t>(limits.optimalBufferCopyRowPitchAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "nonCoherentAtomSize", static_cast<int64_t>(limits.nonCoherentAtomSize)
+    );
 }
 
 void VulkanSqlitePreparedStatements::InsertPhysicalDeviceSparseProperties(
@@ -5583,41 +6050,41 @@ void VulkanSqlitePreparedStatements::InsertPhysicalDeviceSparseProperties(
 )
 {
     auto& statement = physicalDeviceSparsePropertiesInsertStatement;
-    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
-    GFXRECON_SQLITE_CHECK(
+    BindPhysicalDevicePropertyValue(
         db,
-        sqlite3_bind_int64(
-            statement, 2, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyStandard2DBlockShape))
-        )
+        statement,
+        physicalDeviceId,
+        "residencyStandard2DBlockShape",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyStandard2DBlockShape))
     );
-    GFXRECON_SQLITE_CHECK(
+    BindPhysicalDevicePropertyValue(
         db,
-        sqlite3_bind_int64(
-            statement,
-            3,
-            static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyStandard2DMultisampleBlockShape))
-        )
+        statement,
+        physicalDeviceId,
+        "residencyStandard2DMultisampleBlockShape",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyStandard2DMultisampleBlockShape))
     );
-    GFXRECON_SQLITE_CHECK(
+    BindPhysicalDevicePropertyValue(
         db,
-        sqlite3_bind_int64(
-            statement, 4, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyStandard3DBlockShape))
-        )
+        statement,
+        physicalDeviceId,
+        "residencyStandard3DBlockShape",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyStandard3DBlockShape))
     );
-    GFXRECON_SQLITE_CHECK(
+    BindPhysicalDevicePropertyValue(
         db,
-        sqlite3_bind_int64(
-            statement, 5, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyAlignedMipSize))
-        )
+        statement,
+        physicalDeviceId,
+        "residencyAlignedMipSize",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyAlignedMipSize))
     );
-    GFXRECON_SQLITE_CHECK(
+    BindPhysicalDevicePropertyValue(
         db,
-        sqlite3_bind_int64(
-            statement, 6, static_cast<sqlite_int64>(static_cast<bool>(sparseProperties.residencyNonResidentStrict))
-        )
+        statement,
+        physicalDeviceId,
+        "residencyNonResidentStrict",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyNonResidentStrict))
     );
-    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertQueue(
