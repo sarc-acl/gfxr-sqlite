@@ -1799,6 +1799,7 @@ struct VulkanSqlitePreparedStatements
     void InsertSwapchain(
         const format::HandleId swapchain,
         const format::HandleId device,
+        const std::optional<int64_t> surfaceId,
         const VkSwapchainCreateFlagsKHR flags,
         const uint32_t minImageCount,
         const VkFormat imageFormat,
