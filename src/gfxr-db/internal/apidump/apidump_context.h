@@ -44,6 +44,11 @@ struct ApiDumpConversionStats
     uint64_t unparsable_scalars{ 0 };
     uint64_t unknown_structure_types{ 0 };
     uint64_t unknown_commands{ 0 };
+
+    /** Placeholders left by optimizing the .apidump (see api-dump-optimize.ts and
+     * ApiDumpCall::IsAnnotation), skipped without decoding. Expected to be nonzero for an
+     * optimized capture - unlike the other counters here, this is not a sign of anything wrong. */
+    uint64_t optimized_commands{ 0 };
 };
 
 /** The state the generated encoders thread through a single call.

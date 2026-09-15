@@ -254,7 +254,8 @@ endif ()
 # -----------------------------------------------------------------------------
 if (GFXR_SQLITE_BUILD_TEST)
     # Only register with ctest for a standalone build. When gfxr-sqlite is pulled in via
-    # add_subdirectory from Sokatoa's gfxr-consumer, the parent owns test registration.
+    # add_subdirectory from implementing project (E.g. Sokatoa's gfxr-consumer),
+    # the parent owns test registration.
     if (GFXR_SQLITE_IS_TOP_LEVEL)
         enable_testing()
     endif ()

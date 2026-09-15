@@ -237,6 +237,11 @@ std::string_view ApiDumpNode::ElementScalar(size_t index) const
 // ApiDumpCall
 //
 
+bool ApiDumpCall::IsAnnotation() const
+{
+    return (call_ != nullptr) && (call_->find("annotation") != call_->end());
+}
+
 std::string_view ApiDumpCall::Name() const
 {
     if (call_ == nullptr)
@@ -341,10 +346,11 @@ namespace
 
 /** SAX handler that materialises one call object at a time.
  *
- * The document is `[ { "frameNumber": "0", "apiCalls": [ {call}, {call}, ... ] }, ... ]`. Events
- * outside a call only move the state machine along; events inside one are accumulated into a small
- * DOM which is handed to the call handler and then discarded, so peak memory tracks the largest
- * single call rather than the file.
+ * The document is `[ { "frameNumber": "0", "isSetupFrame"?: true, "apiCalls": [ {call}, ... ] },
+ * ... ]`. "isSetupFrame" is only present when always_dump_setup recorded a frame outside the
+ * capture range. Events outside a call only move the state machine along; events inside one are
+ * accumulated into a small DOM which is handed to the call handler and then discarded, so peak
+ * memory tracks the largest single call rather than the file.
  */
 class ApiDumpSaxHandler
 {
@@ -365,7 +371,21 @@ class ApiDumpSaxHandler
 
     bool null() { return InCall() ? AddValue(nlohmann::json(nullptr)) : true; }
 
-    bool boolean(bool value) { return InCall() ? AddValue(nlohmann::json(value)) : true; }
+    bool boolean(bool value)
+    {
+        if (InCall())
+        {
+            return AddValue(nlohmann::json(value));
+        }
+
+        if (state_ == State::kExpectIsSetupFrame)
+        {
+            is_setup_frame_ = value;
+            state_          = State::kInFrame;
+        }
+
+        return true;
+    }
 
     bool number_integer(int64_t value) { return InCall() ? AddValue(nlohmann::json(value)) : true; }
 
@@ -392,10 +412,9 @@ class ApiDumpSaxHandler
                 return false;
             }
 
-            frame_number_     = frame_number;
+            frame_number_      = frame_number;
             have_frame_number_ = true;
-            state_            = State::kInFrame;
-            on_frame_begin_(frame_number_);
+            state_             = State::kInFrame;
         }
 
         return true;
@@ -428,6 +447,7 @@ class ApiDumpSaxHandler
             state_             = State::kInFrame;
             have_frame_number_ = false;
             frame_number_      = 0;
+            is_setup_frame_    = false;
             return true;
         }
 
@@ -448,6 +468,10 @@ class ApiDumpSaxHandler
             {
                 state_ = State::kExpectFrameNumber;
             }
+            else if (value == "isSetupFrame")
+            {
+                state_ = State::kExpectIsSetupFrame;
+            }
             else if (value == "apiCalls")
             {
                 if (!have_frame_number_)
@@ -458,6 +482,10 @@ class ApiDumpSaxHandler
                     return false;
                 }
 
+                // Fired here, rather than as soon as frameNumber's value is read, so that
+                // isSetupFrame - which the layer writes after frameNumber but before apiCalls -
+                // has already been seen.
+                on_frame_begin_(frame_number_, is_setup_frame_);
                 state_ = State::kExpectCallsArray;
             }
         }
@@ -556,6 +584,7 @@ class ApiDumpSaxHandler
         kInTopArray,
         kInFrame,
         kExpectFrameNumber,
+        kExpectIsSetupFrame,
         kExpectCallsArray,
         kInCallsArray,
         kDone
@@ -618,6 +647,7 @@ class ApiDumpSaxHandler
     State    state_{ State::kStart };
     uint64_t frame_number_{ 0 };
     bool     have_frame_number_{ false };
+    bool     is_setup_frame_{ false };
 
     int                          call_depth_{ 0 };
     nlohmann::json               call_root_;

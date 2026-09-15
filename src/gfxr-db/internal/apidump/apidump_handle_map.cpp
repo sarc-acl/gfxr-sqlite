@@ -39,6 +39,7 @@ format::HandleId ApiDumpHandleMap::Get(VkObjectType type, uint64_t address)
     ++lazily_allocated_;
     const format::HandleId id = next_id_++;
     ids_.emplace(key, id);
+    minted_.push_back({ id, address });
     return id;
 }
 
@@ -55,6 +56,7 @@ format::HandleId ApiDumpHandleMap::Create(VkObjectType type, uint64_t address)
     // driver recycled it, and the new object must not inherit the old object's id.
     const format::HandleId id = next_id_++;
     ids_[key]                 = id;
+    minted_.push_back({ id, address });
     return id;
 }
 

@@ -1,6 +1,7 @@
 [
 {
 "frameNumber": "0",
+"isSetupFrame": true,
 "apiCalls": [
 {
 "name": "vkCreateInstance",

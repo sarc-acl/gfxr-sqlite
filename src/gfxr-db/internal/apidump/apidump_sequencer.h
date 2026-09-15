@@ -87,6 +87,11 @@ class ApiDumpSequencer
         next_db_frame_ = db_frame + 1;
     }
 
+    /** Tells the sequencer that db frame `db_frame` is already open, so the next EndFrame call for
+     * it closes it normally instead of gap-filling the frames a collapsed setup region skipped
+     * over. Called once, right after a StateEndMarker opens the real capture's first frame. */
+    void ResumeAt(uint64_t db_frame) { next_db_frame_ = db_frame; }
+
     uint64_t SkippedFrameCount() const { return skipped_frames_; }
 
     uint64_t OutOfOrderFrameCount() const { return out_of_order_frames_; }

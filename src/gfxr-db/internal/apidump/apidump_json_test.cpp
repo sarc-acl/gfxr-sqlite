@@ -28,6 +28,8 @@
 
 #include <filesystem>
 
+#include "nlohmann/json.hpp"
+
 #include "apidump_json.h"
 #include "test_resources_path.h"
 
@@ -82,6 +84,7 @@ int main(int argc, char** argv)
     uint64_t                     calls        = 0;
     std::map<uint64_t, uint64_t> calls_per_frame;
     uint64_t                     current_frame = 0;
+    std::map<uint64_t, bool>     is_setup_frame_by_number;
 
     // Details of the first vkCreateBuffer seen, checked after the parse.
     bool        saw_create_buffer      = false;
@@ -98,9 +101,10 @@ int main(int argc, char** argv)
     bool swapchain_filled_array = false;
 
     ApiDumpReader reader(
-        [&](uint64_t frame_number) {
+        [&](uint64_t frame_number, bool is_setup_frame) {
             ++frames_begun;
-            current_frame = frame_number;
+            current_frame                       = frame_number;
+            is_setup_frame_by_number[frame_number] = is_setup_frame;
         },
         [&](const ApiDumpCall& call) {
             ++calls;
@@ -190,6 +194,15 @@ int main(int argc, char** argv)
                 static_cast<unsigned long long>(frames_begun),
                 static_cast<unsigned long long>(calls));
 
+    if (argc < 2)
+    {
+        // Only the checked in fixture is guaranteed to have a tagged setup frame.
+        const auto found = is_setup_frame_by_number.find(0);
+        Expect("frame 0 is tagged isSetupFrame", (found != is_setup_frame_by_number.end()) && found->second);
+        const auto later = is_setup_frame_by_number.find(10);
+        Expect("a later real frame is not tagged isSetupFrame", (later != is_setup_frame_by_number.end()) && !later->second);
+    }
+
     Expect("found a vkCreateBuffer", saw_create_buffer);
     if (saw_create_buffer)
     {
@@ -208,6 +221,18 @@ int main(int argc, char** argv)
         std::printf("  info  %d vkGetSwapchainImagesKHR calls\n", swapchain_query_calls);
         Expect("count-query form has a null array", swapchain_null_array);
         Expect("populated form has elements", swapchain_filled_array);
+    }
+
+    // ApiDumpCall::IsAnnotation, checked directly against inline JSON rather than the fixture: an
+    // optimized .apidump is what api-dump-optimize.ts produces, not this reader, so there is no
+    // reason to expect one in test1.apidump.
+    {
+        const nlohmann::json real_call = nlohmann::json::parse(R"({"name":"vkCreateFence","args":[]})");
+        const nlohmann::json annotation = nlohmann::json::parse(R"({"annotation":"Optimized vkCreateFence"})");
+
+        Expect("a real call is not an annotation", !ApiDumpCall(&real_call).IsAnnotation());
+        Expect("a placeholder is recognised as an annotation", ApiDumpCall(&annotation).IsAnnotation());
+        Expect("an annotation has no name", ApiDumpCall(&annotation).Name().empty());
     }
 
     if (g_failures == 0)

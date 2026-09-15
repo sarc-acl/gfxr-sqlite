@@ -133,11 +133,27 @@ int main()
     Expect("every call in the fixture became an api event", calls == 288);
     Expect("frame markers were emitted", markers > 0);
 
-    // Api dump frames 0 and 10 through 13 map to db frames 1 and 11 through 14, with the gap
-    // filled so the consumer's frame counter keeps step.
+    // Api dump frame 0 is tagged isSetupFrame, so it is bracketed with a StateBeginMarker /
+    // StateEndMarker pair and folded into db frame 1 instead of getting its own frame end marker -
+    // the same shape a trimmed .gfxr's initial state has. Frames 10 through 13 are real frames and
+    // map to db frames 11 through 14, with no filler frames for the gap the setup region collapsed.
     Expect("frames start at 1", QueryScalar(db, "select min(id) from frames") == 1);
     Expect("the setup frame holds the setup calls",
            QueryScalar(db, "select count(*) from apiEvents where frameId = 1") > 100);
+    Expect("a state begin marker brackets the setup frame",
+           QueryScalar(
+               db,
+               "select count(*) from apiEvents e join functionNames f on f.id = e.functionNameId"
+               " where f.name = 'StateBeginMarker'"
+           ) == 1);
+    Expect("a state end marker closes the setup frame",
+           QueryScalar(
+               db,
+               "select count(*) from apiEvents e join functionNames f on f.id = e.functionNameId"
+               " where f.name = 'StateEndMarker'"
+           ) == 1);
+    Expect("no filler frames were left for the range the setup region collapsed",
+           QueryScalar(db, "select count(*) from frames where id > 1 and id < 11") == 0);
 
     // Object identity. The scene destroys objects and lets the driver hand the same addresses back,
     // which is the case the handle map exists for: a create must never resolve to a live id.
@@ -152,6 +168,18 @@ int main()
                 static_cast<long long>(bufferRows));
     Expect("every buffer create produced a row", (createCalls > 0) && (bufferRows == createCalls));
     Expect("recycled addresses did not collapse into one object", distinctBuffers == bufferRows);
+
+    // Every id the handle map mints gets recorded alongside the raw address that produced it, so
+    // e.g. a shaderModules.handle can be resolved back to the api dump's own handle value (needed
+    // to build a shader extraction handle map). This must hold even for a recycled address, which
+    // is exactly what the buffers above exercise.
+    const int64_t handleAddressRows = QueryScalar(db, "select count(*) from apiDumpHandleAddresses");
+    Expect("handle addresses were recorded", handleAddressRows > 0);
+    const int64_t buffersWithAddress = QueryScalar(
+        db,
+        "select count(*) from buffers join apiDumpHandleAddresses"
+        " on apiDumpHandleAddresses.handleId = buffers.handle");
+    Expect("every buffer's id resolves back to a raw address", buffersWithAddress == bufferRows);
 
     // Instances resolve, which only happens if the whole VkInstanceCreateInfo decoded: it carries a
     // pNext chain, a nested struct and two string arrays, so a single byte of drift loses it.

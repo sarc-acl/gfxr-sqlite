@@ -128,6 +128,14 @@ class ApiDumpCall
 
     bool IsPresent() const { return call_ != nullptr; }
 
+    /** Whether this is not a real recorded call but an `{ "annotation": ... }` placeholder left by
+     * optimizing a .apidump: a command buffer recording, or an object's
+     * whole create-to-destroy lifetime, that never survived to the captured frames. There is
+     * nothing here to decode, so callers should skip it before looking at Name() or anything else -
+     * an annotation has no "name", which would otherwise just read as an unrecognised command.
+     */
+    bool IsAnnotation() const;
+
     std::string_view Name() const;
 
     /** The recorded thread, written as "Thread 1". Returns 0 when it cannot be read. */
@@ -158,8 +166,14 @@ class ApiDumpCall
 class ApiDumpReader
 {
   public:
-    /** Called when a frame object begins, with the frame number exactly as recorded. */
-    using FrameBeginHandler = std::function<void(uint64_t frame_number)>;
+    /** Called when a frame object begins, with the frame number exactly as recorded and whether
+     * the layer tagged it "isSetupFrame" (holds only always_dump_setup calls, recorded because it
+     * happened but not itself part of the captured range).
+     *
+     * Fired once "apiCalls" is reached, not as soon as "frameNumber" is, so that an "isSetupFrame"
+     * appearing between the two has already been seen.
+     */
+    using FrameBeginHandler = std::function<void(uint64_t frame_number, bool is_setup_frame)>;
 
     /** Called when a frame object ends, after all of its calls have been handled. */
     using FrameEndHandler = std::function<void(uint64_t frame_number)>;
@@ -167,8 +181,7 @@ class ApiDumpReader
     using CallHandler = std::function<void(const ApiDumpCall& call)>;
 
     ApiDumpReader(FrameBeginHandler on_frame_begin, CallHandler on_call, FrameEndHandler on_frame_end) :
-        on_frame_begin_(std::move(on_frame_begin)), on_call_(std::move(on_call)),
-        on_frame_end_(std::move(on_frame_end))
+        on_frame_begin_(std::move(on_frame_begin)), on_call_(std::move(on_call)), on_frame_end_(std::move(on_frame_end))
     {}
 
     /** Reads the file, invoking the handlers in document order.
@@ -184,9 +197,9 @@ class ApiDumpReader
 
   private:
     FrameBeginHandler on_frame_begin_;
-    CallHandler       on_call_;
-    FrameEndHandler   on_frame_end_;
-    uint64_t          call_count_{ 0 };
+    CallHandler on_call_;
+    FrameEndHandler on_frame_end_;
+    uint64_t call_count_{ 0 };
 };
 
 GFXRECON_END_NAMESPACE(decode)

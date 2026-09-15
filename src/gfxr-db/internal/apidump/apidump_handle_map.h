@@ -19,6 +19,7 @@
 
 #include <cstdint>
 #include <unordered_map>
+#include <vector>
 
 #include "format/format.h"
 #include "format/platform_types.h"
@@ -45,6 +46,13 @@ GFXRECON_BEGIN_NAMESPACE(decode)
 class ApiDumpHandleMap
 {
   public:
+    /** An id as it was minted, paired with the raw address that produced it. */
+    struct AddressRecord
+    {
+        format::HandleId id;
+        uint64_t         address;
+    };
+
     /** Returns the id for an address, allocating one if this is the first sighting.
      *
      * Allocating on demand matters for objects created before the dump window opened, and for the
@@ -74,6 +82,14 @@ class ApiDumpHandleMap
      */
     uint64_t LazilyAllocatedCount() const { return lazily_allocated_; }
 
+    /** Every id ever minted, in minting order, paired with the address that produced it.
+     *
+     * Recorded independently of `ids_`, which drops an entry on Release(): a destroyed object's row
+     * still exists in the sqlite database (with its destroyApiEventId set), so its address must stay
+     * recoverable even after the handle that produced it has been released.
+     */
+    const std::vector<AddressRecord>& MintedIds() const { return minted_; }
+
   private:
     struct Key
     {
@@ -97,6 +113,7 @@ class ApiDumpHandleMap
     std::unordered_map<Key, format::HandleId, KeyHash> ids_;
     format::HandleId                                   next_id_{ 1 };
     uint64_t                                           lazily_allocated_{ 0 };
+    std::vector<AddressRecord>                         minted_;
 };
 
 GFXRECON_END_NAMESPACE(decode)

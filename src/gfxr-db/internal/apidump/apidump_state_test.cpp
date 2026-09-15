@@ -175,6 +175,29 @@ void TestSequencerGaps()
     }
 }
 
+void TestSequencerResumeAt()
+{
+    std::printf("resuming after a collapsed setup region\n");
+
+    std::vector<uint64_t> markers;
+    ApiDumpSequencer      sequencer([&](uint64_t frame) { markers.push_back(frame); });
+
+    // A leading run of setup-only frames is bracketed with state markers instead of going through
+    // EndFrame, so when the real capture's first frame (api dump frame 10, db frame 11) opens, the
+    // sequencer needs to be told directly rather than inferring it from a prior EndFrame call.
+    sequencer.ResumeAt(11);
+
+    sequencer.EndFrame(10);
+    const bool closed_cleanly = (markers.size() == 1) && (markers[0] == 11);
+    Expect("the real frame closes with its own marker, not a gap fill", closed_cleanly);
+    Expect("nothing was treated as skipped", sequencer.SkippedFrameCount() == 0);
+    Expect("nothing was treated as out of order", sequencer.OutOfOrderFrameCount() == 0);
+
+    sequencer.EndFrame(11);
+    const bool continued = (markers.size() == 2) && (markers[1] == 12);
+    Expect("frames after the resume point continue normally", continued);
+}
+
 } // namespace
 
 int main()
@@ -186,6 +209,7 @@ int main()
     TestSequencerBlockIndices();
     TestSequencerFrames();
     TestSequencerGaps();
+    TestSequencerResumeAt();
 
     if (g_failures == 0)
     {

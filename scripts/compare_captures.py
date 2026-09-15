@@ -42,14 +42,17 @@ import collections
 import sqlite3
 import sys
 
-# Tables a .gfxr fills from meta blocks that an api dump does not contain at all: it records no
-# memory contents and none of gfxreconstruct's own bookkeeping. Differences here are expected and
-# are reported as information rather than as failures.
+# Tables whose row counts are expected to differ between the two databases, reported as information
+# rather than as failures. Most of these are tables a .gfxr fills from meta blocks that an api dump
+# does not contain at all: it records no memory contents and none of gfxreconstruct's own
+# bookkeeping. apiDumpHandleAddresses runs the other way: it is only ever populated when the
+# database is built from a .apidump, so it is always empty on the .gfxr side.
 EXPECTED_MISSING_TABLES = {
     'memory',
     'metaData',
     'displayMessages',
     'annotations',
+    'apiDumpHandleAddresses',
 }
 
 # Argument types whose recorded text cannot be expected to match. Floats go through the layer's

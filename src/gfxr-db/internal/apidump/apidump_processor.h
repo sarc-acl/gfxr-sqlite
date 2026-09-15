@@ -38,6 +38,10 @@ GFXRECON_BEGIN_NAMESPACE(decode)
  * this way goes through the same consumer as one built from a .gfxr. What this class supplies is
  * what a .gfxr carries in its own structure and an api dump does not: a block index per call, and
  * frame end markers.
+ *
+ * When always_dump_setup tagged a leading run of frames "isSetupFrame", that run is bracketed with
+ * a StateBeginMarker/StateEndMarker pair instead of getting a frame end marker each, so the
+ * consumer folds it into frame 1 the same way it already does for a trimmed .gfxr's initial state.
  */
 class ApiDumpProcessor
 {
@@ -56,6 +60,10 @@ class ApiDumpProcessor
 
     uint64_t SkippedCallCount() const { return context_.Stats().unknown_commands; }
 
+    /** Calls skipped because they were `{ "annotation": ... }` placeholders - see
+     * ApiDumpConversionStats::optimized_commands - rather than something unrecognised. */
+    uint64_t OptimizedCallCount() const { return context_.Stats().optimized_commands; }
+
     const ApiDumpConversionStats& Stats() const { return context_.Stats(); }
 
     const ApiDumpHandleMap& Handles() const { return handles_; }
@@ -64,7 +72,7 @@ class ApiDumpProcessor
     std::string DescribeConversion() const;
 
   private:
-    void OnFrameBegin(uint64_t apidump_frame_number);
+    void OnFrameBegin(uint64_t apidump_frame_number, bool is_setup_frame);
     void OnCall(const ApiDumpCall& call);
     void OnFrameEnd(uint64_t apidump_frame_number);
 
@@ -75,6 +83,14 @@ class ApiDumpProcessor
     ApiDumpSequencer   sequencer_;
 
     uint64_t processed_calls_{ 0 };
+
+    // Tracks the leading run of isSetupFrame frames, which is collapsed into a single
+    // StateBeginMarker/StateEndMarker bracket instead of getting a frame end marker each - see
+    // OnFrameBegin/OnFrameEnd. A setup-only run elsewhere in the file (e.g. a periodic capture
+    // range) is left as ordinary frames; only the leading run stands in for a trim state.
+    bool seen_first_frame_{ false };
+    bool in_setup_region_{ false };
+    bool current_frame_is_setup_{ false };
 };
 
 GFXRECON_END_NAMESPACE(decode)

@@ -362,6 +362,32 @@ namespace gfxrSqlite
 
             GFXRECON_LOG_INFO("Converted api dump: %s", processor.DescribeConversion().c_str());
 
+            // Persist the raw-address <-> assigned-handle-id pairing the processor discovered, so
+            // tooling (e.g. shader extraction) can map the ids this database uses elsewhere (such as
+            // shaderModules.handle) back to the address the api dump layer originally recorded for it.
+            gfxrecon::decode::SqliteStatement insertHandleAddressStatement;
+            gfxrecon::decode::PrepareStatement(
+                m_db, "INSERT INTO apiDumpHandleAddresses VALUES (?, ?);", &insertHandleAddressStatement
+            );
+            for (const auto& minted : processor.Handles().MintedIds())
+            {
+                // Variable width, no zero padding, to match the api dump layer's own hex formatting
+                // of handle values exactly (a VkShaderModule handle prints as e.g. "0x210000000021",
+                // not zero-padded to 16 digits the way a full pointer address happens to be).
+                const std::string address = gfxrecon::decode::to_hex_variable_width(minted.address);
+                GFXRECON_SQLITE_CHECK(m_db, sqlite3_reset(insertHandleAddressStatement));
+                GFXRECON_SQLITE_CHECK(
+                    m_db, sqlite3_bind_int64(insertHandleAddressStatement, 1, static_cast<sqlite_int64>(minted.id))
+                );
+                GFXRECON_SQLITE_CHECK(
+                    m_db,
+                    sqlite3_bind_text64(
+                        insertHandleAddressStatement, 2, address.data(), address.size(), SQLITE_STATIC, SQLITE_UTF8
+                    )
+                );
+                GFXRECON_SQLITE_CHECK_DONE(m_db, sqlite3_step(insertHandleAddressStatement));
+            }
+
             sqlite_consumer.PostInitialize();
 
             // As on the gfxr path, frame delimitation leaves a trailing empty frame behind.

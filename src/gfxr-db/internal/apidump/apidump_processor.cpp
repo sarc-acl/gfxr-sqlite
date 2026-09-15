@@ -40,7 +40,7 @@ ApiDumpProcessor::ApiDumpProcessor(VulkanDecoderBase& decoder) :
 bool ApiDumpProcessor::ProcessFile(const std::string& path, std::string& error)
 {
     ApiDumpReader reader(
-        [this](uint64_t frame_number) { OnFrameBegin(frame_number); },
+        [this](uint64_t frame_number, bool is_setup_frame) { OnFrameBegin(frame_number, is_setup_frame); },
         [this](const ApiDumpCall& call) { OnCall(call); },
         [this](uint64_t frame_number) { OnFrameEnd(frame_number); }
     );
@@ -48,14 +48,53 @@ bool ApiDumpProcessor::ProcessFile(const std::string& path, std::string& error)
     return reader.Read(path, error);
 }
 
-void ApiDumpProcessor::OnFrameBegin(uint64_t)
+void ApiDumpProcessor::OnFrameBegin(uint64_t apidump_frame_number, bool is_setup_frame)
 {
-    // Frame 1 is already open when the consumer initialises, and every later frame is opened by
-    // the marker that closed the one before, so there is nothing to do here.
+    current_frame_is_setup_ = is_setup_frame;
+
+    if (!seen_first_frame_)
+    {
+        seen_first_frame_ = true;
+
+        if (is_setup_frame)
+        {
+            // The dump opens with setup-only frames, the api dump analogue of a trimmed .gfxr's
+            // initial state. Bracket them with the same StateBeginMarker a trimmed .gfxr carries,
+            // so the consumer folds them into frame 1 exactly as it already does for one.
+            const uint64_t block_index = sequencer_.NextBlockIndex();
+            decoder_.SetCurrentBlockIndex(block_index);
+            decoder_.DispatchStateBeginMarker(1);
+            in_setup_region_ = true;
+        }
+
+        return;
+    }
+
+    if (in_setup_region_ && !is_setup_frame)
+    {
+        // The first frame that is actually in the captured range. Close the setup region with a
+        // StateEndMarker before any of this frame's calls are decoded, so they land after it
+        // rather than being folded into frame 1 with the setup calls.
+        const uint64_t db_frame    = ApiDumpSequencer::ToDbFrame(apidump_frame_number);
+        const uint64_t block_index = sequencer_.NextBlockIndex();
+        decoder_.SetCurrentBlockIndex(block_index);
+        decoder_.DispatchStateEndMarker(db_frame);
+        sequencer_.ResumeAt(db_frame);
+        in_setup_region_ = false;
+    }
 }
 
 void ApiDumpProcessor::OnCall(const ApiDumpCall& call)
 {
+    if (call.IsAnnotation())
+    {
+        // A placeholder left by optimizing the .apidump: whatever it stood in for never survived
+        // to the captured frames, so there is nothing to decode - and nothing wrong either, unlike
+        // every other reason a call can end up skipped below.
+        ++context_.MutableStats().optimized_commands;
+        return;
+    }
+
     const std::string_view name  = call.Name();
     const auto&            table = GetApiDumpCommandTable();
     const auto             found = table.find(name);
@@ -95,6 +134,13 @@ void ApiDumpProcessor::OnCall(const ApiDumpCall& call)
 
 void ApiDumpProcessor::OnFrameEnd(uint64_t apidump_frame_number)
 {
+    if (current_frame_is_setup_)
+    {
+        // Merged into the still-open StateBeginMarker/StateEndMarker bracket; no frame end marker
+        // of its own, exactly as a trimmed .gfxr's initial state has none.
+        return;
+    }
+
     sequencer_.EndFrame(apidump_frame_number);
 }
 
@@ -105,6 +151,12 @@ std::string ApiDumpProcessor::DescribeConversion() const
     std::ostringstream summary;
     summary << processed_calls_ << " calls";
 
+    if (stats.optimized_commands > 0)
+    {
+        // Not a problem - see ApiDumpConversionStats::optimized_commands - just worth surfacing so
+        // the count in the summary reflects an optimized capture's actual size.
+        summary << ", " << stats.optimized_commands << " skipped as optimized out before capture";
+    }
     if (stats.unknown_commands > 0)
     {
         summary << ", " << stats.unknown_commands << " skipped as undecodable";
