@@ -872,6 +872,9 @@ void VulkanSqliteConsumerExt::Process_vkGetPhysicalDeviceProperties(
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties(callInfo, args);
 
+    // Unlike vkEnumeratePhysicalDevices, pProperties is not a count/array pair filled in over two
+    // calls; it is always populated on a real call. An invalid/missing decoded value here means the
+    // capture data for this block is incomplete (e.g. truncated capture), so quietly return.
     auto [propertiesValid, properties] = GetMetaStructPointer(&args.pProperties);
     if (!propertiesValid || !properties->decoded_value)
     {
@@ -888,6 +891,8 @@ void VulkanSqliteConsumerExt::Process_vkGetPhysicalDeviceProperties2(
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties2(callInfo, args);
 
+    // See Process_vkGetPhysicalDeviceProperties: not a two-call idiom, an invalid decoded value here
+    // means the capture data for this block is incomplete, so quietly return.
     auto [propertiesValid, properties] = GetMetaStructPointer(&args.pProperties);
     if (!propertiesValid || !properties->decoded_value)
     {
@@ -904,6 +909,8 @@ void VulkanSqliteConsumerExt::Process_vkGetPhysicalDeviceProperties2KHR(
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkGetPhysicalDeviceProperties2KHR(callInfo, args);
 
+    // See Process_vkGetPhysicalDeviceProperties: not a two-call idiom, an invalid decoded value here
+    // means the capture data for this block is incomplete, so quietly return.
     auto [propertiesValid, properties] = GetMetaStructPointer(&args.pProperties);
     if (!propertiesValid || !properties->decoded_value)
     {
