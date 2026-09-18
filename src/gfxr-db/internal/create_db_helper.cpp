@@ -357,8 +357,13 @@ namespace gfxrSqlite
                                               std::to_string(VK_VERSION_PATCH(VK_HEADER_VERSION_COMPLETE)) };
             sqlite_consumer.Initialize(GetProjectVersionString(), vulkan_version, inputFilename);
 
-            gfxrecon::decode::ApiDumpProcessor processor(decoder);
-            const bool                         ok = processor.ProcessFile(inputFilename, readError);
+            gfxrecon::decode::ApiDumpProcessor processor(
+                decoder,
+                [&sqlite_consumer](uint64_t apiEventId, uint64_t commandNumber) {
+                    sqlite_consumer.InsertApiDumpCommandId(commandNumber, apiEventId);
+                }
+            );
+            const bool ok = processor.ProcessFile(inputFilename, readError);
 
             GFXRECON_LOG_INFO("Converted api dump: %s", processor.DescribeConversion().c_str());
 

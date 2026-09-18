@@ -289,6 +289,28 @@ uint64_t ApiDumpCall::ThreadId() const
     return id;
 }
 
+std::optional<uint64_t> ApiDumpCall::CommandNumber() const
+{
+    if (call_ == nullptr)
+    {
+        return std::nullopt;
+    }
+
+    const auto command_number = call_->find("commandNumber");
+    if ((command_number == call_->end()) || !command_number->is_string())
+    {
+        return std::nullopt;
+    }
+
+    uint64_t id = 0;
+    if (!ParseRecordedInteger(command_number->get_ref<const std::string&>(), id))
+    {
+        return std::nullopt;
+    }
+
+    return id;
+}
+
 ApiDumpNode ApiDumpCall::Arg(std::string_view arg_name) const
 {
     if (call_ == nullptr)

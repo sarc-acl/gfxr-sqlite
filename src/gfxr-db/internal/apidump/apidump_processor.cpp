@@ -26,8 +26,8 @@
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
 
-ApiDumpProcessor::ApiDumpProcessor(VulkanDecoderBase& decoder) :
-    decoder_(decoder), context_(encoder_, handles_),
+ApiDumpProcessor::ApiDumpProcessor(VulkanDecoderBase& decoder, CommandNumberHandler on_command_number) :
+    decoder_(decoder), context_(encoder_, handles_), on_command_number_(std::move(on_command_number)),
     sequencer_([this](uint64_t db_frame) {
         // A frame marker is a block of its own in a .gfxr, so it takes a block index and lands in
         // apiEvents the same way a call does.
@@ -128,6 +128,14 @@ void ApiDumpProcessor::OnCall(const ApiDumpCall& call)
     call_info.thread_id = static_cast<format::ThreadId>(call.ThreadId());
 
     decoder_.DecodeFunctionCall(found->second.call_id, call_info, encoder_.GetData(), encoder_.GetDataSize());
+
+    if (on_command_number_)
+    {
+        if (const std::optional<uint64_t> command_number = call.CommandNumber(); command_number.has_value())
+        {
+            on_command_number_(block_index, *command_number);
+        }
+    }
 
     ++processed_calls_;
 }

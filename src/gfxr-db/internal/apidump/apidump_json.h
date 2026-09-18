@@ -19,6 +19,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -140,6 +141,10 @@ class ApiDumpCall
 
     /** The recorded thread, written as "Thread 1". Returns 0 when it cannot be read. */
     uint64_t ThreadId() const;
+
+    /** The recorded "commandNumber" (see show_command_numbers), absent when the layer didn't
+     * write one - either an older capture, or the setting was off. */
+    std::optional<uint64_t> CommandNumber() const;
 
     /** Finds an argument by name, returning an absent node when the layer omitted it. */
     ApiDumpNode Arg(std::string_view arg_name) const;

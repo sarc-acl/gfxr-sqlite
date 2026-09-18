@@ -178,7 +178,7 @@ int main()
     const int64_t buffersWithAddress = QueryScalar(
         db,
         "select count(*) from buffers join apiDumpHandleAddresses"
-        " on apiDumpHandleAddresses.handleId = buffers.handle");
+        " on apiDumpHandleAddresses.handle = buffers.handle");
     Expect("every buffer's id resolves back to a raw address", buffersWithAddress == bufferRows);
 
     // Instances resolve, which only happens if the whole VkInstanceCreateInfo decoded: it carries a

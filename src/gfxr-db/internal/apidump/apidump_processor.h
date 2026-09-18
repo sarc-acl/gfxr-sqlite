@@ -18,6 +18,7 @@
 #define GFXRECON_DECODE_APIDUMP_PROCESSOR_H
 
 #include <cstdint>
+#include <functional>
 #include <string>
 
 #include "apidump_context.h"
@@ -46,7 +47,14 @@ GFXRECON_BEGIN_NAMESPACE(decode)
 class ApiDumpProcessor
 {
   public:
-    explicit ApiDumpProcessor(VulkanDecoderBase& decoder);
+    /** Notified with (apiEventId, commandNumber) for each real call decoded from a JSON object that
+     * carried a "commandNumber" (see show_command_numbers). ApiDumpProcessor has no route to a
+     * consumer's own tables through the generic VulkanConsumer interface - .gfxr has no equivalent
+     * of commandNumber for that interface to carry - so a caller that wants to record the mapping
+     * (e.g. into gfxr-sqlite's apiDumpCommandIds table) does so directly through this callback. */
+    using CommandNumberHandler = std::function<void(uint64_t api_event_id, uint64_t command_number)>;
+
+    explicit ApiDumpProcessor(VulkanDecoderBase& decoder, CommandNumberHandler on_command_number = {});
 
     /** Streams the file, encoding each call and handing it to the decoder.
      *
@@ -76,11 +84,12 @@ class ApiDumpProcessor
     void OnCall(const ApiDumpCall& call);
     void OnFrameEnd(uint64_t apidump_frame_number);
 
-    VulkanDecoderBase& decoder_;
-    ApiDumpEncoder     encoder_;
-    ApiDumpHandleMap   handles_;
-    ApiDumpContext     context_;
-    ApiDumpSequencer   sequencer_;
+    VulkanDecoderBase&    decoder_;
+    ApiDumpEncoder        encoder_;
+    ApiDumpHandleMap      handles_;
+    ApiDumpContext        context_;
+    ApiDumpSequencer      sequencer_;
+    CommandNumberHandler  on_command_number_;
 
     uint64_t processed_calls_{ 0 };
 
