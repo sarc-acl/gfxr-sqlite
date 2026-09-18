@@ -459,7 +459,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     );
     PrepareStatement(
         db,
-        "INSERT INTO swapchains VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
+        "INSERT INTO swapchains VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL);",
         &swapchainInsertStatement
     );
     PrepareStatement(
@@ -4537,6 +4537,7 @@ void VulkanSqlitePreparedStatements::InsertSwapchainImage(
 void VulkanSqlitePreparedStatements::InsertSwapchain(
     const format::HandleId swapchain,
     const format::HandleId device,
+    const std::optional<int64_t> surfaceId,
     const VkSwapchainCreateFlagsKHR flags,
     const uint32_t minImageCount,
     const VkFormat imageFormat,
@@ -4563,21 +4564,22 @@ void VulkanSqlitePreparedStatements::InsertSwapchain(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(swapchainId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(swapchainHandle)));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, deviceId));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(minImageCount)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(imageFormat)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(imageColorSpace)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(imageExtent.width)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(imageExtent.height)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 10, static_cast<sqlite_int64>(imageLayers)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 11, static_cast<sqlite_int64>(imageUsage)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 12, static_cast<sqlite_int64>(imageSharingMode)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 13, static_cast<sqlite_int64>(preTransform)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 14, static_cast<sqlite_int64>(compositeAlpha)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 15, static_cast<sqlite_int64>(presentMode)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(clipped)));
-    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 17, oldSwapchainId));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 18, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 4, surfaceId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(flags)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(minImageCount)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 7, static_cast<sqlite_int64>(imageFormat)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(imageColorSpace)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 9, static_cast<sqlite_int64>(imageExtent.width)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 10, static_cast<sqlite_int64>(imageExtent.height)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 11, static_cast<sqlite_int64>(imageLayers)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 12, static_cast<sqlite_int64>(imageUsage)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 13, static_cast<sqlite_int64>(imageSharingMode)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 14, static_cast<sqlite_int64>(preTransform)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 15, static_cast<sqlite_int64>(compositeAlpha)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 16, static_cast<sqlite_int64>(presentMode)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 17, static_cast<sqlite_int64>(clipped)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 18, oldSwapchainId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 19, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
