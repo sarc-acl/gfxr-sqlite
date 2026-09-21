@@ -223,6 +223,46 @@ int main(int argc, char** argv)
         Expect("populated form has elements", swapchain_filled_array);
     }
 
+    // Same fixture, gzip-compressed - proves ApiDumpReader::Read auto-detects gzip content by the
+    // magic bytes rather than the file extension, matching how a real .apidump can be gzip or
+    // plain text depending on the ApiDump.CompressGzip preference (see
+    // api-dump-capture-participant.ts): the file name never changes either way.
+    if (argc < 2)
+    {
+        std::string gzip_path;
+        try
+        {
+            gzip_path = (gfxrSqlite::getTestResourcesFolder() / "test1.apidump.gz").string();
+        }
+        catch (const std::exception& e)
+        {
+            std::printf("  FAIL  %s\n", e.what());
+            return 1;
+        }
+
+        uint64_t gzip_frames_begun = 0;
+        uint64_t gzip_frames_ended = 0;
+        uint64_t gzip_calls        = 0;
+
+        ApiDumpReader gzip_reader(
+            [&](uint64_t, bool) { ++gzip_frames_begun; },
+            [&](const ApiDumpCall&) { ++gzip_calls; },
+            [&](uint64_t) { ++gzip_frames_ended; }
+        );
+
+        std::string gzip_error;
+        std::printf("streaming %s\n", gzip_path.c_str());
+        if (!gzip_reader.Read(gzip_path, gzip_error))
+        {
+            std::printf("  FAIL  gzip read: %s\n", gzip_error.c_str());
+            return 1;
+        }
+
+        Expect("gzip fixture: frame begin and end are balanced", gzip_frames_begun == gzip_frames_ended);
+        Expect("gzip fixture: same frame count as the plain text fixture", gzip_frames_begun == frames_begun);
+        Expect("gzip fixture: same call count as the plain text fixture", gzip_calls == calls);
+    }
+
     // ApiDumpCall::IsAnnotation, checked directly against inline JSON rather than the fixture: an
     // optimized .apidump is what api-dump-optimize.ts produces, not this reader, so there is no
     // reason to expect one in test1.apidump.

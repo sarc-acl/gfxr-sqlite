@@ -16,9 +16,11 @@
 
 #include "apidump_json.h"
 
+#include <array>
 #include <cstdio>
 #include <fstream>
 #include <vector>
+#include <zlib.h>
 
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
@@ -679,22 +681,105 @@ class ApiDumpSaxHandler
     std::string error_;
 };
 
+/** Gzip's 2-byte magic number (RFC 1952). */
+constexpr unsigned char kGzipMagic[2] = { 0x1f, 0x8b };
+
+/** Whether path's content is gzip-compressed, detected by content rather than extension: the
+ * Sokatoa host's ApiDump.CompressGzip preference decides this per capture, but never changes the
+ * .apidump file name, so callers can't tell from the path alone (mirrors how the .apidump JSON
+ * itself is only ever recognized by extension in isApiDumpFile - this is the one place that
+ * additionally has to look inside the file).
+ */
+bool IsGzipFile(const std::string& path)
+{
+    std::ifstream probe(path, std::ios::binary);
+    if (!probe.is_open())
+    {
+        return false;
+    }
+    unsigned char header[2] = { 0, 0 };
+    probe.read(reinterpret_cast<char*>(header), sizeof(header));
+    return (static_cast<size_t>(probe.gcount()) == sizeof(header)) && (header[0] == kGzipMagic[0]) &&
+           (header[1] == kGzipMagic[1]);
+}
+
+/** A minimal std::streambuf that decompresses a gzip file on the fly via zlib's whole-file gzip
+ * API, so ApiDumpReader::Read can hand nlohmann::json::sax_parse a plain istream regardless of
+ * whether the underlying file is gzip-compressed or plain text.
+ */
+class GzipStreambuf : public std::streambuf
+{
+  public:
+    explicit GzipStreambuf(const std::string& path) : file_(gzopen(path.c_str(), "rb")) {}
+
+    ~GzipStreambuf() override
+    {
+        if (file_ != nullptr)
+        {
+            gzclose(file_);
+        }
+    }
+
+    GzipStreambuf(const GzipStreambuf&)            = delete;
+    GzipStreambuf& operator=(const GzipStreambuf&) = delete;
+
+    bool IsOpen() const { return file_ != nullptr; }
+
+  protected:
+    int_type underflow() override
+    {
+        if (file_ == nullptr)
+        {
+            return traits_type::eof();
+        }
+        const int bytes_read = gzread(file_, buffer_.data(), static_cast<unsigned int>(buffer_.size()));
+        if (bytes_read <= 0)
+        {
+            return traits_type::eof();
+        }
+        setg(buffer_.data(), buffer_.data(), buffer_.data() + bytes_read);
+        return traits_type::to_int_type(*gptr());
+    }
+
+  private:
+    gzFile                        file_;
+    std::array<char, 64 * 1024> buffer_;
+};
+
 } // namespace
 
 bool ApiDumpReader::Read(const std::string& path, std::string& error)
 {
-    std::ifstream input(path, std::ios::binary);
-    if (!input.is_open())
-    {
-        error = "could not open " + path;
-        return false;
-    }
-
     ApiDumpSaxHandler handler(on_frame_begin_, on_call_, on_frame_end_, call_count_);
 
     // allow_exceptions=false so a truncated capture reports through parse_error instead of
     // throwing. Captures routinely end mid-document because the app is killed to stop the capture.
-    const bool ok = nlohmann::json::sax_parse(input, &handler, nlohmann::json::input_format_t::json, false);
+    auto RunParse = [&handler](std::istream& input) {
+        return nlohmann::json::sax_parse(input, &handler, nlohmann::json::input_format_t::json, false);
+    };
+
+    bool ok;
+    if (IsGzipFile(path))
+    {
+        GzipStreambuf gzip_streambuf(path);
+        if (!gzip_streambuf.IsOpen())
+        {
+            error = "could not open " + path;
+            return false;
+        }
+        std::istream input(&gzip_streambuf);
+        ok = RunParse(input);
+    }
+    else
+    {
+        std::ifstream input(path, std::ios::binary);
+        if (!input.is_open())
+        {
+            error = "could not open " + path;
+            return false;
+        }
+        ok = RunParse(input);
+    }
 
     if (!ok)
     {
