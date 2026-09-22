@@ -985,7 +985,19 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         "endDynamicRenderPassRecordingId = ? WHERE (debugLabels.id = ?);",
         &debugLabelCmdEndUpdateStatement
     );
-    PrepareStatement(db, "INSERT INTO physicalDevices VALUES (?, ?, ?, ?);", &physicalDeviceInsertStatement);
+    PrepareStatement(
+        db,
+        "INSERT INTO physicalDevices (id, handle, instanceId, enumerateApiEventId) VALUES (?, ?, ?, ?);",
+        &physicalDeviceInsertStatement
+    );
+    // VkPhysicalDeviceProperties arrives later via vkGetPhysicalDeviceProperties[2], so it fills in the
+    // row created above rather than being inserted with it.
+    PrepareStatement(
+        db,
+        "UPDATE physicalDevices SET apiVersion = ?, driverVersion = ?, vendorID = ?, deviceID = ?, deviceType = ?, "
+        "deviceName = ?, pipelineCacheUUID = ? WHERE (physicalDevices.id = ?);",
+        &physicalDevicePropertiesUpdateStatement
+    );
     PrepareStatement(db, "INSERT INTO queues VALUES (?, ?, ?, ?, ?, ?, ?);", &queueInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmits VALUES (?, ?, ?, ?, ?);", &queueSubmitInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmitBatches VALUES (?, ?, ?, ?, ?);", &queueSubmitBatchInsertStatement);
@@ -1316,6 +1328,17 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         db,
         "INSERT INTO cmdDataGraphDispatchRecordingInfos VALUES (?, ?);",
         &cmdDataGraphDispatchRecordingInfoInsertStatement
+    );
+
+    PrepareStatement(
+        db,
+        "INSERT OR IGNORE INTO physicalDeviceLimits (physicalDeviceId, name, value) VALUES (?, ?, ?);",
+        &physicalDeviceLimitsInsertStatement
+    );
+    PrepareStatement(
+        db,
+        "INSERT OR IGNORE INTO physicalDeviceSparseProperties (physicalDeviceId, name, value) VALUES (?, ?, ?);",
+        &physicalDeviceSparsePropertiesInsertStatement
     );
 
     PrepareStatement(db, "INSERT INTO displays VALUES (?, ?, ?, ?);", &displayInsertStatement);
@@ -5368,6 +5391,700 @@ int64_t VulkanSqlitePreparedStatements::InsertPhysicalDevice(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return physicalDeviceId;
+}
+
+void VulkanSqlitePreparedStatements::UpdatePhysicalDeviceProperties(
+    const int64_t physicalDeviceId, const VkPhysicalDeviceProperties& properties
+)
+{
+    // UPDATE physicalDevices SET apiVersion = ?, driverVersion = ?, vendorID = ?, deviceID = ?, deviceType = ?,
+    //   deviceName = ?, pipelineCacheUUID = ? WHERE (physicalDevices.id = ?)
+    auto uuid = uuid_to_string(sizeof(properties.pipelineCacheUUID), properties.pipelineCacheUUID);
+    auto& statement = physicalDevicePropertiesUpdateStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(properties.apiVersion)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(properties.driverVersion)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(properties.vendorID)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(properties.deviceID)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(properties.deviceType)));
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_text(statement, 6, properties.deviceName, -1, SQLITE_TRANSIENT)
+    );
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 7, uuid.c_str(), -1, SQLITE_TRANSIENT));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+namespace
+{
+// Binds and executes one (physicalDeviceId, name, value) row of the EAV-shaped physicalDeviceLimits /
+// physicalDeviceSparseProperties tables - see the CREATE TABLE comment in
+// CreatePhysicalDevicePropertiesTables (vulkan_sqlite_consumer_tables.cpp) for why these two tables are
+// shaped this way instead of one column per VkPhysicalDeviceLimits/VkPhysicalDeviceSparseProperties field.
+void BindPhysicalDevicePropertyValue(
+    sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, int64_t value
+)
+{
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(value)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void BindPhysicalDevicePropertyValue(
+    sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, double value
+)
+{
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 3, value));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+} // namespace
+
+void VulkanSqlitePreparedStatements::InsertPhysicalDeviceLimits(
+    const int64_t physicalDeviceId, const VkPhysicalDeviceLimits& limits
+)
+{
+    auto& statement = physicalDeviceLimitsInsertStatement;
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimension1D", static_cast<int64_t>(limits.maxImageDimension1D)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimension2D", static_cast<int64_t>(limits.maxImageDimension2D)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimension3D", static_cast<int64_t>(limits.maxImageDimension3D)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageDimensionCube", static_cast<int64_t>(limits.maxImageDimensionCube)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxImageArrayLayers", static_cast<int64_t>(limits.maxImageArrayLayers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxTexelBufferElements", static_cast<int64_t>(limits.maxTexelBufferElements)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxUniformBufferRange", static_cast<int64_t>(limits.maxUniformBufferRange)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxStorageBufferRange", static_cast<int64_t>(limits.maxStorageBufferRange)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxPushConstantsSize", static_cast<int64_t>(limits.maxPushConstantsSize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxMemoryAllocationCount",
+        static_cast<int64_t>(limits.maxMemoryAllocationCount)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxSamplerAllocationCount",
+        static_cast<int64_t>(limits.maxSamplerAllocationCount)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "bufferImageGranularity", static_cast<int64_t>(limits.bufferImageGranularity)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "sparseAddressSpaceSize", static_cast<int64_t>(limits.sparseAddressSpaceSize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxBoundDescriptorSets", static_cast<int64_t>(limits.maxBoundDescriptorSets)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorSamplers",
+        static_cast<int64_t>(limits.maxPerStageDescriptorSamplers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorUniformBuffers",
+        static_cast<int64_t>(limits.maxPerStageDescriptorUniformBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorStorageBuffers",
+        static_cast<int64_t>(limits.maxPerStageDescriptorStorageBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorSampledImages",
+        static_cast<int64_t>(limits.maxPerStageDescriptorSampledImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorStorageImages",
+        static_cast<int64_t>(limits.maxPerStageDescriptorStorageImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxPerStageDescriptorInputAttachments",
+        static_cast<int64_t>(limits.maxPerStageDescriptorInputAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxPerStageResources", static_cast<int64_t>(limits.maxPerStageResources)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetSamplers",
+        static_cast<int64_t>(limits.maxDescriptorSetSamplers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetUniformBuffers",
+        static_cast<int64_t>(limits.maxDescriptorSetUniformBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetUniformBuffersDynamic",
+        static_cast<int64_t>(limits.maxDescriptorSetUniformBuffersDynamic)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetStorageBuffers",
+        static_cast<int64_t>(limits.maxDescriptorSetStorageBuffers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetStorageBuffersDynamic",
+        static_cast<int64_t>(limits.maxDescriptorSetStorageBuffersDynamic)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetSampledImages",
+        static_cast<int64_t>(limits.maxDescriptorSetSampledImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetStorageImages",
+        static_cast<int64_t>(limits.maxDescriptorSetStorageImages)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDescriptorSetInputAttachments",
+        static_cast<int64_t>(limits.maxDescriptorSetInputAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexInputAttributes",
+        static_cast<int64_t>(limits.maxVertexInputAttributes)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxVertexInputBindings", static_cast<int64_t>(limits.maxVertexInputBindings)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexInputAttributeOffset",
+        static_cast<int64_t>(limits.maxVertexInputAttributeOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexInputBindingStride",
+        static_cast<int64_t>(limits.maxVertexInputBindingStride)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxVertexOutputComponents",
+        static_cast<int64_t>(limits.maxVertexOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationGenerationLevel",
+        static_cast<int64_t>(limits.maxTessellationGenerationLevel)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationPatchSize",
+        static_cast<int64_t>(limits.maxTessellationPatchSize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlPerVertexInputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlPerVertexInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlPerVertexOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlPerVertexOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlPerPatchOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlPerPatchOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationControlTotalOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationControlTotalOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationEvaluationInputComponents",
+        static_cast<int64_t>(limits.maxTessellationEvaluationInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxTessellationEvaluationOutputComponents",
+        static_cast<int64_t>(limits.maxTessellationEvaluationOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryShaderInvocations",
+        static_cast<int64_t>(limits.maxGeometryShaderInvocations)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryInputComponents",
+        static_cast<int64_t>(limits.maxGeometryInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryOutputComponents",
+        static_cast<int64_t>(limits.maxGeometryOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryOutputVertices",
+        static_cast<int64_t>(limits.maxGeometryOutputVertices)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxGeometryTotalOutputComponents",
+        static_cast<int64_t>(limits.maxGeometryTotalOutputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentInputComponents",
+        static_cast<int64_t>(limits.maxFragmentInputComponents)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentOutputAttachments",
+        static_cast<int64_t>(limits.maxFragmentOutputAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentDualSrcAttachments",
+        static_cast<int64_t>(limits.maxFragmentDualSrcAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxFragmentCombinedOutputResources",
+        static_cast<int64_t>(limits.maxFragmentCombinedOutputResources)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeSharedMemorySize",
+        static_cast<int64_t>(limits.maxComputeSharedMemorySize)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupCountX",
+        static_cast<int64_t>(limits.maxComputeWorkGroupCount[0])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupCountY",
+        static_cast<int64_t>(limits.maxComputeWorkGroupCount[1])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupCountZ",
+        static_cast<int64_t>(limits.maxComputeWorkGroupCount[2])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupInvocations",
+        static_cast<int64_t>(limits.maxComputeWorkGroupInvocations)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupSizeX",
+        static_cast<int64_t>(limits.maxComputeWorkGroupSize[0])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupSizeY",
+        static_cast<int64_t>(limits.maxComputeWorkGroupSize[1])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxComputeWorkGroupSizeZ",
+        static_cast<int64_t>(limits.maxComputeWorkGroupSize[2])
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "subPixelPrecisionBits", static_cast<int64_t>(limits.subPixelPrecisionBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "subTexelPrecisionBits", static_cast<int64_t>(limits.subTexelPrecisionBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "mipmapPrecisionBits", static_cast<int64_t>(limits.mipmapPrecisionBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxDrawIndexedIndexValue",
+        static_cast<int64_t>(limits.maxDrawIndexedIndexValue)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxDrawIndirectCount", static_cast<int64_t>(limits.maxDrawIndirectCount)
+    );
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "maxSamplerLodBias", limits.maxSamplerLodBias);
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxSamplerAnisotropy", limits.maxSamplerAnisotropy
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxViewports", static_cast<int64_t>(limits.maxViewports)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxViewportDimensionsWidth",
+        static_cast<int64_t>(limits.maxViewportDimensions[0])
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxViewportDimensionsHeight",
+        static_cast<int64_t>(limits.maxViewportDimensions[1])
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "viewportBoundsRangeMin", limits.viewportBoundsRange[0]
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "viewportBoundsRangeMax", limits.viewportBoundsRange[1]
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "viewportSubPixelBits", static_cast<int64_t>(limits.viewportSubPixelBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minMemoryMapAlignment", static_cast<int64_t>(limits.minMemoryMapAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "minTexelBufferOffsetAlignment",
+        static_cast<int64_t>(limits.minTexelBufferOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "minUniformBufferOffsetAlignment",
+        static_cast<int64_t>(limits.minUniformBufferOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "minStorageBufferOffsetAlignment",
+        static_cast<int64_t>(limits.minStorageBufferOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minTexelOffset", static_cast<int64_t>(limits.minTexelOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxTexelOffset", static_cast<int64_t>(limits.maxTexelOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minTexelGatherOffset", static_cast<int64_t>(limits.minTexelGatherOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxTexelGatherOffset", static_cast<int64_t>(limits.maxTexelGatherOffset)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "minInterpolationOffset", limits.minInterpolationOffset
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxInterpolationOffset", limits.maxInterpolationOffset
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "subPixelInterpolationOffsetBits",
+        static_cast<int64_t>(limits.subPixelInterpolationOffsetBits)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxFramebufferWidth", static_cast<int64_t>(limits.maxFramebufferWidth)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxFramebufferHeight", static_cast<int64_t>(limits.maxFramebufferHeight)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxFramebufferLayers", static_cast<int64_t>(limits.maxFramebufferLayers)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferColorSampleCounts",
+        static_cast<int64_t>(limits.framebufferColorSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferDepthSampleCounts",
+        static_cast<int64_t>(limits.framebufferDepthSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferStencilSampleCounts",
+        static_cast<int64_t>(limits.framebufferStencilSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "framebufferNoAttachmentsSampleCounts",
+        static_cast<int64_t>(limits.framebufferNoAttachmentsSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxColorAttachments", static_cast<int64_t>(limits.maxColorAttachments)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageColorSampleCounts",
+        static_cast<int64_t>(limits.sampledImageColorSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageIntegerSampleCounts",
+        static_cast<int64_t>(limits.sampledImageIntegerSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageDepthSampleCounts",
+        static_cast<int64_t>(limits.sampledImageDepthSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "sampledImageStencilSampleCounts",
+        static_cast<int64_t>(limits.sampledImageStencilSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "storageImageSampleCounts",
+        static_cast<int64_t>(limits.storageImageSampleCounts)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxSampleMaskWords", static_cast<int64_t>(limits.maxSampleMaskWords)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "timestampComputeAndGraphics",
+        static_cast<int64_t>(static_cast<bool>(limits.timestampComputeAndGraphics))
+    );
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "timestampPeriod", limits.timestampPeriod);
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxClipDistances", static_cast<int64_t>(limits.maxClipDistances)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "maxCullDistances", static_cast<int64_t>(limits.maxCullDistances)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "maxCombinedClipAndCullDistances",
+        static_cast<int64_t>(limits.maxCombinedClipAndCullDistances)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "discreteQueuePriorities", static_cast<int64_t>(limits.discreteQueuePriorities)
+    );
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "pointSizeRangeMin", limits.pointSizeRange[0]);
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "pointSizeRangeMax", limits.pointSizeRange[1]);
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "lineWidthRangeMin", limits.lineWidthRange[0]);
+    BindPhysicalDevicePropertyValue(db, statement, physicalDeviceId, "lineWidthRangeMax", limits.lineWidthRange[1]);
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "pointSizeGranularity", limits.pointSizeGranularity
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "lineWidthGranularity", limits.lineWidthGranularity
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "strictLines", static_cast<int64_t>(static_cast<bool>(limits.strictLines))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "standardSampleLocations",
+        static_cast<int64_t>(static_cast<bool>(limits.standardSampleLocations))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "optimalBufferCopyOffsetAlignment",
+        static_cast<int64_t>(limits.optimalBufferCopyOffsetAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "optimalBufferCopyRowPitchAlignment",
+        static_cast<int64_t>(limits.optimalBufferCopyRowPitchAlignment)
+    );
+    BindPhysicalDevicePropertyValue(
+        db, statement, physicalDeviceId, "nonCoherentAtomSize", static_cast<int64_t>(limits.nonCoherentAtomSize)
+    );
+}
+
+void VulkanSqlitePreparedStatements::InsertPhysicalDeviceSparseProperties(
+    const int64_t physicalDeviceId, const VkPhysicalDeviceSparseProperties& sparseProperties
+)
+{
+    auto& statement = physicalDeviceSparsePropertiesInsertStatement;
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "residencyStandard2DBlockShape",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyStandard2DBlockShape))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "residencyStandard2DMultisampleBlockShape",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyStandard2DMultisampleBlockShape))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "residencyStandard3DBlockShape",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyStandard3DBlockShape))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "residencyAlignedMipSize",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyAlignedMipSize))
+    );
+    BindPhysicalDevicePropertyValue(
+        db,
+        statement,
+        physicalDeviceId,
+        "residencyNonResidentStrict",
+        static_cast<int64_t>(static_cast<bool>(sparseProperties.residencyNonResidentStrict))
+    );
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertQueue(

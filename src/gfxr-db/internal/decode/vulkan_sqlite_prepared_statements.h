@@ -314,6 +314,9 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement debugLabelQueueEndUpdateStatement;
     SqliteStatement debugLabelCmdEndUpdateStatement;
     SqliteStatement physicalDeviceInsertStatement;
+    SqliteStatement physicalDevicePropertiesUpdateStatement;
+    SqliteStatement physicalDeviceLimitsInsertStatement;
+    SqliteStatement physicalDeviceSparsePropertiesInsertStatement;
     SqliteStatement queueInsertStatement;
     SqliteStatement queueSubmitInsertStatement;
     SqliteStatement queueSubmitBatchInsertStatement;
@@ -525,6 +528,11 @@ struct VulkanSqlitePreparedStatements
     );
     int64_t InsertPhysicalDevice(
         const format::HandleId physicalDevice, const std::optional<int64_t> instanceId, const uint64_t apiEventId
+    );
+    void UpdatePhysicalDeviceProperties(const int64_t physicalDeviceId, const VkPhysicalDeviceProperties& properties);
+    void InsertPhysicalDeviceLimits(const int64_t physicalDeviceId, const VkPhysicalDeviceLimits& limits);
+    void InsertPhysicalDeviceSparseProperties(
+        const int64_t physicalDeviceId, const VkPhysicalDeviceSparseProperties& sparseProperties
     );
     int64_t InsertQueue(
         const int64_t queueHandle,

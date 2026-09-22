@@ -97,6 +97,16 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkEnumeratePhysicalDevices(const ApiCallInfo& callInfo, args::EnumeratePhysicalDevices& args) override;
 
+    void Process_vkGetPhysicalDeviceProperties(const ApiCallInfo& callInfo, args::GetPhysicalDeviceProperties& args)
+        override;
+
+    void Process_vkGetPhysicalDeviceProperties2(const ApiCallInfo& callInfo, args::GetPhysicalDeviceProperties2& args)
+        override;
+
+    void Process_vkGetPhysicalDeviceProperties2KHR(
+        const ApiCallInfo& callInfo, args::GetPhysicalDeviceProperties2KHR& args
+    ) override;
+
     void Process_vkCreateDevice(const ApiCallInfo& callInfo, args::CreateDevice& args) override;
 
     void Process_vkDestroyDevice(const ApiCallInfo& callInfo, args::DestroyDevice& args) override;
@@ -1124,6 +1134,10 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
     void ProcessTransferCommandResolve2(
         format::HandleId commandBuffer, StructPointerDecoder<Decoded_VkResolveImageInfo2>* pResolveImageInfo
     );
+
+    // Shared by Process_vkGetPhysicalDeviceProperties[2][KHR] - writes the properties/limits/sparse-properties
+    // rows once the properties struct has been unwrapped from whichever call form produced it.
+    void RecordPhysicalDeviceProperties(format::HandleId physicalDevice, const VkPhysicalDeviceProperties& properties);
 };
 
 GFXRECON_END_NAMESPACE(decode)
