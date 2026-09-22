@@ -1394,6 +1394,36 @@ static void CreateRaytracingPipelineTables(sqlite3* db)
     );
 }
 
+static void CreatePhysicalDevicePropertiesTables(sqlite3* db)
+{
+    // VkPhysicalDeviceLimits / VkPhysicalDeviceSparseProperties, filled in by
+    // VulkanSqliteConsumerExt::Process_vkGetPhysicalDeviceProperties[2] - one (name, value) row per
+    // struct field per physical device whose properties were actually queried, mirroring the
+    // `instanceEnabledExtensions`-style name-list tables above (see `apiEventArguments`/`structMembers`
+    // in vulkan_sqlite_consumer_base_tables.cpp for the same name/`value ANY` pattern used elsewhere).
+    // `UNIQUE(physicalDeviceId, name)` (paired with `INSERT OR IGNORE`) is what dedupes apps commonly
+    // calling vkGetPhysicalDeviceProperties[2] many times per device; the properties are immutable, so
+    // only the first call's rows are kept.
+    ExecSQL(
+        db,
+        "CREATE TABLE physicalDeviceLimits("
+        "   physicalDeviceId INT NOT NULL,"
+        "   name TEXT NOT NULL,"
+        "   value ANY,"
+        "   UNIQUE(physicalDeviceId, name),"
+        "   FOREIGN KEY(physicalDeviceId) REFERENCES physicalDevices(id)) STRICT;"
+    );
+    ExecSQL(
+        db,
+        "CREATE TABLE physicalDeviceSparseProperties("
+        "   physicalDeviceId INT NOT NULL,"
+        "   name TEXT NOT NULL,"
+        "   value ANY,"
+        "   UNIQUE(physicalDeviceId, name),"
+        "   FOREIGN KEY(physicalDeviceId) REFERENCES physicalDevices(id)) STRICT;"
+    );
+}
+
 static void CreateDisplayTables(sqlite3* db)
 {
     ExecSQL(
@@ -2552,6 +2582,7 @@ void CreateAdvancedTables(sqlite3* db)
     CreateComputePipelineTables(db);
     CreateRaytracingPipelineTables(db);
     CreateDataGraphPipelineTables(db);
+    CreatePhysicalDevicePropertiesTables(db);
     CreateDisplayTables(db);
     CreateSwapchainTables(db);
     CreateBufferTables(db);

@@ -184,8 +184,18 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   handle INT NOT NULL,"
         "   instanceId INT,"
         "   enumerateApiEventId INT,"
+        // VkPhysicalDeviceProperties, filled in later by vkGetPhysicalDeviceProperties[2] - nullable
+        // because that call may never be captured.
+        "   apiVersion INT,"
+        "   driverVersion INT,"
+        "   vendorID INT,"
+        "   deviceID INT,"
+        "   deviceType INT,"
+        "   deviceName TEXT,"
+        "   pipelineCacheUUID TEXT,"
         "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
-        "   FOREIGN KEY(enumerateApiEventId) REFERENCES apiEvents(id)) STRICT;"
+        "   FOREIGN KEY(enumerateApiEventId) REFERENCES apiEvents(id),"
+        "   FOREIGN KEY(deviceType) REFERENCES VkPhysicalDeviceType(value)) STRICT;"
     );
 
     ExecSQL(
