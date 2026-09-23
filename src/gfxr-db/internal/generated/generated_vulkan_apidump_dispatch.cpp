@@ -355,7 +355,7 @@ void ApiDump_vkGetQueryPoolResults(ApiDumpContext& ctx, const ApiDumpCall& call)
     ctx.UInt32Value(call.Arg("firstQuery"));
     ctx.UInt32Value(call.Arg("queryCount"));
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
     ctx.UInt64Value(call.Arg("stride"));
     ctx.FlagsValue(call.Arg("flags"), EnumFromString_VkQueryResultFlagBits);
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
@@ -528,7 +528,7 @@ void ApiDump_vkCmdUpdateBuffer(ApiDumpContext& ctx, const ApiDumpCall& call)
     ctx.VulkanHandleValue(call.Arg("dstBuffer"), VK_OBJECT_TYPE_BUFFER);
     ctx.UInt64Value(call.Arg("dstOffset"));
     ctx.UInt64Value(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
 }
 
 void ApiDump_vkCmdFillBuffer(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -698,7 +698,7 @@ void ApiDump_vkGetPipelineCacheData(ApiDumpContext& ctx, const ApiDumpCall& call
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     ctx.VulkanHandleValue(call.Arg("pipelineCache"), VK_OBJECT_TYPE_PIPELINE_CACHE);
     ctx.SizeTPtr(call.Arg("pDataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("pDataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -913,7 +913,7 @@ void ApiDump_vkCmdPushConstants(ApiDumpContext& ctx, const ApiDumpCall& call)
     ctx.FlagsValue(call.Arg("stageFlags"), EnumFromString_VkShaderStageFlagBits);
     ctx.UInt32Value(call.Arg("offset"));
     ctx.UInt32Value(call.Arg("size"));
-    ctx.VoidPtrValue(call.Arg("pValues"));
+    ctx.UInt8Array(call.Arg("pValues"), ctx.Length(call.Arg("size")));
 }
 
 void ApiDump_vkCreateGraphicsPipelines(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -2803,7 +2803,7 @@ void ApiDump_vkGetEncodedVideoSessionParametersKHR(ApiDumpContext& ctx, const Ap
     StructPtrFromApiDump<VkVideoEncodeSessionParametersGetInfoKHR>(ctx, call.Arg("pVideoSessionParametersInfo"));
     StructPtrFromApiDump<VkVideoEncodeSessionParametersFeedbackInfoKHR>(ctx, call.Arg("pFeedbackInfo"));
     ctx.SizeTPtr(call.Arg("pDataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("pDataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -2914,7 +2914,7 @@ void ApiDump_vkCmdUpdateMemoryKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
     StructPtrFromApiDump<VkDeviceAddressRangeKHR>(ctx, call.Arg("pDstRange"));
     ctx.FlagsValue(call.Arg("dstFlags"), EnumFromString_VkAddressCommandFlagBitsKHR);
     ctx.UInt64Value(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
 }
 
 void ApiDump_vkCmdFillMemoryKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -3149,7 +3149,7 @@ void ApiDump_vkGetPipelineBinaryDataKHR(ApiDumpContext& ctx, const ApiDumpCall& 
     StructPtrFromApiDump<VkPipelineBinaryDataInfoKHR>(ctx, call.Arg("pInfo"));
     StructPtrFromApiDump<VkPipelineBinaryKeyKHR>(ctx, call.Arg("pPipelineBinaryKey"));
     ctx.SizeTPtr(call.Arg("pPipelineBinaryDataSize"));
-    ctx.VoidPtrValue(call.Arg("pPipelineBinaryData"));
+    ctx.UInt8Array(call.Arg("pPipelineBinaryData"), ctx.Length(call.Arg("pPipelineBinaryDataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -3447,7 +3447,7 @@ void ApiDump_vkGetShaderInfoAMD(ApiDumpContext& ctx, const ApiDumpCall& call)
     ctx.EnumValue(call.Arg("shaderStage"), EnumFromString_VkShaderStageFlagBits);
     ctx.EnumValue(call.Arg("infoType"), EnumFromString_VkShaderInfoTypeAMD);
     ctx.SizeTPtr(call.Arg("pInfoSize"));
-    ctx.VoidPtrValue(call.Arg("pInfo"));
+    ctx.UInt8Array(call.Arg("pInfo"), ctx.Length(call.Arg("pInfoSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -3804,7 +3804,7 @@ void ApiDump_vkGetGpaSessionResultsAMD(ApiDumpContext& ctx, const ApiDumpCall& c
     ctx.VulkanHandleValue(call.Arg("gpaSession"), VK_OBJECT_TYPE_GPA_SESSION_AMD);
     ctx.UInt32Value(call.Arg("sampleID"));
     ctx.SizeTPtr(call.Arg("pSizeInBytes"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("pSizeInBytes")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -3873,7 +3873,7 @@ void ApiDump_vkGetValidationCacheDataEXT(ApiDumpContext& ctx, const ApiDumpCall&
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     ctx.VulkanHandleValue(call.Arg("validationCache"), VK_OBJECT_TYPE_VALIDATION_CACHE_EXT);
     ctx.SizeTPtr(call.Arg("pDataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("pDataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -3990,7 +3990,7 @@ void ApiDump_vkGetRayTracingShaderGroupHandlesKHR(ApiDumpContext& ctx, const Api
     ctx.UInt32Value(call.Arg("firstGroup"));
     ctx.UInt32Value(call.Arg("groupCount"));
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -4001,7 +4001,7 @@ void ApiDump_vkGetRayTracingShaderGroupHandlesNV(ApiDumpContext& ctx, const ApiD
     ctx.UInt32Value(call.Arg("firstGroup"));
     ctx.UInt32Value(call.Arg("groupCount"));
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -4010,7 +4010,7 @@ void ApiDump_vkGetAccelerationStructureHandleNV(ApiDumpContext& ctx, const ApiDu
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     ctx.VulkanHandleValue(call.Arg("accelerationStructure"), VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV);
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -4624,7 +4624,7 @@ void ApiDump_vkGetDescriptorEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkDescriptorGetInfoEXT>(ctx, call.Arg("pDescriptorInfo"));
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pDescriptor"));
+    ctx.UInt8Array(call.Arg("pDescriptor"), ctx.Length(call.Arg("dataSize")));
 }
 
 void ApiDump_vkCmdBindDescriptorBuffersEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -4895,7 +4895,7 @@ void ApiDump_vkWriteMicromapsPropertiesEXT(ApiDumpContext& ctx, const ApiDumpCal
     ctx.VulkanHandleArray(call.Arg("pMicromaps"), VK_OBJECT_TYPE_MICROMAP_EXT, ctx.Length(call.Arg("micromapCount")));
     ctx.EnumValue(call.Arg("queryType"), EnumFromString_VkQueryType);
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
     ctx.SizeTValue(call.Arg("stride"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
@@ -5359,7 +5359,7 @@ void ApiDump_vkGetShaderBinaryDataEXT(ApiDumpContext& ctx, const ApiDumpCall& ca
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     ctx.VulkanHandleValue(call.Arg("shader"), VK_OBJECT_TYPE_SHADER_EXT);
     ctx.SizeTPtr(call.Arg("pDataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("pDataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -5805,7 +5805,7 @@ void ApiDump_vkWriteAccelerationStructuresPropertiesKHR(ApiDumpContext& ctx, con
     ctx.VulkanHandleArray(call.Arg("pAccelerationStructures"), VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR, ctx.Length(call.Arg("accelerationStructureCount")));
     ctx.EnumValue(call.Arg("queryType"), EnumFromString_VkQueryType);
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
     ctx.SizeTValue(call.Arg("stride"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
@@ -5880,7 +5880,7 @@ void ApiDump_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(ApiDumpContext& c
     ctx.UInt32Value(call.Arg("firstGroup"));
     ctx.UInt32Value(call.Arg("groupCount"));
     ctx.SizeTValue(call.Arg("dataSize"));
-    ctx.VoidPtrValue(call.Arg("pData"));
+    ctx.UInt8Array(call.Arg("pData"), ctx.Length(call.Arg("dataSize")));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 

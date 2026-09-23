@@ -142,7 +142,16 @@ class ApiDumpMemberEncodingMixin:
         if type_name == 'FunctionPtr':
             return 'ctx.FunctionPtrValue({0})'.format(node)
 
+        # A void* with a declared length, e.g. VkPipelineCacheCreateInfo::pInitialData, is a byte
+        # blob: gfxreconstruct's own encoder writes it as EncodeVoidArray, which is byte for byte
+        # EncodeArray<uint8_t>. Only a void* with no length, like pNext or pUserData, carries an
+        # address and nothing else - encoding one of those as an array instead would emit a length
+        # prefix the real decoder's DecodeStruct never expects, desynchronising every byte after it.
         if base_type == 'void' and member.is_pointer:
+            if member.is_array:
+                if hint is not None:
+                    return 'ctx.UInt8Array({0}, {1})'.format(node, hint)
+                return 'ctx.UInt8Array({0})'.format(node)
             return 'ctx.VoidPtrValue({0})'.format(node)
 
         # Enums.

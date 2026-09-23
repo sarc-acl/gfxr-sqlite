@@ -29,6 +29,7 @@
 
 #include "format/format.h"
 #include "util/defines.h"
+#include "util/logging.h"
 
 GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
@@ -44,6 +45,12 @@ struct ApiDumpConversionStats
     uint64_t unparsable_scalars{ 0 };
     uint64_t unknown_structure_types{ 0 };
     uint64_t unknown_commands{ 0 };
+
+    /** A declared count for an array the layer chose not to expand (see ArrayLength) exceeded
+     * kMaxUnexpandedArrayLength and was clamped. A clean capture should never hit this; it only
+     * fires for a corrupted or hand edited count field, which would otherwise drive reserve()/
+     * resize() into throwing std::bad_alloc or std::length_error. */
+    uint64_t oversized_length_hints{ 0 };
 
     /** Placeholders left by optimizing the .apidump (see api-dump-optimize.ts and
      * ApiDumpCall::IsAnnotation), skipped without decoding. Expected to be nonzero for an
@@ -315,11 +322,34 @@ class ApiDumpContext
     }
 
   private:
-    /** How many elements to encode: the expanded count when there is one, else the declared count. */
-    size_t ArrayLength(const ApiDumpNode& node, size_t length_hint) const
+    /** Sanity cap on a declared count for an array the layer chose not to expand. Real captures
+     * never need anywhere close to this many elements for one; without a cap, a corrupted or hand
+     * edited count flows straight into reserve()/resize() in EnumArray, FlagsArray,
+     * EncodeScalarArray and EncodeHandleArray, and can throw std::bad_alloc or std::length_error
+     * and abort the whole conversion. */
+    static constexpr size_t kMaxUnexpandedArrayLength = 10'000'000;
+
+    /** How many elements to encode: the expanded count when there is one, else the declared count,
+     * clamped to kMaxUnexpandedArrayLength. */
+    size_t ArrayLength(const ApiDumpNode& node, size_t length_hint)
     {
         const size_t expanded = node.ElementCount();
-        return (expanded > 0) ? expanded : length_hint;
+        if (expanded > 0)
+        {
+            return expanded;
+        }
+
+        if (length_hint > kMaxUnexpandedArrayLength)
+        {
+            ++stats_.oversized_length_hints;
+            GFXRECON_LOG_WARNING("ApiDumpContext: declared array length %zu exceeds sanity limit, "
+                                  "clamping to %zu",
+                                  length_hint,
+                                  kMaxUnexpandedArrayLength);
+            return kMaxUnexpandedArrayLength;
+        }
+
+        return length_hint;
     }
 
     uint64_t HandleAddress(const ApiDumpNode& node) const

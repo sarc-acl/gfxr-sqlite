@@ -1519,7 +1519,7 @@ template <> void StructFromApiDump<VkPipelineCacheCreateInfo>(ApiDumpContext& ct
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.FlagsValue(value["flags"], EnumFromString_VkPipelineCacheCreateFlagBits);
     ctx.SizeTValue(value["initialDataSize"]);
-    ctx.VoidPtrValue(value["pInitialData"]);
+    ctx.UInt8Array(value["pInitialData"], ctx.Length(value["initialDataSize"]));
 }
 
 template <> void StructFromApiDump<VkSpecializationMapEntry>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -1534,7 +1534,7 @@ template <> void StructFromApiDump<VkSpecializationInfo>(ApiDumpContext& ctx, co
     ctx.UInt32Value(value["mapEntryCount"]);
     StructArrayFromApiDump<VkSpecializationMapEntry>(ctx, value["pMapEntries"], ctx.Length(value["mapEntryCount"]));
     ctx.SizeTValue(value["dataSize"]);
-    ctx.VoidPtrValue(value["pData"]);
+    ctx.UInt8Array(value["pData"], ctx.Length(value["dataSize"]));
 }
 
 template <> void StructFromApiDump<VkPipelineShaderStageCreateInfo>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -3550,7 +3550,7 @@ template <> void StructFromApiDump<VkWriteDescriptorSetInlineUniformBlock>(ApiDu
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["dataSize"]);
-    ctx.VoidPtrValue(value["pData"]);
+    ctx.UInt8Array(value["pData"], ctx.Length(value["dataSize"]));
 }
 
 template <> void StructFromApiDump<VkDescriptorPoolInlineUniformBlockCreateInfo>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -4008,7 +4008,7 @@ template <> void StructFromApiDump<VkPushConstantsInfo>(ApiDumpContext& ctx, con
     ctx.FlagsValue(value["stageFlags"], EnumFromString_VkShaderStageFlagBits);
     ctx.UInt32Value(value["offset"]);
     ctx.UInt32Value(value["size"]);
-    ctx.VoidPtrValue(value["pValues"]);
+    ctx.UInt8Array(value["pValues"], ctx.Length(value["size"]));
 }
 
 template <> void StructFromApiDump<VkPushDescriptorSetInfo>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -5211,7 +5211,7 @@ template <> void StructFromApiDump<VkDeviceFaultShaderAbortMessageInfoKHR>(ApiDu
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt64Value(value["messageDataSize"]);
-    ctx.VoidPtrValue(value["pMessageData"]);
+    ctx.UInt8Array(value["pMessageData"], ctx.Length(value["messageDataSize"]));
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceShaderAbortPropertiesKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -5292,7 +5292,7 @@ template <> void StructFromApiDump<VkPipelineExecutableInternalRepresentationKHR
     ctx.StringValue(value["description"]);
     ctx.UInt32Value(value["isText"]);
     ctx.SizeTValue(value["dataSize"]);
-    ctx.VoidPtrValue(value["pData"]);
+    ctx.UInt8Array(value["pData"], ctx.Length(value["dataSize"]));
 }
 
 template <> void StructFromApiDump<VkPipelineLibraryCreateInfoKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -5745,7 +5745,7 @@ template <> void StructFromApiDump<VkPipelineBinaryKeyKHR>(ApiDumpContext& ctx, 
 template <> void StructFromApiDump<VkPipelineBinaryDataKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
 {
     ctx.SizeTValue(value["dataSize"]);
-    ctx.VoidPtrValue(value["pData"]);
+    ctx.UInt8Array(value["pData"], ctx.Length(value["dataSize"]));
 }
 
 template <> void StructFromApiDump<VkPipelineBinaryKeysAndDataKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -6478,7 +6478,7 @@ template <> void StructFromApiDump<VkDeviceFaultDebugInfoKHR>(ApiDumpContext& ct
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["vendorBinarySize"]);
-    ctx.VoidPtrValue(value["pVendorBinaryData"]);
+    ctx.UInt8Array(value["pVendorBinaryData"], ctx.Length(value["vendorBinarySize"]));
 }
 
 template <> void StructFromApiDump<VkDeviceFaultVendorBinaryHeaderVersionOneKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -6786,7 +6786,7 @@ template <> void StructFromApiDump<VkDebugMarkerObjectTagInfoEXT>(ApiDumpContext
     ctx.UInt64Value(value["object"]);
     ctx.UInt64Value(value["tagName"]);
     ctx.SizeTValue(value["tagSize"]);
-    ctx.VoidPtrValue(value["pTag"]);
+    ctx.UInt8Array(value["pTag"], ctx.Length(value["tagSize"]));
 }
 
 template <> void StructFromApiDump<VkDebugMarkerMarkerInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -7286,7 +7286,7 @@ template <> void StructFromApiDump<VkDebugUtilsObjectTagInfoEXT>(ApiDumpContext&
     ctx.UInt64Value(value["objectHandle"]);
     ctx.UInt64Value(value["tagName"]);
     ctx.SizeTValue(value["tagSize"]);
-    ctx.VoidPtrValue(value["pTag"]);
+    ctx.UInt8Array(value["pTag"], ctx.Length(value["tagSize"]));
 }
 
 template <> void StructFromApiDump<VkAndroidHardwareBufferUsageANDROID>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -7651,7 +7651,7 @@ template <> void StructFromApiDump<VkValidationCacheCreateInfoEXT>(ApiDumpContex
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.FlagsValue(value["flags"]);
     ctx.SizeTValue(value["initialDataSize"]);
-    ctx.VoidPtrValue(value["pInitialData"]);
+    ctx.UInt8Array(value["pInitialData"], ctx.Length(value["initialDataSize"]));
 }
 
 template <> void StructFromApiDump<VkShaderModuleValidationCacheCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -9509,7 +9509,7 @@ template <> void StructFromApiDump<VkFrameBoundaryEXT>(ApiDumpContext& ctx, cons
     ctx.VulkanHandleArray(value["pBuffers"], VK_OBJECT_TYPE_BUFFER, ctx.Length(value["bufferCount"]));
     ctx.UInt64Value(value["tagName"]);
     ctx.SizeTValue(value["tagSize"]);
-    ctx.VoidPtrValue(value["pTag"]);
+    ctx.UInt8Array(value["pTag"], ctx.Length(value["tagSize"]));
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -10677,7 +10677,7 @@ template <> void StructFromApiDump<VkShaderCreateInfoEXT>(ApiDumpContext& ctx, c
     ctx.FlagsValue(value["nextStage"], EnumFromString_VkShaderStageFlagBits);
     ctx.EnumValue(value["codeType"], EnumFromString_VkShaderCodeTypeEXT);
     ctx.SizeTValue(value["codeSize"]);
-    ctx.VoidPtrValue(value["pCode"]);
+    ctx.UInt8Array(value["pCode"], ctx.Length(value["codeSize"]));
     ctx.StringValue(value["pName"]);
     ctx.UInt32Value(value["setLayoutCount"]);
     ctx.VulkanHandleArray(value["pSetLayouts"], VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT, ctx.Length(value["setLayoutCount"]));
@@ -11048,7 +11048,7 @@ template <> void StructFromApiDump<VkDataGraphPipelinePropertyQueryResultARM>(Ap
     ctx.EnumValue(value["property"], EnumFromString_VkDataGraphPipelinePropertyARM);
     ctx.UInt32Value(value["isText"]);
     ctx.SizeTValue(value["dataSize"]);
-    ctx.VoidPtrValue(value["pData"]);
+    ctx.UInt8Array(value["pData"], ctx.Length(value["dataSize"]));
 }
 
 template <> void StructFromApiDump<VkDataGraphPipelineIdentifierCreateInfoARM>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -11725,7 +11725,7 @@ template <> void StructFromApiDump<VkHdrVividDynamicMetadataHUAWEI>(ApiDumpConte
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.SizeTValue(value["dynamicMetadataSize"]);
-    ctx.VoidPtrValue(value["pDynamicMetadata"]);
+    ctx.UInt8Array(value["pDynamicMetadata"], ctx.Length(value["dynamicMetadataSize"]));
 }
 
 template <> void StructFromApiDump<VkCooperativeMatrixFlexibleDimensionsPropertiesNV>(ApiDumpContext& ctx, const ApiDumpNode& value)

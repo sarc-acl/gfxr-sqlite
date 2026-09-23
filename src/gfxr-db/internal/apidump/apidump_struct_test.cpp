@@ -389,6 +389,39 @@ void TestUnexpandedStringArray()
     }
 }
 
+/** A declared array length that lies about the payload behind it.
+ *
+ * Regression test for the crash this guards against: a corrupted or hand edited .apidump can carry
+ * a count field for an array the layer did not expand that is far larger than anything real, which
+ * used to flow straight into std::vector::reserve/resize and throw std::bad_alloc or
+ * std::length_error, aborting the whole conversion. See ApiDumpContext::kMaxUnexpandedArrayLength.
+ */
+void TestOversizedLengthHintClamped()
+{
+    std::printf("oversized declared array length is clamped, not thrown\n");
+
+    // valueCount is far larger than kMaxUnexpandedArrayLength; pValues carries no elements at all,
+    // the case where ArrayLength falls back to the declared count instead of the expanded one.
+    const std::string json = R"JSON({
+        "type": "const VkLayerSettingEXT", "name": "[0]", "address": "0x6dec649b50",
+        "members": [
+            { "type": "const char*", "name": "pLayerName", "value": "VK_LAYER_LUNARG_api_dump" },
+            { "type": "const char*", "name": "pSettingName", "value": "log_filename" },
+            { "type": "VkLayerSettingTypeEXT", "name": "type", "value": "VK_LAYER_SETTING_TYPE_UINT32_EXT" },
+            { "type": "uint32_t", "name": "valueCount", "value": "4000000000" },
+            { "type": "const void*", "name": "pValues", "address": "0x6d62eb3678" }
+        ]
+    })JSON";
+
+    DecoderAllocGuard<true> guard;
+    RoundTrip<VkLayerSettingEXT, Decoded_VkLayerSettingEXT> trip(json);
+
+    // Reaching this line at all is most of the point: the old code threw out of the RoundTrip
+    // constructor above instead.
+    Expect("buffer consumed exactly", trip.ConsumedEverything());
+    Expect("hint was clamped rather than trusted", trip.Stats().oversized_length_hints == 1);
+}
+
 } // namespace
 
 int main()
@@ -401,6 +434,7 @@ int main()
     TestStringsAndCustomStruct();
     TestShaderModuleDerivedLength();
     TestUnexpandedStringArray();
+    TestOversizedLengthHintClamped();
 
     if (g_failures == 0)
     {

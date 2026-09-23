@@ -181,6 +181,10 @@ std::string ApiDumpProcessor::DescribeConversion() const
     {
         summary << ", " << stats.unparsable_scalars << " unparsable values";
     }
+    if (stats.oversized_length_hints > 0)
+    {
+        summary << ", " << stats.oversized_length_hints << " array lengths clamped as implausible";
+    }
     if (handles_.LazilyAllocatedCount() > 0)
     {
         // Expected for a trimmed capture, where objects already existed when the dump began.
