@@ -764,6 +764,22 @@ static void CreateShaderTables(sqlite3* db)
 
     ExecSQL(
         db,
+        // Only populated when the database was built from a .apidump: maps the synthesized handle
+        // id (the `handle` column of every object table above, e.g. shaderModules.handle) back to
+        // the raw driver value the api dump layer recorded for it (e.g. "0x210000000021"). A .gfxr
+        // capture already carries its own capture-time handle ids, so this stays empty for those -
+        // it's created unconditionally so callers never need an existence check. handle values are
+        // minted from a single counter shared by every VkObjectType (see ApiDumpHandleMap), so they
+        // are already unique across object types without needing to record the type here too. Not
+        // named handleId: it isn't a foreign key, it's the same synthesized value the referenced
+        // handle column is.
+        "CREATE TABLE apiDumpHandleAddresses("
+        "   handle INTEGER UNIQUE NOT NULL PRIMARY KEY,"
+        "   address TEXT NOT NULL) STRICT;"
+    );
+
+    ExecSQL(
+        db,
         "CREATE TABLE validationCaches("
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   handle INT NOT NULL,"

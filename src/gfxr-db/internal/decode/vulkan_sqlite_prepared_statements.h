@@ -95,6 +95,7 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement commandBufferInsertStatement;
     SqliteStatement commandBufferInheritanceInfoInsertStatement;
     SqliteStatement commandBufferCommandInsertStatement;
+    SqliteStatement apiDumpCommandIdInsertStatement;
     SqliteStatement trackedCmdCommandInsertStatement;
     SqliteStatement commandBufferRecordingInsertStatement;
     SqliteStatement commandBufferRecordingEndStatement;
@@ -1799,6 +1800,8 @@ struct VulkanSqlitePreparedStatements
     );
 
     void InsertCommandBufferCommand(const int64_t commandBufferRecordingId, const uint64_t apiEventId);
+
+    void InsertApiDumpCommandId(const uint64_t commandNumber, const uint64_t apiEventId);
 
     int64_t InsertDisplayMessage(const int64_t frame, const std::string_view message);
 

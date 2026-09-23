@@ -107,6 +107,14 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         context.currentBlockIndex = block_index;
     }
 
+    // Records the row a real api_dump call landed in against its own commandNumber, so it can be
+    // looked up by that number later. ApiDumpProcessor calls this directly - it has no commandNumber
+    // concept to dispatch through the generic VulkanConsumer interface, since .gfxr has none.
+    void InsertApiDumpCommandId(uint64_t commandNumber, uint64_t apiEventId)
+    {
+        statements.InsertApiDumpCommandId(commandNumber, apiEventId);
+    }
+
     void ProcessStateBeginMarker(uint64_t frameNumber) override;
 
     void ProcessStateEndMarker(uint64_t frameNumber) override;

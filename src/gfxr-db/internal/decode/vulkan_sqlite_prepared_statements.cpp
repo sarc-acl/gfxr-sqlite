@@ -50,6 +50,9 @@ void VulkanSqlitePreparedStatements::CreateBasePreparedStatements()
     );
 
     PrepareStatement(db, "INSERT INTO commandBufferCommands VALUES (?, ?);", &commandBufferCommandInsertStatement);
+    PrepareStatement(
+        db, "INSERT INTO apiDumpCommandIds VALUES (?, ?);", &apiDumpCommandIdInsertStatement
+    );
 
     PrepareStatement(db, "INSERT INTO trackedCmdCommands VALUES(?, ?, ?, ?, ?, ?);", &trackedCmdCommandInsertStatement);
     PrepareStatement(
@@ -4501,6 +4504,15 @@ void VulkanSqlitePreparedStatements::InsertCommandBufferCommand(
     auto& statement = commandBufferCommandInsertStatement;
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(commandBufferRecordingId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertApiDumpCommandId(const uint64_t commandNumber, const uint64_t apiEventId)
+{
+    auto& statement = apiDumpCommandIdInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(commandNumber)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
