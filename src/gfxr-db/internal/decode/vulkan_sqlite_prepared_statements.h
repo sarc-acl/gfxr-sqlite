@@ -27,6 +27,7 @@
 #include <span>
 #include <string_view>
 #include <optional>
+#include <vector>
 
 #include "sqlite3.h"
 
@@ -422,6 +423,68 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement deferredOperationInsertStatement;
     SqliteStatement pipelineBinaryInsertStatement;
 
+    // Statements backing VulkanSqliteConsumerExt::Release{Instance,PhysicalDevice,Device}Dependents -
+    // see that file for the composable-cascade design. Each is a bulk
+    // "UPDATE <table> SET <endColumn> = ? WHERE <parentIdColumn> = ? AND <endColumn> IS NULL"
+    // (or, for the two tables whose immediate parent isn't the id being cascaded from, the same
+    // shape with a subquery in place of a flat parentId) executed through the existing generic
+    // DestroyObject(statement, apiEventId, parentId) helper - no bespoke wrapper function needed
+    // since every one of these statements takes exactly the same two bound parameters.
+    SqliteStatement releaseDisplayUpdateStatement;
+
+    // instance-scoped (ReleaseInstanceDependents)
+    SqliteStatement destroySurfacesByInstanceStatement;
+    SqliteStatement destroyDebugReportCallbacksByInstanceStatement;
+    SqliteStatement destroyDebugMessengersByInstanceStatement;
+    SqliteStatement releasePhysicalDevicesByInstanceStatement;
+    SqliteStatement destroyDevicesByInstanceStatement;
+    SqliteStatement selectLivePhysicalDeviceIdsByInstanceStatement;
+    SqliteStatement selectLiveDeviceIdsByInstanceStatement;
+
+    // physicalDevice-scoped (ReleasePhysicalDeviceDependents)
+    SqliteStatement releaseDisplaysByPhysicalDeviceStatement;
+    SqliteStatement destroyDisplayModesByPhysicalDeviceStatement;
+
+    // device-scoped (ReleaseDeviceDependents)
+    SqliteStatement destroyQueuesByDeviceStatement;
+    SqliteStatement destroyCommandPoolsByDeviceStatement;
+    SqliteStatement freeCommandBuffersByDeviceStatement;
+    SqliteStatement resetCommandBufferRecordingsByDeviceStatement;
+    SqliteStatement destroyBuffersByDeviceStatement;
+    SqliteStatement destroyBufferViewsByDeviceStatement;
+    SqliteStatement destroyImagesByDeviceStatement;
+    SqliteStatement destroyImageViewsByDeviceStatement;
+    SqliteStatement destroySamplersByDeviceStatement;
+    SqliteStatement destroySamplerYcbcrConversionsByDeviceStatement;
+    SqliteStatement destroyDescriptorPoolsByDeviceStatement;
+    SqliteStatement freeDescriptorSetsByDeviceStatement;
+    SqliteStatement destroyDescriptorSetLayoutsByDeviceStatement;
+    SqliteStatement destroyDescriptorUpdateTemplatesByDeviceStatement;
+    SqliteStatement destroyPipelinesByDeviceStatement;
+    SqliteStatement destroyPipelineLayoutsByDeviceStatement;
+    SqliteStatement destroyPipelineCachesByDeviceStatement;
+    SqliteStatement destroyPipelineBinariesByDeviceStatement;
+    SqliteStatement destroyShaderModulesByDeviceStatement;
+    SqliteStatement destroyShaderObjectsByDeviceStatement;
+    SqliteStatement destroyRenderPassesByDeviceStatement;
+    SqliteStatement destroyFramebuffersByDeviceStatement;
+    SqliteStatement destroyQueryPoolsByDeviceStatement;
+    SqliteStatement destroyFencesByDeviceStatement;
+    SqliteStatement destroySemaphoresByDeviceStatement;
+    SqliteStatement destroyEventsByDeviceStatement;
+    SqliteStatement destroyValidationCachesByDeviceStatement;
+    SqliteStatement destroyPrivateDataSlotsByDeviceStatement;
+    SqliteStatement destroyAccelerationStructuresByDeviceStatement;
+    SqliteStatement destroyAccelerationStructuresNvByDeviceStatement;
+    SqliteStatement destroyDeferredOperationsByDeviceStatement;
+    SqliteStatement destroyVideoSessionsByDeviceStatement;
+    SqliteStatement destroyVideoSessionParametersByDeviceStatement;
+    SqliteStatement destroyIndirectCommandsLayoutsByDeviceStatement;
+    SqliteStatement destroyMicromapsByDeviceStatement;
+    SqliteStatement destroyOpticalFlowSessionsByDeviceStatement;
+    SqliteStatement destroyDataGraphPipelineSessionsByDeviceStatement;
+    SqliteStatement destroySwapchainsByDeviceStatement;
+
     void CreateBasePreparedStatements();
     void CreateAdvancedPreparedStatements();
 
@@ -460,9 +523,18 @@ struct VulkanSqlitePreparedStatements
 
     int64_t InsertStruct(const std::string_view type);
     int64_t InsertArray(const std::string_view type);
-    int64_t InsertDebugReportCallback(const int64_t callbackHandle, const uint32_t flags, const uint64_t apiEventId);
+    int64_t InsertDebugReportCallback(
+        const int64_t callbackHandle,
+        const std::optional<int64_t> instanceId,
+        const uint32_t flags,
+        const uint64_t apiEventId
+    );
     void InsertDebugMessenger(
-        const format::HandleId messenger, const uint32_t severity, const uint32_t type, const uint64_t apiEventId
+        const format::HandleId messenger,
+        const std::optional<int64_t> instanceId,
+        const uint32_t severity,
+        const uint32_t type,
+        const uint64_t apiEventId
     );
     void InsertDebugName(
         const std::string_view objectName,
@@ -1146,7 +1218,12 @@ struct VulkanSqlitePreparedStatements
     void InsertDeviceEnabledFeature(const int64_t deviceId, const std::string_view featureName);
     void InsertTrackedDeviceCommand(const int64_t deviceId, const uint64_t apiEventId);
 
-    int64_t InsertSurface(const int64_t surfaceHandle, const uint32_t createInfoType, const uint64_t apiEventId);
+    int64_t InsertSurface(
+        const int64_t surfaceHandle,
+        const std::optional<int64_t> instanceId,
+        const uint32_t createInfoType,
+        const uint64_t apiEventId
+    );
     int64_t InsertCommandBufferInheritanceInfo(
         const std::optional<int64_t> renderPassId,
         const uint32_t subpassIndex,
@@ -1992,6 +2069,12 @@ struct VulkanSqlitePreparedStatements
     );
 
     void DestroyObject(const SqliteStatement& statement, const uint64_t apiEventId, const uint64_t objectId);
+
+    // Runs a single-parameter "SELECT id FROM ... WHERE <parentIdColumn> = ?" statement (e.g.
+    // selectLivePhysicalDeviceIdsByInstanceStatement) and returns every id row. Used by
+    // VulkanSqliteConsumerExt::ReleaseInstanceDependents to recurse into each live child's own
+    // Release*Dependents call before bulk-closing the parent-scoped rows themselves.
+    std::vector<int64_t> SelectIds(const SqliteStatement& statement, const int64_t parentId);
 
   private:
     int64_t InsertStateId(const uint64_t apiEventId);

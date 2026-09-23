@@ -511,7 +511,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugReportCallbackEXT(
     auto flags = createInfo->decoded_value->flags;
 
     auto callbackHandle = ToInt64(callback);
-    auto callbackId = statements.InsertDebugReportCallback(callbackHandle, flags, this->block_index_);
+    auto instanceId     = context.GetInstanceId(args.instance, /*allowNull=*/true);
+    auto callbackId = statements.InsertDebugReportCallback(callbackHandle, instanceId, flags, this->block_index_);
     context.debugReportCallbackHandleToId[callbackHandle] = callbackId;
 }
 
@@ -561,7 +562,10 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugUtilsMessengerEXT(
 
     auto& ci = *createInfo->decoded_value;
 
-    statements.InsertDebugMessenger(messenger, ci.messageSeverity, ci.messageType, this->block_index_);
+    auto instanceId = context.GetInstanceId(args.instance, /*allowNull=*/true);
+    statements.InsertDebugMessenger(
+        messenger, instanceId, ci.messageSeverity, ci.messageType, this->block_index_
+    );
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDebugUtilsMessengerEXT(
@@ -820,6 +824,106 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(const ApiCallInfo& callIn
     }
 }
 
+// See the declaration in vulkan_sqlite_consumer_ext.h for the overall composable-cascade design.
+// Destroying an instance implicitly releases everything created under it: its surfaces/debug
+// report callbacks/debug messengers directly (they have no vkDestroy of their own that would have
+// already closed them - VUID-vkDestroyInstance-instance-00629 requires all of these to already be
+// destroyed, but malformed/truncated captures can still violate that), its physical devices (which
+// have no destroy call at all, only enumeration), and transitively every device created from one of
+// those physical devices - each such device's own dependents are released by recursing into
+// ReleaseDeviceDependents, which is the only place that knows what a device contains.
+void VulkanSqliteConsumerExt::ReleaseInstanceDependents(int64_t instanceId, uint64_t apiEventId)
+{
+    // TODO: these bulk cascades don't erase the corresponding in-memory *HandleToId context maps
+    // (surfaceHandleToId, debugReportCallbackHandleToId, debugMessengerHandleToId,
+    // physicalDeviceHandleToId, deviceHandleToId, and transitively everything ReleaseDeviceDependents
+    // touches) since the cascade only ever materializes row ids, never handle values. A handle
+    // released this way stays resolvable in memory - as a now-stale reference to a row the DB
+    // considers destroyed - until the driver reuses that handle value for a new object. This is a
+    // known, deferred leak; see the identical TODO on VulkanSqliteConsumerExt::
+    // Process_vkDestroyDescriptorPool/Process_vkResetDescriptorPool, whose bulk
+    // freePoolDescriptorSetsUpdateStatement cascade this design generalizes.
+    statements.DestroyObject(statements.destroySurfacesByInstanceStatement, apiEventId, instanceId);
+    statements.DestroyObject(statements.destroyDebugReportCallbacksByInstanceStatement, apiEventId, instanceId);
+    statements.DestroyObject(statements.destroyDebugMessengersByInstanceStatement, apiEventId, instanceId);
+
+    for (auto physicalDeviceId : statements.SelectIds(statements.selectLivePhysicalDeviceIdsByInstanceStatement, instanceId))
+    {
+        ReleasePhysicalDeviceDependents(physicalDeviceId, apiEventId);
+    }
+    statements.DestroyObject(statements.releasePhysicalDevicesByInstanceStatement, apiEventId, instanceId);
+
+    for (auto deviceId : statements.SelectIds(statements.selectLiveDeviceIdsByInstanceStatement, instanceId))
+    {
+        ReleaseDeviceDependents(deviceId, apiEventId);
+    }
+    statements.DestroyObject(statements.destroyDevicesByInstanceStatement, apiEventId, instanceId);
+}
+
+// A VkPhysicalDevice has no destroy call of its own - it's implicitly released along with its
+// instance. Its only children are the displays (and, transitively, display modes) acquired through
+// it; VkPhysicalDevice is never itself the source of a device's teardown decision (that's driven by
+// the instance destroying every device created from one of its physical devices, in
+// ReleaseInstanceDependents), so this function only needs to know about displays/displayModes.
+void VulkanSqliteConsumerExt::ReleasePhysicalDeviceDependents(int64_t physicalDeviceId, uint64_t apiEventId)
+{
+    // TODO: same known-and-deferred displayHandleToId/displayModeHandleToId leak as described in
+    // ReleaseInstanceDependents - this bulk cascade doesn't erase those in-memory maps either.
+    statements.DestroyObject(statements.destroyDisplayModesByPhysicalDeviceStatement, apiEventId, physicalDeviceId);
+    statements.DestroyObject(statements.releaseDisplaysByPhysicalDeviceStatement, apiEventId, physicalDeviceId);
+}
+
+// Destroying a device implicitly releases every object created on it that the app didn't already
+// explicitly destroy - per spec this should never be observed (VUID-vkDestroyDevice-device-05137
+// requires every child object to already be destroyed), but real captures can still violate that
+// (a trace ending mid-capture, a leaking/crashing app). Every table here already denormalizes its
+// owning deviceId directly (confirmed against the schema), so each one is an independent flat bulk
+// UPDATE - no recursion needed within this function, unlike the instance/physicalDevice levels.
+void VulkanSqliteConsumerExt::ReleaseDeviceDependents(int64_t deviceId, uint64_t apiEventId)
+{
+    // TODO: same known-and-deferred *HandleToId leak as described in ReleaseInstanceDependents,
+    // for every table closed below (queueHandleToId, commandPoolHandleToId, commandBufferHandleToId,
+    // bufferHandleToId, imageHandleToId, descriptorSetHandleToInfo, pipelineHandleToId, ...).
+    statements.DestroyObject(statements.destroyQueuesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyCommandPoolsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.resetCommandBufferRecordingsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.freeCommandBuffersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyBuffersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyBufferViewsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyImagesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyImageViewsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySamplersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySamplerYcbcrConversionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.freeDescriptorSetsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDescriptorPoolsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDescriptorSetLayoutsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDescriptorUpdateTemplatesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelinesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelineLayoutsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelineCachesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelineBinariesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyShaderModulesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyShaderObjectsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyRenderPassesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyFramebuffersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyQueryPoolsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyFencesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySemaphoresByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyEventsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyValidationCachesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPrivateDataSlotsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyAccelerationStructuresByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyAccelerationStructuresNvByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDeferredOperationsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyVideoSessionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyVideoSessionParametersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyIndirectCommandsLayoutsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyMicromapsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyOpticalFlowSessionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDataGraphPipelineSessionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySwapchainsByDeviceStatement, apiEventId, deviceId);
+}
+
 void VulkanSqliteConsumerExt::Process_vkDestroyInstance(const ApiCallInfo& callInfo, args::DestroyInstance& args)
 {
     // generate the base apiEvents database entries
@@ -827,6 +931,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyInstance(const ApiCallInfo& callI
 
     if (auto id = context.ExtractId(args.instance, context.instanceHandleToId, "instance", this->block_index_))
     {
+        ReleaseInstanceDependents(*id, this->block_index_);
         statements.DestroyObject(statements.destroyInstanceUpdateStatement, this->block_index_, *id);
     }
 }
@@ -1069,6 +1174,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDevice(const ApiCallInfo& callInf
 
     if (auto id = context.ExtractId(args.device, context.deviceHandleToId, "device", this->block_index_))
     {
+        ReleaseDeviceDependents(*id, this->block_index_);
         statements.DestroyObject(statements.destroyDeviceUpdateStatement, this->block_index_, *id);
     }
 }
@@ -4859,6 +4965,12 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorPool(
     {
         statements.DestroyObject(statements.destroyDescriptorPoolUpdateStatement, this->block_index_, *id);
         // update all un-freed associated descriptor sets as they are now implicitly freed
+        // TODO: this bulk cascade doesn't erase context.descriptorSetHandleToInfo for the sets it
+        // implicitly frees - unlike Process_vkFreeDescriptorSets, which erases that map per handle
+        // on the fully-explicit path. A handle freed this way stays resolvable in memory as a
+        // now-stale reference until the driver reuses it for a new descriptor set. Known, deferred
+        // leak - see the same TODO on VulkanSqliteConsumerExt::ReleaseInstanceDependents, which
+        // generalizes this exact bulk-cascade idiom to the rest of the object graph.
         statements.DestroyObject(statements.freePoolDescriptorSetsUpdateStatement, this->block_index_, *id);
     }
 }
@@ -4880,6 +4992,7 @@ void VulkanSqliteConsumerExt::Process_vkResetDescriptorPool(
     }
 
     // update all un-freed associated descriptor sets as they are now implicitly freed
+    // TODO: same context.descriptorSetHandleToInfo leak as in Process_vkDestroyDescriptorPool above.
     statements.DestroyObject(
         statements.freePoolDescriptorSetsUpdateStatement, this->block_index_, descriptorPoolIter->second
     );
@@ -7477,6 +7590,32 @@ void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
         ci.parameters.refreshRate,
         this->block_index_
     );
+}
+
+void VulkanSqliteConsumerExt::Process_vkReleaseDisplayEXT(const ApiCallInfo& callInfo, args::ReleaseDisplayEXT& args)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkReleaseDisplayEXT(callInfo, args);
+
+    if (args.result != VK_SUCCESS)
+    {
+        return;
+    }
+
+    // Non-erasing lookup (not ExtractId): unlike a destroy call, releasing display access doesn't
+    // invalidate the VkDisplayKHR handle - the app can re-acquire the same display later, so
+    // displayHandleToId must keep resolving it. Deliberately does not cascade to displayModes:
+    // those remain valid Vulkan objects after a release (they'd only be closed if the display's
+    // instance is destroyed - see ReleasePhysicalDeviceDependents). Repeated acquire/release cycles
+    // on the same display aren't modeled - a single nullable releaseApiEventId column can't
+    // represent more than one release event, so only the first release recorded here sticks (this
+    // statement, unlike the bulk cascade statements, has no "AND releaseApiEventId IS NULL" guard -
+    // matching every other single-object destroy statement in this file - so a second release call
+    // would simply overwrite it; accepted simplification, not modeled further).
+    if (auto id = context.GetDisplayId(args.display))
+    {
+        statements.DestroyObject(statements.releaseDisplayUpdateStatement, this->block_index_, *id);
+    }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(const ApiCallInfo& callInfo, args::CreateSwapchainKHR& args)

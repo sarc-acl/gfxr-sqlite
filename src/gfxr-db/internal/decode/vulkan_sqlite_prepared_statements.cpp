@@ -176,7 +176,7 @@ void VulkanSqlitePreparedStatements::CreateBasePreparedStatements()
         "UPDATE commandPools SET destroyApiEventId = ? WHERE (commandPools.id = ?);",
         &destroyCommandPoolUpdateStatement
     );
-    PrepareStatement(db, "INSERT INTO surfaces VALUES (?, ?, ?, ?, NULL);", &surfaceInsertStatement);
+    PrepareStatement(db, "INSERT INTO surfaces VALUES (?, ?, ?, ?, ?, NULL);", &surfaceInsertStatement);
     PrepareStatement(
         db, "UPDATE surfaces SET destroyApiEventId = ? WHERE (surfaces.id = ?);", &destroySurfaceUpdateStatement
     );
@@ -945,9 +945,11 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     );
 
     PrepareStatement(
-        db, "INSERT INTO debugReportCallbacks VALUES (?, ?, ?, ?, NULL);", &debugReportCallbackInsertStatement
+        db, "INSERT INTO debugReportCallbacks VALUES (?, ?, ?, ?, ?, NULL);", &debugReportCallbackInsertStatement
     );
-    PrepareStatement(db, "INSERT INTO debugMessengers VALUES (?, ?, ?, ?, ?, NULL);", &debugMessengerInsertStatement);
+    PrepareStatement(
+        db, "INSERT INTO debugMessengers VALUES (?, ?, ?, ?, ?, ?, NULL);", &debugMessengerInsertStatement
+    );
     PrepareStatement(db, "INSERT INTO debugNames VALUES (?, ?, ?, ?, ?, ?, ?);", &debugNameInsertStatement);
     PrepareStatement(db, "INSERT INTO debugTags VALUES (?, ?, ?, ?, ?, ?, ?, ?);", &debugTagInsertStatement);
     PrepareStatement(
@@ -998,7 +1000,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         "deviceName = ?, pipelineCacheUUID = ? WHERE (physicalDevices.id = ?);",
         &physicalDevicePropertiesUpdateStatement
     );
-    PrepareStatement(db, "INSERT INTO queues VALUES (?, ?, ?, ?, ?, ?, ?);", &queueInsertStatement);
+    PrepareStatement(db, "INSERT INTO queues VALUES (?, ?, ?, ?, ?, ?, ?, NULL);", &queueInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmits VALUES (?, ?, ?, ?, ?);", &queueSubmitInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmitBatches VALUES (?, ?, ?, ?, ?);", &queueSubmitBatchInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmitBuffers VALUES (?, ?, ?);", &queueSubmitBufferInsertStatement);
@@ -1341,8 +1343,10 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         &physicalDeviceSparsePropertiesInsertStatement
     );
 
-    PrepareStatement(db, "INSERT INTO displays VALUES (?, ?, ?, ?);", &displayInsertStatement);
-    PrepareStatement(db, "INSERT INTO displayModes VALUES (?, ?, ?, ?, ?, ?, ?, ?);", &displayModeInsertStatement);
+    PrepareStatement(db, "INSERT INTO displays VALUES (?, ?, ?, ?, NULL);", &displayInsertStatement);
+    PrepareStatement(
+        db, "INSERT INTO displayModes VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL);", &displayModeInsertStatement
+    );
     PrepareStatement(db, "INSERT INTO acquireNextImages VALUES (?, ?, ?, ?, ?, ?);", &acquireNextImageInsertStatement);
 
     PrepareStatement(
@@ -1416,6 +1420,301 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         "UPDATE opticalFlowSessions SET destroyApiEventId = ?"
         " WHERE (opticalFlowSessions.id = ?);",
         &destroyOpticalFlowSessionUpdateStatement
+    );
+
+    // See VulkanSqliteConsumerExt::Release{Instance,PhysicalDevice,Device}Dependents for the
+    // composable cascade these statements back. Every statement here takes exactly
+    // (apiEventId, parentId) in that order, so all of them are executed through the existing
+    // generic DestroyObject() helper rather than a bespoke wrapper per table.
+    PrepareStatement(
+        db, "UPDATE displays SET releaseApiEventId = ? WHERE (displays.id = ?);", &releaseDisplayUpdateStatement
+    );
+
+    // instance-scoped (ReleaseInstanceDependents)
+    PrepareStatement(
+        db,
+        "UPDATE surfaces SET destroyApiEventId = ?"
+        " WHERE (surfaces.instanceId = ? AND surfaces.destroyApiEventId IS NULL);",
+        &destroySurfacesByInstanceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE debugReportCallbacks SET destroyApiEventId = ?"
+        " WHERE (debugReportCallbacks.instanceId = ? AND debugReportCallbacks.destroyApiEventId IS NULL);",
+        &destroyDebugReportCallbacksByInstanceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE debugMessengers SET destroyApiEventId = ?"
+        " WHERE (debugMessengers.instanceId = ? AND debugMessengers.destroyApiEventId IS NULL);",
+        &destroyDebugMessengersByInstanceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE physicalDevices SET releaseApiEventId = ?"
+        " WHERE (physicalDevices.instanceId = ? AND physicalDevices.releaseApiEventId IS NULL);",
+        &releasePhysicalDevicesByInstanceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE devices SET destroyApiEventId = ?"
+        " WHERE (devices.physicalDeviceId IN (SELECT id FROM physicalDevices WHERE instanceId = ?)"
+        " AND devices.destroyApiEventId IS NULL);",
+        &destroyDevicesByInstanceStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT id FROM physicalDevices WHERE instanceId = ? AND releaseApiEventId IS NULL;",
+        &selectLivePhysicalDeviceIdsByInstanceStatement
+    );
+    PrepareStatement(
+        db,
+        "SELECT id FROM devices WHERE physicalDeviceId IN (SELECT id FROM physicalDevices WHERE instanceId = ?)"
+        " AND destroyApiEventId IS NULL;",
+        &selectLiveDeviceIdsByInstanceStatement
+    );
+
+    // physicalDevice-scoped (ReleasePhysicalDeviceDependents)
+    PrepareStatement(
+        db,
+        "UPDATE displays SET releaseApiEventId = ?"
+        " WHERE (displays.physicalDeviceId = ? AND displays.releaseApiEventId IS NULL);",
+        &releaseDisplaysByPhysicalDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE displayModes SET destroyApiEventId = ?"
+        " WHERE (displayModes.physicalDeviceId = ? AND displayModes.destroyApiEventId IS NULL);",
+        &destroyDisplayModesByPhysicalDeviceStatement
+    );
+
+    // device-scoped (ReleaseDeviceDependents)
+    PrepareStatement(
+        db,
+        "UPDATE queues SET destroyApiEventId = ? WHERE (queues.deviceId = ? AND queues.destroyApiEventId IS NULL);",
+        &destroyQueuesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE commandPools SET destroyApiEventId = ?"
+        " WHERE (commandPools.deviceId = ? AND commandPools.destroyApiEventId IS NULL);",
+        &destroyCommandPoolsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE commandBuffers SET freeApiEventId = ?"
+        " WHERE (commandBuffers.deviceId = ? AND commandBuffers.freeApiEventId IS NULL);",
+        &freeCommandBuffersByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE commandBufferRecordings SET resetApiEventId = ?"
+        " WHERE (commandBufferRecordings.commandBufferId IN (SELECT id FROM commandBuffers WHERE deviceId = ?)"
+        " AND commandBufferRecordings.resetApiEventId IS NULL);",
+        &resetCommandBufferRecordingsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE buffers SET destroyApiEventId = ?"
+        " WHERE (buffers.deviceId = ? AND buffers.destroyApiEventId IS NULL);",
+        &destroyBuffersByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE bufferViews SET destroyApiEventId = ?"
+        " WHERE (bufferViews.deviceId = ? AND bufferViews.destroyApiEventId IS NULL);",
+        &destroyBufferViewsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE images SET destroyApiEventId = ?"
+        " WHERE (images.deviceId = ? AND images.destroyApiEventId IS NULL);",
+        &destroyImagesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE imageViews SET destroyApiEventId = ?"
+        " WHERE (imageViews.deviceId = ? AND imageViews.destroyApiEventId IS NULL);",
+        &destroyImageViewsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE samplers SET destroyApiEventId = ?"
+        " WHERE (samplers.deviceId = ? AND samplers.destroyApiEventId IS NULL);",
+        &destroySamplersByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE samplerYcbcrConversions SET destroyApiEventId = ?"
+        " WHERE (samplerYcbcrConversions.deviceId = ? AND samplerYcbcrConversions.destroyApiEventId IS NULL);",
+        &destroySamplerYcbcrConversionsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE descriptorPools SET destroyApiEventId = ?"
+        " WHERE (descriptorPools.deviceId = ? AND descriptorPools.destroyApiEventId IS NULL);",
+        &destroyDescriptorPoolsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE descriptorSets SET freeApiEventId = ?"
+        " WHERE (descriptorSets.descriptorPoolId IN (SELECT id FROM descriptorPools WHERE deviceId = ?)"
+        " AND descriptorSets.freeApiEventId IS NULL);",
+        &freeDescriptorSetsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE descriptorSetLayouts SET destroyApiEventId = ?"
+        " WHERE (descriptorSetLayouts.deviceId = ? AND descriptorSetLayouts.destroyApiEventId IS NULL);",
+        &destroyDescriptorSetLayoutsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE descriptorUpdateTemplates SET destroyApiEventId = ?"
+        " WHERE (descriptorUpdateTemplates.deviceId = ? AND descriptorUpdateTemplates.destroyApiEventId IS NULL);",
+        &destroyDescriptorUpdateTemplatesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE pipelines SET destroyApiEventId = ?"
+        " WHERE (pipelines.deviceId = ? AND pipelines.destroyApiEventId IS NULL);",
+        &destroyPipelinesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE pipelineLayouts SET destroyApiEventId = ?"
+        " WHERE (pipelineLayouts.deviceId = ? AND pipelineLayouts.destroyApiEventId IS NULL);",
+        &destroyPipelineLayoutsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE pipelineCaches SET destroyApiEventId = ?"
+        " WHERE (pipelineCaches.deviceId = ? AND pipelineCaches.destroyApiEventId IS NULL);",
+        &destroyPipelineCachesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE pipelineBinaries SET destroyApiEventId = ?"
+        " WHERE (pipelineBinaries.deviceId = ? AND pipelineBinaries.destroyApiEventId IS NULL);",
+        &destroyPipelineBinariesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE shaderModules SET destroyApiEventId = ?"
+        " WHERE (shaderModules.deviceId = ? AND shaderModules.destroyApiEventId IS NULL);",
+        &destroyShaderModulesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE shaderObjects SET destroyApiEventId = ?"
+        " WHERE (shaderObjects.deviceId = ? AND shaderObjects.destroyApiEventId IS NULL);",
+        &destroyShaderObjectsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE renderPasses SET destroyApiEventId = ?"
+        " WHERE (renderPasses.deviceId = ? AND renderPasses.destroyApiEventId IS NULL);",
+        &destroyRenderPassesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE framebuffers SET destroyApiEventId = ?"
+        " WHERE (framebuffers.deviceId = ? AND framebuffers.destroyApiEventId IS NULL);",
+        &destroyFramebuffersByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE queryPools SET destroyApiEventId = ?"
+        " WHERE (queryPools.deviceId = ? AND queryPools.destroyApiEventId IS NULL);",
+        &destroyQueryPoolsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE fences SET destroyApiEventId = ? WHERE (fences.deviceId = ? AND fences.destroyApiEventId IS NULL);",
+        &destroyFencesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE semaphores SET destroyApiEventId = ?"
+        " WHERE (semaphores.deviceId = ? AND semaphores.destroyApiEventId IS NULL);",
+        &destroySemaphoresByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE events SET destroyApiEventId = ? WHERE (events.deviceId = ? AND events.destroyApiEventId IS NULL);",
+        &destroyEventsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE validationCaches SET destroyApiEventId = ?"
+        " WHERE (validationCaches.deviceId = ? AND validationCaches.destroyApiEventId IS NULL);",
+        &destroyValidationCachesByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE privateDataSlots SET destroyApiEventId = ?"
+        " WHERE (privateDataSlots.deviceId = ? AND privateDataSlots.destroyApiEventId IS NULL);",
+        &destroyPrivateDataSlotsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE accelerationStructures SET destroyApiEventId = ?"
+        " WHERE (accelerationStructures.deviceId = ? AND accelerationStructures.destroyApiEventId IS NULL);",
+        &destroyAccelerationStructuresByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE accelerationStructuresNv SET destroyApiEventId = ?"
+        " WHERE (accelerationStructuresNv.deviceId = ? AND accelerationStructuresNv.destroyApiEventId IS NULL);",
+        &destroyAccelerationStructuresNvByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE deferredOperations SET destroyApiEventId = ?"
+        " WHERE (deferredOperations.deviceId = ? AND deferredOperations.destroyApiEventId IS NULL);",
+        &destroyDeferredOperationsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE videoSessions SET destroyApiEventId = ?"
+        " WHERE (videoSessions.deviceId = ? AND videoSessions.destroyApiEventId IS NULL);",
+        &destroyVideoSessionsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE videoSessionParameters SET destroyApiEventId = ?"
+        " WHERE (videoSessionParameters.deviceId = ? AND videoSessionParameters.destroyApiEventId IS NULL);",
+        &destroyVideoSessionParametersByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE indirectCommandsLayouts SET destroyApiEventId = ?"
+        " WHERE (indirectCommandsLayouts.deviceId = ? AND indirectCommandsLayouts.destroyApiEventId IS NULL);",
+        &destroyIndirectCommandsLayoutsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE micromaps SET destroyApiEventId = ?"
+        " WHERE (micromaps.deviceId = ? AND micromaps.destroyApiEventId IS NULL);",
+        &destroyMicromapsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE opticalFlowSessions SET destroyApiEventId = ?"
+        " WHERE (opticalFlowSessions.deviceId = ? AND opticalFlowSessions.destroyApiEventId IS NULL);",
+        &destroyOpticalFlowSessionsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE dataGraphPipelineSessions SET destroyApiEventId = ?"
+        " WHERE (dataGraphPipelineSessions.deviceId = ? AND dataGraphPipelineSessions.destroyApiEventId IS NULL);",
+        &destroyDataGraphPipelineSessionsByDeviceStatement
+    );
+    PrepareStatement(
+        db,
+        "UPDATE swapchains SET destroyApiEventId = ?"
+        " WHERE (swapchains.deviceId = ? AND swapchains.destroyApiEventId IS NULL);",
+        &destroySwapchainsByDeviceStatement
     );
 }
 
@@ -5104,6 +5403,27 @@ void VulkanSqlitePreparedStatements::DestroyObject(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
+std::vector<int64_t> VulkanSqlitePreparedStatements::SelectIds(const SqliteStatement& statement, const int64_t parentId)
+{
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(parentId)));
+
+    std::vector<int64_t> ids;
+    int err = sqlite3_step(statement);
+    while (err == SQLITE_ROW)
+    {
+        ids.push_back(static_cast<int64_t>(sqlite3_column_int64(statement, 0)));
+        err = sqlite3_step(statement);
+    }
+    if (err != SQLITE_DONE) [[unlikely]]
+    {
+        GFXRECON_SQLITE_LOG_ERROR(
+            "Error %d at offset %d running SelectIds: %s\n", err, sqlite3_error_offset(db), sqlite3_errmsg(db)
+        );
+    }
+    return ids;
+}
+
 int64_t VulkanSqlitePreparedStatements::InsertStruct(const std::string_view type)
 {
     auto structId = ++context->currentStructId;
@@ -5127,7 +5447,10 @@ int64_t VulkanSqlitePreparedStatements::InsertArray(const std::string_view type)
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertDebugReportCallback(
-    const int64_t callbackHandle, const uint32_t flags, const uint64_t apiEventId
+    const int64_t callbackHandle,
+    const std::optional<int64_t> instanceId,
+    const uint32_t flags,
+    const uint64_t apiEventId
 )
 {
     auto callbackId = ++context->currentDebugReportCallbackId;
@@ -5135,14 +5458,19 @@ int64_t VulkanSqlitePreparedStatements::InsertDebugReportCallback(
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(callbackId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(callbackHandle)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(flags)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, instanceId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(flags)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return callbackId;
 }
 
 void VulkanSqlitePreparedStatements::InsertDebugMessenger(
-    const format::HandleId messenger, const uint32_t severity, const uint32_t type, const uint64_t apiEventId
+    const format::HandleId messenger,
+    const std::optional<int64_t> instanceId,
+    const uint32_t severity,
+    const uint32_t type,
+    const uint64_t apiEventId
 )
 {
     auto messengerHandle = ToInt64(messenger);
@@ -5152,9 +5480,10 @@ void VulkanSqlitePreparedStatements::InsertDebugMessenger(
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(messengerId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(messengerHandle)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(severity)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(type)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, instanceId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(severity)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(type)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 6, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
@@ -8071,7 +8400,10 @@ void VulkanSqlitePreparedStatements::InsertOpticalFlowSession(
 }
 
 int64_t VulkanSqlitePreparedStatements::InsertSurface(
-    const int64_t surfaceHandle, const uint32_t createInfoType, const uint64_t apiEventId
+    const int64_t surfaceHandle,
+    const std::optional<int64_t> instanceId,
+    const uint32_t createInfoType,
+    const uint64_t apiEventId
 )
 {
     auto surfaceId = ++context->currentSurfaceId;
@@ -8080,8 +8412,9 @@ int64_t VulkanSqlitePreparedStatements::InsertSurface(
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(surfaceId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(surfaceHandle)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(createInfoType)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(apiEventId)));
+    GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 3, instanceId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(createInfoType)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return surfaceId;
 }

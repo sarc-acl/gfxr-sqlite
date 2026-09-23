@@ -1,5 +1,5 @@
 /********************************************************************************
-    Copyright 2024-2025 The Sokatoa Project Authors
+    Copyright 2024-2026 The Sokatoa Project Authors
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -173,6 +173,9 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   handle INT NOT NULL,"
         "   instanceId INT,"
         "   enumerateApiEventId INT,"
+        // VkPhysicalDevice is never explicitly destroyed - only implicitly invalidated when its
+        // instance is destroyed (see VulkanSqliteConsumerExt::ReleaseInstanceDependents).
+        "   releaseApiEventId INT,"
         // VkPhysicalDeviceProperties, filled in later by vkGetPhysicalDeviceProperties[2] - nullable
         // because that call may never be captured.
         "   apiVersion INT,"
@@ -184,6 +187,7 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   pipelineCacheUUID TEXT,"
         "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
         "   FOREIGN KEY(enumerateApiEventId) REFERENCES apiEvents(id),"
+        "   FOREIGN KEY(releaseApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(deviceType) REFERENCES VkPhysicalDeviceType(value)) STRICT;"
     );
 
@@ -239,9 +243,11 @@ static void CreateVulkanObjectTables(sqlite3* db)
         "CREATE TABLE surfaces("
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   handle INT NOT NULL,"
+        "   instanceId INT,"
         "   createInfoType INT,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
+        "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
         "   FOREIGN KEY(createInfoType) REFERENCES VkStructureType(value),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"

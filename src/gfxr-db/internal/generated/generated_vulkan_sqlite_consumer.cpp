@@ -6390,7 +6390,7 @@ void VulkanSqliteConsumer::Process_vkCreateDisplayPlaneSurfaceKHR(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkCreateSharedSwapchainsKHR(
     const ApiCallInfo&                          call_info,
@@ -6425,7 +6425,7 @@ void VulkanSqliteConsumer::Process_vkCreateXlibSurfaceKHR(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 
 void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceXlibPresentationSupportKHR(
@@ -6461,7 +6461,7 @@ void VulkanSqliteConsumer::Process_vkCreateXcbSurfaceKHR(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 
 void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceXcbPresentationSupportKHR(
@@ -6497,7 +6497,7 @@ void VulkanSqliteConsumer::Process_vkCreateWaylandSurfaceKHR(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 
 void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceWaylandPresentationSupportKHR(
@@ -6531,7 +6531,7 @@ void VulkanSqliteConsumer::Process_vkCreateAndroidSurfaceKHR(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkCreateWin32SurfaceKHR(
     const ApiCallInfo&                          call_info,
@@ -6548,7 +6548,7 @@ void VulkanSqliteConsumer::Process_vkCreateWin32SurfaceKHR(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 
 void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceWin32PresentationSupportKHR(
@@ -10612,7 +10612,7 @@ void VulkanSqliteConsumer::Process_vkCreateStreamDescriptorSurfaceGGP(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(
     const ApiCallInfo&                          call_info,
@@ -10673,7 +10673,7 @@ void VulkanSqliteConsumer::Process_vkCreateViSurfaceNN(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkCmdBeginConditionalRenderingEXT(
     const ApiCallInfo&                          call_info,
@@ -10979,7 +10979,7 @@ void VulkanSqliteConsumer::Process_vkCreateIOSSurfaceMVK(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkCreateMacOSSurfaceMVK(
     const ApiCallInfo&                          call_info,
@@ -10996,7 +10996,7 @@ void VulkanSqliteConsumer::Process_vkCreateMacOSSurfaceMVK(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkSetDebugUtilsObjectNameEXT(
     const ApiCallInfo&                          call_info,
@@ -12667,7 +12667,7 @@ void VulkanSqliteConsumer::Process_vkCreateImagePipeSurfaceFUCHSIA(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkCreateMetalSurfaceEXT(
     const ApiCallInfo&                          call_info,
@@ -12684,7 +12684,7 @@ void VulkanSqliteConsumer::Process_vkCreateMetalSurfaceEXT(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkGetBufferDeviceAddressEXT(
     const ApiCallInfo&                          call_info,
@@ -12824,7 +12824,7 @@ void VulkanSqliteConsumer::Process_vkCreateHeadlessSurfaceEXT(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 void VulkanSqliteConsumer::Process_vkCmdSetLineStippleEXT(
     const ApiCallInfo&                          call_info,
@@ -13617,7 +13617,7 @@ void VulkanSqliteConsumer::Process_vkCreateDirectFBSurfaceEXT(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 
 void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceDirectFBPresentationSupportEXT(
@@ -13852,7 +13852,7 @@ void VulkanSqliteConsumer::Process_vkCreateScreenSurfaceQNX(
     FieldToSqlite(statements, fieldInfo, 4, "pSurface", &args.pSurface, "VkSurfaceKHR*");
 
     statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
-    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
 }
 
 void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceScreenPresentationSupportQNX(
