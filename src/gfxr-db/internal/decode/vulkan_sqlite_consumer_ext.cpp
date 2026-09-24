@@ -511,7 +511,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugReportCallbackEXT(
     auto flags = createInfo->decoded_value->flags;
 
     auto callbackHandle = ToInt64(callback);
-    auto callbackId = statements.InsertDebugReportCallback(callbackHandle, flags, this->block_index_);
+    auto instanceId = context.GetInstanceId(args.instance, /*allowNull=*/true);
+    auto callbackId = statements.InsertDebugReportCallback(callbackHandle, instanceId, flags, this->block_index_);
     context.debugReportCallbackHandleToId[callbackHandle] = callbackId;
 }
 
@@ -561,7 +562,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateDebugUtilsMessengerEXT(
 
     auto& ci = *createInfo->decoded_value;
 
-    statements.InsertDebugMessenger(messenger, ci.messageSeverity, ci.messageType, this->block_index_);
+    auto instanceId = context.GetInstanceId(args.instance, /*allowNull=*/true);
+    statements.InsertDebugMessenger(messenger, instanceId, ci.messageSeverity, ci.messageType, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkDestroyDebugUtilsMessengerEXT(
@@ -820,6 +822,107 @@ void VulkanSqliteConsumerExt::Process_vkCreateInstance(const ApiCallInfo& callIn
     }
 }
 
+// See the declaration in vulkan_sqlite_consumer_ext.h for the overall composable-cascade design.
+// Destroying an instance implicitly releases everything created under it: its surfaces/debug
+// report callbacks/debug messengers directly (they have no vkDestroy of their own that would have
+// already closed them - VUID-vkDestroyInstance-instance-00629 requires all of these to already be
+// destroyed, but malformed/truncated captures can still violate that), its physical devices (which
+// have no destroy call at all, only enumeration), and transitively every device created from one of
+// those physical devices - each such device's own dependents are released by recursing into
+// ReleaseDeviceDependents, which is the only place that knows what a device contains.
+void VulkanSqliteConsumerExt::ReleaseInstanceDependents(int64_t instanceId, uint64_t apiEventId)
+{
+    // TODO: these bulk cascades don't erase the corresponding in-memory *HandleToId context maps
+    // (surfaceHandleToId, debugReportCallbackHandleToId, debugMessengerHandleToId,
+    // physicalDeviceHandleToId, deviceHandleToId, and transitively everything ReleaseDeviceDependents
+    // touches) since the cascade only ever materializes row ids, never handle values. A handle
+    // released this way stays resolvable in memory - as a now-stale reference to a row the DB
+    // considers destroyed - until the driver reuses that handle value for a new object. This is a
+    // known, deferred leak; see the identical TODO on VulkanSqliteConsumerExt::
+    // Process_vkDestroyDescriptorPool/Process_vkResetDescriptorPool, whose bulk
+    // freePoolDescriptorSetsUpdateStatement cascade this design generalizes.
+    statements.DestroyObject(statements.destroySurfacesByInstanceStatement, apiEventId, instanceId);
+    statements.DestroyObject(statements.destroyDebugReportCallbacksByInstanceStatement, apiEventId, instanceId);
+    statements.DestroyObject(statements.destroyDebugMessengersByInstanceStatement, apiEventId, instanceId);
+
+    for (auto physicalDeviceId :
+         statements.SelectIds(statements.selectLivePhysicalDeviceIdsByInstanceStatement, instanceId))
+    {
+        ReleasePhysicalDeviceDependents(physicalDeviceId, apiEventId);
+    }
+    statements.DestroyObject(statements.releasePhysicalDevicesByInstanceStatement, apiEventId, instanceId);
+
+    for (auto deviceId : statements.SelectIds(statements.selectLiveDeviceIdsByInstanceStatement, instanceId))
+    {
+        ReleaseDeviceDependents(deviceId, apiEventId);
+    }
+    statements.DestroyObject(statements.destroyDevicesByInstanceStatement, apiEventId, instanceId);
+}
+
+// A VkPhysicalDevice has no destroy call of its own - it's implicitly released along with its
+// instance. Its only children are the displays (and, transitively, display modes) acquired through
+// it; VkPhysicalDevice is never itself the source of a device's teardown decision (that's driven by
+// the instance destroying every device created from one of its physical devices, in
+// ReleaseInstanceDependents), so this function only needs to know about displays/displayModes.
+void VulkanSqliteConsumerExt::ReleasePhysicalDeviceDependents(int64_t physicalDeviceId, uint64_t apiEventId)
+{
+    // TODO: same known-and-deferred displayHandleToId/displayModeHandleToId leak as described in
+    // ReleaseInstanceDependents - this bulk cascade doesn't erase those in-memory maps either.
+    statements.DestroyObject(statements.destroyDisplayModesByPhysicalDeviceStatement, apiEventId, physicalDeviceId);
+    statements.DestroyObject(statements.releaseDisplaysByPhysicalDeviceStatement, apiEventId, physicalDeviceId);
+}
+
+// Destroying a device implicitly releases every object created on it that the app didn't already
+// explicitly destroy - per spec this should never be observed (VUID-vkDestroyDevice-device-05137
+// requires every child object to already be destroyed), but real captures can still violate that
+// (a trace ending mid-capture, a leaking/crashing app). Every table here already denormalizes its
+// owning deviceId directly (confirmed against the schema), so each one is an independent flat bulk
+// UPDATE - no recursion needed within this function, unlike the instance/physicalDevice levels.
+void VulkanSqliteConsumerExt::ReleaseDeviceDependents(int64_t deviceId, uint64_t apiEventId)
+{
+    // TODO: same known-and-deferred *HandleToId leak as described in ReleaseInstanceDependents,
+    // for every table closed below (queueHandleToId, commandPoolHandleToId, commandBufferHandleToId,
+    // bufferHandleToId, imageHandleToId, descriptorSetHandleToInfo, pipelineHandleToId, ...).
+    statements.DestroyObject(statements.releaseQueuesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyCommandPoolsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.resetCommandBufferRecordingsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.freeCommandBuffersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyBuffersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyBufferViewsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyImagesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyImageViewsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySamplersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySamplerYcbcrConversionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.freeDescriptorSetsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDescriptorPoolsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDescriptorSetLayoutsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDescriptorUpdateTemplatesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelinesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelineLayoutsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelineCachesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPipelineBinariesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyShaderModulesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyShaderObjectsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyRenderPassesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyFramebuffersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyQueryPoolsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyFencesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySemaphoresByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyEventsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyValidationCachesByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyPrivateDataSlotsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyAccelerationStructuresByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyAccelerationStructuresNvByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDeferredOperationsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyVideoSessionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyVideoSessionParametersByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyIndirectCommandsLayoutsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyMicromapsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyOpticalFlowSessionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroyDataGraphPipelineSessionsByDeviceStatement, apiEventId, deviceId);
+    statements.DestroyObject(statements.destroySwapchainsByDeviceStatement, apiEventId, deviceId);
+}
+
 void VulkanSqliteConsumerExt::Process_vkDestroyInstance(const ApiCallInfo& callInfo, args::DestroyInstance& args)
 {
     // generate the base apiEvents database entries
@@ -827,6 +930,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyInstance(const ApiCallInfo& callI
 
     if (auto id = context.ExtractId(args.instance, context.instanceHandleToId, "instance", this->block_index_))
     {
+        ReleaseInstanceDependents(*id, this->block_index_);
         statements.DestroyObject(statements.destroyInstanceUpdateStatement, this->block_index_, *id);
     }
 }
@@ -1069,6 +1173,7 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDevice(const ApiCallInfo& callInf
 
     if (auto id = context.ExtractId(args.device, context.deviceHandleToId, "device", this->block_index_))
     {
+        ReleaseDeviceDependents(*id, this->block_index_);
         statements.DestroyObject(statements.destroyDeviceUpdateStatement, this->block_index_, *id);
     }
 }
@@ -1135,8 +1240,7 @@ void VulkanSqliteConsumerExt::ProcessQueue(
                 if (!isTempQueue)
                 {
                     LOG_CMD_WARNING(
-                        "Failed to find queue, no queue data for device handle %" PRIu64
-                        ", family index %d, flags %d",
+                        "Failed to find queue, no queue data for device handle %" PRIu64 ", family index %d, flags %d",
                         device,
                         queueFamilyIndex,
                         flags
@@ -1168,7 +1272,7 @@ void VulkanSqliteConsumerExt::ProcessQueue(
         }
     }
 
-    statements.InsertQueue(queueHandle, flags, queueFamilyIndex, queueIndex, priority, device);
+    statements.InsertQueue(queueHandle, flags, queueFamilyIndex, queueIndex, priority, device, this->block_index_);
 }
 
 void VulkanSqliteConsumerExt::Process_vkGetDeviceQueue(const ApiCallInfo& callInfo, args::GetDeviceQueue& args)
@@ -2378,7 +2482,8 @@ std::optional<int64_t> VulkanSqliteConsumerExt::GetBasePipelineId(
             {
                 if (returnValue == VK_SUCCESS)
                 {
-                    GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
                         "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is out of range, "
                         "setting foreign key to NULL",
                         createInfo.decoded_value->basePipelineIndex
@@ -2389,7 +2494,8 @@ std::optional<int64_t> VulkanSqliteConsumerExt::GetBasePipelineId(
             {
                 if (returnValue == VK_SUCCESS)
                 {
-                    GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
                         "Derivative pipeline has null basePipelineHandle and basePipelineIndex %d is for a "
                         "non-created pipeline at index %" PRIu64 ", setting foreign key to NULL",
                         createInfo.decoded_value->basePipelineIndex,
@@ -2404,7 +2510,8 @@ std::optional<int64_t> VulkanSqliteConsumerExt::GetBasePipelineId(
         }
         else if (returnValue == VK_SUCCESS && createInfo.decoded_value->basePipelineIndex != -1)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Derivative pipeline has both basePipelineHandle and basePipelineIndex "
                 "set; using basePipelineHandle"
             );
@@ -2415,7 +2522,8 @@ std::optional<int64_t> VulkanSqliteConsumerExt::GetBasePipelineId(
             auto basePipelineIter = context.pipelineHandleToId.find(ToInt64(basePipelineHandle));
             if (basePipelineIter == context.pipelineHandleToId.end())
             {
-                GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
                     "Failed to find base pipeline with handle %" PRIu64 ", setting foreign key to NULL",
                     basePipelineHandle
                 );
@@ -2442,8 +2550,10 @@ VulkanSqliteConsumerExt::GetPipelineLibraryInfo(
         auto libraryPipelineIter = context.pipelineHandleToId.find(ToInt64(libraryHandles[libraryIndex]));
         if (libraryPipelineIter == context.pipelineHandleToId.end())
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-                "Failed to find library pipeline with handle %" PRIu64 "; ignoring", libraryHandles[libraryIndex]
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
+                "Failed to find library pipeline with handle %" PRIu64 "; ignoring",
+                libraryHandles[libraryIndex]
             );
             continue;
         }
@@ -2452,8 +2562,10 @@ VulkanSqliteConsumerExt::GetPipelineLibraryInfo(
 
         if (!lookup.found)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-                "Failed to look up library pipeline with handle %" PRIu64 "; ignoring", libraryHandles[libraryIndex]
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
+                "Failed to look up library pipeline with handle %" PRIu64 "; ignoring",
+                libraryHandles[libraryIndex]
             );
             continue;
         }
@@ -2467,7 +2579,8 @@ VulkanSqliteConsumerExt::GetPipelineLibraryInfo(
         }
         else
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Failed to look up library pipeline flags with handle %" PRIu64 "; ignoring",
                 libraryHandles[libraryIndex]
             );
@@ -2479,7 +2592,8 @@ VulkanSqliteConsumerExt::GetPipelineLibraryInfo(
         }
         else
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Failed to look up library pipeline library flags with handle %" PRIu64 "; ignoring",
                 libraryHandles[libraryIndex]
             );
@@ -2496,7 +2610,8 @@ VulkanSqliteConsumerExt::GetPipelineLibraryInfo(
             {
                 if (libraries.contains(libraryFlag))
                 {
-                    GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
                         "Pipeline with handle %" PRIu64 " has flag %u on both library %" PRIu64 " and %" PRIu64
                         "; ignoring second",
                         pipelineHandle,
@@ -2734,7 +2849,9 @@ VulkanSqliteConsumerExt::ProcessGraphicsPipelineVertexInputState(
         if (returnValue == VK_SUCCESS &&
             !PipelineEnablesDynamicState(createInfo.pDynamicState, VK_DYNAMIC_STATE_VERTEX_INPUT_EXT))
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create vertex input state, invalid pVertexInputState struct");
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_, "Failed to create vertex input state, invalid pVertexInputState struct"
+            );
         }
     }
     else
@@ -2837,7 +2954,8 @@ VulkanSqliteConsumerExt::GraphicsPipelineVertexInputState VulkanSqliteConsumerEx
 
     if (!lookup.found)
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to look up library vertex input state + input assembly state for pipeline %" PRId64
             "/library %" PRId64 "; treating as NULL",
             pipelineId,
@@ -3110,7 +3228,8 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelinePreRasterizationShaderState(int64_t
 
     if (!lookup.found)
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to look up library pre rasterization shader state for pipeline %" PRId64 "/library %" PRId64
             "; treating as NULL",
             pipelineId,
@@ -3286,7 +3405,8 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelineFragmentShaderState(
 
     if (!lookup.found)
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to look up library fragment shader state for pipeline %" PRId64 "/library %" PRId64
             "; treating as NULL",
             pipelineId,
@@ -3305,7 +3425,8 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelineFragmentShaderState(
     else
     {
         // This is illegal per VUID-VkGraphicsPipelineCreateInfo-stage-06897
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Library %" PRId64 " for pipeline %" PRId64 " has more than 1 fragment shader stage (%" PRId64
             "); this breaks stageIndex logic so treating as 0 fragment shader stages",
             libraryPipelineId,
@@ -3427,7 +3548,8 @@ VulkanSqliteConsumerExt::CopyGraphicsPipelineFragmentOutputState(int64_t pipelin
 
     if (!lookup.found)
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to look up library fragment output state for pipeline %" PRId64 "/library %" PRId64
             "; treating as NULL",
             pipelineId,
@@ -3505,7 +3627,8 @@ std::optional<int64_t> VulkanSqliteConsumerExt::CopyGraphicsPipelineMultisampleS
 
     if (!lookup.found)
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to look up library fragment output state for pipeline %" PRId64 "/library %" PRId64
             "; treating as NULL",
             pipelineId,
@@ -3606,7 +3729,8 @@ void VulkanSqliteConsumerExt::ProcessPipelineShaderStageCreateInfo(
             // https://github.com/KhronosGroup/Vulkan-Docs/blob/main/proposals/VK_EXT_graphics_pipeline_library.adoc#deprecating-shader-modules
             if (stage.module != format::kNullHandleId)
             {
-                GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
                     "Shader stage has non-null module but also chains VkShaderModuleCreateInfo; using chained shader"
                 );
             }
@@ -3640,8 +3764,10 @@ void VulkanSqliteConsumerExt::ProcessPipelineShaderStageCreateInfo(
             auto shaderModuleIter = context.shaderModuleHandleToId.find(ToInt64(stage.module));
             if (shaderModuleIter == context.shaderModuleHandleToId.end())
             {
-                GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-                    "Failed to find shader module with handle %" PRIu64 ", setting foreign key to NULL", stage.module
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
+                    "Failed to find shader module with handle %" PRIu64 ", setting foreign key to NULL",
+                    stage.module
                 );
             }
             else
@@ -3653,8 +3779,10 @@ void VulkanSqliteConsumerExt::ProcessPipelineShaderStageCreateInfo(
         {
             // TODO: There are other cases where this can happen beyond chaining VkShaderModuleCreateInfo:
             // https://registry.khronos.org/vulkan/specs/latest/man/html/VkPipelineShaderStageCreateInfo.html#VUID-VkPipelineShaderStageCreateInfo-stage-06845
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-                "Pipeline stage is missing shader module and lacks chained VkShaderModuleCreateInfo", stage.module
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
+                "Pipeline stage is missing shader module and lacks chained VkShaderModuleCreateInfo",
+                stage.module
             );
         }
     }
@@ -4859,6 +4987,12 @@ void VulkanSqliteConsumerExt::Process_vkDestroyDescriptorPool(
     {
         statements.DestroyObject(statements.destroyDescriptorPoolUpdateStatement, this->block_index_, *id);
         // update all un-freed associated descriptor sets as they are now implicitly freed
+        // TODO: this bulk cascade doesn't erase context.descriptorSetHandleToInfo for the sets it
+        // implicitly frees - unlike Process_vkFreeDescriptorSets, which erases that map per handle
+        // on the fully-explicit path. A handle freed this way stays resolvable in memory as a
+        // now-stale reference until the driver reuses it for a new descriptor set. Known, deferred
+        // leak - see the same TODO on VulkanSqliteConsumerExt::ReleaseInstanceDependents, which
+        // generalizes this exact bulk-cascade idiom to the rest of the object graph.
         statements.DestroyObject(statements.freePoolDescriptorSetsUpdateStatement, this->block_index_, *id);
     }
 }
@@ -4880,6 +5014,7 @@ void VulkanSqliteConsumerExt::Process_vkResetDescriptorPool(
     }
 
     // update all un-freed associated descriptor sets as they are now implicitly freed
+    // TODO: same context.descriptorSetHandleToInfo leak as in Process_vkDestroyDescriptorPool above.
     statements.DestroyObject(
         statements.freePoolDescriptorSetsUpdateStatement, this->block_index_, descriptorPoolIter->second
     );
@@ -5013,7 +5148,9 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create render pass, invalid pRenderPass handle");
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_, "Failed to create render pass, invalid pRenderPass handle"
+            );
         }
         return;
     }
@@ -5256,8 +5393,8 @@ void VulkanSqliteConsumerExt::CreateSamplerYcbcrConversion(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-                "Failed to create sampler ycbcr conversion, invalid pSamplerYcbcrConversion handle"
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_, "Failed to create sampler ycbcr conversion, invalid pSamplerYcbcrConversion handle"
             );
         }
         return;
@@ -5268,7 +5405,9 @@ void VulkanSqliteConsumerExt::CreateSamplerYcbcrConversion(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create sampler ycbcr conversion, invalid pCreateInfo");
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_, "Failed to create sampler ycbcr conversion, invalid pCreateInfo"
+            );
         }
         return;
     }
@@ -5352,7 +5491,9 @@ void VulkanSqliteConsumerExt::CreatePrivateDataSlot(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create private data slot, invalid pPrivateDataSlot handle");
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_, "Failed to create private data slot, invalid pPrivateDataSlot handle"
+            );
         }
         return;
     }
@@ -5362,7 +5503,9 @@ void VulkanSqliteConsumerExt::CreatePrivateDataSlot(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create private data slot, invalid pCreateInfo");
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_, "Failed to create private data slot, invalid pCreateInfo"
+            );
         }
         return;
     }
@@ -5555,7 +5698,9 @@ void VulkanSqliteConsumerExt::BindDescriptorSets2(
     auto [descriptorSetsInfoValid, descriptorSetsInfo] = GetMetaStructPointer(pBindDescriptorSetsInfo);
     if (!descriptorSetsInfoValid)
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to bind descriptor sets, invalid pBindDescriptorSetsInfo");
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_, "Failed to bind descriptor sets, invalid pBindDescriptorSetsInfo"
+        );
         return;
     }
 
@@ -5571,7 +5716,8 @@ void VulkanSqliteConsumerExt::BindDescriptorSets2(
     auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to bind descriptor sets, failed to find command buffer recording for command buffer with handle "
             "%" PRIi64,
             commandBuffer
@@ -5581,7 +5727,8 @@ void VulkanSqliteConsumerExt::BindDescriptorSets2(
     auto pipelineLayoutIter = context.pipelineLayoutHandleToId.find(ToInt64(descriptorSetsInfo->layout));
     if (pipelineLayoutIter == context.pipelineLayoutHandleToId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to bind descriptor sets, failed to find pipeline layout with handle %" PRIi64,
             descriptorSetsInfo->layout
         );
@@ -5598,8 +5745,10 @@ void VulkanSqliteConsumerExt::BindDescriptorSets2(
         auto descriptorSetIter = context.descriptorSetHandleToInfo.find(ToInt64(descriptorSet));
         if (descriptorSetIter == context.descriptorSetHandleToInfo.end())
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-                "Failed to bind descriptor set, failed to find descriptor set with handle %" PRIi64, descriptorSet
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
+                "Failed to bind descriptor set, failed to find descriptor set with handle %" PRIi64,
+                descriptorSet
             );
             continue;
         }
@@ -5639,7 +5788,8 @@ void VulkanSqliteConsumerExt::BindDescriptorSets2(
                         }
                         else
                         {
-                            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                            GFXRECON_SQLITE_LOG_WARNING_AT(
+                                this->block_index_,
                                 "Failed to add descriptor set dynamic offset, invalid number of dynamic offsets"
                             );
                             break;
@@ -5683,7 +5833,8 @@ void VulkanSqliteConsumerExt::CreateDescriptorUpdateTemplate(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Failed to create descriptor update template, invalid pDescriptorUpdateTemplate handle"
             );
         }
@@ -5695,7 +5846,9 @@ void VulkanSqliteConsumerExt::CreateDescriptorUpdateTemplate(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create descriptor update template, invalid pCreateInfo");
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_, "Failed to create descriptor update template, invalid pCreateInfo"
+            );
         }
         return;
     }
@@ -5811,7 +5964,8 @@ void VulkanSqliteConsumerExt::WriteDescriptorSet(
     auto descriptorSetDstIter = context.descriptorSetHandleToInfo.find(ToInt64(descriptorWrite.dstSet));
     if (descriptorSetDstIter == context.descriptorSetHandleToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to write descriptor set, failed to find destination descriptor set with handle "
             "%" PRIu64,
             descriptorWrite.dstSet
@@ -5848,7 +6002,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSet(
     auto descriptorSetLayoutInfoIter = context.descriptorSetLayoutToInfo.find(layoutId);
     if (descriptorSetLayoutInfoIter == context.descriptorSetLayoutToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to write descriptor set, failed to find descriptor set layout binding for layout id "
             "%" PRIu64,
             layoutId
@@ -5859,7 +6014,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSet(
     auto bindingInfoIter = descriptorSetLayoutInfoIter->second.bindings.find(dstBinding);
     if (bindingInfoIter == descriptorSetLayoutInfoIter->second.bindings.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to write descriptor set, failed to find descriptor set layout binding info for layout id "
             "%" PRIu64 " binding %u",
             layoutId,
@@ -5926,7 +6082,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSet(
             element = 0;
             if (bindingInfoIter == descriptorSetLayoutInfoIter->second.bindings.end())
             {
-                GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
                     "Failed to fully write descriptor set, failed to find descriptor set layout binding info for "
                     "layout id %" PRIu64 " binding %u",
                     layoutId,
@@ -6063,7 +6220,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
     auto descriptorSetSrcIter = context.descriptorSetHandleToInfo.find(ToInt64(descriptorCopy.srcSet));
     if (descriptorSetSrcIter == context.descriptorSetHandleToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to copy descriptor set, failed to find source descriptor set with handle %" PRIu64,
             descriptorCopy.srcSet
         );
@@ -6072,7 +6230,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
     auto descriptorSetDstIter = context.descriptorSetHandleToInfo.find(ToInt64(descriptorCopy.dstSet));
     if (descriptorSetDstIter == context.descriptorSetHandleToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to copy descriptor set, failed to find destination descriptor set with handle %" PRIu64,
             descriptorCopy.dstSet
         );
@@ -6087,7 +6246,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
     auto dstDescriptorSetLayoutInfoIter = context.descriptorSetLayoutToInfo.find(descriptorSetDstIter->second.layoutId);
     if (dstDescriptorSetLayoutInfoIter == context.descriptorSetLayoutToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to copy descriptor set, failed to find descriptor set layout binding for layout id "
             "%" PRIu64,
             descriptorSetDstIter->second.layoutId
@@ -6098,7 +6258,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
     auto dstBindingInfoIter = dstDescriptorSetLayoutInfoIter->second.bindings.find(dstBinding);
     if (dstBindingInfoIter == dstDescriptorSetLayoutInfoIter->second.bindings.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to copy descriptor set, failed to find descriptor set layout binding info for layout id "
             "%" PRIu64 " binding %u",
             descriptorSetDstIter->second.layoutId,
@@ -6109,7 +6270,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
     auto srcDescriptorSetLayoutInfoIter = context.descriptorSetLayoutToInfo.find(descriptorSetSrcIter->second.layoutId);
     if (srcDescriptorSetLayoutInfoIter == context.descriptorSetLayoutToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to copy descriptor set, failed to find descriptor set layout binding for layout id "
             "%" PRIu64,
             descriptorSetSrcIter->second.layoutId
@@ -6120,7 +6282,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
     auto srcBindingInfoIter = srcDescriptorSetLayoutInfoIter->second.bindings.find(srcBinding);
     if (srcBindingInfoIter == srcDescriptorSetLayoutInfoIter->second.bindings.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to copy descriptor set, failed to find descriptor set layout binding info for layout id "
             "%" PRIu64 " binding %u",
             descriptorSetSrcIter->second.layoutId,
@@ -6148,7 +6311,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
             dstElement = 0;
             if (dstBindingInfoIter == dstDescriptorSetLayoutInfoIter->second.bindings.end())
             {
-                GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
                     "Failed to fully copy descriptor set, failed to find descriptor set layout binding info for "
                     "layout id %" PRIu64 " binding %u",
                     descriptorSetDstIter->second.layoutId,
@@ -6166,7 +6330,8 @@ void VulkanSqliteConsumerExt::CopyDescriptorSet(const Decoded_VkCopyDescriptorSe
             srcElement = 0;
             if (srcBindingInfoIter == srcDescriptorSetLayoutInfoIter->second.bindings.end())
             {
-                GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
                     "Failed to fully copy descriptor set, failed to find descriptor set layout binding info for "
                     "layout id %" PRIu64 " binding %u",
                     descriptorSetSrcIter->second.layoutId,
@@ -6294,7 +6459,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
         context.descriptorUpdateTemplateHandleToId.find(ToInt64(descriptorUpdateTemplate));
     if (descriptorUpdateTemplateIter == context.descriptorUpdateTemplateHandleToId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to update descriptor set with template; no template found with handle %" PRIu64,
             descriptorUpdateTemplate
         );
@@ -6305,7 +6471,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     auto descriptorUpdateTemplateInfoIter = context.descriptorUpdateTemplateInfo.find(descriptorUpdateTemplateId);
     if (descriptorUpdateTemplateInfoIter == context.descriptorUpdateTemplateInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to update descriptor set with template; no template found with id %" PRIi64,
             descriptorUpdateTemplateId
         );
@@ -6334,7 +6501,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
         auto descriptorSetLayoutInfoIter = context.descriptorSetLayoutToInfo.find(layoutId);
         if (descriptorSetLayoutInfoIter == context.descriptorSetLayoutToInfo.end())
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Failed to write descriptor set, failed to find descriptor set layout binding for layout id "
                 "%" PRIu64,
                 layoutId
@@ -6345,7 +6513,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
         auto bindingInfoIter = descriptorSetLayoutInfoIter->second.bindings.find(entry.dstBinding);
         if (bindingInfoIter == descriptorSetLayoutInfoIter->second.bindings.end())
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Failed to write descriptor set, failed to find descriptor set layout binding info for layout id "
                 "%" PRIu64 " binding %u",
                 layoutId,
@@ -6370,7 +6539,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
                 element = 0;
                 if (bindingInfoIter == descriptorSetLayoutInfoIter->second.bindings.end())
                 {
-                    GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
                         "Failed to fully write descriptor set, failed to find descriptor set layout binding info for "
                         "layout id %" PRIu64 " binding %u",
                         layoutId,
@@ -6551,8 +6721,10 @@ void VulkanSqliteConsumerExt::WriteDescriptorSetWithTemplate(
     auto descriptorSetDstIter = context.descriptorSetHandleToInfo.find(ToInt64(descriptorSet));
     if (descriptorSetDstIter == context.descriptorSetHandleToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-            "Failed to update descriptor set with template; no descriptor set found with handle %" PRIu64, descriptorSet
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
+            "Failed to update descriptor set with template; no descriptor set found with handle %" PRIu64,
+            descriptorSet
         );
         return;
     }
@@ -6601,7 +6773,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
     auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to push descriptor sets, failed to find command buffer recording for command buffer with handle "
             "%" PRIi64,
             commandBuffer
@@ -6611,15 +6784,18 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
     auto pipelineLayoutIter = context.pipelineLayoutHandleToId.find(ToInt64(pipelineLayout));
     if (pipelineLayoutIter == context.pipelineLayoutHandleToId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-            "Failed to push descriptor sets, failed to find pipeline layout with handle %" PRIi64, pipelineLayout
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
+            "Failed to push descriptor sets, failed to find pipeline layout with handle %" PRIi64,
+            pipelineLayout
         );
         return;
     }
     auto pipelineLayoutSetsIter = context.pipelineLayoutSetIndexToLayoutId.find(pipelineLayoutIter->second);
     if (pipelineLayoutSetsIter == context.pipelineLayoutSetIndexToLayoutId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to push descriptor sets, failed to find pipeline layout with handle %" PRIi64 " / ID %" PRIi64,
             pipelineLayout,
             pipelineLayoutIter->second
@@ -6630,7 +6806,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
     auto descriptorSetLayoutIter = pipelineLayoutSetsIter->second.find(set);
     if (descriptorSetLayoutIter == pipelineLayoutSetsIter->second.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to push descriptor sets, pipeline layout with handle %" PRIi64 " / ID %" PRIi64
             " does not have a set with index %u",
             pipelineLayout,
@@ -6643,7 +6820,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
     auto descriptorSetLayoutInfoIter = context.descriptorSetLayoutToInfo.find(descriptorSetLayoutIter->second);
     if (descriptorSetLayoutInfoIter == context.descriptorSetLayoutToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "While pushing descriptor sets, pipeline layout with handle %" PRIi64 " / ID %" PRIi64 " set index %" PRIi64
             " references descriptor set layout ID %" PRIi64 " which does not exist",
             pipelineLayout,
@@ -6655,7 +6833,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
     }
     if (!(descriptorSetLayoutInfoIter->second.flags & VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT))
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor push with pipeline layout with handle %" PRIi64 " / ID %" PRIi64
             " and set with index %u refers to pipeline layout %" PRIi64 " which does not have the push descriptor flag",
             pipelineLayout,
@@ -6678,7 +6857,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSet(
     }
     else
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to determine descriptor set push stage flags, neither a pipeline bind point nor stage flags "
             "were provided"
         );
@@ -6806,7 +6986,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to push descriptor sets, failed to find command buffer recording for command buffer with handle "
             "%" PRIi64,
             commandBuffer
@@ -6816,15 +6997,18 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     auto pipelineLayoutIter = context.pipelineLayoutHandleToId.find(ToInt64(pipelineLayout));
     if (pipelineLayoutIter == context.pipelineLayoutHandleToId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-            "Failed to push descriptor sets, failed to find pipeline layout with handle %" PRIi64, pipelineLayout
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
+            "Failed to push descriptor sets, failed to find pipeline layout with handle %" PRIi64,
+            pipelineLayout
         );
         return;
     }
     auto pipelineLayoutSetsIter = context.pipelineLayoutSetIndexToLayoutId.find(pipelineLayoutIter->second);
     if (pipelineLayoutSetsIter == context.pipelineLayoutSetIndexToLayoutId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to push descriptor sets, failed to find pipeline layout with handle %" PRIi64 " / ID %" PRIi64,
             pipelineLayout,
             pipelineLayoutIter->second
@@ -6835,7 +7019,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     auto descriptorSetLayoutIter = pipelineLayoutSetsIter->second.find(set);
     if (descriptorSetLayoutIter == pipelineLayoutSetsIter->second.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to push descriptor sets, pipeline layout with handle %" PRIi64 " / ID %" PRIi64
             " does not have a set with index %u",
             pipelineLayout,
@@ -6848,7 +7033,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     auto descriptorSetLayoutInfoIter = context.descriptorSetLayoutToInfo.find(descriptorSetLayoutIter->second);
     if (descriptorSetLayoutInfoIter == context.descriptorSetLayoutToInfo.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "While pushing descriptor sets, pipeline layout with handle %" PRIi64 " / ID %" PRIi64 " set index %" PRIi64
             " references descriptor set layout ID %" PRIi64 " which does not exist",
             pipelineLayout,
@@ -6860,7 +7046,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate(
     }
     if (!(descriptorSetLayoutInfoIter->second.flags & VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT))
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor push with pipeline layout with handle %" PRIi64 " / ID %" PRIi64
             " and set with index %u refers to pipeline layout %" PRIi64 " which does not have the push descriptor flag",
             pipelineLayout,
@@ -6917,8 +7104,8 @@ void VulkanSqliteConsumerExt::PushDescriptorSetWithTemplate2(
         GetMetaStructPointer(pPushDescriptorSetWithTemplateInfo);
     if (!pushDescriptorSetWithTemplateInfo)
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-            "Failed to push descriptor sets, invalid pPushDescriptorSetWithTemplateInfo struct"
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_, "Failed to push descriptor sets, invalid pPushDescriptorSetWithTemplateInfo struct"
         );
         return;
     }
@@ -7377,8 +7564,10 @@ void VulkanSqliteConsumerExt::GetDisplay(
     {
         if (returnValue == VK_SUCCESS)
         {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
-                "Failed to create display, failed to find physical device with handle %" PRIu64, physicalDevice
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
+                "Failed to create display, failed to find physical device with handle %" PRIu64,
+                physicalDevice
             );
         }
         return;
@@ -7477,6 +7666,25 @@ void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
         ci.parameters.refreshRate,
         this->block_index_
     );
+}
+
+void VulkanSqliteConsumerExt::Process_vkReleaseDisplayEXT(const ApiCallInfo& callInfo, args::ReleaseDisplayEXT& args)
+{
+    // generate the base apiEvents database entries
+    VulkanSqliteConsumer::Process_vkReleaseDisplayEXT(callInfo, args);
+
+    if (args.result != VK_SUCCESS)
+    {
+        return;
+    }
+
+    // Deliberately does not cascade to displayModes: those remain valid Vulkan objects
+    // after a release (they'd only be closed if the display's instance is destroyed -
+    // see ReleasePhysicalDeviceDependents).
+    if (auto id = context.GetDisplayId(args.display))
+    {
+        statements.DestroyObject(statements.releaseDisplayUpdateStatement, this->block_index_, *id);
+    }
 }
 
 void VulkanSqliteConsumerExt::Process_vkCreateSwapchainKHR(const ApiCallInfo& callInfo, args::CreateSwapchainKHR& args)
@@ -10369,7 +10577,8 @@ void VulkanSqliteConsumerExt::Process_vkCmdDispatchDataGraphARM(
     auto commandBufferRecordingIter = context.commandBufferHandleToRecordingId.find(ToInt64(args.commandBuffer));
     if (commandBufferRecordingIter == context.commandBufferHandleToRecordingId.end())
     {
-        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_,
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Failed to insert data graph dispatch recording, failed to find command buffer recording for handle "
             "%" PRIi64,
             args.commandBuffer

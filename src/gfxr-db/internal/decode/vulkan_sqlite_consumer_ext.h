@@ -356,6 +356,8 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
 
     void Process_vkCreateDisplayModeKHR(const ApiCallInfo& callInfo, args::CreateDisplayModeKHR& args) override;
 
+    void Process_vkReleaseDisplayEXT(const ApiCallInfo& callInfo, args::ReleaseDisplayEXT& args) override;
+
     void Process_vkCreateSwapchainKHR(const ApiCallInfo& callInfo, args::CreateSwapchainKHR& args) override;
 
     void Process_vkCreateSharedSwapchainsKHR(
@@ -991,6 +993,19 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
     void GetDisplay(
         VkResult returnValue, format::HandleId physicalDevice, HandlePointerDecoder<VkDisplayKHR>* pDisplay
     );
+
+    // Composable object-lifecycle cascade, one function per level of the instance/device hierarchy.
+    // Each function only knows about its own *direct* children - ReleaseInstanceDependents calls
+    // ReleaseDeviceDependents per live device it finds, but has no idea what a device contains, and
+    // vice versa. This means adding a new device-scoped table only requires touching
+    // ReleaseDeviceDependents, never the levels above it. See the cascade statements grouped at the
+    // end of VulkanSqlitePreparedStatements (vulkan_sqlite_prepared_statements.h) for the SQL these
+    // rely on: almost every table already denormalizes its owning deviceId/physicalDeviceId/
+    // instanceId directly, so each level is (mostly) a flat bulk "UPDATE ... WHERE parentId = ?"
+    // rather than an in-memory parent->children map walk.
+    void ReleaseInstanceDependents(int64_t instanceId, uint64_t apiEventId);
+    void ReleasePhysicalDeviceDependents(int64_t physicalDeviceId, uint64_t apiEventId);
+    void ReleaseDeviceDependents(int64_t deviceId, uint64_t apiEventId);
 
     void BindDescriptorSets2(
         format::HandleId commandBuffer, StructPointerDecoder<Decoded_VkBindDescriptorSetsInfo>* pBindDescriptorSetsInfo

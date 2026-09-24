@@ -101,9 +101,11 @@ static void CreateDebugTables(sqlite3* db)
         "CREATE TABLE debugReportCallbacks("
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   handle INT NOT NULL,"
+        "   instanceId INT,"
         "   flags INT NOT NULL,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
+        "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
@@ -113,10 +115,12 @@ static void CreateDebugTables(sqlite3* db)
         "CREATE TABLE debugMessengers("
         "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
         "   handle INT NOT NULL,"
+        "   instanceId INT,"
         "   severity INT NOT NULL,"
         "   type INT NOT NULL,"
         "   createApiEventId INT NOT NULL,"
         "   destroyApiEventId INT,"
+        "   FOREIGN KEY(instanceId) REFERENCES instances(id),"
         "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
         "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
@@ -212,6 +216,9 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   FOREIGN KEY(deviceId) REFERENCES devices(id)) STRICT;"
     );
 
+    // VkQueue has no explicit create/destroy call - it comes from a get call (vkGetDeviceQueue /
+    // vkGetDeviceQueue2) and is only implicitly invalidated when its device is destroyed (see
+    // VulkanSqliteConsumerExt::ReleaseDeviceDependents).
     ExecSQL(
         db,
         "CREATE TABLE queues("
@@ -222,7 +229,11 @@ static void CreateVulkanInstanceTables(sqlite3* db)
         "   idx INT NOT NULL,"
         "   priority REAL NOT NULL,"
         "   deviceId INT,"
-        "   FOREIGN KEY(deviceId) REFERENCES devices(id)) STRICT;"
+        "   getApiEventId INT NOT NULL,"
+        "   releaseApiEventId INT,"
+        "   FOREIGN KEY(deviceId) REFERENCES devices(id),"
+        "   FOREIGN KEY(getApiEventId) REFERENCES apiEvents(id),"
+        "   FOREIGN KEY(releaseApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
 }
 
@@ -1410,6 +1421,9 @@ static void CreatePhysicalDevicePropertiesTables(sqlite3* db)
 
 static void CreateDisplayTables(sqlite3* db)
 {
+    // VkDisplayKHR has no create/destroy call - it uses a get/release cycle
+    // each entry is one acquisition of the display which could be the same handle
+    // as future displays.
     ExecSQL(
         db,
         "CREATE TABLE displays("
@@ -1417,10 +1431,14 @@ static void CreateDisplayTables(sqlite3* db)
         "   handle INT NOT NULL,"
         "   physicalDeviceId INT NOT NULL,"
         "   getApiEventId INT NOT NULL,"
+        "   releaseApiEventId INT,"
         "   FOREIGN KEY(physicalDeviceId) REFERENCES physicalDevices(id),"
-        "   FOREIGN KEY(getApiEventId) REFERENCES apiEvents(id)) STRICT;"
+        "   FOREIGN KEY(getApiEventId) REFERENCES apiEvents(id),"
+        "   FOREIGN KEY(releaseApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
 
+    // VkDisplayModeKHR has no destroy call - only implicitly invalidated when its instance is
+    // destroyed (see VulkanSqliteConsumerExt::ReleasePhysicalDeviceDependents).
     ExecSQL(
         db,
         "CREATE TABLE displayModes("
@@ -1432,9 +1450,11 @@ static void CreateDisplayTables(sqlite3* db)
         "   visibleRegionHeight INT NOT NULL,"
         "   refreshRate INT NOT NULL,"
         "   createApiEventId INT NOT NULL,"
+        "   destroyApiEventId INT,"
         "   FOREIGN KEY(physicalDeviceId) REFERENCES physicalDevices(id),"
         "   FOREIGN KEY(displayId) REFERENCES displays(id),"
-        "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id)) STRICT;"
+        "   FOREIGN KEY(createApiEventId) REFERENCES apiEvents(id),"
+        "   FOREIGN KEY(destroyApiEventId) REFERENCES apiEvents(id)) STRICT;"
     );
 }
 
