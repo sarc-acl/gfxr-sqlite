@@ -446,7 +446,7 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement destroyDisplayModesByPhysicalDeviceStatement;
 
     // device-scoped (ReleaseDeviceDependents)
-    SqliteStatement destroyQueuesByDeviceStatement;
+    SqliteStatement releaseQueuesByDeviceStatement;
     SqliteStatement destroyCommandPoolsByDeviceStatement;
     SqliteStatement freeCommandBuffersByDeviceStatement;
     SqliteStatement resetCommandBufferRecordingsByDeviceStatement;
@@ -612,7 +612,8 @@ struct VulkanSqlitePreparedStatements
         const uint32_t queueFamilyIndex,
         const uint32_t queueIndex,
         const float priority,
-        const format::HandleId device
+        const format::HandleId device,
+        const uint64_t apiEventId
     );
     int64_t InsertQueueSubmit(
         const int64_t queueId,

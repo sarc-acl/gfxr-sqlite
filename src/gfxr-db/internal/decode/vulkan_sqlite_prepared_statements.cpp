@@ -1000,7 +1000,7 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
         "deviceName = ?, pipelineCacheUUID = ? WHERE (physicalDevices.id = ?);",
         &physicalDevicePropertiesUpdateStatement
     );
-    PrepareStatement(db, "INSERT INTO queues VALUES (?, ?, ?, ?, ?, ?, ?, NULL);", &queueInsertStatement);
+    PrepareStatement(db, "INSERT INTO queues VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL);", &queueInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmits VALUES (?, ?, ?, ?, ?);", &queueSubmitInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmitBatches VALUES (?, ?, ?, ?, ?);", &queueSubmitBatchInsertStatement);
     PrepareStatement(db, "INSERT INTO queueSubmitBuffers VALUES (?, ?, ?);", &queueSubmitBufferInsertStatement);
@@ -1427,7 +1427,10 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     // (apiEventId, parentId) in that order, so all of them are executed through the existing
     // generic DestroyObject() helper rather than a bespoke wrapper per table.
     PrepareStatement(
-        db, "UPDATE displays SET releaseApiEventId = ? WHERE (displays.id = ?);", &releaseDisplayUpdateStatement
+        db,
+        "UPDATE displays SET releaseApiEventId = ?"
+        " WHERE (displays.id = ? AND displays.releaseApiEventId IS NULL);",
+        &releaseDisplayUpdateStatement
     );
 
     // instance-scoped (ReleaseInstanceDependents)
@@ -1491,8 +1494,8 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     // device-scoped (ReleaseDeviceDependents)
     PrepareStatement(
         db,
-        "UPDATE queues SET destroyApiEventId = ? WHERE (queues.deviceId = ? AND queues.destroyApiEventId IS NULL);",
-        &destroyQueuesByDeviceStatement
+        "UPDATE queues SET releaseApiEventId = ? WHERE (queues.deviceId = ? AND queues.releaseApiEventId IS NULL);",
+        &releaseQueuesByDeviceStatement
     );
     PrepareStatement(
         db,
@@ -6422,7 +6425,8 @@ int64_t VulkanSqlitePreparedStatements::InsertQueue(
     const uint32_t queueFamilyIndex,
     const uint32_t queueIndex,
     const float priority,
-    const format::HandleId device
+    const format::HandleId device,
+    const uint64_t apiEventId
 )
 {
     auto deviceId = context->GetDeviceId(device);
@@ -6437,6 +6441,7 @@ int64_t VulkanSqlitePreparedStatements::InsertQueue(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(queueIndex)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 6, priority));
     GFXRECON_SQLITE_CHECK(db, BindOptInt64(statement, 7, deviceId));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(apiEventId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
     return queueId;
 }
