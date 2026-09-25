@@ -5842,7 +5842,6 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "LAYER SETTINGS CREATE INFO", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_FEATURES_ARM", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE SHADER CORE BUILTINS FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE SHADER CORE BUILTINS PROPERTIES", -1, SQLITE_STATIC); sqlite3_step(stmt);
-        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE PIPELINE LIBRARY GROUP HANDLES FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE DYNAMIC RENDERING UNUSED ATTACHMENTS FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE INTERNALLY SYNCHRONIZED QUEUES FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "LATENCY SLEEP MODE INFO", -1, SQLITE_STATIC); sqlite3_step(stmt);
@@ -6095,6 +6094,7 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE SHADER UNIFORM BUFFER UNSIZED ARRAY FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "COMPUTE OCCUPANCY PRIORITY PARAMETERS", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE COMPUTE OCCUPANCY PRIORITY FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE PIPELINE LIBRARY GROUP HANDLES FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE MAINTENANCE 11 FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "QUEUE FAMILY OPTIMAL IMAGE TRANSFER GRANULARITY PROPERTIES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE COOPERATIVE MATRIX MAINTENANCE 1 FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
@@ -6121,6 +6121,10 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "IMAGE TILING CONTROL CREATE INFO", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE COOPERATIVE MATRIX DECODE VECTOR FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE PRIVATE DATA BASE HANDLE FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INFO_PROPERTIES_INTEL)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INFO_PROPERTIES_INTEL", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE INFO PROPERTIES", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE BUFFER DEVICE ADDRESS ALLOCATION ALIGNMENT FEATURES VALVE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_PROPERTIES_VALVE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_PROPERTIES_VALVE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE BUFFER DEVICE ADDRESS ALLOCATION ALIGNMENT PROPERTIES VALVE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "BUFFER DEVICE ADDRESS ALIGNMENT ALLOCATE INFO VALVE", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
 
@@ -19789,9 +19793,6 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM");
             break;
-        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT:
-            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT");
-            break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT");
             break;
@@ -20548,6 +20549,9 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV");
             break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR");
+            break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR");
             break;
@@ -20625,6 +20629,18 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
             break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_BASE_HANDLE_FEATURES_NV");
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INFO_PROPERTIES_INTEL:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INFO_PROPERTIES_INTEL");
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE");
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_PROPERTIES_VALVE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_PROPERTIES_VALVE");
+            break;
+        case VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE");
             break;
         default:
             RecordFieldAsHexFixedWidth<VkStructureType>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", value);
