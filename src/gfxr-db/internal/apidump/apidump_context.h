@@ -56,6 +56,11 @@ struct ApiDumpConversionStats
      * ApiDumpCall::IsAnnotation), skipped without decoding. Expected to be nonzero for an
      * optimized capture - unlike the other counters here, this is not a sign of anything wrong. */
     uint64_t optimized_commands{ 0 };
+
+    /** Queue submissions decoded with ApiDumpCall::IsSetupSubmission() true - a
+     * queue-submission-boundary capture's pre-range submissions, folded into the initial state the
+     * same way any other setup content is. Also not a sign of anything wrong. */
+    uint64_t setup_queue_submits{ 0 };
 };
 
 /** The state the generated encoders thread through a single call.

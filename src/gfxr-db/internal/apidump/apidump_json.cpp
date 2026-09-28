@@ -313,6 +313,26 @@ std::optional<uint64_t> ApiDumpCall::CommandNumber() const
     return id;
 }
 
+std::optional<bool> ApiDumpCall::IsSetupSubmission() const
+{
+    if (call_ == nullptr)
+    {
+        return std::nullopt;
+    }
+
+    // Written as a bare boolean by the layer, unlike commandNumber above - see the layer's
+    // dump_json_function_head - so this checks is_boolean() rather than is_string(). Absent for
+    // any call other than vkQueueSubmit/vkQueueSubmit2/vkQueueSubmit2KHR in a queue-submission-
+    // boundary capture, and even then only ever written when true.
+    const auto is_setup_submission = call_->find("isSetupSubmission");
+    if ((is_setup_submission == call_->end()) || !is_setup_submission->is_boolean())
+    {
+        return std::nullopt;
+    }
+
+    return is_setup_submission->get<bool>();
+}
+
 ApiDumpNode ApiDumpCall::Arg(std::string_view arg_name) const
 {
     if (call_ == nullptr)

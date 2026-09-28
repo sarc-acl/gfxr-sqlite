@@ -146,6 +146,12 @@ class ApiDumpCall
      * write one - either an older capture, or the setting was off. */
     std::optional<uint64_t> CommandNumber() const;
 
+    /** Whether this queue submission predates the active queue-submission range/trigger in a
+     * queue-submission-boundary capture (see capture_trigger_boundary). Absent for any call other
+     * than vkQueueSubmit/vkQueueSubmit2/vkQueueSubmit2KHR, and even then only ever written true -
+     * a submission already inside the range simply omits it, like isSetupFrame does for a frame. */
+    std::optional<bool> IsSetupSubmission() const;
+
     /** Finds an argument by name, returning an absent node when the layer omitted it. */
     ApiDumpNode Arg(std::string_view arg_name) const;
 

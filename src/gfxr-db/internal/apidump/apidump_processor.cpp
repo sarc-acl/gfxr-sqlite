@@ -110,6 +110,14 @@ void ApiDumpProcessor::OnCall(const ApiDumpCall& call)
         return;
     }
 
+    if (call.IsSetupSubmission() == true)
+    {
+        // Decoded normally below, same as any other setup content merged into the still-open
+        // StateBeginMarker/StateEndMarker bracket - counted only so DescribeConversion can surface
+        // it, not to change how it is handled.
+        ++context_.MutableStats().setup_queue_submits;
+    }
+
     const uint64_t block_index = sequencer_.NextBlockIndex();
     decoder_.SetCurrentBlockIndex(block_index);
 
@@ -164,6 +172,11 @@ std::string ApiDumpProcessor::DescribeConversion() const
         // Not a problem - see ApiDumpConversionStats::optimized_commands - just worth surfacing so
         // the count in the summary reflects an optimized capture's actual size.
         summary << ", " << stats.optimized_commands << " skipped as optimized out before capture";
+    }
+    if (stats.setup_queue_submits > 0)
+    {
+        // Also not a problem - see ApiDumpConversionStats::setup_queue_submits.
+        summary << ", " << stats.setup_queue_submits << " queue submissions folded into the initial state";
     }
     if (stats.unknown_commands > 0)
     {
