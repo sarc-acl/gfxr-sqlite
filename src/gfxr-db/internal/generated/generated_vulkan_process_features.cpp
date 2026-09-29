@@ -1034,6 +1034,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(header);
+                if(pFeatures->pipelineLibraryGroupHandles) { enabledFeatureNames.emplace_back("pipelineLibraryGroupHandles"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance11FeaturesKHR>():
             {
                 // clang-format off
@@ -2080,14 +2088,6 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
-            case gfxrecon::util::GetSType<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT>():
-            {
-                // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT*>(header);
-                if(pFeatures->pipelineLibraryGroupHandles) { enabledFeatureNames.emplace_back("pipelineLibraryGroupHandles"); }
-                // clang-format on
-                break;
-            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT>():
             {
                 // clang-format off
@@ -2524,6 +2524,14 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format off
                 const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(header);
                 if(pFeatures->privateDataBaseHandle) { enabledFeatureNames.emplace_back("privateDataBaseHandle"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(header);
+                if(pFeatures->bufferDeviceAddressAllocationAlignment) { enabledFeatureNames.emplace_back("bufferDeviceAddressAllocationAlignment"); }
                 // clang-format on
                 break;
             }
