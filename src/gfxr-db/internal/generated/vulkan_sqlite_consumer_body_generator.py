@@ -836,7 +836,7 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
             body += '\n'
             body += textwrap.indent(inspect.cleandoc(
                 '''
-                    RecordCreateSurface(&args.pSurface, &args.pCreateInfo, args.result);
+                    RecordCreateSurface(args.instance, &args.pSurface, &args.pCreateInfo, args.result);
                 '''
             ), '    ')
         if name in self.destroySurface:
