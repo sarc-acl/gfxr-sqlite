@@ -1,5 +1,5 @@
 /********************************************************************************
-    Copyright 2024-2025 The Sokatoa Project Authors
+    Copyright 2024-2026 The Sokatoa Project Authors
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -415,6 +415,7 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
     // only in the platform-specific pCreateInfo struct type.
     template <class T>
     inline void RecordCreateSurface(
+        format::HandleId                                            instance,
         const gfxrecon::decode::HandlePointerDecoder<VkSurfaceKHR>* pSurface,
         const gfxrecon::decode::StructPointerDecoder<T>*            pCreateInfo,
         VkResult                                                    result
@@ -445,8 +446,9 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         LogUnsupportedPNext(createInfo->pNext);
 
         auto createInfoType = createInfo->decoded_value->sType;
+        auto instanceId     = context.GetInstanceId(instance, /*allowNull=*/true);
 
-        statements.InsertSurface(gfxrecon::decode::ToInt64(surface), createInfoType, this->block_index_);
+        statements.InsertSurface(gfxrecon::decode::ToInt64(surface), instanceId, createInfoType, this->block_index_);
     }
 
     using HandleArray = std::tuple<bool, gfxrecon::format::HandleId*, uint64_t>;
