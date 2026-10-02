@@ -6,10 +6,10 @@ The resulting database exposes Vulkan API events, command buffers, descriptors, 
 
 ## What's in the box
 
-| Target              | Type       | Purpose                                                                                  |
-| ------------------- | ---------- | ---------------------------------------------------------------------------------------- |
+| Target                  | Type       | Purpose                                                                                  |
+| ----------------------- | ---------- | ---------------------------------------------------------------------------------------- |
 | `gfxr-sqlite-library`   | static lib | Core decoder. Embeds SQLite. Links against gfxreconstruct's `decode`/`format`/`util`.    |
-| `gfxr-sqlite`       | executable | CLI wrapper that converts a single `.gfxr` file to a `.sqlite3` file on disk.            |
+| `gfxr-sqlite`           | executable | CLI wrapper that converts a single `.gfxr` file to a `.sqlite3` file on disk.            |
 | `gfxr-sqlite-test`      | executable | Native C++ test for the library.                                                         |
 
 ## Building standalone
@@ -87,6 +87,8 @@ To reuse an existing gfxreconstruct checkout (instead of the nested submodule), 
 
 ## Running the CLI
 
+The CLI accepts either a `.gfxr` trace or a `.apidump` file in place of the capture argument; the output database is the same either way.
+
 ```bash
 gfxr-sqlite path/to/capture.gfxr
 # produces path/to/capture.gfxr.sqlite3
@@ -97,9 +99,61 @@ gfxr-sqlite -o my_capture.sqlite3 path/to/capture.gfxr
 
 The output `.sqlite3` file can be opened with any SQLite client. Schema documentation lives in the headers under [src/gfxr-db/includes/](src/gfxr-db/includes/).
 
+## Capturing with the api dump layer
+
+Alongside `.gfxr` traces, `gfxr-sqlite` can build the same database from the JSON output of the LunarG [VulkanTools](https://github.com/LunarG/VulkanTools) `api_dump` layer. This records a readable JSON transcript of the Vulkan calls rather than a replayable binary trace, and stands in for gfxreconstruct whenever that layer is not in use.
+
+Because it leans on behaviour the stock layer does not provide — passing the output file name down as a layer setting and some additional settings used to dump setup information such as Vulkan object creation/destruction and command buffer recording prior to the start of capture — this path needs the `api_dump` layer from the fork at <https://github.com/sarc-acl/VulkanTools>. The consumer expects the file to carry the `.apidump` extension. The layer itself writes `.json`, so implementing applications should rename its output to `.apidump` before conversion; a file named `.json` is still accepted, since detection falls back to a content sniff when the extension is not `.apidump`.
+
+### Required layer options
+
+The database is only faithful when the layer runs with these options set at capture time:
+
+| Option | Value | Why |
+| ------ | ----- | --- |
+| `output_format` | `json` | The consumer parses the JSON spelling. |
+| `file` | `true` | Write to a file rather than stdout. |
+| `show_types` | `true` | Argument and member types, which the reader resolves. |
+| `show_shader` | `true` | Expands the SPIR-V contents of shader modules. |
+| `detailed` | `true` | Expands struct members; without it calls carry no arguments. |
+| `show_thread_and_frame` | `true` | Records the frame and thread the reader walks. |
+| `indent_size` | `0` | Cosmetic only — the reader is whitespace-insensitive — but keeps the file small. |
+| `show_enum_value` | `true` | Emits the numeric value with the name, so an enumerant newer than the reader's headers still resolves. |
+| `float_precision` | `9` | `std::numeric_limits<float>::max_digits10`, so floats round trip. |
+| `always_dump_setup` | `true` | Dumps the setup calls objects depend on, not just the capture window. |
+
+Implementing applications will need to configure the output file name by passing the path down as a layer setting because the path exceeds Android's property length limit. A capture started and stopped by hand (manual capture mode) is bounded by `capture_trigger`, which puts the layer into triggered mode and makes it ignore any frame range.
+
+### Passing a `.apidump` to the CLI
+
+The `.apidump` file is passed in exactly the slot a `.gfxr` would occupy:
+
+```bash
+gfxr-sqlite path/to/capture.apidump
+# produces path/to/capture.apidump.sqlite3
+
+gfxr-sqlite -o my_capture.sqlite3 path/to/capture.apidump
+# writes to my_capture.sqlite3
+```
+
+### How it differs from a `.gfxr`
+
+The database goes through the identical `VulkanSqliteConsumer`, so the schema and the example queries are unchanged. What differs is what a `.gfxr` carries in its own binary structure that a JSON dump does not, which `ApiDumpProcessor` synthesises in its place:
+
+- **Block indices.** A `.gfxr` numbers every record with a block index, stored as `apiEvents.id`. The dump has none, so calls are numbered in document order instead.
+- **Frame boundaries.** A `.gfxr` ends each frame with a frame-marker block. Here they are inserted as synthesised `FrameMarker` metadata commands, one per frame object. The dump counts frames from zero while the schema counts from one (reconciled internally); frame numbers the dump skipped are filled in and out-of-order frames are dropped.
+- **Handle ids.** The consumer assigns handle ids in a globally incrementing manner, exactly as gfxr does, mapping each runtime address (keyed by object type) onto the next free id. An address recycled after a destroy starts a fresh id, and a handle returned by a getter resolves to the id it was first seen with.
+
+Because a dump only contains what the layer expanded, some data a `.gfxr` would carry may be absent:
+
+- Pointers and arrays the layer did not expand are recorded as present-but-omitted, matching gfxreconstruct's own handling of that case, rather than as contents.
+- Commands gfxreconstruct does not decode are skipped, and unrecognised enum names, structure types or scalars are counted. The conversion prints a one-line summary of any such gaps.
+- There is no admin data: no timestamps, no driver or application metadata packets, and no D3D12/OpenXR detection — an api dump is always treated as Vulkan.
+- A capture cut short by the application being killed is the common case. Everything parsed before the truncation is kept, and the early end is reported as a warning rather than discarding the database.
+
 ## Example queries
 
-The schema captures Vulkan API events under `apiEvents`, with each event's Vulkan function name resolved through the `functionNames` lookup table. Higher-level structure tables (`frames`, `queueSubmits`, `commandBufferRecordings`, `commandBufferCommands`, etc.) reference `apiEvents` by id. The patterns below illustrate the most common joins. More advanced documentation on the schema and example queries can be found at https://sarc-acl.github.io/gfxr-sqlite/
+The schema captures Vulkan API events under `apiEvents`, with each event's Vulkan function name resolved through the `functionNames` lookup table. Higher-level structure tables (`frames`, `queueSubmits`, `commandBufferRecordings`, `commandBufferCommands`, etc.) reference `apiEvents` by id. The patterns below illustrate the most common joins. More advanced documentation on the schema and example queries can be found at <https://sarc-acl.github.io/gfxr-sqlite/>
 
 ### List frames
 
@@ -266,6 +320,8 @@ A subset of the decoder is generated from gfxreconstruct's Vulkan registry. The 
 python3 src/gfxr-db/internal/generated/generate_vulkan.py
 # uses external/gfxreconstruct by default; override with --gfxr-dir <path>
 ```
+
+The same script regenerates the api dump ingest path alongside the gfxr consumer: the `enum_from_string` table used to resolve enum and flag names, and the `struct_from_apidump`, `pnext_from_apidump` and `apidump_dispatch` generators that turn a dump's JSON into the parameter buffer. Like the gfxr tables, these are generated so they track Vulkan-Headers, and only the api dump dispatch and enum tables are specific to this path.
 
 ## License
 
