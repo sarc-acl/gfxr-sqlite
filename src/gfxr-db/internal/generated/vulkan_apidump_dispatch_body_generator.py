@@ -66,6 +66,35 @@ class VulkanApiDumpDispatchBodyGenerator(VulkanBaseGenerator, ApiDumpMemberEncod
     registry derived layout.
     """
 
+    # The commands gfxreconstruct decodes by hand in VulkanDecoderBase::DecodeFunctionCall. They sit on
+    # its generator blacklists, so the generated decoder has no Decode_ function for them and this
+    # generator would skip them with the rest of the blacklist. Their layouts are nevertheless the
+    # registry derived ones (parameters in order, then the result), apart from the descriptor update
+    # template data below, so they are emitted like any other command.
+    HANDWRITTEN_DECODER_COMMANDS = [
+        'vkCreateRayTracingPipelinesKHR',
+        'vkDeferredOperationJoinKHR',
+        'vkUpdateDescriptorSetWithTemplate',
+        'vkUpdateDescriptorSetWithTemplateKHR',
+        'vkCmdPushDescriptorSetWithTemplateKHR',
+        'vkCmdPushDescriptorSetWithTemplate2KHR',
+    ]
+
+    # The pData parameter of a descriptor update template command is a void* whose contents
+    # gfxreconstruct reconstructs from the template (DescriptorUpdateTemplateDecoder), so it cannot be
+    # encoded as the opaque address a plain void* is.
+    TEMPLATE_DATA_PARAMS = {
+        'vkUpdateDescriptorSetWithTemplate': 'pData',
+        'vkUpdateDescriptorSetWithTemplateKHR': 'pData',
+        'vkCmdPushDescriptorSetWithTemplateKHR': 'pData',
+    }
+
+    # vkCmdPushDescriptorSetWithTemplate2KHR carries pData inside its info struct, and the hand written
+    # decoder reads it from the stream straight after that struct rather than as part of it.
+    TEMPLATE_DATA_STRUCT_PARAMS = {
+        'vkCmdPushDescriptorSetWithTemplate2KHR': 'pPushDescriptorSetWithTemplateInfo',
+    }
+
     def __init__(self, err_file=sys.stderr, warn_file=sys.stderr, diag_file=sys.stdout):
         VulkanBaseGenerator.__init__(
             self, err_file=err_file, warn_file=warn_file, diag_file=diag_file
@@ -81,6 +110,11 @@ class VulkanApiDumpDispatchBodyGenerator(VulkanBaseGenerator, ApiDumpMemberEncod
         for name in self.APICALL_DECODER_BLACKLIST:
             if name not in self.APICALL_BLACKLIST:
                 self.APICALL_BLACKLIST.append(name)
+
+        # Then take back the commands the decoder writes by hand, which do have a decoder.
+        for name in self.HANDWRITTEN_DECODER_COMMANDS:
+            while name in self.APICALL_BLACKLIST:
+                self.APICALL_BLACKLIST.remove(name)
 
         body = inspect.cleandoc(
             '''
@@ -192,7 +226,19 @@ class VulkanApiDumpDispatchBodyGenerator(VulkanBaseGenerator, ApiDumpMemberEncod
             write('    GFXRECON_UNREFERENCED_PARAMETER(call);', file=self.outFile)
         else:
             for param in params:
-                write('    {};'.format(self.make_member_call(name, param, params)), file=self.outFile)
+                if self.TEMPLATE_DATA_PARAMS.get(name) == param.name:
+                    call = 'ctx.DescriptorUpdateTemplateData({0})'.format(self.node_expr(param))
+                else:
+                    call = self.make_member_call(name, param, params)
+
+                write('    {};'.format(call), file=self.outFile)
+
+                # The info struct has been encoded; its pData follows it in the stream.
+                if self.TEMPLATE_DATA_STRUCT_PARAMS.get(name) == param.name:
+                    write(
+                        '    ctx.DescriptorUpdateTemplateData({0}["pData"]);'.format(self.node_expr(param)),
+                        file=self.outFile
+                    )
 
             if return_statement is not None:
                 write('    {};'.format(return_statement), file=self.outFile)

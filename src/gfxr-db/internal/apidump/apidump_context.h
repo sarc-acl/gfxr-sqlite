@@ -147,6 +147,32 @@ class ApiDumpContext
     /** An opaque pointer, recorded as an address with no contents. */
     void VoidPtrValue(const ApiDumpNode& node) { encoder_.EncodeVoidPtrValue(node.Address()); }
 
+    /** A pointer to an opaque pointer, such as vkMapMemory's ppData.
+     *
+     * gfxreconstruct's decoder reads this as a pointer (an attribute word, then the address), not as
+     * a bare address like VoidPtrValue writes. Writing the bare address made the decoder take half
+     * of it for the attribute word, and the resulting flags (string, array) sent it on to read a
+     * length and fill that many elements from whatever bytes followed. The dump only records the
+     * address of the out parameter, never the opaque pointer written through it, so there is no data.
+     */
+    void VoidPtrPtr(const ApiDumpNode& node)
+    {
+        encoder_.EncodePointer<format::AddressEncodeType>(0, node.Address(), node.IsNullPointer(), false);
+    }
+
+    /** The pData of a descriptor update template command, with the contents left out.
+     *
+     * gfxreconstruct decodes this with DescriptorUpdateTemplateDecoder, which expects a struct pointer
+     * header followed, when the data is present, by counts and the packed descriptors. The layout of
+     * those descriptors comes from the template's entries, which a capture layer recorded at
+     * vkCreateDescriptorUpdateTemplate time and an api dump does not carry; the dump holds only the
+     * address of pData. So this writes the header with no data, and the decoder reports no descriptors.
+     */
+    void DescriptorUpdateTemplateData(const ApiDumpNode& node)
+    {
+        encoder_.EncodeStructPtrPreamble(node.Address(), node.IsNullPointer(), false);
+    }
+
     void FunctionPtrValue(const ApiDumpNode& node) { encoder_.EncodeVoidPtrValue(node.Address()); }
 
     //

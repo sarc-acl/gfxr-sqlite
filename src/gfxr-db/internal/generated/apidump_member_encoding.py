@@ -148,6 +148,11 @@ class ApiDumpMemberEncodingMixin:
         # address and nothing else - encoding one of those as an array instead would emit a length
         # prefix the real decoder's DecodeStruct never expects, desynchronising every byte after it.
         if base_type == 'void' and member.is_pointer:
+            # A void** out parameter, such as vkMapMemory's ppData, is a pointer in gfxreconstruct's
+            # stream (EncodeVoidPtrPtr), so the decoder expects an attribute word ahead of the address.
+            # Encoded as a bare address it reads half of it as flags and goes on to read a length.
+            if member.pointer_count > 1 and not member.is_array:
+                return 'ctx.VoidPtrPtr({0})'.format(node)
             if member.is_array:
                 if hint is not None:
                     return 'ctx.UInt8Array({0}, {1})'.format(node, hint)

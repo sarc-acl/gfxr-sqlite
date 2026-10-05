@@ -329,8 +329,9 @@ namespace gfxrSqlite
 
     void CreateDBHelper::createDatabaseFromApiDump(const std::string& inputFilename)
     {
-        int err = sqlite3_open(m_dbFilename.c_str(), &m_db);
-        if (err)
+        // Not "err": GFXRECON_SQLITE_CHECK declares one of its own, which this would then shadow.
+        const int openResult = sqlite3_open(m_dbFilename.c_str(), &m_db);
+        if (openResult)
         {
             std::ostringstream errMsg;
             errMsg << "Failed to create database: " << sqlite3_errmsg(m_db);

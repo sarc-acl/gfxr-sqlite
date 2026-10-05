@@ -178,7 +178,7 @@ void ApiDump_vkMapMemory(ApiDumpContext& ctx, const ApiDumpCall& call)
     ctx.UInt64Value(call.Arg("offset"));
     ctx.UInt64Value(call.Arg("size"));
     ctx.FlagsValue(call.Arg("flags"), EnumFromString_VkMemoryMapFlagBits);
-    ctx.VoidPtrValue(call.Arg("ppData"));
+    ctx.VoidPtrPtr(call.Arg("ppData"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -1318,6 +1318,14 @@ void ApiDump_vkDestroyDescriptorUpdateTemplate(ApiDumpContext& ctx, const ApiDum
     ctx.ReleaseHandle(call.Arg("descriptorUpdateTemplate"), VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE);
 }
 
+void ApiDump_vkUpdateDescriptorSetWithTemplate(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    ctx.VulkanHandleValue(call.Arg("descriptorSet"), VK_OBJECT_TYPE_DESCRIPTOR_SET);
+    ctx.VulkanHandleValue(call.Arg("descriptorUpdateTemplate"), VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE);
+    ctx.DescriptorUpdateTemplateData(call.Arg("pData"));
+}
+
 void ApiDump_vkGetDescriptorSetLayoutSupport(ApiDumpContext& ctx, const ApiDumpCall& call)
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
@@ -1708,7 +1716,7 @@ void ApiDump_vkMapMemory2(ApiDumpContext& ctx, const ApiDumpCall& call)
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkMemoryMapInfo>(ctx, call.Arg("pMemoryMapInfo"));
-    ctx.VoidPtrValue(call.Arg("ppData"));
+    ctx.VoidPtrPtr(call.Arg("ppData"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -2307,7 +2315,7 @@ void ApiDump_vkGetMemoryWin32HandleKHR(ApiDumpContext& ctx, const ApiDumpCall& c
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkMemoryGetWin32HandleInfoKHR>(ctx, call.Arg("pGetWin32HandleInfo"));
-    ctx.VoidPtrValue(call.Arg("pHandle"));
+    ctx.VoidPtrPtr(call.Arg("pHandle"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -2355,7 +2363,7 @@ void ApiDump_vkGetSemaphoreWin32HandleKHR(ApiDumpContext& ctx, const ApiDumpCall
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkSemaphoreGetWin32HandleInfoKHR>(ctx, call.Arg("pGetWin32HandleInfo"));
-    ctx.VoidPtrValue(call.Arg("pHandle"));
+    ctx.VoidPtrPtr(call.Arg("pHandle"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -2384,6 +2392,15 @@ void ApiDump_vkCmdPushDescriptorSetKHR(ApiDumpContext& ctx, const ApiDumpCall& c
     StructArrayFromApiDump<VkWriteDescriptorSet>(ctx, call.Arg("pDescriptorWrites"), ctx.Length(call.Arg("descriptorWriteCount")));
 }
 
+void ApiDump_vkCmdPushDescriptorSetWithTemplateKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
+    ctx.VulkanHandleValue(call.Arg("descriptorUpdateTemplate"), VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE);
+    ctx.VulkanHandleValue(call.Arg("layout"), VK_OBJECT_TYPE_PIPELINE_LAYOUT);
+    ctx.UInt32Value(call.Arg("set"));
+    ctx.DescriptorUpdateTemplateData(call.Arg("pData"));
+}
+
 void ApiDump_vkCreateDescriptorUpdateTemplateKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
@@ -2399,6 +2416,14 @@ void ApiDump_vkDestroyDescriptorUpdateTemplateKHR(ApiDumpContext& ctx, const Api
     ctx.VulkanHandleValue(call.Arg("descriptorUpdateTemplate"), VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE);
     StructPtrFromApiDump<VkAllocationCallbacks>(ctx, call.Arg("pAllocator"));
     ctx.ReleaseHandle(call.Arg("descriptorUpdateTemplate"), VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE);
+}
+
+void ApiDump_vkUpdateDescriptorSetWithTemplateKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    ctx.VulkanHandleValue(call.Arg("descriptorSet"), VK_OBJECT_TYPE_DESCRIPTOR_SET);
+    ctx.VulkanHandleValue(call.Arg("descriptorUpdateTemplate"), VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE);
+    ctx.DescriptorUpdateTemplateData(call.Arg("pData"));
 }
 
 void ApiDump_vkCreateRenderPass2KHR(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -2455,7 +2480,7 @@ void ApiDump_vkGetFenceWin32HandleKHR(ApiDumpContext& ctx, const ApiDumpCall& ca
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkFenceGetWin32HandleInfoKHR>(ctx, call.Arg("pGetWin32HandleInfo"));
-    ctx.VoidPtrValue(call.Arg("pHandle"));
+    ctx.VoidPtrPtr(call.Arg("pHandle"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -2747,6 +2772,13 @@ void ApiDump_vkGetDeferredOperationResultKHR(ApiDumpContext& ctx, const ApiDumpC
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
+void ApiDump_vkDeferredOperationJoinKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    ctx.VulkanHandleValue(call.Arg("operation"), VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR);
+    ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
+}
+
 void ApiDump_vkGetPipelineExecutablePropertiesKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
@@ -2778,7 +2810,7 @@ void ApiDump_vkMapMemory2KHR(ApiDumpContext& ctx, const ApiDumpCall& call)
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkMemoryMapInfo>(ctx, call.Arg("pMemoryMapInfo"));
-    ctx.VoidPtrValue(call.Arg("ppData"));
+    ctx.VoidPtrPtr(call.Arg("ppData"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -3219,6 +3251,13 @@ void ApiDump_vkCmdPushDescriptorSet2KHR(ApiDumpContext& ctx, const ApiDumpCall& 
     StructPtrFromApiDump<VkPushDescriptorSetInfo>(ctx, call.Arg("pPushDescriptorSetInfo"));
 }
 
+void ApiDump_vkCmdPushDescriptorSetWithTemplate2KHR(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
+    StructPtrFromApiDump<VkPushDescriptorSetWithTemplateInfo>(ctx, call.Arg("pPushDescriptorSetWithTemplateInfo"));
+    ctx.DescriptorUpdateTemplateData(call.Arg("pPushDescriptorSetWithTemplateInfo")["pData"]);
+}
+
 void ApiDump_vkCmdSetDescriptorBufferOffsets2EXT(ApiDumpContext& ctx, const ApiDumpCall& call)
 {
     ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
@@ -3478,7 +3517,7 @@ void ApiDump_vkGetMemoryWin32HandleNV(ApiDumpContext& ctx, const ApiDumpCall& ca
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     ctx.VulkanHandleValue(call.Arg("memory"), VK_OBJECT_TYPE_DEVICE_MEMORY);
     ctx.FlagsValue(call.Arg("handleType"), EnumFromString_VkExternalMemoryHandleTypeFlagBitsNV);
-    ctx.VoidPtrValue(call.Arg("pHandle"));
+    ctx.VoidPtrPtr(call.Arg("pHandle"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -3726,7 +3765,7 @@ void ApiDump_vkGetMemoryAndroidHardwareBufferANDROID(ApiDumpContext& ctx, const 
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkMemoryGetAndroidHardwareBufferInfoANDROID>(ctx, call.Arg("pInfo"));
-    ctx.VoidPtrValue(call.Arg("pBuffer"));
+    ctx.VoidPtrPtr(call.Arg("pBuffer"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -4752,7 +4791,7 @@ void ApiDump_vkGetMemoryRemoteAddressNV(ApiDumpContext& ctx, const ApiDumpCall& 
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkMemoryGetRemoteAddressInfoNV>(ctx, call.Arg("pMemoryGetRemoteAddressInfo"));
-    ctx.VoidPtrValue(call.Arg("pAddress"));
+    ctx.VoidPtrPtr(call.Arg("pAddress"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -4982,7 +5021,7 @@ void ApiDump_vkGetDescriptorSetHostMappingVALVE(ApiDumpContext& ctx, const ApiDu
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     ctx.VulkanHandleValue(call.Arg("descriptorSet"), VK_OBJECT_TYPE_DESCRIPTOR_SET);
-    ctx.VoidPtrValue(call.Arg("ppData"));
+    ctx.VoidPtrPtr(call.Arg("ppData"));
 }
 
 void ApiDump_vkGetPipelineIndirectMemoryRequirementsNV(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -5671,7 +5710,7 @@ void ApiDump_vkGetMemoryMetalHandleEXT(ApiDumpContext& ctx, const ApiDumpCall& c
 {
     ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
     StructPtrFromApiDump<VkMemoryGetMetalHandleInfoEXT>(ctx, call.Arg("pGetMetalHandleInfo"));
-    ctx.VoidPtrValue(call.Arg("pHandle"));
+    ctx.VoidPtrPtr(call.Arg("pHandle"));
     ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
@@ -5871,6 +5910,18 @@ void ApiDump_vkCmdTraceRaysKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
     ctx.UInt32Value(call.Arg("width"));
     ctx.UInt32Value(call.Arg("height"));
     ctx.UInt32Value(call.Arg("depth"));
+}
+
+void ApiDump_vkCreateRayTracingPipelinesKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    ctx.VulkanHandleValue(call.Arg("deferredOperation"), VK_OBJECT_TYPE_DEFERRED_OPERATION_KHR);
+    ctx.VulkanHandleValue(call.Arg("pipelineCache"), VK_OBJECT_TYPE_PIPELINE_CACHE);
+    ctx.UInt32Value(call.Arg("createInfoCount"));
+    StructArrayFromApiDump<VkRayTracingPipelineCreateInfoKHR>(ctx, call.Arg("pCreateInfos"), ctx.Length(call.Arg("createInfoCount")));
+    StructPtrFromApiDump<VkAllocationCallbacks>(ctx, call.Arg("pAllocator"));
+    ctx.VulkanHandleCreatedArray(call.Arg("pPipelines"), VK_OBJECT_TYPE_PIPELINE, ctx.Length(call.Arg("createInfoCount")));
+    ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
 }
 
 void ApiDump_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -6096,6 +6147,7 @@ const ApiDumpCommandTable& GetApiDumpCommandTable()
         { "vkCmdDispatchBase", { format::ApiCallId::ApiCall_vkCmdDispatchBase, ApiDump_vkCmdDispatchBase } },
         { "vkCreateDescriptorUpdateTemplate", { format::ApiCallId::ApiCall_vkCreateDescriptorUpdateTemplate, ApiDump_vkCreateDescriptorUpdateTemplate } },
         { "vkDestroyDescriptorUpdateTemplate", { format::ApiCallId::ApiCall_vkDestroyDescriptorUpdateTemplate, ApiDump_vkDestroyDescriptorUpdateTemplate } },
+        { "vkUpdateDescriptorSetWithTemplate", { format::ApiCallId::ApiCall_vkUpdateDescriptorSetWithTemplate, ApiDump_vkUpdateDescriptorSetWithTemplate } },
         { "vkGetDescriptorSetLayoutSupport", { format::ApiCallId::ApiCall_vkGetDescriptorSetLayoutSupport, ApiDump_vkGetDescriptorSetLayoutSupport } },
         { "vkCreateSamplerYcbcrConversion", { format::ApiCallId::ApiCall_vkCreateSamplerYcbcrConversion, ApiDump_vkCreateSamplerYcbcrConversion } },
         { "vkDestroySamplerYcbcrConversion", { format::ApiCallId::ApiCall_vkDestroySamplerYcbcrConversion, ApiDump_vkDestroySamplerYcbcrConversion } },
@@ -6235,8 +6287,10 @@ const ApiDumpCommandTable& GetApiDumpCommandTable()
         { "vkImportSemaphoreFdKHR", { format::ApiCallId::ApiCall_vkImportSemaphoreFdKHR, ApiDump_vkImportSemaphoreFdKHR } },
         { "vkGetSemaphoreFdKHR", { format::ApiCallId::ApiCall_vkGetSemaphoreFdKHR, ApiDump_vkGetSemaphoreFdKHR } },
         { "vkCmdPushDescriptorSetKHR", { format::ApiCallId::ApiCall_vkCmdPushDescriptorSetKHR, ApiDump_vkCmdPushDescriptorSetKHR } },
+        { "vkCmdPushDescriptorSetWithTemplateKHR", { format::ApiCallId::ApiCall_vkCmdPushDescriptorSetWithTemplateKHR, ApiDump_vkCmdPushDescriptorSetWithTemplateKHR } },
         { "vkCreateDescriptorUpdateTemplateKHR", { format::ApiCallId::ApiCall_vkCreateDescriptorUpdateTemplateKHR, ApiDump_vkCreateDescriptorUpdateTemplateKHR } },
         { "vkDestroyDescriptorUpdateTemplateKHR", { format::ApiCallId::ApiCall_vkDestroyDescriptorUpdateTemplateKHR, ApiDump_vkDestroyDescriptorUpdateTemplateKHR } },
+        { "vkUpdateDescriptorSetWithTemplateKHR", { format::ApiCallId::ApiCall_vkUpdateDescriptorSetWithTemplateKHR, ApiDump_vkUpdateDescriptorSetWithTemplateKHR } },
         { "vkCreateRenderPass2KHR", { format::ApiCallId::ApiCall_vkCreateRenderPass2KHR, ApiDump_vkCreateRenderPass2KHR } },
         { "vkCmdBeginRenderPass2KHR", { format::ApiCallId::ApiCall_vkCmdBeginRenderPass2KHR, ApiDump_vkCmdBeginRenderPass2KHR } },
         { "vkCmdNextSubpass2KHR", { format::ApiCallId::ApiCall_vkCmdNextSubpass2KHR, ApiDump_vkCmdNextSubpass2KHR } },
@@ -6282,6 +6336,7 @@ const ApiDumpCommandTable& GetApiDumpCommandTable()
         { "vkDestroyDeferredOperationKHR", { format::ApiCallId::ApiCall_vkDestroyDeferredOperationKHR, ApiDump_vkDestroyDeferredOperationKHR } },
         { "vkGetDeferredOperationMaxConcurrencyKHR", { format::ApiCallId::ApiCall_vkGetDeferredOperationMaxConcurrencyKHR, ApiDump_vkGetDeferredOperationMaxConcurrencyKHR } },
         { "vkGetDeferredOperationResultKHR", { format::ApiCallId::ApiCall_vkGetDeferredOperationResultKHR, ApiDump_vkGetDeferredOperationResultKHR } },
+        { "vkDeferredOperationJoinKHR", { format::ApiCallId::ApiCall_vkDeferredOperationJoinKHR, ApiDump_vkDeferredOperationJoinKHR } },
         { "vkGetPipelineExecutablePropertiesKHR", { format::ApiCallId::ApiCall_vkGetPipelineExecutablePropertiesKHR, ApiDump_vkGetPipelineExecutablePropertiesKHR } },
         { "vkGetPipelineExecutableStatisticsKHR", { format::ApiCallId::ApiCall_vkGetPipelineExecutableStatisticsKHR, ApiDump_vkGetPipelineExecutableStatisticsKHR } },
         { "vkGetPipelineExecutableInternalRepresentationsKHR", { format::ApiCallId::ApiCall_vkGetPipelineExecutableInternalRepresentationsKHR, ApiDump_vkGetPipelineExecutableInternalRepresentationsKHR } },
@@ -6346,6 +6401,7 @@ const ApiDumpCommandTable& GetApiDumpCommandTable()
         { "vkCmdBindDescriptorSets2KHR", { format::ApiCallId::ApiCall_vkCmdBindDescriptorSets2KHR, ApiDump_vkCmdBindDescriptorSets2KHR } },
         { "vkCmdPushConstants2KHR", { format::ApiCallId::ApiCall_vkCmdPushConstants2KHR, ApiDump_vkCmdPushConstants2KHR } },
         { "vkCmdPushDescriptorSet2KHR", { format::ApiCallId::ApiCall_vkCmdPushDescriptorSet2KHR, ApiDump_vkCmdPushDescriptorSet2KHR } },
+        { "vkCmdPushDescriptorSetWithTemplate2KHR", { format::ApiCallId::ApiCall_vkCmdPushDescriptorSetWithTemplate2KHR, ApiDump_vkCmdPushDescriptorSetWithTemplate2KHR } },
         { "vkCmdSetDescriptorBufferOffsets2EXT", { format::ApiCallId::ApiCall_vkCmdSetDescriptorBufferOffsets2EXT, ApiDump_vkCmdSetDescriptorBufferOffsets2EXT } },
         { "vkCmdBindDescriptorBufferEmbeddedSamplers2EXT", { format::ApiCallId::ApiCall_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT, ApiDump_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT } },
         { "vkCmdCopyMemoryIndirectKHR", { format::ApiCallId::ApiCall_vkCmdCopyMemoryIndirectKHR, ApiDump_vkCmdCopyMemoryIndirectKHR } },
@@ -6688,6 +6744,7 @@ const ApiDumpCommandTable& GetApiDumpCommandTable()
         { "vkGetDeviceAccelerationStructureCompatibilityKHR", { format::ApiCallId::ApiCall_vkGetDeviceAccelerationStructureCompatibilityKHR, ApiDump_vkGetDeviceAccelerationStructureCompatibilityKHR } },
         { "vkGetAccelerationStructureBuildSizesKHR", { format::ApiCallId::ApiCall_vkGetAccelerationStructureBuildSizesKHR, ApiDump_vkGetAccelerationStructureBuildSizesKHR } },
         { "vkCmdTraceRaysKHR", { format::ApiCallId::ApiCall_vkCmdTraceRaysKHR, ApiDump_vkCmdTraceRaysKHR } },
+        { "vkCreateRayTracingPipelinesKHR", { format::ApiCallId::ApiCall_vkCreateRayTracingPipelinesKHR, ApiDump_vkCreateRayTracingPipelinesKHR } },
         { "vkGetRayTracingCaptureReplayShaderGroupHandlesKHR", { format::ApiCallId::ApiCall_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR, ApiDump_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR } },
         { "vkCmdTraceRaysIndirectKHR", { format::ApiCallId::ApiCall_vkCmdTraceRaysIndirectKHR, ApiDump_vkCmdTraceRaysIndirectKHR } },
         { "vkGetRayTracingShaderGroupStackSizeKHR", { format::ApiCallId::ApiCall_vkGetRayTracingShaderGroupStackSizeKHR, ApiDump_vkGetRayTracingShaderGroupStackSizeKHR } },
