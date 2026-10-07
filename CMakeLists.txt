@@ -148,6 +148,15 @@ target_sources(gfxr-sqlite-library
         ${GFXR_DB_SRC_PATH}/internal/generated/generated_vulkan_struct_to_sqlite.cpp
         ${GFXR_DB_SRC_PATH}/internal/generated/generated_vulkan_enum_to_sqlite.cpp
         ${GFXR_DB_SRC_PATH}/internal/generated/generated_vulkan_process_features.cpp
+        ${GFXR_DB_SRC_PATH}/internal/generated/generated_vulkan_enum_from_string.cpp
+        ${GFXR_DB_SRC_PATH}/internal/apidump/apidump_json.cpp
+        ${GFXR_DB_SRC_PATH}/internal/apidump/apidump_handle_map.cpp
+        ${GFXR_DB_SRC_PATH}/internal/apidump/apidump_value_parse.cpp
+        ${GFXR_DB_SRC_PATH}/internal/apidump/apidump_processor.cpp
+        ${GFXR_DB_SRC_PATH}/internal/generated/generated_vulkan_apidump_dispatch.cpp
+        ${GFXR_DB_SRC_PATH}/internal/apidump/custom_vulkan_struct_from_apidump.cpp
+        ${GFXR_DB_SRC_PATH}/internal/generated/generated_vulkan_struct_from_apidump.cpp
+        ${GFXR_DB_SRC_PATH}/internal/generated/generated_vulkan_pnext_from_apidump.cpp
         ${GFXR_DB_SRC_PATH}/internal/sqlite3_memdb_ext/memdb_ext.c
         ${GFXR_DB_SRC_PATH}/internal/sqlite3_memdb_ext/mem_redirect.cpp
         ${GFXR_DB_SRC_PATH}/sqlite3/sqlite3.c
@@ -184,6 +193,9 @@ target_include_directories(gfxr-sqlite-library PUBLIC
     ${GFXR_DB_SRC_PATH}/includes
     ${GFXR_DB_SRC_PATH}/internal
     ${GFXR_DB_SRC_PATH}/sqlite3
+    ${GFXR_DB_SRC_PATH}/internal/apidump
+    ${GFXR_DB_SRC_PATH}/internal/generated
+    ${GFXR_PATH}/external/nlohmann-json/include
 )
 
 if (APPLE)
@@ -241,6 +253,13 @@ endif ()
 # gfxr-sqlite-test: native test executable for the library.
 # -----------------------------------------------------------------------------
 if (GFXR_SQLITE_BUILD_TEST)
+    # Only register with ctest for a standalone build. When gfxr-sqlite is pulled in via
+    # add_subdirectory from implementing project (E.g. Sokatoa's gfxr-consumer),
+    # the parent owns test registration.
+    if (GFXR_SQLITE_IS_TOP_LEVEL)
+        enable_testing()
+    endif ()
+
     add_executable(gfxr-sqlite-test
         ${GFXR_DB_SRC_PATH}/internal/native_gfxr_consumer_test.cpp
         ${GFXR_DB_SRC_PATH}/internal/executable_path.cpp)
@@ -248,4 +267,47 @@ if (GFXR_SQLITE_BUILD_TEST)
         set_property(TARGET gfxr-sqlite-test PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<IF:$<CONFIG:DEBUG>,Debug,>DLL")
     endif ()
     target_link_libraries(gfxr-sqlite-test PRIVATE gfxr-sqlite-library)
+
+    # Tests for the api dump ingest path. Kept as separate executables because each one pins down a
+    # different layer of it and they are useful to run in isolation while working on the generators.
+    #
+    # apidump-encoder-test is the odd one out: it is the only place allowed to include
+    # encode/parameter_encoder.h, which it uses to assert ApiDumpEncoder produces byte identical
+    # output. The library itself must never include that header, for the reasons on ApiDumpEncoder.
+    foreach (apidump_test IN ITEMS convert encoder enum-lookup json state struct)
+        string(REPLACE "-" "_" apidump_test_source ${apidump_test})
+        # executable_path.cpp is not part of the library, and the tests that locate test-resources
+        # need it; it is cheap enough to give to all of them rather than special casing.
+        add_executable(apidump-${apidump_test}-test
+            ${GFXR_DB_SRC_PATH}/internal/apidump/apidump_${apidump_test_source}_test.cpp
+            ${GFXR_DB_SRC_PATH}/internal/executable_path.cpp)
+        if (MSVC)
+            set_property(TARGET apidump-${apidump_test}-test
+                PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<IF:$<CONFIG:DEBUG>,Debug,>DLL")
+        endif ()
+        target_link_libraries(apidump-${apidump_test}-test PRIVATE gfxr-sqlite-library)
+    endforeach ()
+
+    # gfxrecon_encode is deliberately not a dependency of gfxr-sqlite-library, so its output
+    # directory is not on the library's link path either. Only this test needs it.
+    #
+    # Both architecture directories are listed for the same reason the library lists both: gfxr
+    # builds x64 everywhere except macOS, where it builds universal.
+    target_link_directories(apidump-encoder-test PRIVATE
+        ${GFXR_BUILD_DIR}/x64/cmake_output/framework/encode/${GFXR_OUTPUT_SUBFOLDER})
+    if (APPLE)
+        target_link_directories(apidump-encoder-test PRIVATE
+            ${GFXR_BUILD_DIR}/universal/cmake_output/framework/encode/${GFXR_OUTPUT_SUBFOLDER})
+    endif ()
+    target_link_libraries(apidump-encoder-test PRIVATE gfxrecon_encode)
+
+    add_test(NAME apidump-encoder COMMAND apidump-encoder-test)
+    add_test(NAME apidump-enum-lookup COMMAND apidump-enum-lookup-test)
+    add_test(NAME apidump-state COMMAND apidump-state-test)
+    add_test(NAME apidump-struct COMMAND apidump-struct-test)
+
+    # Both of these locate test-resources/test1.apidump by walking up from the executable, so they
+    # need no arguments; apidump-json-test still accepts a path for pointing at a full capture.
+    add_test(NAME apidump-json COMMAND apidump-json-test)
+    add_test(NAME apidump-convert COMMAND apidump-convert-test)
 endif ()
