@@ -270,6 +270,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO:
         StructPtrFromApiDump<VkBufferCreateInfo>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE:
+        StructPtrFromApiDump<VkBufferDeviceAddressAlignmentAllocateInfoVALVE>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT:
         StructPtrFromApiDump<VkBufferDeviceAddressCreateInfoEXT>(ctx, value);
         break;
@@ -1356,6 +1359,12 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BORDER_COLOR_SWIZZLE_FEATURES_EXT:
         StructPtrFromApiDump<VkPhysicalDeviceBorderColorSwizzleFeaturesEXT>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE:
+        StructPtrFromApiDump<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_PROPERTIES_VALVE:
+        StructPtrFromApiDump<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES:
         StructPtrFromApiDump<VkPhysicalDeviceBufferDeviceAddressFeatures>(ctx, value);
         break;
@@ -1782,6 +1791,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES:
         StructPtrFromApiDump<VkPhysicalDeviceIndexTypeUint8Features>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INFO_PROPERTIES_INTEL:
+        StructPtrFromApiDump<VkPhysicalDeviceInfoPropertiesINTEL>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INHERITED_VIEWPORT_SCISSOR_FEATURES_NV:
         StructPtrFromApiDump<VkPhysicalDeviceInheritedViewportScissorFeaturesNV>(ctx, value);
         break;
@@ -2004,8 +2016,8 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR:
         StructPtrFromApiDump<VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR>(ctx, value);
         break;
-    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT:
-        StructPtrFromApiDump<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT>(ctx, value);
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_KHR:
+        StructPtrFromApiDump<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM:
         StructPtrFromApiDump<VkPhysicalDevicePipelineOpacityMicromapFeaturesARM>(ctx, value);

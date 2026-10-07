@@ -3795,7 +3795,7 @@ template <> void StructFromApiDump<VkQueueFamilyGlobalPriorityProperties>(ApiDum
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["priorityCount"]);
-    ctx.EnumArray(value["priorities"], EnumFromString_VkQueueGlobalPriority);
+    ctx.EnumArray(value["priorities"], EnumFromString_VkQueueGlobalPriority, ctx.Length(value["priorityCount"]));
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceIndexTypeUint8Features>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -5739,7 +5739,7 @@ template <> void StructFromApiDump<VkPipelineBinaryKeyKHR>(ApiDumpContext& ctx, 
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["keySize"]);
-    ctx.UInt8Array(value["key"]);
+    ctx.UInt8Array(value["key"], ctx.Length(value["keySize"]));
 }
 
 template <> void StructFromApiDump<VkPipelineBinaryDataKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -6686,6 +6686,13 @@ template <> void StructFromApiDump<VkResolveImageModeInfoKHR>(ApiDumpContext& ct
     ctx.FlagsValue(value["flags"], EnumFromString_VkResolveImageFlagBitsKHR);
     ctx.EnumValue(value["resolveMode"], EnumFromString_VkResolveModeFlagBits);
     ctx.EnumValue(value["stencilResolveMode"], EnumFromString_VkResolveModeFlagBits);
+}
+
+template <> void StructFromApiDump<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["pipelineLibraryGroupHandles"]);
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceMaintenance11FeaturesKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -10525,7 +10532,7 @@ template <> void StructFromApiDump<VkShaderModuleIdentifierEXT>(ApiDumpContext& 
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["identifierSize"]);
-    ctx.UInt8Array(value["identifier"]);
+    ctx.UInt8Array(value["identifier"], ctx.Length(value["identifierSize"]));
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceOpticalFlowFeaturesNV>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -10844,13 +10851,6 @@ template <> void StructFromApiDump<VkPhysicalDeviceShaderCoreBuiltinsPropertiesA
     ctx.UInt64Value(value["shaderCoreMask"]);
     ctx.UInt32Value(value["shaderCoreCount"]);
     ctx.UInt32Value(value["shaderWarpsPerCore"]);
-}
-
-template <> void StructFromApiDump<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
-{
-    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
-    PNextFromApiDump(ctx, value["pNext"]);
-    ctx.UInt32Value(value["pipelineLibraryGroupHandles"]);
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -12220,6 +12220,36 @@ template <> void StructFromApiDump<VkPhysicalDevicePrivateDataBaseHandleFeatures
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["privateDataBaseHandle"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceInfoPropertiesINTEL>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["deviceIpVersionArch"]);
+    ctx.UInt32Value(value["deviceIpVersionRelease"]);
+    ctx.UInt32Value(value["deviceIpVersionRevision"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["bufferDeviceAddressAllocationAlignment"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["maxBufferDeviceAddressAllocationAlignment"]);
+}
+
+template <> void StructFromApiDump<VkBufferDeviceAddressAlignmentAllocateInfoVALVE>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["alignment"]);
 }
 
 template <> void StructFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
