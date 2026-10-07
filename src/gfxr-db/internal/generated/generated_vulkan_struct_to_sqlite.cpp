@@ -21906,8256 +21906,6756 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
 }
 
 
-static constexpr std::string_view pNextName = "pNext";
+
 
 void InsertPNext_VkShaderModuleCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkShaderModuleCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkShaderModuleCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineLayoutCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineLayoutCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineLayoutCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryDedicatedRequirements(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryDedicatedRequirements";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryDedicatedRequirements*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryDedicatedAllocateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryDedicatedAllocateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryDedicatedAllocateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryAllocateFlagsInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryAllocateFlagsInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryAllocateFlagsInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceGroupCommandBufferBeginInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceGroupCommandBufferBeginInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceGroupCommandBufferBeginInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceGroupSubmitInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceGroupSubmitInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceGroupSubmitInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceGroupBindSparseInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceGroupBindSparseInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceGroupBindSparseInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBindBufferMemoryDeviceGroupInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBindBufferMemoryDeviceGroupInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBindBufferMemoryDeviceGroupInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBindImageMemoryDeviceGroupInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBindImageMemoryDeviceGroupInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBindImageMemoryDeviceGroupInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceGroupDeviceCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceGroupDeviceCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceGroupDeviceCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFeatures2(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFeatures2";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFeatures2*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageViewUsageCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageViewUsageCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageViewUsageCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceProtectedMemoryFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceProtectedMemoryFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceProtectedMemoryFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceProtectedMemoryProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceProtectedMemoryProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceProtectedMemoryProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkProtectedSubmitInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkProtectedSubmitInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkProtectedSubmitInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBindImagePlaneMemoryInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBindImagePlaneMemoryInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBindImagePlaneMemoryInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImagePlaneMemoryRequirementsInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImagePlaneMemoryRequirementsInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImagePlaneMemoryRequirementsInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExternalImageFormatInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExternalImageFormatInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExternalImageFormatInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExternalImageFormatProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExternalImageFormatProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExternalImageFormatProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceIDProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceIDProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceIDProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExternalMemoryImageCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExternalMemoryImageCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExternalMemoryImageCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExternalMemoryBufferCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExternalMemoryBufferCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExternalMemoryBufferCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportMemoryAllocateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportMemoryAllocateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportMemoryAllocateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportFenceCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportFenceCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportFenceCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportSemaphoreCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportSemaphoreCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportSemaphoreCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSubgroupProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSubgroupProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSubgroupProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevice16BitStorageFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevice16BitStorageFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevice16BitStorageFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVariablePointersFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVariablePointersFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVariablePointersFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance3Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance3Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance3Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerYcbcrConversionInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerYcbcrConversionInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSamplerYcbcrConversionFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSamplerYcbcrConversionFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSamplerYcbcrConversionFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerYcbcrConversionImageFormatProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerYcbcrConversionImageFormatProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionImageFormatProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceGroupRenderPassBeginInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceGroupRenderPassBeginInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceGroupRenderPassBeginInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePointClippingProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePointClippingProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePointClippingProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassInputAttachmentAspectCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassInputAttachmentAspectCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassInputAttachmentAspectCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineTessellationDomainOriginStateCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineTessellationDomainOriginStateCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineTessellationDomainOriginStateCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassMultiviewCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassMultiviewCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassMultiviewCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultiviewFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultiviewFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultiviewProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultiviewProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderDrawParametersFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderDrawParametersFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderDrawParametersFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDriverProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDriverProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDriverProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan11Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan11Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan11Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan11Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan11Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan11Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan12Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan12Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan12Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan12Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan12Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan12Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageFormatListCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageFormatListCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageFormatListCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkanMemoryModelFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkanMemoryModelFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkanMemoryModelFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceHostQueryResetFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceHostQueryResetFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceHostQueryResetFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTimelineSemaphoreFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTimelineSemaphoreFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTimelineSemaphoreFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTimelineSemaphoreProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTimelineSemaphoreProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTimelineSemaphoreProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSemaphoreTypeCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSemaphoreTypeCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSemaphoreTypeCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTimelineSemaphoreSubmitInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTimelineSemaphoreSubmitInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTimelineSemaphoreSubmitInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceBufferDeviceAddressFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceBufferDeviceAddressFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBufferOpaqueCaptureAddressCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBufferOpaqueCaptureAddressCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBufferOpaqueCaptureAddressCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryOpaqueCaptureAddressAllocateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryOpaqueCaptureAddressAllocateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryOpaqueCaptureAddressAllocateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevice8BitStorageFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevice8BitStorageFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevice8BitStorageFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderAtomicInt64Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderAtomicInt64Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicInt64Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderFloat16Int8Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderFloat16Int8Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFloat16Int8Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFloatControlsProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFloatControlsProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFloatControlsProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDescriptorSetLayoutBindingFlagsCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDescriptorSetLayoutBindingFlagsCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDescriptorSetLayoutBindingFlagsCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorIndexingFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorIndexingFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorIndexingFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorIndexingProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorIndexingProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorIndexingProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDescriptorSetVariableDescriptorCountAllocateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDescriptorSetVariableDescriptorCountAllocateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDescriptorSetVariableDescriptorCountAllocateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDescriptorSetVariableDescriptorCountLayoutSupport(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDescriptorSetVariableDescriptorCountLayoutSupport";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDescriptorSetVariableDescriptorCountLayoutSupport*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceScalarBlockLayoutFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceScalarBlockLayoutFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceScalarBlockLayoutFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerReductionModeCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerReductionModeCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerReductionModeCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSamplerFilterMinmaxProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSamplerFilterMinmaxProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSamplerFilterMinmaxProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceUniformBufferStandardLayoutFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceUniformBufferStandardLayoutFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceUniformBufferStandardLayoutFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSubpassDescriptionDepthStencilResolve(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSubpassDescriptionDepthStencilResolve";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSubpassDescriptionDepthStencilResolve*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDepthStencilResolveProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDepthStencilResolveProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthStencilResolveProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageStencilUsageCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageStencilUsageCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageStencilUsageCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImagelessFramebufferFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImagelessFramebufferFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImagelessFramebufferFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassAttachmentBeginInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassAttachmentBeginInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassAttachmentBeginInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkFramebufferAttachmentsCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkFramebufferAttachmentsCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkFramebufferAttachmentsCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAttachmentReferenceStencilLayout(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAttachmentReferenceStencilLayout";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAttachmentReferenceStencilLayout*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAttachmentDescriptionStencilLayout(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAttachmentDescriptionStencilLayout";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAttachmentDescriptionStencilLayout*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan13Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan13Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan13Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan13Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan13Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan13Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePrivateDataFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePrivateDataFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePrivateDataFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDevicePrivateDataCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDevicePrivateDataCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDevicePrivateDataCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryBarrier2(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryBarrier2";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryBarrier2*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSynchronization2Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSynchronization2Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSynchronization2Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTextureCompressionASTCHDRFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTextureCompressionASTCHDRFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTextureCompressionASTCHDRFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkFormatProperties3(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkFormatProperties3";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkFormatProperties3*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance4Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance4Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance4Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance4Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance4Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance4Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineCreationFeedbackCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineCreationFeedbackCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineCreationFeedbackCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderTerminateInvocationFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderTerminateInvocationFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderTerminateInvocationFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineCreationCacheControlFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineCreationCacheControlFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineCreationCacheControlFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageRobustnessFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageRobustnessFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageRobustnessFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSubgroupSizeControlFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSubgroupSizeControlFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSubgroupSizeControlFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSubgroupSizeControlProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSubgroupSizeControlProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSubgroupSizeControlProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineShaderStageRequiredSubgroupSizeCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineShaderStageRequiredSubgroupSizeCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineShaderStageRequiredSubgroupSizeCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceInlineUniformBlockFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceInlineUniformBlockFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceInlineUniformBlockFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceInlineUniformBlockProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceInlineUniformBlockProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceInlineUniformBlockProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkWriteDescriptorSetInlineUniformBlock(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkWriteDescriptorSetInlineUniformBlock";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkWriteDescriptorSetInlineUniformBlock*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDescriptorPoolInlineUniformBlockCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDescriptorPoolInlineUniformBlockCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDescriptorPoolInlineUniformBlockCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderIntegerDotProductFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderIntegerDotProductFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderIntegerDotProductFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderIntegerDotProductProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderIntegerDotProductProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderIntegerDotProductProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTexelBufferAlignmentProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTexelBufferAlignmentProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTexelBufferAlignmentProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRenderingCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRenderingCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRenderingCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDynamicRenderingFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDynamicRenderingFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDynamicRenderingFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkCommandBufferInheritanceRenderingInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkCommandBufferInheritanceRenderingInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkCommandBufferInheritanceRenderingInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan14Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan14Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan14Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVulkan14Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVulkan14Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan14Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceQueueGlobalPriorityCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceQueueGlobalPriorityCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceQueueGlobalPriorityCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceGlobalPriorityQueryFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceGlobalPriorityQueryFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceGlobalPriorityQueryFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueueFamilyGlobalPriorityProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueueFamilyGlobalPriorityProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueueFamilyGlobalPriorityProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceIndexTypeUint8Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceIndexTypeUint8Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceIndexTypeUint8Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance5Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance5Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance5Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance5Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance5Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance5Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBufferUsageFlags2CreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBufferUsageFlags2CreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBufferUsageFlags2CreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance6Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance6Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance6Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance6Properties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance6Properties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance6Properties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBindMemoryStatus(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBindMemoryStatus";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBindMemoryStatus*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceHostImageCopyFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceHostImageCopyFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceHostImageCopyFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceHostImageCopyProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceHostImageCopyProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceHostImageCopyProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSubresourceHostMemcpySize(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSubresourceHostMemcpySize";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSubresourceHostMemcpySize*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkHostImageCopyDevicePerformanceQuery(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkHostImageCopyDevicePerformanceQuery";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkHostImageCopyDevicePerformanceQuery*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSubgroupRotateFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSubgroupRotateFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupRotateFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderFloatControls2Features(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderFloatControls2Features";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFloatControls2Features*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderExpectAssumeFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderExpectAssumeFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderExpectAssumeFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineCreateFlags2CreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineCreateFlags2CreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineCreateFlags2CreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePushDescriptorProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePushDescriptorProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePushDescriptorProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineProtectedAccessFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineProtectedAccessFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineProtectedAccessFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineRobustnessFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineRobustnessFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineRobustnessFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineRobustnessProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineRobustnessProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineRobustnessProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRobustnessCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRobustnessCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRobustnessCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLineRasterizationFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLineRasterizationFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLineRasterizationFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLineRasterizationProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLineRasterizationProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLineRasterizationProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRasterizationLineStateCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRasterizationLineStateCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRasterizationLineStateCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVertexAttributeDivisorProperties(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVertexAttributeDivisorProperties";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexAttributeDivisorProperties*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineVertexInputDivisorStateCreateInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineVertexInputDivisorStateCreateInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineVertexInputDivisorStateCreateInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVertexAttributeDivisorFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVertexAttributeDivisorFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexAttributeDivisorFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDynamicRenderingLocalReadFeatures(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDynamicRenderingLocalReadFeatures";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDynamicRenderingLocalReadFeatures*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderingAttachmentLocationInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderingAttachmentLocationInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderingAttachmentLocationInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderingInputAttachmentIndexInfo(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderingInputAttachmentIndexInfo";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderingInputAttachmentIndexInfo*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageSwapchainCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageSwapchainCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageSwapchainCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBindImageMemorySwapchainInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBindImageMemorySwapchainInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBindImageMemorySwapchainInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceGroupPresentInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceGroupPresentInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceGroupPresentInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceGroupSwapchainCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceGroupSwapchainCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceGroupSwapchainCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDisplayPresentInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDisplayPresentInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDisplayPresentInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueueFamilyQueryResultStatusPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueueFamilyQueryResultStatusPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueueFamilyQueryResultStatusPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueueFamilyVideoPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueueFamilyVideoPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueueFamilyVideoPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoProfileInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoProfileInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoProfileInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoProfileListInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoProfileListInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoProfileListInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeUsageInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeUsageInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeUsageInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264CapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264CapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264CapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264QualityLevelPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264QualityLevelPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264QualityLevelPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264SessionCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264SessionCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264SessionCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264SessionParametersAddInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264SessionParametersAddInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264SessionParametersAddInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264SessionParametersCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264SessionParametersCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264SessionParametersCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264SessionParametersGetInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264SessionParametersGetInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264SessionParametersGetInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264SessionParametersFeedbackInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264SessionParametersFeedbackInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264SessionParametersFeedbackInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264PictureInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264PictureInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264PictureInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264DpbSlotInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264DpbSlotInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264DpbSlotInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264ProfileInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264ProfileInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264ProfileInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264RateControlInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264RateControlInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264RateControlInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264RateControlLayerInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264RateControlLayerInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264RateControlLayerInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264GopRemainingFrameInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264GopRemainingFrameInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264GopRemainingFrameInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeH264ProfileInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeH264ProfileInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeH264ProfileInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeH264CapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeH264CapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeH264CapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeH264SessionParametersAddInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeH264SessionParametersAddInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeH264SessionParametersAddInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeH264SessionParametersCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeH264SessionParametersCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeH264SessionParametersCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeH264PictureInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeH264PictureInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeH264PictureInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeH264DpbSlotInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeH264DpbSlotInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeH264DpbSlotInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImportMemoryWin32HandleInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImportMemoryWin32HandleInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImportMemoryWin32HandleInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportMemoryWin32HandleInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportMemoryWin32HandleInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportMemoryWin32HandleInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImportMemoryFdInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImportMemoryFdInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImportMemoryFdInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkWin32KeyedMutexAcquireReleaseInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkWin32KeyedMutexAcquireReleaseInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkWin32KeyedMutexAcquireReleaseInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportSemaphoreWin32HandleInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportSemaphoreWin32HandleInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportSemaphoreWin32HandleInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkD3D12FenceSubmitInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkD3D12FenceSubmitInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkD3D12FenceSubmitInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPresentRegionsKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPresentRegionsKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPresentRegionsKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSharedPresentSurfaceCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSharedPresentSurfaceCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSharedPresentSurfaceCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportFenceWin32HandleInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportFenceWin32HandleInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportFenceWin32HandleInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePerformanceQueryFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePerformanceQueryFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePerformanceQueryFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePerformanceQueryPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePerformanceQueryPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePerformanceQueryPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueryPoolPerformanceCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueryPoolPerformanceCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueryPoolPerformanceCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPerformanceQuerySubmitInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPerformanceQuerySubmitInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPerformanceQuerySubmitInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderBfloat16FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderBfloat16FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderBfloat16FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePortabilitySubsetFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePortabilitySubsetFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePortabilitySubsetFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePortabilitySubsetPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePortabilitySubsetPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePortabilitySubsetPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderClockFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderClockFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderClockFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkFragmentShadingRateAttachmentInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkFragmentShadingRateAttachmentInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkFragmentShadingRateAttachmentInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineFragmentShadingRateStateCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineFragmentShadingRateStateCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineFragmentShadingRateStateCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentShadingRateFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentShadingRateFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShadingRateFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentShadingRatePropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentShadingRatePropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShadingRatePropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderingFragmentShadingRateAttachmentInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderingFragmentShadingRateAttachmentInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderingFragmentShadingRateAttachmentInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderConstantDataFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderConstantDataFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderConstantDataFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderAbortFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderAbortFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAbortFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceFaultShaderAbortMessageInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceFaultShaderAbortMessageInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceFaultShaderAbortMessageInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderAbortPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderAbortPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAbortPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderQuadControlFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderQuadControlFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderQuadControlFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfaceProtectedCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfaceProtectedCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfaceProtectedCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentWaitFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentWaitFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentWaitFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineLibraryCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineLibraryCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineLibraryCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPresentIdKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPresentIdKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPresentIdKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentIdFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentIdFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentIdFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueryPoolVideoEncodeFeedbackCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueryPoolVideoEncodeFeedbackCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueryPoolVideoEncodeFeedbackCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeUsageInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeUsageInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeUsageInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeRateControlInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeRateControlInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeRateControlInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeQualityLevelInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeQualityLevelInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeQualityLevelInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryRangeBarriersInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryRangeBarriersInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryRangeBarriersInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderUntypedPointersFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfaceCapabilitiesPresentId2KHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfaceCapabilitiesPresentId2KHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfaceCapabilitiesPresentId2KHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPresentId2KHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPresentId2KHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPresentId2KHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentId2FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentId2FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentId2FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfaceCapabilitiesPresentWait2KHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfaceCapabilitiesPresentWait2KHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfaceCapabilitiesPresentWait2KHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentWait2FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentWait2FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentWait2FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineBinaryFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineBinaryFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineBinaryFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineBinaryPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineBinaryPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineBinaryPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDevicePipelineBinaryInternalCacheControlKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDevicePipelineBinaryInternalCacheControlKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDevicePipelineBinaryInternalCacheControlKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineBinaryInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineBinaryInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineBinaryInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfacePresentModeKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfacePresentModeKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfacePresentModeKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfacePresentScalingCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfacePresentScalingCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfacePresentScalingCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfacePresentModeCompatibilityKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfacePresentModeCompatibilityKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfacePresentModeCompatibilityKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainPresentFenceInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainPresentFenceInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainPresentFenceInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainPresentModesCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainPresentModesCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainPresentModesCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainPresentModeInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainPresentModeInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainPresentModeInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainPresentScalingCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainPresentScalingCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainPresentScalingCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceComputeShaderDerivativesPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceComputeShaderDerivativesPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceComputeShaderDerivativesPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeAV1ProfileInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeAV1ProfileInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeAV1ProfileInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeAV1CapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeAV1CapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeAV1CapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeAV1SessionParametersCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeAV1SessionParametersCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeAV1SessionParametersCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeAV1PictureInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeAV1PictureInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeAV1PictureInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeAV1DpbSlotInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeAV1DpbSlotInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeAV1DpbSlotInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVideoEncodeAV1FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1CapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1CapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1CapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1QualityLevelPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1QualityLevelPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1QualityLevelPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1SessionCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1SessionCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1SessionCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1SessionParametersCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1SessionParametersCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1SessionParametersCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1PictureInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1PictureInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1PictureInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1DpbSlotInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1DpbSlotInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1DpbSlotInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1ProfileInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1ProfileInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1ProfileInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1GopRemainingFrameInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1GopRemainingFrameInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1GopRemainingFrameInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1RateControlInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1RateControlInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1RateControlInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1RateControlLayerInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1RateControlLayerInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1RateControlLayerInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVideoDecodeVP9FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeVP9ProfileInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeVP9ProfileInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeVP9ProfileInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeVP9CapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeVP9CapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeVP9CapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoDecodeVP9PictureInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoDecodeVP9PictureInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoDecodeVP9PictureInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVideoMaintenance1FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVideoMaintenance1FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoMaintenance1FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoInlineQueryInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoInlineQueryInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoInlineQueryInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAttachmentFeedbackLoopInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAttachmentFeedbackLoopInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAttachmentFeedbackLoopInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCopyMemoryIndirectPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCopyMemoryIndirectPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCopyMemoryIndirectPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeIntraRefreshCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeIntraRefreshCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeIntraRefreshCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeSessionIntraRefreshCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeSessionIntraRefreshCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeSessionIntraRefreshCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeIntraRefreshInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeIntraRefreshInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeIntraRefreshInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoReferenceIntraRefreshInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoReferenceIntraRefreshInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoReferenceIntraRefreshInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeQuantizationMapCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeQuantizationMapCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeQuantizationMapCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoFormatQuantizationMapPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoFormatQuantizationMapPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoFormatQuantizationMapPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeQuantizationMapInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeQuantizationMapInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeQuantizationMapInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeQuantizationMapSessionParametersCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeQuantizationMapSessionParametersCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeQuantizationMapSessionParametersCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH264QuantizationMapCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH264QuantizationMapCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH264QuantizationMapCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeH265QuantizationMapCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeH265QuantizationMapCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeH265QuantizationMapCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoFormatH265QuantizationMapPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoFormatH265QuantizationMapPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoFormatH265QuantizationMapPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeAV1QuantizationMapCapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeAV1QuantizationMapCapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeAV1QuantizationMapCapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoFormatAV1QuantizationMapPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoFormatAV1QuantizationMapPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoFormatAV1QuantizationMapPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance7FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance7FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance7FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance7PropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance7PropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance7PropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLayeredApiPropertiesListKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLayeredApiPropertiesListKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLayeredApiPropertiesListKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLayeredApiVulkanPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLayeredApiVulkanPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLayeredApiVulkanPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFaultFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFaultFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFaultFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFaultPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFaultPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFaultPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryBarrierAccessFlags3KHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryBarrierAccessFlags3KHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryBarrierAccessFlags3KHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance8FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance8FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance8FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderFmaFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderFmaFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFmaFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance9FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance9FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance9FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance9PropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance9PropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance9PropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueueFamilyOwnershipTransferPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueueFamilyOwnershipTransferPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueueFamilyOwnershipTransferPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeFeedback2CapabilitiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeFeedback2CapabilitiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeFeedback2CapabilitiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDepthClampZeroOneFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRobustness2FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRobustness2FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRobustness2FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRobustness2PropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRobustness2PropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRobustness2PropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureGeometryMicromapDataKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureGeometryMicromapDataKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureGeometryMicromapDataKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceOpacityMicromapFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceOpacityMicromapFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceOpacityMicromapFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceOpacityMicromapPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceOpacityMicromapPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceOpacityMicromapPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureTrianglesOpacityMicromapKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureTrianglesOpacityMicromapKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureTrianglesOpacityMicromapKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance10FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance10FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance10FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance10PropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance10PropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance10PropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderingAttachmentFlagsInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderingAttachmentFlagsInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderingAttachmentFlagsInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkResolveImageModeInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkResolveImageModeInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkResolveImageModeInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMaintenance11FeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMaintenance11FeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance11FeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkFormatProperties4KHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkFormatProperties4KHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkFormatProperties4KHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageUsageFlags2CreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageUsageFlags2CreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageUsageFlags2CreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageCreateFlags2CreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageCreateFlags2CreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageCreateFlags2CreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageViewUsage2CreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageViewUsage2CreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageViewUsage2CreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExtendedFlagsFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExtendedFlagsFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageStencilUsage2CreateInfoKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageStencilUsage2CreateInfoKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageStencilUsage2CreateInfoKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSharedPresentSurfaceCapabilities2KHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSharedPresentSurfaceCapabilities2KHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSharedPresentSurfaceCapabilities2KHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDebugReportCallbackCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDebugReportCallbackCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDebugReportCallbackCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRasterizationStateRasterizationOrderAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRasterizationStateRasterizationOrderAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRasterizationStateRasterizationOrderAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDedicatedAllocationImageCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDedicatedAllocationImageCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDedicatedAllocationImageCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDedicatedAllocationBufferCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDedicatedAllocationBufferCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDedicatedAllocationBufferCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDedicatedAllocationMemoryAllocateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDedicatedAllocationMemoryAllocateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDedicatedAllocationMemoryAllocateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTransformFeedbackFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTransformFeedbackFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTransformFeedbackFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTransformFeedbackPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTransformFeedbackPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTransformFeedbackPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRasterizationStateStreamCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRasterizationStateStreamCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRasterizationStateStreamCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTextureLODGatherFormatPropertiesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTextureLODGatherFormatPropertiesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTextureLODGatherFormatPropertiesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCornerSampledImageFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCornerSampledImageFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCornerSampledImageFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExternalMemoryImageCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExternalMemoryImageCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExternalMemoryImageCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportMemoryAllocateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportMemoryAllocateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportMemoryAllocateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImportMemoryWin32HandleInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImportMemoryWin32HandleInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImportMemoryWin32HandleInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExportMemoryWin32HandleInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExportMemoryWin32HandleInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExportMemoryWin32HandleInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkWin32KeyedMutexAcquireReleaseInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkWin32KeyedMutexAcquireReleaseInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkWin32KeyedMutexAcquireReleaseInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkValidationFlagsEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkValidationFlagsEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkValidationFlagsEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageViewASTCDecodeModeEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageViewASTCDecodeModeEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageViewASTCDecodeModeEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceASTCDecodeFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceASTCDecodeFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceASTCDecodeFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceConditionalRenderingFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceConditionalRenderingFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceConditionalRenderingFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkCommandBufferInheritanceConditionalRenderingInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkCommandBufferInheritanceConditionalRenderingInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkCommandBufferInheritanceConditionalRenderingInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineViewportWScalingStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineViewportWScalingStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineViewportWScalingStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainCounterCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainCounterCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainCounterCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPresentTimesInfoGOOGLE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPresentTimesInfoGOOGLE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPresentTimesInfoGOOGLE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMultiviewPerViewAttributesInfoNVX(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMultiviewPerViewAttributesInfoNVX";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMultiviewPerViewAttributesInfoNVX*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineViewportSwizzleStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineViewportSwizzleStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineViewportSwizzleStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDiscardRectanglePropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDiscardRectanglePropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDiscardRectanglePropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineDiscardRectangleStateCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineDiscardRectangleStateCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineDiscardRectangleStateCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceConservativeRasterizationPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceConservativeRasterizationPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceConservativeRasterizationPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRasterizationConservativeStateCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRasterizationConservativeStateCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRasterizationConservativeStateCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDepthClipEnableFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDepthClipEnableFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClipEnableFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRasterizationDepthClipStateCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRasterizationDepthClipStateCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRasterizationDepthClipStateCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDebugUtilsObjectNameInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDebugUtilsObjectNameInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDebugUtilsObjectNameInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDebugUtilsMessengerCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDebugUtilsMessengerCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDebugUtilsMessengerCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAndroidHardwareBufferUsageANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAndroidHardwareBufferUsageANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAndroidHardwareBufferUsageANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAndroidHardwareBufferFormatPropertiesANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAndroidHardwareBufferFormatPropertiesANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAndroidHardwareBufferFormatPropertiesANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImportAndroidHardwareBufferInfoANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImportAndroidHardwareBufferInfoANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImportAndroidHardwareBufferInfoANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExternalFormatANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExternalFormatANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExternalFormatANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAndroidHardwareBufferFormatProperties2ANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAndroidHardwareBufferFormatProperties2ANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAndroidHardwareBufferFormatProperties2ANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceGpaFeaturesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceGpaFeaturesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceGpaFeaturesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceGpaPropertiesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceGpaPropertiesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceGpaPropertiesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceGpaProperties2AMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceGpaProperties2AMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceGpaProperties2AMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAttachmentSampleCountInfoAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAttachmentSampleCountInfoAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAttachmentSampleCountInfoAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSampleLocationsInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSampleLocationsInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSampleLocationsInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassSampleLocationsBeginInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassSampleLocationsBeginInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassSampleLocationsBeginInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineSampleLocationsStateCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineSampleLocationsStateCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineSampleLocationsStateCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSampleLocationsPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSampleLocationsPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSampleLocationsPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineColorBlendAdvancedStateCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineColorBlendAdvancedStateCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineColorBlendAdvancedStateCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineCoverageToColorStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineCoverageToColorStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineCoverageToColorStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineCoverageModulationStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineCoverageModulationStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineCoverageModulationStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSMBuiltinsPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSMBuiltinsPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSMBuiltinsPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSMBuiltinsFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDrmFormatModifierPropertiesListEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDrmFormatModifierPropertiesListEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDrmFormatModifierPropertiesListEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageDrmFormatModifierInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageDrmFormatModifierInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageDrmFormatModifierInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageDrmFormatModifierListCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageDrmFormatModifierListCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageDrmFormatModifierListCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageDrmFormatModifierExplicitCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageDrmFormatModifierExplicitCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageDrmFormatModifierExplicitCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDrmFormatModifierPropertiesList2EXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDrmFormatModifierPropertiesList2EXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDrmFormatModifierPropertiesList2EXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkShaderModuleValidationCacheCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkShaderModuleValidationCacheCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkShaderModuleValidationCacheCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineViewportShadingRateImageStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineViewportShadingRateImageStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineViewportShadingRateImageStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShadingRateImageFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShadingRateImageFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShadingRateImageFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShadingRateImagePropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShadingRateImagePropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShadingRateImagePropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineViewportCoarseSampleOrderStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineViewportCoarseSampleOrderStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineViewportCoarseSampleOrderStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkWriteDescriptorSetAccelerationStructureNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkWriteDescriptorSetAccelerationStructureNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkWriteDescriptorSetAccelerationStructureNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRepresentativeFragmentTestStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRepresentativeFragmentTestStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRepresentativeFragmentTestStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageViewImageFormatInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageViewImageFormatInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageViewImageFormatInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkFilterCubicImageViewImageFormatPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkFilterCubicImageViewImageFormatPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkFilterCubicImageViewImageFormatPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImportMemoryHostPointerInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImportMemoryHostPointerInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImportMemoryHostPointerInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExternalMemoryHostPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExternalMemoryHostPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExternalMemoryHostPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineCompilerControlCreateInfoAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineCompilerControlCreateInfoAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineCompilerControlCreateInfoAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderCorePropertiesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderCorePropertiesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderCorePropertiesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceMemoryOverallocationCreateInfoAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceMemoryOverallocationCreateInfoAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceMemoryOverallocationCreateInfoAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPresentFrameTokenGGP(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPresentFrameTokenGGP";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPresentFrameTokenGGP*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMeshShaderFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMeshShaderFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMeshShaderFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMeshShaderPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMeshShaderPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMeshShaderPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderImageFootprintFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderImageFootprintFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderImageFootprintFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineViewportExclusiveScissorStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineViewportExclusiveScissorStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineViewportExclusiveScissorStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExclusiveScissorFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExclusiveScissorFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExclusiveScissorFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueueFamilyCheckpointPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueueFamilyCheckpointPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueueFamilyCheckpointPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueueFamilyCheckpointProperties2NV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueueFamilyCheckpointProperties2NV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueueFamilyCheckpointProperties2NV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentTimingFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentTimingFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentTimingFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPresentTimingSurfaceCapabilitiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPresentTimingSurfaceCapabilitiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPresentTimingSurfaceCapabilitiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainCalibratedTimestampInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainCalibratedTimestampInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainCalibratedTimestampInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPresentTimingsInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPresentTimingsInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPresentTimingsInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkQueryPoolPerformanceQueryCreateInfoINTEL(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkQueryPoolPerformanceQueryCreateInfoINTEL";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkQueryPoolPerformanceQueryCreateInfoINTEL*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePCIBusInfoPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePCIBusInfoPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePCIBusInfoPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDisplayNativeHdrSurfaceCapabilitiesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDisplayNativeHdrSurfaceCapabilitiesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDisplayNativeHdrSurfaceCapabilitiesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainDisplayNativeHdrCreateInfoAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainDisplayNativeHdrCreateInfoAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainDisplayNativeHdrCreateInfoAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMapFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMapFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMapPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMapPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassFragmentDensityMapCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassFragmentDensityMapCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassFragmentDensityMapCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderingFragmentDensityMapAttachmentInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderingFragmentDensityMapAttachmentInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderingFragmentDensityMapAttachmentInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderCoreProperties2AMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderCoreProperties2AMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderCoreProperties2AMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCoherentMemoryFeaturesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCoherentMemoryFeaturesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCoherentMemoryFeaturesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMemoryBudgetPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMemoryBudgetPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMemoryBudgetPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMemoryPriorityFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMemoryPriorityFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMemoryPriorityFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryPriorityAllocateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryPriorityAllocateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryPriorityAllocateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceBufferDeviceAddressFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBufferDeviceAddressCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBufferDeviceAddressCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBufferDeviceAddressCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkValidationFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkValidationFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkValidationFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCoverageReductionModeFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCoverageReductionModeFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCoverageReductionModeFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineCoverageReductionStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineCoverageReductionStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineCoverageReductionStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceProvokingVertexFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceProvokingVertexFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceProvokingVertexFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceProvokingVertexPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceProvokingVertexPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceProvokingVertexPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineRasterizationProvokingVertexStateCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineRasterizationProvokingVertexStateCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineRasterizationProvokingVertexStateCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfaceFullScreenExclusiveInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfaceFullScreenExclusiveInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfaceFullScreenExclusiveInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfaceCapabilitiesFullScreenExclusiveEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfaceCapabilitiesFullScreenExclusiveEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfaceCapabilitiesFullScreenExclusiveEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfaceFullScreenExclusiveWin32InfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfaceFullScreenExclusiveWin32InfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfaceFullScreenExclusiveWin32InfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderAtomicFloatFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExtendedDynamicStateFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMapMemoryPlacedFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMapMemoryPlacedPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMapMemoryPlacedPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMapMemoryPlacedPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryMapPlacedInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryMapPlacedInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryMapPlacedInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkGraphicsPipelineShaderGroupsCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkGraphicsPipelineShaderGroupsCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkGraphicsPipelineShaderGroupsCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceInheritedViewportScissorFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceInheritedViewportScissorFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceInheritedViewportScissorFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkCommandBufferInheritanceViewportScissorInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkCommandBufferInheritanceViewportScissorInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkCommandBufferInheritanceViewportScissorInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassTransformBeginInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassTransformBeginInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassTransformBeginInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkCommandBufferInheritanceRenderPassTransformInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkCommandBufferInheritanceRenderPassTransformInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkCommandBufferInheritanceRenderPassTransformInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDepthBiasControlFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDepthBiasControlFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthBiasControlFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDepthBiasRepresentationInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDepthBiasRepresentationInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDepthBiasRepresentationInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDeviceMemoryReportFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceDeviceMemoryReportCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceDeviceMemoryReportCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceDeviceMemoryReportCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerCustomBorderColorCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerCustomBorderColorCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerCustomBorderColorCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCustomBorderColorPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCustomBorderColorPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCustomBorderColorPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCustomBorderColorFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCustomBorderColorFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCustomBorderColorFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentBarrierFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentBarrierFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentBarrierFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSurfaceCapabilitiesPresentBarrierNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSurfaceCapabilitiesPresentBarrierNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSurfaceCapabilitiesPresentBarrierNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainPresentBarrierCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainPresentBarrierCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainPresentBarrierCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDiagnosticsConfigFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDiagnosticsConfigFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDiagnosticsConfigFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceDiagnosticsConfigCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceDiagnosticsConfigCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceDiagnosticsConfigCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceQueuePerfHintFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceQueuePerfHintPropertiesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceQueuePerfHintPropertiesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceQueuePerfHintPropertiesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageProcessing3FeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageProcessing3FeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessing3FeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSplitBarrierFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSplitBarrierPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSplitBarrierPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSplitBarrierPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTileShadingFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTileShadingFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTileShadingFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTileShadingPropertiesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTileShadingPropertiesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTileShadingPropertiesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassTileShadingCreateInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassTileShadingCreateInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassTileShadingCreateInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorBufferPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorBufferPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorBufferPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorBufferFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorBufferFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorBufferFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDescriptorBufferBindingPushDescriptorBufferHandleEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDescriptorBufferBindingPushDescriptorBufferHandleEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDescriptorBufferBindingPushDescriptorBufferHandleEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkOpaqueCaptureDescriptorDataCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkOpaqueCaptureDescriptorDataCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkOpaqueCaptureDescriptorDataCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorBufferDensityMapPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorBufferDensityMapPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorBufferDensityMapPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceGraphicsPipelineLibraryPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceGraphicsPipelineLibraryPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceGraphicsPipelineLibraryPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkGraphicsPipelineLibraryCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkGraphicsPipelineLibraryCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkGraphicsPipelineLibraryCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShadingRateEnumsPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineFragmentShadingRateEnumStateCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineFragmentShadingRateEnumStateCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineFragmentShadingRateEnumStateCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureGeometryMotionTrianglesDataNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureGeometryMotionTrianglesDataNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureGeometryMotionTrianglesDataNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureMotionInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureMotionInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureMotionInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingMotionBlurFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMap2FeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMap2PropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMap2PropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMap2PropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkCopyCommandTransformInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkCopyCommandTransformInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkCopyCommandTransformInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageCompressionControlFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageCompressionControlFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageCompressionControlFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageCompressionControlEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageCompressionControlEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageCompressionControlEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageCompressionPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageCompressionPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageCompressionPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevice4444FormatsFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevice4444FormatsFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevice4444FormatsFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFaultFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFaultFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFaultFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMutableDescriptorTypeCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMutableDescriptorTypeCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMutableDescriptorTypeCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDrmPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDrmPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDrmPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceAddressBindingReportFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceAddressBindingReportFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceAddressBindingReportFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceAddressBindingCallbackDataEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceAddressBindingCallbackDataEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceAddressBindingCallbackDataEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDepthClipControlFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDepthClipControlFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClipControlFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineViewportDepthClipControlCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineViewportDepthClipControlCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineViewportDepthClipControlCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImportMemoryZirconHandleInfoFUCHSIA(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImportMemoryZirconHandleInfoFUCHSIA";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImportMemoryZirconHandleInfoFUCHSIA*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceInvocationMaskFeaturesHUAWEI";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExternalMemoryRDMAFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFrameBoundaryFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFrameBoundaryFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFrameBoundaryFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkFrameBoundaryEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkFrameBoundaryEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkFrameBoundaryEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSubpassResolvePerformanceQueryEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSubpassResolvePerformanceQueryEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSubpassResolvePerformanceQueryEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMultisampledRenderToSingleSampledInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMultisampledRenderToSingleSampledInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMultisampledRenderToSingleSampledInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExtendedDynamicState2FeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceColorWriteEnableFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceColorWriteEnableFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceColorWriteEnableFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineColorWriteCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineColorWriteCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineColorWriteCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeRgbConversionCapabilitiesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeRgbConversionCapabilitiesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeRgbConversionCapabilitiesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeProfileRgbConversionInfoVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeProfileRgbConversionInfoVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeProfileRgbConversionInfoVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkVideoEncodeSessionRgbConversionCreateInfoVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkVideoEncodeSessionRgbConversionCreateInfoVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkVideoEncodeSessionRgbConversionCreateInfoVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageViewMinLodFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageViewMinLodFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageViewMinLodFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageViewMinLodCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageViewMinLodCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageViewMinLodCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultiDrawFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultiDrawFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiDrawFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultiDrawPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultiDrawPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiDrawPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImage2DViewOf3DFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderTileImageFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderTileImageFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderTileImageFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderTileImagePropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderTileImagePropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderTileImagePropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceOpacityMicromapFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceOpacityMicromapFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceOpacityMicromapFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceOpacityMicromapPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceOpacityMicromapPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceOpacityMicromapPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureTrianglesOpacityMicromapEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureTrianglesOpacityMicromapEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureTrianglesOpacityMicromapEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDisplacementMicromapFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDisplacementMicromapFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDisplacementMicromapFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDisplacementMicromapPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDisplacementMicromapPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDisplacementMicromapPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureTrianglesDisplacementMicromapNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureTrianglesDisplacementMicromapNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureTrianglesDisplacementMicromapNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceClusterCullingShaderPropertiesHUAWEI(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceClusterCullingShaderPropertiesHUAWEI";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceClusterCullingShaderPropertiesHUAWEI*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceBorderColorSwizzleFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerBorderColorComponentMappingCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerBorderColorComponentMappingCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerBorderColorComponentMappingCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderCorePropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderCorePropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderCorePropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDeviceQueueShaderCoreControlCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDeviceQueueShaderCoreControlCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDeviceQueueShaderCoreControlCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSchedulingControlsFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSchedulingControlsFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSchedulingControlsFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSchedulingControlsPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSchedulingControlsPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSchedulingControlsPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageViewSlicedCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageViewSlicedCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageViewSlicedCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRenderPassStripedFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRenderPassStripedFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRenderPassStripedFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRenderPassStripedPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRenderPassStripedPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRenderPassStripedPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassStripeBeginInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassStripeBeginInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassStripeBeginInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassStripeSubmitInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassStripeSubmitInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassStripeSubmitInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMapOffsetPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMapOffsetPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapOffsetPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassFragmentDensityMapOffsetEndInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassFragmentDensityMapOffsetEndInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassFragmentDensityMapOffsetEndInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkComputePipelineIndirectBufferInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkComputePipelineIndirectBufferInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkComputePipelineIndirectBufferInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureGeometryLinearSweptSpheresDataNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureGeometryLinearSweptSpheresDataNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureGeometryLinearSweptSpheresDataNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAccelerationStructureGeometrySpheresDataNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAccelerationStructureGeometrySpheresDataNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAccelerationStructureGeometrySpheresDataNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLinearColorAttachmentFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLinearColorAttachmentFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLinearColorAttachmentFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageViewSampleWeightCreateInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageViewSampleWeightCreateInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageViewSampleWeightCreateInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageProcessingFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageProcessingFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessingFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageProcessingPropertiesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageProcessingPropertiesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessingPropertiesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceNestedCommandBufferFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceNestedCommandBufferFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceNestedCommandBufferFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceNestedCommandBufferPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceNestedCommandBufferPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceNestedCommandBufferPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExternalMemoryAcquireUnmodifiedEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExternalMemoryAcquireUnmodifiedEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExternalMemoryAcquireUnmodifiedEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExtendedDynamicState3FeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExtendedDynamicState3PropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExtendedDynamicState3PropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedDynamicState3PropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassCreationControlEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassCreationControlEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassCreationControlEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassCreationFeedbackCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassCreationFeedbackCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassCreationFeedbackCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassSubpassFeedbackCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassSubpassFeedbackCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassSubpassFeedbackCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDirectDriverLoadingListLUNARG(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDirectDriverLoadingListLUNARG";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDirectDriverLoadingListLUNARG*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTensorDescriptionARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTensorDescriptionARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTensorDescriptionARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkWriteDescriptorSetTensorARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkWriteDescriptorSetTensorARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkWriteDescriptorSetTensorARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTensorFormatPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTensorFormatPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTensorFormatPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTensorPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTensorPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTensorPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTensorMemoryBarrierARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTensorMemoryBarrierARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTensorMemoryBarrierARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTensorDependencyInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTensorDependencyInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTensorDependencyInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTensorFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTensorFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTensorFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMemoryDedicatedAllocateInfoTensorARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMemoryDedicatedAllocateInfoTensorARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMemoryDedicatedAllocateInfoTensorARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkExternalMemoryTensorCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkExternalMemoryTensorCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkExternalMemoryTensorCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorBufferTensorFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorBufferTensorPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorBufferTensorPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorBufferTensorPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDescriptorGetTensorInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDescriptorGetTensorInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDescriptorGetTensorInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkFrameBoundaryTensorsARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkFrameBoundaryTensorsARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkFrameBoundaryTensorsARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineShaderStageModuleIdentifierCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineShaderStageModuleIdentifierCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineShaderStageModuleIdentifierCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceOpticalFlowFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceOpticalFlowFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceOpticalFlowFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceOpticalFlowPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceOpticalFlowPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceOpticalFlowPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkOpticalFlowImageFormatInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkOpticalFlowImageFormatInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkOpticalFlowImageFormatInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkOpticalFlowSessionCreatePrivateDataInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkOpticalFlowSessionCreatePrivateDataInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkOpticalFlowSessionCreatePrivateDataInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLegacyDitheringFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLegacyDitheringFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLegacyDitheringFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExternalFormatResolveFeaturesANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExternalFormatResolvePropertiesANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExternalFormatResolvePropertiesANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExternalFormatResolvePropertiesANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAndroidHardwareBufferFormatResolvePropertiesANDROID(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAndroidHardwareBufferFormatResolvePropertiesANDROID";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAndroidHardwareBufferFormatResolvePropertiesANDROID*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceAntiLagFeaturesAMD(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceAntiLagFeaturesAMD";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceAntiLagFeaturesAMD*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderObjectFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderObjectFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderObjectFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderObjectPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderObjectPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderObjectPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTilePropertiesFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTilePropertiesFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTilePropertiesFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceAmigoProfilingFeaturesSEC(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceAmigoProfilingFeaturesSEC";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceAmigoProfilingFeaturesSEC*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkAmigoProfilingSubmitInfoSEC(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkAmigoProfilingSubmitInfoSEC";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkAmigoProfilingSubmitInfoSEC*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingInvocationReorderPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingInvocationReorderPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingInvocationReorderPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeVectorPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeVectorPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeVectorPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeVectorFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeVectorFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeVectorFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceExtendedSparseAddressSpacePropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceExtendedSparseAddressSpacePropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedSparseAddressSpacePropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLegacyVertexAttributesPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLegacyVertexAttributesPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLegacyVertexAttributesPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkLayerSettingsCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkLayerSettingsCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkLayerSettingsCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderCoreBuiltinsPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderCoreBuiltinsPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderCoreBuiltinsPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkLatencySubmissionPresentIdNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkLatencySubmissionPresentIdNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkLatencySubmissionPresentIdNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainLatencyCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainLatencyCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainLatencyCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkLatencySurfaceCapabilitiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkLatencySurfaceCapabilitiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkLatencySurfaceCapabilitiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDataGraphFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDataGraphFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineCompilerControlCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineCompilerControlCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineCompilerControlCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineShaderModuleCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineShaderModuleCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineShaderModuleCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineIdentifierCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineIdentifierCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineIdentifierCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphProcessingEngineCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphProcessingEngineCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphProcessingEngineCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkMultiviewPerViewRenderAreasRenderPassBeginInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkMultiviewPerViewRenderAreasRenderPassBeginInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkMultiviewPerViewRenderAreasRenderPassBeginInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePerStageDescriptorSetFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePerStageDescriptorSetFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePerStageDescriptorSetFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageProcessing2FeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageProcessing2FeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessing2FeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageProcessing2PropertiesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageProcessing2PropertiesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessing2PropertiesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerBlockMatchWindowCreateInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerBlockMatchWindowCreateInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerBlockMatchWindowCreateInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCubicWeightsFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCubicWeightsFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCubicWeightsFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerCubicWeightsCreateInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerCubicWeightsCreateInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerCubicWeightsCreateInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBlitImageCubicWeightsInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBlitImageCubicWeightsInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBlitImageCubicWeightsInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceYcbcrDegammaFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSamplerYcbcrConversionYcbcrDegammaCreateInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCubicClampFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCubicClampFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCubicClampFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceLayeredDriverPropertiesMSFT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceLayeredDriverPropertiesMSFT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceLayeredDriverPropertiesMSFT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTileMemoryHeapFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceTileMemoryHeapPropertiesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceTileMemoryHeapPropertiesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceTileMemoryHeapPropertiesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTileMemoryRequirementsQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTileMemoryRequirementsQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTileMemoryRequirementsQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTileMemoryBindInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTileMemoryBindInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTileMemoryBindInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTileMemorySizeInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTileMemorySizeInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTileMemorySizeInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMemoryDecompressionFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMemoryDecompressionFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMemoryDecompressionFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMemoryDecompressionPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMemoryDecompressionPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMemoryDecompressionPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDisplaySurfaceStereoCreateInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDisplaySurfaceStereoCreateInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDisplaySurfaceStereoCreateInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDisplayModeStereoPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDisplayModeStereoPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDisplayModeStereoPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRawAccessChainsFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRawAccessChainsFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRawAccessChainsFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCommandBufferInheritanceFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTensorRollingBackingCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTensorRollingBackingCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTensorRollingBackingCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkTensorExplicitTilingFormatPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkTensorExplicitTilingFormatPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkTensorExplicitTilingFormatPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderFloat8FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderFloat8FeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFloat8FeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingValidationFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingValidationFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingValidationFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePartitionedAccelerationStructurePropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePartitionedAccelerationStructurePropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePartitionedAccelerationStructurePropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPartitionedAccelerationStructureFlagsNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPartitionedAccelerationStructureFlagsNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPartitionedAccelerationStructureFlagsNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkWriteDescriptorSetPartitionedAccelerationStructureNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkWriteDescriptorSetPartitionedAccelerationStructureNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkWriteDescriptorSetPartitionedAccelerationStructureNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDeviceGeneratedCommandsPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDeviceGeneratedCommandsPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkGeneratedCommandsPipelineInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkGeneratedCommandsPipelineInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkGeneratedCommandsPipelineInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkGeneratedCommandsShaderInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkGeneratedCommandsShaderInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkGeneratedCommandsShaderInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageAlignmentControlFeaturesMESA(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageAlignmentControlFeaturesMESA";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageAlignmentControlFeaturesMESA*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageAlignmentControlPropertiesMESA(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageAlignmentControlPropertiesMESA";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageAlignmentControlPropertiesMESA*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageAlignmentControlCreateInfoMESA(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageAlignmentControlCreateInfoMESA";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageAlignmentControlCreateInfoMESA*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPushConstantBankInfoNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPushConstantBankInfoNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPushConstantBankInfoNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePushConstantBankFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePushConstantBankFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePushConstantBankFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePushConstantBankPropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePushConstantBankPropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePushConstantBankPropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingInvocationReorderPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingInvocationReorderPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingInvocationReorderPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDepthClampControlFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDepthClampControlFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClampControlFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineViewportDepthClampControlCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineViewportDepthClampControlCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineViewportDepthClampControlCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceHdrVividFeaturesHUAWEI(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceHdrVividFeaturesHUAWEI";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceHdrVividFeaturesHUAWEI*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkHdrVividDynamicMetadataHUAWEI(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkHdrVividDynamicMetadataHUAWEI";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkHdrVividDynamicMetadataHUAWEI*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrix2FeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrix2FeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrix2PropertiesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrix2PropertiesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrix2PropertiesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineOpacityMicromapFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImportMemoryMetalHandleInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImportMemoryMetalHandleInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImportMemoryMetalHandleInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePerformanceCountersByRegionFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePerformanceCountersByRegionPropertiesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePerformanceCountersByRegionPropertiesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePerformanceCountersByRegionPropertiesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkRenderPassPerformanceCountersByRegionBeginInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkRenderPassPerformanceCountersByRegionBeginInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkRenderPassPerformanceCountersByRegionBeginInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFormatPackFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFormatPackFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFormatPackFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapLayeredPropertiesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPipelineFragmentDensityMapLayeredCreateInfoVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPipelineFragmentDensityMapLayeredCreateInfoVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPipelineFragmentDensityMapLayeredCreateInfoVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSetPresentConfigNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSetPresentConfigNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSetPresentConfigNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePresentMeteringFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePresentMeteringFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePresentMeteringFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkSwapchainFlagsSurfaceCapabilitiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkSwapchainFlagsSurfaceCapabilitiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkSwapchainFlagsSurfaceCapabilitiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShader64BitIndexingFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCustomResolveFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCustomResolveFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCustomResolveFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkCustomResolveCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkCustomResolveCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkCustomResolveCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineBuiltinModelCreateInfoQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineBuiltinModelCreateInfoQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineBuiltinModelCreateInfoQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDataGraphModelFeaturesQCOM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDataGraphModelFeaturesQCOM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineOpticalFlowCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineOpticalFlowCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineOpticalFlowCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphOpticalFlowImageFormatInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphOpticalFlowImageFormatInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphOpticalFlowImageFormatInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineOpticalFlowDispatchInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineOpticalFlowDispatchInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineOpticalFlowDispatchInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineResourceInfoImageLayoutARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineResourceInfoImageLayoutARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineResourceInfoImageLayoutARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineSingleNodeCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineSingleNodeCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineSingleNodeCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderLongVectorFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderLongVectorFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderLongVectorPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderLongVectorPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderLongVectorPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkThrottleHintSubmitInfoSEC(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkThrottleHintSubmitInfoSEC";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkThrottleHintSubmitInfoSEC*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceThrottleHintFeaturesSEC(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceThrottleHintFeaturesSEC";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceThrottleHintFeaturesSEC*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineNeuralStatisticsCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineNeuralStatisticsCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineNeuralStatisticsCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceImageTilingControlFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceImageTilingControlFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceImageTilingControlFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkImageTilingControlCreateInfoEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkImageTilingControlCreateInfoEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkImageTilingControlCreateInfoEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDevicePrivateDataBaseHandleFeaturesNV";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceInfoPropertiesINTEL(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceInfoPropertiesINTEL";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceInfoPropertiesINTEL*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentPropertiesVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkBufferDeviceAddressAlignmentAllocateInfoVALVE(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkBufferDeviceAddressAlignmentAllocateInfoVALVE";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkBufferDeviceAddressAlignmentAllocateInfoVALVE*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkWriteDescriptorSetAccelerationStructureKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkWriteDescriptorSetAccelerationStructureKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkWriteDescriptorSetAccelerationStructureKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceAccelerationStructureFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceAccelerationStructureFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceAccelerationStructurePropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceAccelerationStructurePropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceAccelerationStructurePropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingPipelineFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingPipelineFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingPipelineFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayTracingPipelinePropertiesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayTracingPipelinePropertiesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingPipelinePropertiesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceRayQueryFeaturesKHR(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceRayQueryFeaturesKHR";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceRayQueryFeaturesKHR*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMeshShaderFeaturesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMeshShaderFeaturesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMeshShaderFeaturesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void InsertPNext_VkPhysicalDeviceMeshShaderPropertiesEXT(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, const std::string_view& fieldName, const PNextNode* data)
 {
     static constexpr std::string_view name = "VkPhysicalDeviceMeshShaderPropertiesEXT";
 
-    // generate the structMembers entries
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+    // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
     const auto* pnext = reinterpret_cast<const Decoded_VkPhysicalDeviceMeshShaderPropertiesEXT*>(data->GetMetaStructPointer());
-    FieldInfo memberInfo = { .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 };
-    FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+    FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
 }
 
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const PNextNode* data)

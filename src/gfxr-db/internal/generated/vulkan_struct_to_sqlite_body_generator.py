@@ -120,9 +120,6 @@ class VulkanStructToSqliteBodyGenerator(VulkanBaseGenerator):
     # yapf: disable
     def endFile(self):
         body = "\n"
-        body += inspect.cleandoc('''
-                static constexpr std::string_view pNextName = "pNext";
-            ''')
         body += self.make_pnext_funcs()
         body += "\n\n"
         body += inspect.cleandoc('''
@@ -305,11 +302,9 @@ class VulkanStructToSqliteBodyGenerator(VulkanBaseGenerator):
             {{
                 static constexpr std::string_view name = "{0}";
 
-                // generate the structMembers entries
-                const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, name);
+                // the typed FieldToSqlite overload records the struct (and the parent's member pointing to it) itself
                 const auto* pnext = reinterpret_cast<const Decoded_{0}*>(data->GetMetaStructPointer());
-                FieldInfo memberInfo = {{ .eventId = fieldInfo.eventId, .structId = structId, .arrayId = 0, .arrayIndex = 0 }};
-                FieldToSqlite(statements, memberInfo, fieldIndex, pNextName, pnext, name);
+                FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, pnext, name);
             }}
             ''').format(struct, self.pnext_extension_structs[struct])
         return body
