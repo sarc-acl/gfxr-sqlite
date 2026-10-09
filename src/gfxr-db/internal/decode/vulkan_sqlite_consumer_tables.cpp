@@ -1168,7 +1168,7 @@ static void CreateGraphicsPipelineTables(sqlite3* db)
         "   pipelineId INT NOT NULL,"
         "   rasterizationSamples INT NOT NULL,"
         "   sampleShadingEnable INT NOT NULL,"
-        "   minSampleShading INT NOT NULL,"
+        "   minSampleShading REAL NOT NULL,"
         "   alphaToCoverageEnable INT NOT NULL,"
         "   alphaToOneEnable INT NOT NULL,"
         "   FOREIGN KEY(pipelineId) REFERENCES pipelines(id),"
