@@ -56,6 +56,13 @@ from vulkan_struct_to_sqlite_header_generator import VulkanStructToSqliteHeaderG
 from vulkan_struct_to_sqlite_body_generator import VulkanStructToSqliteBodyGenerator, VulkanStructToSqliteBodyGeneratorOptions
 from vulkan_enum_to_sqlite_header_generator import VulkanEnumToSqliteHeaderGenerator, VulkanEnumToSqliteHeaderGeneratorOptions
 from vulkan_enum_to_sqlite_body_generator import VulkanEnumToSqliteBodyGenerator, VulkanEnumToSqliteBodyGeneratorOptions
+from vulkan_enum_from_string_header_generator import VulkanEnumFromStringHeaderGenerator, VulkanEnumFromStringHeaderGeneratorOptions
+from vulkan_enum_from_string_body_generator import VulkanEnumFromStringBodyGenerator, VulkanEnumFromStringBodyGeneratorOptions
+from vulkan_struct_from_apidump_header_generator import VulkanStructFromApiDumpHeaderGenerator, VulkanStructFromApiDumpHeaderGeneratorOptions
+from vulkan_struct_from_apidump_body_generator import VulkanStructFromApiDumpBodyGenerator, VulkanStructFromApiDumpBodyGeneratorOptions
+from vulkan_pnext_from_apidump_body_generator import VulkanPNextFromApiDumpBodyGenerator, VulkanPNextFromApiDumpBodyGeneratorOptions
+from vulkan_apidump_dispatch_header_generator import VulkanApiDumpDispatchHeaderGenerator, VulkanApiDumpDispatchHeaderGeneratorOptions
+from vulkan_apidump_dispatch_body_generator import VulkanApiDumpDispatchBodyGenerator, VulkanApiDumpDispatchBodyGeneratorOptions
 from vulkan_process_features_body_generator import VulkanProcessFeaturesBodyGenerator, VulkanProcessFeaturesBodyGeneratorOptions
 
 # Simple timer functions
@@ -251,6 +258,104 @@ def make_gen_opts(args):
         VulkanEnumToSqliteBodyGenerator,
         VulkanEnumToSqliteBodyGeneratorOptions(
             filename='generated_vulkan_enum_to_sqlite.cpp',
+            directory=directory,
+            blacklists=blacklists,
+            platform_types=platform_types,
+            prefixText=prefix_strings + vk_prefix_strings,
+            protectFile=False,
+            protectFeature=False,
+            extra_headers=extra_headers
+        )
+    ]
+
+    gen_opts['generated_vulkan_enum_from_string.h'] = [
+        VulkanEnumFromStringHeaderGenerator,
+        VulkanEnumFromStringHeaderGeneratorOptions(
+            filename='generated_vulkan_enum_from_string.h',
+            directory=directory,
+            blacklists=blacklists,
+            platform_types=platform_types,
+            prefixText=prefix_strings + vk_prefix_strings,
+            protectFile=True,
+            protectFeature=False,
+            extra_headers=extra_headers
+        )
+    ]
+
+    gen_opts['generated_vulkan_enum_from_string.cpp'] = [
+        VulkanEnumFromStringBodyGenerator,
+        VulkanEnumFromStringBodyGeneratorOptions(
+            filename='generated_vulkan_enum_from_string.cpp',
+            directory=directory,
+            blacklists=blacklists,
+            platform_types=platform_types,
+            prefixText=prefix_strings + vk_prefix_strings,
+            protectFile=False,
+            protectFeature=False,
+            extra_headers=extra_headers
+        )
+    ]
+
+    gen_opts['generated_vulkan_struct_from_apidump.h'] = [
+        VulkanStructFromApiDumpHeaderGenerator,
+        VulkanStructFromApiDumpHeaderGeneratorOptions(
+            filename='generated_vulkan_struct_from_apidump.h',
+            directory=directory,
+            blacklists=blacklists,
+            platform_types=platform_types,
+            prefixText=prefix_strings + vk_prefix_strings,
+            protectFile=True,
+            protectFeature=False,
+            extra_headers=extra_headers
+        )
+    ]
+
+    gen_opts['generated_vulkan_struct_from_apidump.cpp'] = [
+        VulkanStructFromApiDumpBodyGenerator,
+        VulkanStructFromApiDumpBodyGeneratorOptions(
+            filename='generated_vulkan_struct_from_apidump.cpp',
+            directory=directory,
+            blacklists=blacklists,
+            platform_types=platform_types,
+            prefixText=prefix_strings + vk_prefix_strings,
+            protectFile=False,
+            protectFeature=False,
+            extra_headers=extra_headers
+        )
+    ]
+
+    gen_opts['generated_vulkan_pnext_from_apidump.cpp'] = [
+        VulkanPNextFromApiDumpBodyGenerator,
+        VulkanPNextFromApiDumpBodyGeneratorOptions(
+            filename='generated_vulkan_pnext_from_apidump.cpp',
+            directory=directory,
+            blacklists=blacklists,
+            platform_types=platform_types,
+            prefixText=prefix_strings + vk_prefix_strings,
+            protectFile=False,
+            protectFeature=False,
+            extra_headers=extra_headers
+        )
+    ]
+
+    gen_opts['generated_vulkan_apidump_dispatch.h'] = [
+        VulkanApiDumpDispatchHeaderGenerator,
+        VulkanApiDumpDispatchHeaderGeneratorOptions(
+            filename='generated_vulkan_apidump_dispatch.h',
+            directory=directory,
+            blacklists=blacklists,
+            platform_types=platform_types,
+            prefixText=prefix_strings + vk_prefix_strings,
+            protectFile=True,
+            protectFeature=False,
+            extra_headers=extra_headers
+        )
+    ]
+
+    gen_opts['generated_vulkan_apidump_dispatch.cpp'] = [
+        VulkanApiDumpDispatchBodyGenerator,
+        VulkanApiDumpDispatchBodyGeneratorOptions(
+            filename='generated_vulkan_apidump_dispatch.cpp',
             directory=directory,
             blacklists=blacklists,
             platform_types=platform_types,

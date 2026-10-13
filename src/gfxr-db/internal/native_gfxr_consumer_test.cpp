@@ -21,33 +21,9 @@
 #include <stdexcept>
 
 #include "create_db_helper.h"
-#include "executable_path.h"
+#include "test_resources_path.h"
 
-const auto TestResourcesFolderName = "test-resources";
-
-static std::filesystem::path getTestResourcesFolder()
-{
-    auto binPath = gfxrSqlite::getExecutablePath();
-    std::filesystem::path bin = binPath;
-    auto path = bin.parent_path();
-    for (;;)
-    {
-        auto testResources = path / TestResourcesFolderName;
-        if (exists(testResources))
-        {
-            return testResources;
-        }
-        // Detect root by checking that parent_path() actually reduces the path.
-        // `has_parent_path()` returns true even at filesystem roots on Windows,
-        // which would otherwise spin this loop forever.
-        auto parent = path.parent_path();
-        if (parent == path)
-        {
-            throw std::runtime_error("test-resources folder not found in any parent of " + binPath);
-        }
-        path = parent;
-    }
-}
+using gfxrSqlite::getTestResourcesFolder;
 
 static bool runSimpleQuery(sqlite3* const dbHandle)
 {

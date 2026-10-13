@@ -25,13 +25,13 @@
 #include "sqlite3.h"
 
 namespace {
-// Reads the given .gfxr file and converts it to an in-memory database.
+// Reads the given .gfxr or .apidump file and converts it to an in-memory database.
 // Returns the pointer to the in-memory database, or nullptr at errors.
 //
 // Although this program will export the database to the disk later, an
 // in-memory database is used because in the future Sherlock may access
 // the database purely in memory, saving the cost to save/load it.
-sqlite3 *openGfxrAsDatabase(const std::string &filePath) {
+sqlite3 *openCaptureAsDatabase(const std::string &filePath) {
   int memDbInitErr = sqlite3MemdbExtInit();
   if (memDbInitErr != SQLITE_OK) [[unlikely]] {
     return nullptr;
@@ -89,14 +89,14 @@ int exportDatabase(sqlite3 *sourceDb, const char *destinationFilename) {
 int main(int argc, char *argv[]) {
   // Check for optional output file path
   std::string outputPath;
-  std::string gfxrFilePath;
+  std::string inputPath;
 
   if (argc == 2) {
-    gfxrFilePath = argv[1];
-    outputPath = gfxrFilePath + ".sqlite3";
+    inputPath = argv[1];
+    outputPath = inputPath + ".sqlite3";
   } else if (argc == 4 && std::string(argv[1]) == "-o") {
     outputPath = argv[2];
-    gfxrFilePath = argv[3];
+    inputPath = argv[3];
   } else {
     std::cerr << "Usage: " << argv[0]
               << " [-o <output_path>] <path_to_gfxr_file>\n";
@@ -109,9 +109,9 @@ int main(int argc, char *argv[]) {
       std::filesystem::remove(outputPath);
     }
 
-    sqlite3 *inMemoryDb = openGfxrAsDatabase(gfxrFilePath);
+    sqlite3 *inMemoryDb = openCaptureAsDatabase(inputPath);
     if (inMemoryDb == nullptr) {
-      std::cerr << "ERROR: Failed to convert file " << gfxrFilePath
+      std::cerr << "ERROR: Failed to convert file " << inputPath
                 << " to a database\n";
       return EXIT_FAILURE;
     }

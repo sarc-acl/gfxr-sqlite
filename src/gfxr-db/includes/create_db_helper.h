@@ -77,6 +77,14 @@ namespace gfxrSqlite
 
         void createDatabase();
 
+        /** Builds the database from an api dump instead of a gfxr capture.
+         *
+         * Selected by createDatabase when the input looks like an api dump. Produces the same
+         * schema through the same consumer; see ApiDumpProcessor for what it has to synthesise
+         * that a gfxr file carries in its own structure.
+         */
+        void createDatabaseFromApiDump(const std::string& inputFilename);
+
         sqlite3* getDB() const { return m_db; }
 
       private:

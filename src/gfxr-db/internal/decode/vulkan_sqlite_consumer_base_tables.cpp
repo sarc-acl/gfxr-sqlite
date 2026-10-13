@@ -91,6 +91,17 @@ static void CreateCoreDataTables(sqlite3* db)
         "   FOREIGN KEY(functionNameId) REFERENCES functionNames(id)) STRICT;"
     );
 
+    // Maps an api_dump commandNumber (see show_command_numbers) to the row it was decoded into.
+    // Only populated for real calls that carried one; synthesized frame/state marker rows never do,
+    // since they don't exist in the source .apidump and have no commandNumber of their own.
+    ExecSQL(
+        db,
+        "CREATE TABLE apiDumpCommandIds("
+        "   id INTEGER UNIQUE NOT NULL PRIMARY KEY,"
+        "   apiEventId INTEGER NOT NULL,"
+        "   FOREIGN KEY(apiEventId) REFERENCES apiEvents(id)) STRICT;"
+    );
+
     ExecSQL(
         db,
         "CREATE TABLE apiEventReturns("
