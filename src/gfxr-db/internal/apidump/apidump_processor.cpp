@@ -27,14 +27,14 @@ GFXRECON_BEGIN_NAMESPACE(gfxrecon)
 GFXRECON_BEGIN_NAMESPACE(decode)
 
 ApiDumpProcessor::ApiDumpProcessor(VulkanDecoderBase& decoder, CommandNumberHandler on_command_number) :
-    decoder_(decoder), context_(encoder_, handles_), on_command_number_(std::move(on_command_number)),
-    sequencer_([this](uint64_t db_frame) {
+    decoder_(decoder), context_(encoder_, handles_), sequencer_([this](uint64_t db_frame) {
         // A frame marker is a block of its own in a .gfxr, so it takes a block index and lands in
         // apiEvents the same way a call does.
         const uint64_t block_index = sequencer_.NextBlockIndex();
         decoder_.SetCurrentBlockIndex(block_index);
         decoder_.DispatchFrameEndMarker(db_frame);
-    })
+    }),
+    on_command_number_(std::move(on_command_number))
 {}
 
 bool ApiDumpProcessor::ProcessFile(const std::string& path, std::string& error)
@@ -75,7 +75,7 @@ void ApiDumpProcessor::OnFrameBegin(uint64_t apidump_frame_number, bool is_setup
         // The first frame that is actually in the captured range. Close the setup region with a
         // StateEndMarker before any of this frame's calls are decoded, so they land after it
         // rather than being folded into frame 1 with the setup calls.
-        const uint64_t db_frame    = ApiDumpSequencer::ToDbFrame(apidump_frame_number);
+        const uint64_t db_frame = ApiDumpSequencer::ToDbFrame(apidump_frame_number);
         const uint64_t block_index = sequencer_.NextBlockIndex();
         decoder_.SetCurrentBlockIndex(block_index);
         decoder_.DispatchStateEndMarker(db_frame);
@@ -95,18 +95,18 @@ void ApiDumpProcessor::OnCall(const ApiDumpCall& call)
         return;
     }
 
-    const std::string_view name  = call.Name();
-    const auto&            table = GetApiDumpCommandTable();
-    const auto             found = table.find(name);
+    const std::string_view name = call.Name();
+    const auto& table = GetApiDumpCommandTable();
+    const auto found = table.find(name);
 
     if (found == table.end())
     {
         // A command gfxreconstruct does not decode. Skipping it without taking a block index keeps
         // apiEvents contiguous; the alternative would leave a hole no row ever fills.
         ++context_.MutableStats().unknown_commands;
-        GFXRECON_LOG_WARNING("ApiDumpProcessor: no decoder for %.*s, skipping",
-                             static_cast<int>(name.size()),
-                             name.data());
+        GFXRECON_LOG_WARNING(
+            "ApiDumpProcessor: no decoder for %.*s, skipping", static_cast<int>(name.size()), name.data()
+        );
         return;
     }
 
@@ -132,7 +132,7 @@ void ApiDumpProcessor::OnCall(const ApiDumpCall& call)
     found->second.encode(context_, call);
 
     ApiCallInfo call_info{};
-    call_info.index     = block_index;
+    call_info.index = block_index;
     call_info.thread_id = static_cast<format::ThreadId>(call.ThreadId());
 
     decoder_.DecodeFunctionCall(found->second.call_id, call_info, encoder_.GetData(), encoder_.GetDataSize());
