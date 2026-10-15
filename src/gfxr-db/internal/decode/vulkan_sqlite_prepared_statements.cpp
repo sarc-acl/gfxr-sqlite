@@ -880,53 +880,31 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(db, "INSERT INTO renderSubpasses VALUES (?, ?, ?, ?);", &renderSubpassInsertStatement);
     PrepareStatement(
         db,
-        "INSERT INTO renderSubpassAttachmentReferences VALUES (?, ?, ?, NULL, NULL, NULL, NULL, 0);",
-        &renderSubpassBlankAttachmentReferencesInsertStatement
-    );
-    PrepareStatement(
-        db,
         "INSERT INTO renderSubpassDependencies VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
         &renderSubpassDependenciesInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET inputLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceInputLayoutUpdateStatement
+        "INSERT INTO renderSubpassInputAttachmentReferences VALUES (?, ?, ?, ?, ?);",
+        &renderSubpassInputAttachmentReferenceInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET colorLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceColorLayoutUpdateStatement
+        "INSERT INTO renderSubpassColorAttachmentReferences VALUES (?, ?, ?, ?, ?);",
+        &renderSubpassColorAttachmentReferenceInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET resolveLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceResolveLayoutUpdateStatement
+        "INSERT INTO renderSubpassResolveAttachmentReferences VALUES (?, ?, ?, ?, ?);",
+        &renderSubpassResolveAttachmentReferenceInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET depthStencilLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceDepthStencilLayoutUpdateStatement
+        "INSERT INTO renderSubpassDepthStencilAttachmentReferences VALUES (?, ?, ?, ?);",
+        &renderSubpassDepthStencilAttachmentReferenceInsertStatement
     );
     PrepareStatement(
-        db,
-        "UPDATE renderSubpassAttachmentReferences SET preserveAttachment = True"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferencePreserveUpdateStatement
+        db, "INSERT INTO renderSubpassPreserveAttachments VALUES (?, ?, ?);", &renderSubpassPreserveAttachmentInsertStatement
     );
 
     PrepareStatement(db, "INSERT INTO queuePresents VALUES (?, ?, ?, ?, ?);", &queuePresentInsertStatement);
@@ -4354,18 +4332,6 @@ void VulkanSqlitePreparedStatements::InsertRenderSubpass(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
-void VulkanSqlitePreparedStatements::InsertBlankRenderSubpassAttachmentReference(
-    const int64_t renderPassId, const size_t subpassIndex, size_t attachmentIndex
-)
-{
-    auto& statement = renderSubpassBlankAttachmentReferencesInsertStatement;
-    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(attachmentIndex)));
-    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
-}
-
 void VulkanSqlitePreparedStatements::InsertSubpassDependencies(
     const int64_t renderPassId,
     const uint32_t srcSubpass,
@@ -4390,27 +4356,42 @@ void VulkanSqlitePreparedStatements::InsertSubpassDependencies(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
-void VulkanSqlitePreparedStatements::UpdateSubpassAttachmentReferenceLayout(
+void VulkanSqlitePreparedStatements::InsertSubpassAttachmentReference(
     const SqliteStatement& statement,
     const int64_t renderPassId,
     const size_t subpassIndex,
+    const size_t idx,
     const uint32_t attachment,
     const VkImageLayout layout
 )
 {
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(layout)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(renderPassId)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(subpassIndex)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(idx)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(attachment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(layout)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
-void VulkanSqlitePreparedStatements::UpdateSubpassAttachmentReferencePreserve(
+void VulkanSqlitePreparedStatements::InsertSubpassDepthStencilAttachmentReference(
+    const int64_t renderPassId, const size_t subpassIndex, const uint32_t attachment, const VkImageLayout layout
+)
+{
+    auto& statement = renderSubpassDepthStencilAttachmentReferenceInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(attachment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(layout)));
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertSubpassPreserveAttachment(
     const int64_t renderPassId, const size_t subpassIndex, const uint32_t attachment
 )
 {
-    auto& statement = renderSubpassSetAttachmentReferencePreserveUpdateStatement;
+    auto& statement = renderSubpassPreserveAttachmentInsertStatement;
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));

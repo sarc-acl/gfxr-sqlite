@@ -292,12 +292,11 @@ struct VulkanSqlitePreparedStatements
     SqliteStatement renderPassInsertStatement;
     SqliteStatement renderPassAttachmentInsertStatement;
     SqliteStatement renderSubpassInsertStatement;
-    SqliteStatement renderSubpassBlankAttachmentReferencesInsertStatement;
-    SqliteStatement renderSubpassSetAttachmentReferenceInputLayoutUpdateStatement;
-    SqliteStatement renderSubpassSetAttachmentReferenceColorLayoutUpdateStatement;
-    SqliteStatement renderSubpassSetAttachmentReferenceResolveLayoutUpdateStatement;
-    SqliteStatement renderSubpassSetAttachmentReferenceDepthStencilLayoutUpdateStatement;
-    SqliteStatement renderSubpassSetAttachmentReferencePreserveUpdateStatement;
+    SqliteStatement renderSubpassInputAttachmentReferenceInsertStatement;
+    SqliteStatement renderSubpassColorAttachmentReferenceInsertStatement;
+    SqliteStatement renderSubpassResolveAttachmentReferenceInsertStatement;
+    SqliteStatement renderSubpassDepthStencilAttachmentReferenceInsertStatement;
+    SqliteStatement renderSubpassPreserveAttachmentInsertStatement;
     SqliteStatement renderSubpassDependenciesInsertStatement;
     SqliteStatement queuePresentInsertStatement;
     SqliteStatement queuePresentRectInsertStatement;
@@ -1722,17 +1721,19 @@ struct VulkanSqlitePreparedStatements
         const VkSubpassDescriptionFlags flags,
         const VkPipelineBindPoint pipelineBindPoint
     );
-    void InsertBlankRenderSubpassAttachmentReference(
-        const int64_t renderPassId, const size_t subpassIndex, const size_t attachmentIndex
-    );
-    void UpdateSubpassAttachmentReferenceLayout(
+    // Shared by the input, color and resolve reference tables; idx is the position in the Vulkan array.
+    void InsertSubpassAttachmentReference(
         const SqliteStatement& statement,
         const int64_t renderPassId,
         const size_t subpassIndex,
+        const size_t idx,
         const uint32_t attachment,
         const VkImageLayout layout
     );
-    void UpdateSubpassAttachmentReferencePreserve(
+    void InsertSubpassDepthStencilAttachmentReference(
+        const int64_t renderPassId, const size_t subpassIndex, const uint32_t attachment, const VkImageLayout layout
+    );
+    void InsertSubpassPreserveAttachment(
         const int64_t renderPassId, const size_t subpassIndex, const uint32_t attachment
     );
     void InsertSubpassDependencies(
