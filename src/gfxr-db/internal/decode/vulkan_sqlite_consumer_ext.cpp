@@ -5207,11 +5207,8 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
             auto pipelineBindPoint = subpass.decoded_value->pipelineBindPoint;
             statements.InsertRenderSubpass(renderPassId, subpassIndex, flags, pipelineBindPoint);
 
-            for (size_t attachmentIndex = 0; attachmentIndex < attachmentsCount; ++attachmentIndex)
-            {
-                statements.InsertBlankRenderSubpassAttachmentReference(renderPassId, subpassIndex, attachmentIndex);
-            }
-
+            // Each array is recorded verbatim, including VK_ATTACHMENT_UNUSED entries, so that the position of a
+            // reference (idx) can be mapped back to a shader's attachment location/index.
             auto [inputAttachmentsValid, inputAttachments, inputAttachmentCount] =
                 GetMetaStructArray(subpass.pInputAttachments);
             if (inputAttachmentsValid)
@@ -5223,24 +5220,18 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
                     {
                         LogUnsupportedPNext(inputAttachment.pNext);
                     }
-                    auto attachment = inputAttachment.decoded_value->attachment;
-                    if (attachment != VK_ATTACHMENT_UNUSED)
-                    {
-                        auto layout = inputAttachment.decoded_value->layout;
-                        statements.UpdateSubpassAttachmentReferenceLayout(
-                            statements.renderSubpassSetAttachmentReferenceInputLayoutUpdateStatement,
-                            renderPassId,
-                            subpassIndex,
-                            attachment,
-                            layout
-                        );
-                    }
+                    statements.InsertSubpassAttachmentReference(
+                        statements.renderSubpassInputAttachmentReferenceInsertStatement,
+                        renderPassId,
+                        subpassIndex,
+                        j,
+                        inputAttachment.decoded_value->attachment,
+                        inputAttachment.decoded_value->layout
+                    );
                 }
             }
             auto [colorAttachmentsValid, colorAttachments, colorAttachmentCount] =
                 GetMetaStructArray(subpass.pColorAttachments);
-            auto [resolveAttachmentsValid, resolveAttachments, resolveAttachmentCount] =
-                GetMetaStructArray(subpass.pResolveAttachments);
             if (colorAttachmentsValid)
             {
                 for (size_t j = 0; j < colorAttachmentCount; ++j)
@@ -5250,39 +5241,35 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
                     {
                         LogUnsupportedPNext(colorAttachment.pNext);
                     }
-                    auto attachment = colorAttachment.decoded_value->attachment;
-                    if (attachment != VK_ATTACHMENT_UNUSED)
+                    statements.InsertSubpassAttachmentReference(
+                        statements.renderSubpassColorAttachmentReferenceInsertStatement,
+                        renderPassId,
+                        subpassIndex,
+                        j,
+                        colorAttachment.decoded_value->attachment,
+                        colorAttachment.decoded_value->layout
+                    );
+                }
+            }
+            auto [resolveAttachmentsValid, resolveAttachments, resolveAttachmentCount] =
+                GetMetaStructArray(subpass.pResolveAttachments);
+            if (resolveAttachmentsValid)
+            {
+                for (size_t j = 0; j < resolveAttachmentCount; ++j)
+                {
+                    auto& resolveAttachment = resolveAttachments[j];
+                    if constexpr (std::is_same_v<T, Decoded_VkRenderPassCreateInfo2>)
                     {
-                        auto layoutColor = colorAttachment.decoded_value->layout;
-                        statements.UpdateSubpassAttachmentReferenceLayout(
-                            statements.renderSubpassSetAttachmentReferenceColorLayoutUpdateStatement,
-                            renderPassId,
-                            subpassIndex,
-                            attachment,
-                            layoutColor
-                        );
+                        LogUnsupportedPNext(resolveAttachment.pNext);
                     }
-
-                    if (resolveAttachmentsValid && j < resolveAttachmentCount)
-                    {
-                        auto& resolveAttachment = resolveAttachments[j];
-                        if constexpr (std::is_same_v<T, Decoded_VkRenderPassCreateInfo2>)
-                        {
-                            LogUnsupportedPNext(resolveAttachment.pNext);
-                        }
-                        auto attachmentResolve = resolveAttachment.decoded_value->attachment;
-                        if (attachmentResolve != VK_ATTACHMENT_UNUSED)
-                        {
-                            auto layoutResolve = resolveAttachment.decoded_value->layout;
-                            statements.UpdateSubpassAttachmentReferenceLayout(
-                                statements.renderSubpassSetAttachmentReferenceResolveLayoutUpdateStatement,
-                                renderPassId,
-                                subpassIndex,
-                                attachmentResolve,
-                                layoutResolve
-                            );
-                        }
-                    }
+                    statements.InsertSubpassAttachmentReference(
+                        statements.renderSubpassResolveAttachmentReferenceInsertStatement,
+                        renderPassId,
+                        subpassIndex,
+                        j,
+                        resolveAttachment.decoded_value->attachment,
+                        resolveAttachment.decoded_value->layout
+                    );
                 }
             }
             auto [preserveAttachmentsValid, preserveAttachments, preserveAttachmentCount] =
@@ -5291,9 +5278,7 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
             {
                 for (size_t j = 0; j < preserveAttachmentCount; ++j)
                 {
-                    statements.UpdateSubpassAttachmentReferencePreserve(
-                        renderPassId, subpassIndex, preserveAttachments[j]
-                    );
+                    statements.InsertSubpassPreserveAttachment(renderPassId, subpassIndex, preserveAttachments[j]);
                 }
             }
             auto [depthStencilAttachmentValid, depthStencilAttachment] =
@@ -5304,18 +5289,12 @@ void VulkanSqliteConsumerExt::CreateRenderPass(
                 {
                     LogUnsupportedPNext(depthStencilAttachment->pNext);
                 }
-                auto attachment = depthStencilAttachment->decoded_value->attachment;
-                if (attachment != VK_ATTACHMENT_UNUSED)
-                {
-                    auto layout = depthStencilAttachment->decoded_value->layout;
-                    statements.UpdateSubpassAttachmentReferenceLayout(
-                        statements.renderSubpassSetAttachmentReferenceDepthStencilLayoutUpdateStatement,
-                        renderPassId,
-                        subpassIndex,
-                        attachment,
-                        layout
-                    );
-                }
+                statements.InsertSubpassDepthStencilAttachmentReference(
+                    renderPassId,
+                    subpassIndex,
+                    depthStencilAttachment->decoded_value->attachment,
+                    depthStencilAttachment->decoded_value->layout
+                );
             }
         }
     }

@@ -491,20 +491,58 @@ static void CreateRenderPassTables(sqlite3* db)
 
     ExecSQL(
         db,
-        "CREATE TABLE renderSubpassAttachmentReferences("
+        "CREATE TABLE renderSubpassInputAttachmentReferences("
+        "   renderPassId INT NOT NULL,"
+        "   subpassIndex INT NOT NULL,"
+        "   idx INT NOT NULL,"
+        "   attachmentIndex INT,"
+        "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex, idx),"
+        "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE renderSubpassColorAttachmentReferences("
+        "   renderPassId INT NOT NULL,"
+        "   subpassIndex INT NOT NULL,"
+        "   idx INT NOT NULL,"
+        "   attachmentIndex INT,"
+        "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex, idx),"
+        "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE renderSubpassResolveAttachmentReferences("
+        "   renderPassId INT NOT NULL,"
+        "   subpassIndex INT NOT NULL,"
+        "   idx INT NOT NULL,"
+        "   attachmentIndex INT,"
+        "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex, idx),"
+        "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE renderSubpassDepthStencilAttachmentReferences("
+        "   renderPassId INT NOT NULL,"
+        "   subpassIndex INT NOT NULL,"
+        "   attachmentIndex INT,"
+        "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex),"
+        "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
+    );
+
+    ExecSQL(
+        db,
+        "CREATE TABLE renderSubpassPreserveAttachments("
         "   renderPassId INT NOT NULL,"
         "   subpassIndex INT NOT NULL,"
         "   attachmentIndex INT NOT NULL,"
-        "   inputLayout INT,"
-        "   colorLayout INT,"
-        "   resolveLayout INT,"
-        "   depthStencilLayout INT,"
-        "   preserveAttachment INT NOT NULL,"
-        "   FOREIGN KEY(inputLayout) REFERENCES VkImageLayout(value),"
-        "   FOREIGN KEY(colorLayout) REFERENCES VkImageLayout(value),"
-        "   FOREIGN KEY(resolveLayout) REFERENCES VkImageLayout(value),"
-        "   FOREIGN KEY(depthStencilLayout) REFERENCES VkImageLayout(value),"
-        "   FOREIGN KEY(preserveAttachment) REFERENCES VkBool32(value)) STRICT;"
+        "   PRIMARY KEY(renderPassId, subpassIndex, attachmentIndex)) STRICT;"
     );
 
     ExecSQL(

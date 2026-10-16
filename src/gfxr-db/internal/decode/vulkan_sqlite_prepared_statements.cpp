@@ -50,9 +50,7 @@ void VulkanSqlitePreparedStatements::CreateBasePreparedStatements()
     );
 
     PrepareStatement(db, "INSERT INTO commandBufferCommands VALUES (?, ?);", &commandBufferCommandInsertStatement);
-    PrepareStatement(
-        db, "INSERT INTO apiDumpCommandIds VALUES (?, ?);", &apiDumpCommandIdInsertStatement
-    );
+    PrepareStatement(db, "INSERT INTO apiDumpCommandIds VALUES (?, ?);", &apiDumpCommandIdInsertStatement);
 
     PrepareStatement(db, "INSERT INTO trackedCmdCommands VALUES(?, ?, ?, ?, ?, ?);", &trackedCmdCommandInsertStatement);
     PrepareStatement(
@@ -880,53 +878,33 @@ void VulkanSqlitePreparedStatements::CreateAdvancedPreparedStatements()
     PrepareStatement(db, "INSERT INTO renderSubpasses VALUES (?, ?, ?, ?);", &renderSubpassInsertStatement);
     PrepareStatement(
         db,
-        "INSERT INTO renderSubpassAttachmentReferences VALUES (?, ?, ?, NULL, NULL, NULL, NULL, 0);",
-        &renderSubpassBlankAttachmentReferencesInsertStatement
-    );
-    PrepareStatement(
-        db,
         "INSERT INTO renderSubpassDependencies VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
         &renderSubpassDependenciesInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET inputLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceInputLayoutUpdateStatement
+        "INSERT INTO renderSubpassInputAttachmentReferences VALUES (?, ?, ?, ?, ?);",
+        &renderSubpassInputAttachmentReferenceInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET colorLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceColorLayoutUpdateStatement
+        "INSERT INTO renderSubpassColorAttachmentReferences VALUES (?, ?, ?, ?, ?);",
+        &renderSubpassColorAttachmentReferenceInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET resolveLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceResolveLayoutUpdateStatement
+        "INSERT INTO renderSubpassResolveAttachmentReferences VALUES (?, ?, ?, ?, ?);",
+        &renderSubpassResolveAttachmentReferenceInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET depthStencilLayout = ?"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferenceDepthStencilLayoutUpdateStatement
+        "INSERT INTO renderSubpassDepthStencilAttachmentReferences VALUES (?, ?, ?, ?);",
+        &renderSubpassDepthStencilAttachmentReferenceInsertStatement
     );
     PrepareStatement(
         db,
-        "UPDATE renderSubpassAttachmentReferences SET preserveAttachment = True"
-        " WHERE renderSubpassAttachmentReferences.renderPassId = ?"
-        "  AND renderSubpassAttachmentReferences.subpassIndex = ?"
-        "  AND renderSubpassAttachmentReferences.attachmentIndex = ?;",
-        &renderSubpassSetAttachmentReferencePreserveUpdateStatement
+        "INSERT INTO renderSubpassPreserveAttachments VALUES (?, ?, ?);",
+        &renderSubpassPreserveAttachmentInsertStatement
     );
 
     PrepareStatement(db, "INSERT INTO queuePresents VALUES (?, ?, ?, ?, ?);", &queuePresentInsertStatement);
@@ -4354,18 +4332,6 @@ void VulkanSqlitePreparedStatements::InsertRenderSubpass(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
-void VulkanSqlitePreparedStatements::InsertBlankRenderSubpassAttachmentReference(
-    const int64_t renderPassId, const size_t subpassIndex, size_t attachmentIndex
-)
-{
-    auto& statement = renderSubpassBlankAttachmentReferencesInsertStatement;
-    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(attachmentIndex)));
-    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
-}
-
 void VulkanSqlitePreparedStatements::InsertSubpassDependencies(
     const int64_t renderPassId,
     const uint32_t srcSubpass,
@@ -4390,27 +4356,68 @@ void VulkanSqlitePreparedStatements::InsertSubpassDependencies(
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
-void VulkanSqlitePreparedStatements::UpdateSubpassAttachmentReferenceLayout(
+// The layout of a VK_ATTACHMENT_UNUSED reference is ignored by Vulkan and may hold an arbitrary value, which would
+// violate the VkImageLayout foreign key, so it is recorded as VK_IMAGE_LAYOUT_UNDEFINED (0) instead.
+static VkImageLayout SubpassAttachmentLayout(const uint32_t attachment, const VkImageLayout layout)
+{
+    return attachment == VK_ATTACHMENT_UNUSED ? VK_IMAGE_LAYOUT_UNDEFINED : layout;
+}
+
+// VK_ATTACHMENT_UNUSED is a sentinel, not an attachment index, so unused slots are recorded as NULL.
+void VulkanSqlitePreparedStatements::BindSubpassAttachmentIndex(
+    const SqliteStatement& statement, const int index, const uint32_t attachment
+)
+{
+    if (attachment == VK_ATTACHMENT_UNUSED)
+    {
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_null(statement, index));
+    }
+    else
+    {
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, index, static_cast<sqlite_int64>(attachment)));
+    }
+}
+
+void VulkanSqlitePreparedStatements::InsertSubpassAttachmentReference(
     const SqliteStatement& statement,
     const int64_t renderPassId,
     const size_t subpassIndex,
+    const size_t idx,
     const uint32_t attachment,
     const VkImageLayout layout
 )
 {
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(layout)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(renderPassId)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(subpassIndex)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(attachment)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(idx)));
+    BindSubpassAttachmentIndex(statement, 4, attachment);
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(SubpassAttachmentLayout(attachment, layout)))
+    );
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
 }
 
-void VulkanSqlitePreparedStatements::UpdateSubpassAttachmentReferencePreserve(
+void VulkanSqlitePreparedStatements::InsertSubpassDepthStencilAttachmentReference(
+    const int64_t renderPassId, const size_t subpassIndex, const uint32_t attachment, const VkImageLayout layout
+)
+{
+    auto& statement = renderSubpassDepthStencilAttachmentReferenceInsertStatement;
+    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));
+    BindSubpassAttachmentIndex(statement, 3, attachment);
+    GFXRECON_SQLITE_CHECK(
+        db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(SubpassAttachmentLayout(attachment, layout)))
+    );
+    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+}
+
+void VulkanSqlitePreparedStatements::InsertSubpassPreserveAttachment(
     const int64_t renderPassId, const size_t subpassIndex, const uint32_t attachment
 )
 {
-    auto& statement = renderSubpassSetAttachmentReferencePreserveUpdateStatement;
+    auto& statement = renderSubpassPreserveAttachmentInsertStatement;
     GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(renderPassId)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 2, static_cast<sqlite_int64>(subpassIndex)));
@@ -5751,9 +5758,7 @@ void VulkanSqlitePreparedStatements::UpdatePhysicalDeviceProperties(
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(properties.vendorID)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 4, static_cast<sqlite_int64>(properties.deviceID)));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 5, static_cast<sqlite_int64>(properties.deviceType)));
-    GFXRECON_SQLITE_CHECK(
-        db, sqlite3_bind_text(statement, 6, properties.deviceName, -1, SQLITE_TRANSIENT)
-    );
+    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 6, properties.deviceName, -1, SQLITE_TRANSIENT));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 7, uuid.c_str(), -1, SQLITE_TRANSIENT));
     GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 8, static_cast<sqlite_int64>(physicalDeviceId)));
     GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
@@ -5761,31 +5766,31 @@ void VulkanSqlitePreparedStatements::UpdatePhysicalDeviceProperties(
 
 namespace
 {
-// Binds and executes one (physicalDeviceId, name, value) row of the EAV-shaped physicalDeviceLimits /
-// physicalDeviceSparseProperties tables - see the CREATE TABLE comment in
-// CreatePhysicalDevicePropertiesTables (vulkan_sqlite_consumer_tables.cpp) for why these two tables are
-// shaped this way instead of one column per VkPhysicalDeviceLimits/VkPhysicalDeviceSparseProperties field.
-void BindPhysicalDevicePropertyValue(
-    sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, int64_t value
-)
-{
-    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(value)));
-    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
-}
+    // Binds and executes one (physicalDeviceId, name, value) row of the EAV-shaped physicalDeviceLimits /
+    // physicalDeviceSparseProperties tables - see the CREATE TABLE comment in
+    // CreatePhysicalDevicePropertiesTables (vulkan_sqlite_consumer_tables.cpp) for why these two tables are
+    // shaped this way instead of one column per VkPhysicalDeviceLimits/VkPhysicalDeviceSparseProperties field.
+    void BindPhysicalDevicePropertyValue(
+        sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, int64_t value
+    )
+    {
+        GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 3, static_cast<sqlite_int64>(value)));
+        GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+    }
 
-void BindPhysicalDevicePropertyValue(
-    sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, double value
-)
-{
-    GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
-    GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 3, value));
-    GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
-}
+    void BindPhysicalDevicePropertyValue(
+        sqlite3* db, sqlite3_stmt* statement, int64_t physicalDeviceId, const char* name, double value
+    )
+    {
+        GFXRECON_SQLITE_CHECK(db, sqlite3_reset(statement));
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_int64(statement, 1, static_cast<sqlite_int64>(physicalDeviceId)));
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_text(statement, 2, name, -1, SQLITE_STATIC));
+        GFXRECON_SQLITE_CHECK(db, sqlite3_bind_double(statement, 3, value));
+        GFXRECON_SQLITE_CHECK_DONE(db, sqlite3_step(statement));
+    }
 } // namespace
 
 void VulkanSqlitePreparedStatements::InsertPhysicalDeviceLimits(
