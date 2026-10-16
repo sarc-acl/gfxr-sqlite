@@ -495,8 +495,9 @@ static void CreateRenderPassTables(sqlite3* db)
         "   renderPassId INT NOT NULL,"
         "   subpassIndex INT NOT NULL,"
         "   idx INT NOT NULL,"
-        "   attachmentIndex INT NOT NULL,"
+        "   attachmentIndex INT,"
         "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex, idx),"
         "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
     );
 
@@ -506,8 +507,9 @@ static void CreateRenderPassTables(sqlite3* db)
         "   renderPassId INT NOT NULL,"
         "   subpassIndex INT NOT NULL,"
         "   idx INT NOT NULL,"
-        "   attachmentIndex INT NOT NULL,"
+        "   attachmentIndex INT,"
         "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex, idx),"
         "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
     );
 
@@ -517,8 +519,9 @@ static void CreateRenderPassTables(sqlite3* db)
         "   renderPassId INT NOT NULL,"
         "   subpassIndex INT NOT NULL,"
         "   idx INT NOT NULL,"
-        "   attachmentIndex INT NOT NULL,"
+        "   attachmentIndex INT,"
         "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex, idx),"
         "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
     );
 
@@ -527,8 +530,9 @@ static void CreateRenderPassTables(sqlite3* db)
         "CREATE TABLE renderSubpassDepthStencilAttachmentReferences("
         "   renderPassId INT NOT NULL,"
         "   subpassIndex INT NOT NULL,"
-        "   attachmentIndex INT NOT NULL,"
+        "   attachmentIndex INT,"
         "   layout INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex),"
         "   FOREIGN KEY(layout) REFERENCES VkImageLayout(value)) STRICT;"
     );
 
@@ -537,7 +541,8 @@ static void CreateRenderPassTables(sqlite3* db)
         "CREATE TABLE renderSubpassPreserveAttachments("
         "   renderPassId INT NOT NULL,"
         "   subpassIndex INT NOT NULL,"
-        "   attachmentIndex INT NOT NULL) STRICT;"
+        "   attachmentIndex INT NOT NULL,"
+        "   PRIMARY KEY(renderPassId, subpassIndex, attachmentIndex)) STRICT;"
     );
 
     ExecSQL(

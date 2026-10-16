@@ -1721,6 +1721,8 @@ struct VulkanSqlitePreparedStatements
         const VkSubpassDescriptionFlags flags,
         const VkPipelineBindPoint pipelineBindPoint
     );
+    // Binds `attachment` as an integer, or NULL when it is VK_ATTACHMENT_UNUSED.
+    void BindSubpassAttachmentIndex(const SqliteStatement& statement, const int index, const uint32_t attachment);
     // Shared by the input, color and resolve reference tables; idx is the position in the Vulkan array.
     void InsertSubpassAttachmentReference(
         const SqliteStatement& statement,
