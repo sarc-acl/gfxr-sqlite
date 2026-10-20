@@ -25,6 +25,7 @@
  */
 
 #include <cstdio>
+#include <iterator>
 #include <filesystem>
 #include <fstream>
 #include <string>
@@ -243,6 +244,130 @@ void CheckHandWrittenCommands()
                        " where f.name = 'vkMapMemory' and r.value = 0") == 1);
 }
 
+/** A vkCreateDevice whose only features come from feature structs chained on pNext.
+ *
+ * Trimmed from a real capture. The feature walker used to read each struct's VkBool32s out of the
+ * decoder's 16 byte meta struct rather than the struct it points at, so the names it recorded were
+ * whatever followed in memory. The values alternate so a lucky read cannot reproduce them.
+ */
+std::string DeviceFeaturePNextDump()
+{
+    const std::string fault =
+        "{\"type\":\"VkPhysicalDeviceFaultFeaturesEXT*\",\"name\":\"pNext\",\"address\":\"0x5100\",\"members\":["
+        + Value("VkStructureType", "sType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT") + ","
+        + Address("void*", "pNext", "address") + "," + Value("VkBool32", "deviceFault", "1") + ","
+        + Value("VkBool32", "deviceFaultVendorBinary", "0") + "]}";
+
+    static constexpr const char* atomicFloatMembers[] = {
+        "shaderBufferFloat32Atomics", "shaderBufferFloat32AtomicAdd", "shaderBufferFloat64Atomics",
+        "shaderBufferFloat64AtomicAdd", "shaderSharedFloat32Atomics", "shaderSharedFloat32AtomicAdd",
+        "shaderSharedFloat64Atomics", "shaderSharedFloat64AtomicAdd", "shaderImageFloat32Atomics",
+        "shaderImageFloat32AtomicAdd", "sparseImageFloat32Atomics", "sparseImageFloat32AtomicAdd",
+    };
+    std::string atomicFloat =
+        "{\"type\":\"VkPhysicalDeviceShaderAtomicFloatFeaturesEXT*\",\"name\":\"pNext\",\"address\":\"0x5000\","
+        "\"members\":["
+        + Value("VkStructureType", "sType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT") + ","
+        + fault;
+    for (size_t i = 0; i < std::size(atomicFloatMembers); ++i)
+    {
+        atomicFloat += "," + Value("VkBool32", atomicFloatMembers[i], (i % 2 == 0) ? "1" : "0");
+    }
+    atomicFloat += "]}";
+
+    const std::string createInfo =
+        "{\"type\":\"const VkDeviceCreateInfo*\",\"name\":\"pCreateInfo\",\"address\":\"0x4000\",\"members\":["
+        + Value("VkStructureType", "sType", "VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO") + "," + atomicFloat + ","
+        + Value("VkDeviceCreateFlags", "flags", "0") + "," + Value("uint32_t", "queueCreateInfoCount", "0") + ","
+        + Address("const VkDeviceQueueCreateInfo*", "pQueueCreateInfos", "address") + ","
+        + Value("uint32_t", "enabledLayerCount", "0") + ","
+        + Address("const char* const*", "ppEnabledLayerNames", "address") + ","
+        + Value("uint32_t", "enabledExtensionCount", "0") + ","
+        + Address("const char* const*", "ppEnabledExtensionNames", "address") + ","
+        + Address("const VkPhysicalDeviceFeatures*", "pEnabledFeatures", "address") + "]}";
+
+    const std::string createDevice = Call(
+        "vkCreateDevice",
+        Value("VkPhysicalDevice", "physicalDevice", "0x10") + "," + createInfo + ","
+            + Address("const VkAllocationCallbacks*", "pAllocator", "address")
+            + ",{\"type\":\"VkDevice*\",\"name\":\"pDevice\",\"address\":\"0x6000\",\"value\":\"0x20\"}",
+        "VK_SUCCESS"
+    );
+
+    return "[{\"frameNumber\":\"0\",\"apiCalls\":[" + createDevice + "]}]";
+}
+
+/** Runs one query returning a single text value, returning "<error>" when the query fails. */
+std::string QueryText(sqlite3* db, const char* sql)
+{
+    sqlite3_stmt* statement = nullptr;
+    if (sqlite3_prepare_v2(db, sql, -1, &statement, nullptr) != SQLITE_OK)
+    {
+        std::printf("  FAIL  query failed to prepare: %s (%s)\n", sql, sqlite3_errmsg(db));
+        ++g_failures;
+        return "<error>";
+    }
+
+    std::string result;
+    if (sqlite3_step(statement) == SQLITE_ROW && sqlite3_column_text(statement, 0) != nullptr)
+    {
+        result = reinterpret_cast<const char*>(sqlite3_column_text(statement, 0));
+    }
+
+    sqlite3_finalize(statement);
+    return result;
+}
+
+/** Converts DeviceFeaturePNextDump and checks exactly the enabled pNext features were recorded. */
+void CheckDeviceFeaturePNext()
+{
+    std::printf("converting a vkCreateDevice with pNext feature structs\n");
+
+    const auto dump     = std::filesystem::temp_directory_path() / "apidump_device_features_test.apidump";
+    const auto database = std::filesystem::temp_directory_path() / "apidump_device_features_test.sqlite3";
+    std::error_code ignored;
+    std::filesystem::remove(database, ignored);
+
+    {
+        std::ofstream out(dump, std::ios::binary | std::ios::trunc);
+        out << DeviceFeaturePNextDump();
+    }
+
+    std::vector<std::string> errors;
+    gfxrSqlite::CreateDBHelper helper{ dump.string(),
+                                       database.string(),
+                                       std::nullopt,
+                                       /*enforceForeignKeys=*/false,
+                                       [&errors](const std::string& error) { errors.push_back(error); } };
+    helper.createDatabase();
+
+    for (const auto& error : errors)
+    {
+        std::printf("  FAIL  conversion reported: %s\n", error.c_str());
+        ++g_failures;
+    }
+
+    sqlite3* db = helper.getDB();
+    Expect("device features: database was created", db != nullptr);
+    if (db == nullptr)
+    {
+        return;
+    }
+
+    Expect("the device was recorded", QueryScalar(db, "select count(*) from devices") == 1);
+
+    const std::string expected = "deviceFault,shaderBufferFloat32Atomics,shaderBufferFloat64Atomics,"
+                                 "shaderImageFloat32Atomics,shaderSharedFloat32Atomics,"
+                                 "shaderSharedFloat64Atomics,sparseImageFloat32Atomics";
+    const std::string actual =
+        QueryText(db, "select group_concat(name, ',') from (select name from deviceEnabledFeatures order by name)");
+    if (actual != expected)
+    {
+        std::printf("  info  recorded features: %s\n", actual.c_str());
+    }
+    Expect("exactly the enabled pNext features were recorded", actual == expected);
+}
+
 } // namespace
 
 int main()
@@ -362,6 +487,7 @@ int main()
            QueryScalar(db, "select count(*) from commandBufferCommands") > 0);
 
     CheckHandWrittenCommands();
+    CheckDeviceFeaturePNext();
 
     if (g_failures == 0)
     {

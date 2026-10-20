@@ -117,7 +117,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceProtectedMemoryFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceProtectedMemoryFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceProtectedMemoryFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->protectedMemory) { enabledFeatureNames.emplace_back("protectedMemory"); }
                 // clang-format on
                 break;
@@ -125,7 +126,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevice16BitStorageFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevice16BitStorageFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevice16BitStorageFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->storageBuffer16BitAccess) { enabledFeatureNames.emplace_back("storageBuffer16BitAccess"); }
                 if(pFeatures->uniformAndStorageBuffer16BitAccess) { enabledFeatureNames.emplace_back("uniformAndStorageBuffer16BitAccess"); }
                 if(pFeatures->storagePushConstant16) { enabledFeatureNames.emplace_back("storagePushConstant16"); }
@@ -136,7 +138,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVariablePointersFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVariablePointersFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVariablePointersFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->variablePointersStorageBuffer) { enabledFeatureNames.emplace_back("variablePointersStorageBuffer"); }
                 if(pFeatures->variablePointers) { enabledFeatureNames.emplace_back("variablePointers"); }
                 // clang-format on
@@ -145,7 +148,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceSamplerYcbcrConversionFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceSamplerYcbcrConversionFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceSamplerYcbcrConversionFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->samplerYcbcrConversion) { enabledFeatureNames.emplace_back("samplerYcbcrConversion"); }
                 // clang-format on
                 break;
@@ -153,7 +157,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMultiviewFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMultiviewFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->multiview) { enabledFeatureNames.emplace_back("multiview"); }
                 if(pFeatures->multiviewGeometryShader) { enabledFeatureNames.emplace_back("multiviewGeometryShader"); }
                 if(pFeatures->multiviewTessellationShader) { enabledFeatureNames.emplace_back("multiviewTessellationShader"); }
@@ -163,7 +168,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderDrawParametersFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderDrawParametersFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderDrawParametersFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderDrawParameters) { enabledFeatureNames.emplace_back("shaderDrawParameters"); }
                 // clang-format on
                 break;
@@ -171,7 +177,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVulkan11Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVulkan11Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan11Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->storageBuffer16BitAccess) { enabledFeatureNames.emplace_back("storageBuffer16BitAccess"); }
                 if(pFeatures->uniformAndStorageBuffer16BitAccess) { enabledFeatureNames.emplace_back("uniformAndStorageBuffer16BitAccess"); }
                 if(pFeatures->storagePushConstant16) { enabledFeatureNames.emplace_back("storagePushConstant16"); }
@@ -190,7 +197,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVulkan12Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVulkan12Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan12Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->samplerMirrorClampToEdge) { enabledFeatureNames.emplace_back("samplerMirrorClampToEdge"); }
                 if(pFeatures->drawIndirectCount) { enabledFeatureNames.emplace_back("drawIndirectCount"); }
                 if(pFeatures->storageBuffer8BitAccess) { enabledFeatureNames.emplace_back("storageBuffer8BitAccess"); }
@@ -244,7 +252,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVulkanMemoryModelFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVulkanMemoryModelFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkanMemoryModelFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->vulkanMemoryModel) { enabledFeatureNames.emplace_back("vulkanMemoryModel"); }
                 if(pFeatures->vulkanMemoryModelDeviceScope) { enabledFeatureNames.emplace_back("vulkanMemoryModelDeviceScope"); }
                 if(pFeatures->vulkanMemoryModelAvailabilityVisibilityChains) { enabledFeatureNames.emplace_back("vulkanMemoryModelAvailabilityVisibilityChains"); }
@@ -254,7 +263,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceHostQueryResetFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceHostQueryResetFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceHostQueryResetFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->hostQueryReset) { enabledFeatureNames.emplace_back("hostQueryReset"); }
                 // clang-format on
                 break;
@@ -262,7 +272,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTimelineSemaphoreFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTimelineSemaphoreFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTimelineSemaphoreFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->timelineSemaphore) { enabledFeatureNames.emplace_back("timelineSemaphore"); }
                 // clang-format on
                 break;
@@ -270,7 +281,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceBufferDeviceAddressFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->bufferDeviceAddress) { enabledFeatureNames.emplace_back("bufferDeviceAddress"); }
                 if(pFeatures->bufferDeviceAddressCaptureReplay) { enabledFeatureNames.emplace_back("bufferDeviceAddressCaptureReplay"); }
                 if(pFeatures->bufferDeviceAddressMultiDevice) { enabledFeatureNames.emplace_back("bufferDeviceAddressMultiDevice"); }
@@ -280,7 +292,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevice8BitStorageFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevice8BitStorageFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevice8BitStorageFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->storageBuffer8BitAccess) { enabledFeatureNames.emplace_back("storageBuffer8BitAccess"); }
                 if(pFeatures->uniformAndStorageBuffer8BitAccess) { enabledFeatureNames.emplace_back("uniformAndStorageBuffer8BitAccess"); }
                 if(pFeatures->storagePushConstant8) { enabledFeatureNames.emplace_back("storagePushConstant8"); }
@@ -290,7 +303,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderAtomicInt64Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderAtomicInt64Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicInt64Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderBufferInt64Atomics) { enabledFeatureNames.emplace_back("shaderBufferInt64Atomics"); }
                 if(pFeatures->shaderSharedInt64Atomics) { enabledFeatureNames.emplace_back("shaderSharedInt64Atomics"); }
                 // clang-format on
@@ -299,7 +313,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderFloat16Int8Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderFloat16Int8Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFloat16Int8Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderFloat16) { enabledFeatureNames.emplace_back("shaderFloat16"); }
                 if(pFeatures->shaderInt8) { enabledFeatureNames.emplace_back("shaderInt8"); }
                 // clang-format on
@@ -308,7 +323,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDescriptorIndexingFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDescriptorIndexingFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorIndexingFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderInputAttachmentArrayDynamicIndexing) { enabledFeatureNames.emplace_back("shaderInputAttachmentArrayDynamicIndexing"); }
                 if(pFeatures->shaderUniformTexelBufferArrayDynamicIndexing) { enabledFeatureNames.emplace_back("shaderUniformTexelBufferArrayDynamicIndexing"); }
                 if(pFeatures->shaderStorageTexelBufferArrayDynamicIndexing) { enabledFeatureNames.emplace_back("shaderStorageTexelBufferArrayDynamicIndexing"); }
@@ -335,7 +351,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceScalarBlockLayoutFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceScalarBlockLayoutFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceScalarBlockLayoutFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->scalarBlockLayout) { enabledFeatureNames.emplace_back("scalarBlockLayout"); }
                 // clang-format on
                 break;
@@ -343,7 +360,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceUniformBufferStandardLayoutFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceUniformBufferStandardLayoutFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceUniformBufferStandardLayoutFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->uniformBufferStandardLayout) { enabledFeatureNames.emplace_back("uniformBufferStandardLayout"); }
                 // clang-format on
                 break;
@@ -351,7 +369,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderSubgroupExtendedTypes) { enabledFeatureNames.emplace_back("shaderSubgroupExtendedTypes"); }
                 // clang-format on
                 break;
@@ -359,7 +378,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImagelessFramebufferFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImagelessFramebufferFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImagelessFramebufferFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imagelessFramebuffer) { enabledFeatureNames.emplace_back("imagelessFramebuffer"); }
                 // clang-format on
                 break;
@@ -367,7 +387,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->separateDepthStencilLayouts) { enabledFeatureNames.emplace_back("separateDepthStencilLayouts"); }
                 // clang-format on
                 break;
@@ -375,7 +396,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVulkan13Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVulkan13Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan13Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->robustImageAccess) { enabledFeatureNames.emplace_back("robustImageAccess"); }
                 if(pFeatures->inlineUniformBlock) { enabledFeatureNames.emplace_back("inlineUniformBlock"); }
                 if(pFeatures->descriptorBindingInlineUniformBlockUpdateAfterBind) { enabledFeatureNames.emplace_back("descriptorBindingInlineUniformBlockUpdateAfterBind"); }
@@ -397,7 +419,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePrivateDataFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrivateDataFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePrivateDataFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->privateData) { enabledFeatureNames.emplace_back("privateData"); }
                 // clang-format on
                 break;
@@ -405,7 +428,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceSynchronization2Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceSynchronization2Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceSynchronization2Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->synchronization2) { enabledFeatureNames.emplace_back("synchronization2"); }
                 // clang-format on
                 break;
@@ -413,7 +437,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTextureCompressionASTCHDRFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTCHDRFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTextureCompressionASTCHDRFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->textureCompressionASTC_HDR) { enabledFeatureNames.emplace_back("textureCompressionASTC_HDR"); }
                 // clang-format on
                 break;
@@ -421,7 +446,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance4Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance4Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance4Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance4) { enabledFeatureNames.emplace_back("maintenance4"); }
                 // clang-format on
                 break;
@@ -429,7 +455,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderTerminateInvocationFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderTerminateInvocationFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderTerminateInvocationFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderTerminateInvocation) { enabledFeatureNames.emplace_back("shaderTerminateInvocation"); }
                 // clang-format on
                 break;
@@ -437,7 +464,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderDemoteToHelperInvocation) { enabledFeatureNames.emplace_back("shaderDemoteToHelperInvocation"); }
                 // clang-format on
                 break;
@@ -445,7 +473,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineCreationCacheControlFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineCreationCacheControlFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineCreationCacheControlFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineCreationCacheControl) { enabledFeatureNames.emplace_back("pipelineCreationCacheControl"); }
                 // clang-format on
                 break;
@@ -453,7 +482,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderZeroInitializeWorkgroupMemory) { enabledFeatureNames.emplace_back("shaderZeroInitializeWorkgroupMemory"); }
                 // clang-format on
                 break;
@@ -461,7 +491,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageRobustnessFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageRobustnessFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageRobustnessFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->robustImageAccess) { enabledFeatureNames.emplace_back("robustImageAccess"); }
                 // clang-format on
                 break;
@@ -469,7 +500,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceSubgroupSizeControlFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceSubgroupSizeControlFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceSubgroupSizeControlFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->subgroupSizeControl) { enabledFeatureNames.emplace_back("subgroupSizeControl"); }
                 if(pFeatures->computeFullSubgroups) { enabledFeatureNames.emplace_back("computeFullSubgroups"); }
                 // clang-format on
@@ -478,7 +510,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceInlineUniformBlockFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceInlineUniformBlockFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceInlineUniformBlockFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->inlineUniformBlock) { enabledFeatureNames.emplace_back("inlineUniformBlock"); }
                 if(pFeatures->descriptorBindingInlineUniformBlockUpdateAfterBind) { enabledFeatureNames.emplace_back("descriptorBindingInlineUniformBlockUpdateAfterBind"); }
                 // clang-format on
@@ -487,7 +520,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderIntegerDotProductFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderIntegerDotProductFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderIntegerDotProductFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderIntegerDotProduct) { enabledFeatureNames.emplace_back("shaderIntegerDotProduct"); }
                 // clang-format on
                 break;
@@ -495,7 +529,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDynamicRenderingFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDynamicRenderingFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDynamicRenderingFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dynamicRendering) { enabledFeatureNames.emplace_back("dynamicRendering"); }
                 // clang-format on
                 break;
@@ -503,7 +538,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVulkan14Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVulkan14Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVulkan14Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->globalPriorityQuery) { enabledFeatureNames.emplace_back("globalPriorityQuery"); }
                 if(pFeatures->shaderSubgroupRotate) { enabledFeatureNames.emplace_back("shaderSubgroupRotate"); }
                 if(pFeatures->shaderSubgroupRotateClustered) { enabledFeatureNames.emplace_back("shaderSubgroupRotateClustered"); }
@@ -531,7 +567,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceGlobalPriorityQueryFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceGlobalPriorityQueryFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceGlobalPriorityQueryFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->globalPriorityQuery) { enabledFeatureNames.emplace_back("globalPriorityQuery"); }
                 // clang-format on
                 break;
@@ -539,7 +576,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceIndexTypeUint8Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceIndexTypeUint8Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceIndexTypeUint8Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->indexTypeUint8) { enabledFeatureNames.emplace_back("indexTypeUint8"); }
                 // clang-format on
                 break;
@@ -547,7 +585,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance5Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance5Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance5Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance5) { enabledFeatureNames.emplace_back("maintenance5"); }
                 // clang-format on
                 break;
@@ -555,7 +594,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance6Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance6Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance6Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance6) { enabledFeatureNames.emplace_back("maintenance6"); }
                 // clang-format on
                 break;
@@ -563,7 +603,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceHostImageCopyFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceHostImageCopyFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceHostImageCopyFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->hostImageCopy) { enabledFeatureNames.emplace_back("hostImageCopy"); }
                 // clang-format on
                 break;
@@ -571,7 +612,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSubgroupRotateFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderSubgroupRotateFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupRotateFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderSubgroupRotate) { enabledFeatureNames.emplace_back("shaderSubgroupRotate"); }
                 if(pFeatures->shaderSubgroupRotateClustered) { enabledFeatureNames.emplace_back("shaderSubgroupRotateClustered"); }
                 // clang-format on
@@ -580,7 +622,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderFloatControls2Features>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderFloatControls2Features*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFloatControls2Features*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderFloatControls2) { enabledFeatureNames.emplace_back("shaderFloatControls2"); }
                 // clang-format on
                 break;
@@ -588,7 +631,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderExpectAssumeFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderExpectAssumeFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderExpectAssumeFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderExpectAssume) { enabledFeatureNames.emplace_back("shaderExpectAssume"); }
                 // clang-format on
                 break;
@@ -596,7 +640,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineProtectedAccessFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineProtectedAccessFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineProtectedAccessFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineProtectedAccess) { enabledFeatureNames.emplace_back("pipelineProtectedAccess"); }
                 // clang-format on
                 break;
@@ -604,7 +649,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineRobustnessFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineRobustnessFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineRobustnessFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineRobustness) { enabledFeatureNames.emplace_back("pipelineRobustness"); }
                 // clang-format on
                 break;
@@ -612,7 +658,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceLineRasterizationFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceLineRasterizationFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceLineRasterizationFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rectangularLines) { enabledFeatureNames.emplace_back("rectangularLines"); }
                 if(pFeatures->bresenhamLines) { enabledFeatureNames.emplace_back("bresenhamLines"); }
                 if(pFeatures->smoothLines) { enabledFeatureNames.emplace_back("smoothLines"); }
@@ -625,7 +672,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVertexAttributeDivisorFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVertexAttributeDivisorFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexAttributeDivisorFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->vertexAttributeInstanceRateDivisor) { enabledFeatureNames.emplace_back("vertexAttributeInstanceRateDivisor"); }
                 if(pFeatures->vertexAttributeInstanceRateZeroDivisor) { enabledFeatureNames.emplace_back("vertexAttributeInstanceRateZeroDivisor"); }
                 // clang-format on
@@ -634,7 +682,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDynamicRenderingLocalReadFeatures>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDynamicRenderingLocalReadFeatures*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDynamicRenderingLocalReadFeatures*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dynamicRenderingLocalRead) { enabledFeatureNames.emplace_back("dynamicRenderingLocalRead"); }
                 // clang-format on
                 break;
@@ -642,7 +691,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePerformanceQueryFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePerformanceQueryFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePerformanceQueryFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->performanceCounterQueryPools) { enabledFeatureNames.emplace_back("performanceCounterQueryPools"); }
                 if(pFeatures->performanceCounterMultipleQueryPools) { enabledFeatureNames.emplace_back("performanceCounterMultipleQueryPools"); }
                 // clang-format on
@@ -651,7 +701,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderBfloat16FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderBfloat16FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderBfloat16FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderBFloat16Type) { enabledFeatureNames.emplace_back("shaderBFloat16Type"); }
                 if(pFeatures->shaderBFloat16DotProduct) { enabledFeatureNames.emplace_back("shaderBFloat16DotProduct"); }
                 if(pFeatures->shaderBFloat16CooperativeMatrix) { enabledFeatureNames.emplace_back("shaderBFloat16CooperativeMatrix"); }
@@ -661,7 +712,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePortabilitySubsetFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePortabilitySubsetFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePortabilitySubsetFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->constantAlphaColorBlendFactors) { enabledFeatureNames.emplace_back("constantAlphaColorBlendFactors"); }
                 if(pFeatures->events) { enabledFeatureNames.emplace_back("events"); }
                 if(pFeatures->imageViewFormatReinterpretation) { enabledFeatureNames.emplace_back("imageViewFormatReinterpretation"); }
@@ -683,7 +735,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderClockFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderClockFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderClockFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderSubgroupClock) { enabledFeatureNames.emplace_back("shaderSubgroupClock"); }
                 if(pFeatures->shaderDeviceClock) { enabledFeatureNames.emplace_back("shaderDeviceClock"); }
                 // clang-format on
@@ -692,7 +745,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentShadingRateFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentShadingRateFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShadingRateFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineFragmentShadingRate) { enabledFeatureNames.emplace_back("pipelineFragmentShadingRate"); }
                 if(pFeatures->primitiveFragmentShadingRate) { enabledFeatureNames.emplace_back("primitiveFragmentShadingRate"); }
                 if(pFeatures->attachmentFragmentShadingRate) { enabledFeatureNames.emplace_back("attachmentFragmentShadingRate"); }
@@ -702,7 +756,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderConstantDataFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderConstantDataFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderConstantDataFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderConstantData) { enabledFeatureNames.emplace_back("shaderConstantData"); }
                 // clang-format on
                 break;
@@ -710,7 +765,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderAbortFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderAbortFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAbortFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderAbort) { enabledFeatureNames.emplace_back("shaderAbort"); }
                 // clang-format on
                 break;
@@ -718,7 +774,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderQuadControlFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderQuadControlFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderQuadControlFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderQuadControl) { enabledFeatureNames.emplace_back("shaderQuadControl"); }
                 // clang-format on
                 break;
@@ -726,7 +783,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentWaitFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentWaitFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentWaitFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentWait) { enabledFeatureNames.emplace_back("presentWait"); }
                 // clang-format on
                 break;
@@ -734,7 +792,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineExecutableInfo) { enabledFeatureNames.emplace_back("pipelineExecutableInfo"); }
                 // clang-format on
                 break;
@@ -742,7 +801,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentIdFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentIdFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentIdFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentId) { enabledFeatureNames.emplace_back("presentId"); }
                 // clang-format on
                 break;
@@ -750,7 +810,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceAddressCommands) { enabledFeatureNames.emplace_back("deviceAddressCommands"); }
                 // clang-format on
                 break;
@@ -758,7 +819,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->fragmentShaderBarycentric) { enabledFeatureNames.emplace_back("fragmentShaderBarycentric"); }
                 // clang-format on
                 break;
@@ -766,7 +828,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupUniformControlFlowFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderSubgroupUniformControlFlow) { enabledFeatureNames.emplace_back("shaderSubgroupUniformControlFlow"); }
                 // clang-format on
                 break;
@@ -774,7 +837,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->workgroupMemoryExplicitLayout) { enabledFeatureNames.emplace_back("workgroupMemoryExplicitLayout"); }
                 if(pFeatures->workgroupMemoryExplicitLayoutScalarBlockLayout) { enabledFeatureNames.emplace_back("workgroupMemoryExplicitLayoutScalarBlockLayout"); }
                 if(pFeatures->workgroupMemoryExplicitLayout8BitAccess) { enabledFeatureNames.emplace_back("workgroupMemoryExplicitLayout8BitAccess"); }
@@ -785,7 +849,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayTracingMaintenance1) { enabledFeatureNames.emplace_back("rayTracingMaintenance1"); }
                 if(pFeatures->rayTracingPipelineTraceRaysIndirect2) { enabledFeatureNames.emplace_back("rayTracingPipelineTraceRaysIndirect2"); }
                 // clang-format on
@@ -794,7 +859,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderUntypedPointersFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderUntypedPointersFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderUntypedPointers) { enabledFeatureNames.emplace_back("shaderUntypedPointers"); }
                 // clang-format on
                 break;
@@ -802,7 +868,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderMaximalReconvergenceFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderMaximalReconvergence) { enabledFeatureNames.emplace_back("shaderMaximalReconvergence"); }
                 // clang-format on
                 break;
@@ -810,7 +877,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentId2FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentId2FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentId2FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentId2) { enabledFeatureNames.emplace_back("presentId2"); }
                 // clang-format on
                 break;
@@ -818,7 +886,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentWait2FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentWait2FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentWait2FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentWait2) { enabledFeatureNames.emplace_back("presentWait2"); }
                 // clang-format on
                 break;
@@ -826,7 +895,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingPositionFetchFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayTracingPositionFetch) { enabledFeatureNames.emplace_back("rayTracingPositionFetch"); }
                 // clang-format on
                 break;
@@ -834,7 +904,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineBinaryFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineBinaryFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineBinaryFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineBinaries) { enabledFeatureNames.emplace_back("pipelineBinaries"); }
                 // clang-format on
                 break;
@@ -842,7 +913,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->swapchainMaintenance1) { enabledFeatureNames.emplace_back("swapchainMaintenance1"); }
                 // clang-format on
                 break;
@@ -850,7 +922,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->internallySynchronizedQueues) { enabledFeatureNames.emplace_back("internallySynchronizedQueues"); }
                 // clang-format on
                 break;
@@ -858,7 +931,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cooperativeMatrix) { enabledFeatureNames.emplace_back("cooperativeMatrix"); }
                 if(pFeatures->cooperativeMatrixRobustBufferAccess) { enabledFeatureNames.emplace_back("cooperativeMatrixRobustBufferAccess"); }
                 // clang-format on
@@ -867,7 +941,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceComputeShaderDerivativesFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->computeDerivativeGroupQuads) { enabledFeatureNames.emplace_back("computeDerivativeGroupQuads"); }
                 if(pFeatures->computeDerivativeGroupLinear) { enabledFeatureNames.emplace_back("computeDerivativeGroupLinear"); }
                 // clang-format on
@@ -876,7 +951,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVideoEncodeAV1FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoEncodeAV1FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->videoEncodeAV1) { enabledFeatureNames.emplace_back("videoEncodeAV1"); }
                 // clang-format on
                 break;
@@ -884,7 +960,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVideoDecodeVP9FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoDecodeVP9FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoDecodeVP9FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->videoDecodeVP9) { enabledFeatureNames.emplace_back("videoDecodeVP9"); }
                 // clang-format on
                 break;
@@ -892,7 +969,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVideoMaintenance1FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoMaintenance1FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoMaintenance1FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->videoMaintenance1) { enabledFeatureNames.emplace_back("videoMaintenance1"); }
                 // clang-format on
                 break;
@@ -900,7 +978,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceUnifiedImageLayoutsFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->unifiedImageLayouts) { enabledFeatureNames.emplace_back("unifiedImageLayouts"); }
                 if(pFeatures->unifiedImageLayoutsVideo) { enabledFeatureNames.emplace_back("unifiedImageLayoutsVideo"); }
                 // clang-format on
@@ -909,7 +988,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCopyMemoryIndirectFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->indirectMemoryCopy) { enabledFeatureNames.emplace_back("indirectMemoryCopy"); }
                 if(pFeatures->indirectMemoryToImageCopy) { enabledFeatureNames.emplace_back("indirectMemoryToImageCopy"); }
                 // clang-format on
@@ -918,7 +998,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeIntraRefreshFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->videoEncodeIntraRefresh) { enabledFeatureNames.emplace_back("videoEncodeIntraRefresh"); }
                 // clang-format on
                 break;
@@ -926,7 +1007,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->videoEncodeQuantizationMap) { enabledFeatureNames.emplace_back("videoEncodeQuantizationMap"); }
                 // clang-format on
                 break;
@@ -934,7 +1016,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderRelaxedExtendedInstructionFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderRelaxedExtendedInstruction) { enabledFeatureNames.emplace_back("shaderRelaxedExtendedInstruction"); }
                 // clang-format on
                 break;
@@ -942,7 +1025,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance7FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance7FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance7FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance7) { enabledFeatureNames.emplace_back("maintenance7"); }
                 // clang-format on
                 break;
@@ -950,7 +1034,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFaultFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFaultFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFaultFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceFault) { enabledFeatureNames.emplace_back("deviceFault"); }
                 if(pFeatures->deviceFaultVendorBinary) { enabledFeatureNames.emplace_back("deviceFaultVendorBinary"); }
                 if(pFeatures->deviceFaultReportMasked) { enabledFeatureNames.emplace_back("deviceFaultReportMasked"); }
@@ -961,7 +1046,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance8FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance8FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance8FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance8) { enabledFeatureNames.emplace_back("maintenance8"); }
                 // clang-format on
                 break;
@@ -969,7 +1055,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderFmaFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderFmaFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFmaFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderFmaFloat16) { enabledFeatureNames.emplace_back("shaderFmaFloat16"); }
                 if(pFeatures->shaderFmaFloat32) { enabledFeatureNames.emplace_back("shaderFmaFloat32"); }
                 if(pFeatures->shaderFmaFloat64) { enabledFeatureNames.emplace_back("shaderFmaFloat64"); }
@@ -979,7 +1066,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance9FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance9FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance9FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance9) { enabledFeatureNames.emplace_back("maintenance9"); }
                 // clang-format on
                 break;
@@ -987,7 +1075,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->videoEncodeFeedback2) { enabledFeatureNames.emplace_back("videoEncodeFeedback2"); }
                 // clang-format on
                 break;
@@ -995,7 +1084,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDepthClampZeroOneFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDepthClampZeroOneFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClampZeroOneFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->depthClampZeroOne) { enabledFeatureNames.emplace_back("depthClampZeroOne"); }
                 // clang-format on
                 break;
@@ -1003,7 +1093,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRobustness2FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRobustness2FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRobustness2FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->robustBufferAccess2) { enabledFeatureNames.emplace_back("robustBufferAccess2"); }
                 if(pFeatures->robustImageAccess2) { enabledFeatureNames.emplace_back("robustImageAccess2"); }
                 if(pFeatures->nullDescriptor) { enabledFeatureNames.emplace_back("nullDescriptor"); }
@@ -1013,7 +1104,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentModeFifoLatestReady) { enabledFeatureNames.emplace_back("presentModeFifoLatestReady"); }
                 // clang-format on
                 break;
@@ -1021,7 +1113,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceOpacityMicromapFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceOpacityMicromapFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceOpacityMicromapFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->micromap) { enabledFeatureNames.emplace_back("micromap"); }
                 // clang-format on
                 break;
@@ -1029,7 +1122,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance10FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance10FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance10FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance10) { enabledFeatureNames.emplace_back("maintenance10"); }
                 // clang-format on
                 break;
@@ -1037,7 +1131,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineLibraryGroupHandles) { enabledFeatureNames.emplace_back("pipelineLibraryGroupHandles"); }
                 // clang-format on
                 break;
@@ -1045,7 +1140,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance11FeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMaintenance11FeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance11FeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->maintenance11) { enabledFeatureNames.emplace_back("maintenance11"); }
                 // clang-format on
                 break;
@@ -1053,7 +1149,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExtendedFlagsFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedFlagsFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->extendedFlags) { enabledFeatureNames.emplace_back("extendedFlags"); }
                 // clang-format on
                 break;
@@ -1061,7 +1158,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTransformFeedbackFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTransformFeedbackFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTransformFeedbackFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->transformFeedback) { enabledFeatureNames.emplace_back("transformFeedback"); }
                 if(pFeatures->geometryStreams) { enabledFeatureNames.emplace_back("geometryStreams"); }
                 // clang-format on
@@ -1070,7 +1168,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCornerSampledImageFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCornerSampledImageFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCornerSampledImageFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cornerSampledImage) { enabledFeatureNames.emplace_back("cornerSampledImage"); }
                 // clang-format on
                 break;
@@ -1078,7 +1177,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceASTCDecodeFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceASTCDecodeFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceASTCDecodeFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->decodeModeSharedExponent) { enabledFeatureNames.emplace_back("decodeModeSharedExponent"); }
                 // clang-format on
                 break;
@@ -1086,7 +1186,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceConditionalRenderingFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceConditionalRenderingFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceConditionalRenderingFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->conditionalRendering) { enabledFeatureNames.emplace_back("conditionalRendering"); }
                 if(pFeatures->inheritedConditionalRendering) { enabledFeatureNames.emplace_back("inheritedConditionalRendering"); }
                 // clang-format on
@@ -1095,7 +1196,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDepthClipEnableFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDepthClipEnableFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClipEnableFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->depthClipEnable) { enabledFeatureNames.emplace_back("depthClipEnable"); }
                 // clang-format on
                 break;
@@ -1103,7 +1205,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->relaxedLineRasterization) { enabledFeatureNames.emplace_back("relaxedLineRasterization"); }
                 // clang-format on
                 break;
@@ -1111,7 +1214,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceGpaFeaturesAMD>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceGpaFeaturesAMD*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceGpaFeaturesAMD*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->perfCounters) { enabledFeatureNames.emplace_back("perfCounters"); }
                 if(pFeatures->streamingPerfCounters) { enabledFeatureNames.emplace_back("streamingPerfCounters"); }
                 if(pFeatures->sqThreadTracing) { enabledFeatureNames.emplace_back("sqThreadTracing"); }
@@ -1122,7 +1226,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->advancedBlendCoherentOperations) { enabledFeatureNames.emplace_back("advancedBlendCoherentOperations"); }
                 // clang-format on
                 break;
@@ -1130,7 +1235,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSMBuiltinsFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderSMBuiltinsFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSMBuiltinsFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderSMBuiltins) { enabledFeatureNames.emplace_back("shaderSMBuiltins"); }
                 // clang-format on
                 break;
@@ -1138,7 +1244,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShadingRateImageFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShadingRateImageFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShadingRateImageFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shadingRateImage) { enabledFeatureNames.emplace_back("shadingRateImage"); }
                 if(pFeatures->shadingRateCoarseSampleOrder) { enabledFeatureNames.emplace_back("shadingRateCoarseSampleOrder"); }
                 // clang-format on
@@ -1147,7 +1254,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->representativeFragmentTest) { enabledFeatureNames.emplace_back("representativeFragmentTest"); }
                 // clang-format on
                 break;
@@ -1155,7 +1263,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cooperativeMatrixConversion) { enabledFeatureNames.emplace_back("cooperativeMatrixConversion"); }
                 // clang-format on
                 break;
@@ -1163,7 +1272,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->elapsedTimerQuery) { enabledFeatureNames.emplace_back("elapsedTimerQuery"); }
                 // clang-format on
                 break;
@@ -1171,7 +1281,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMeshShaderFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMeshShaderFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMeshShaderFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->taskShader) { enabledFeatureNames.emplace_back("taskShader"); }
                 if(pFeatures->meshShader) { enabledFeatureNames.emplace_back("meshShader"); }
                 // clang-format on
@@ -1180,7 +1291,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderImageFootprintFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderImageFootprintFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderImageFootprintFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imageFootprint) { enabledFeatureNames.emplace_back("imageFootprint"); }
                 // clang-format on
                 break;
@@ -1188,7 +1300,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExclusiveScissorFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExclusiveScissorFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExclusiveScissorFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->exclusiveScissor) { enabledFeatureNames.emplace_back("exclusiveScissor"); }
                 // clang-format on
                 break;
@@ -1196,7 +1309,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentTimingFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentTimingFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentTimingFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentTiming) { enabledFeatureNames.emplace_back("presentTiming"); }
                 if(pFeatures->presentAtAbsoluteTime) { enabledFeatureNames.emplace_back("presentAtAbsoluteTime"); }
                 if(pFeatures->presentAtRelativeTime) { enabledFeatureNames.emplace_back("presentAtRelativeTime"); }
@@ -1206,7 +1320,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderIntegerFunctions2FeaturesINTEL*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderIntegerFunctions2) { enabledFeatureNames.emplace_back("shaderIntegerFunctions2"); }
                 // clang-format on
                 break;
@@ -1214,7 +1329,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentDensityMapFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->fragmentDensityMap) { enabledFeatureNames.emplace_back("fragmentDensityMap"); }
                 if(pFeatures->fragmentDensityMapDynamic) { enabledFeatureNames.emplace_back("fragmentDensityMapDynamic"); }
                 if(pFeatures->fragmentDensityMapNonSubsampledImages) { enabledFeatureNames.emplace_back("fragmentDensityMapNonSubsampledImages"); }
@@ -1224,7 +1340,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCoherentMemoryFeaturesAMD>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCoherentMemoryFeaturesAMD*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCoherentMemoryFeaturesAMD*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceCoherentMemory) { enabledFeatureNames.emplace_back("deviceCoherentMemory"); }
                 // clang-format on
                 break;
@@ -1232,7 +1349,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderImageAtomicInt64FeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderImageInt64Atomics) { enabledFeatureNames.emplace_back("shaderImageInt64Atomics"); }
                 if(pFeatures->sparseImageInt64Atomics) { enabledFeatureNames.emplace_back("sparseImageInt64Atomics"); }
                 // clang-format on
@@ -1241,7 +1359,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMemoryPriorityFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMemoryPriorityFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMemoryPriorityFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->memoryPriority) { enabledFeatureNames.emplace_back("memoryPriority"); }
                 // clang-format on
                 break;
@@ -1249,7 +1368,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dedicatedAllocationImageAliasing) { enabledFeatureNames.emplace_back("dedicatedAllocationImageAliasing"); }
                 // clang-format on
                 break;
@@ -1257,7 +1377,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceBufferDeviceAddressFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->bufferDeviceAddress) { enabledFeatureNames.emplace_back("bufferDeviceAddress"); }
                 if(pFeatures->bufferDeviceAddressCaptureReplay) { enabledFeatureNames.emplace_back("bufferDeviceAddressCaptureReplay"); }
                 if(pFeatures->bufferDeviceAddressMultiDevice) { enabledFeatureNames.emplace_back("bufferDeviceAddressMultiDevice"); }
@@ -1267,7 +1388,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cooperativeMatrix) { enabledFeatureNames.emplace_back("cooperativeMatrix"); }
                 if(pFeatures->cooperativeMatrixRobustBufferAccess) { enabledFeatureNames.emplace_back("cooperativeMatrixRobustBufferAccess"); }
                 // clang-format on
@@ -1276,7 +1398,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCoverageReductionModeFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCoverageReductionModeFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCoverageReductionModeFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->coverageReductionMode) { enabledFeatureNames.emplace_back("coverageReductionMode"); }
                 // clang-format on
                 break;
@@ -1284,7 +1407,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShaderInterlockFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->fragmentShaderSampleInterlock) { enabledFeatureNames.emplace_back("fragmentShaderSampleInterlock"); }
                 if(pFeatures->fragmentShaderPixelInterlock) { enabledFeatureNames.emplace_back("fragmentShaderPixelInterlock"); }
                 if(pFeatures->fragmentShaderShadingRateInterlock) { enabledFeatureNames.emplace_back("fragmentShaderShadingRateInterlock"); }
@@ -1294,7 +1418,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceYcbcrImageArraysFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceYcbcrImageArraysFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceYcbcrImageArraysFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->ycbcrImageArrays) { enabledFeatureNames.emplace_back("ycbcrImageArrays"); }
                 // clang-format on
                 break;
@@ -1302,7 +1427,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceProvokingVertexFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceProvokingVertexFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceProvokingVertexFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->provokingVertexLast) { enabledFeatureNames.emplace_back("provokingVertexLast"); }
                 if(pFeatures->transformFeedbackPreservesProvokingVertex) { enabledFeatureNames.emplace_back("transformFeedbackPreservesProvokingVertex"); }
                 // clang-format on
@@ -1311,7 +1437,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderAtomicFloatFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderAtomicFloatFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicFloatFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderBufferFloat32Atomics) { enabledFeatureNames.emplace_back("shaderBufferFloat32Atomics"); }
                 if(pFeatures->shaderBufferFloat32AtomicAdd) { enabledFeatureNames.emplace_back("shaderBufferFloat32AtomicAdd"); }
                 if(pFeatures->shaderBufferFloat64Atomics) { enabledFeatureNames.emplace_back("shaderBufferFloat64Atomics"); }
@@ -1330,7 +1457,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExtendedDynamicStateFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExtendedDynamicStateFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedDynamicStateFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->extendedDynamicState) { enabledFeatureNames.emplace_back("extendedDynamicState"); }
                 // clang-format on
                 break;
@@ -1338,7 +1466,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMapMemoryPlacedFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMapMemoryPlacedFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMapMemoryPlacedFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->memoryMapPlaced) { enabledFeatureNames.emplace_back("memoryMapPlaced"); }
                 if(pFeatures->memoryMapRangePlaced) { enabledFeatureNames.emplace_back("memoryMapRangePlaced"); }
                 if(pFeatures->memoryUnmapReserve) { enabledFeatureNames.emplace_back("memoryUnmapReserve"); }
@@ -1348,7 +1477,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicFloat2FeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderBufferFloat16Atomics) { enabledFeatureNames.emplace_back("shaderBufferFloat16Atomics"); }
                 if(pFeatures->shaderBufferFloat16AtomicAdd) { enabledFeatureNames.emplace_back("shaderBufferFloat16AtomicAdd"); }
                 if(pFeatures->shaderBufferFloat16AtomicMinMax) { enabledFeatureNames.emplace_back("shaderBufferFloat16AtomicMinMax"); }
@@ -1367,7 +1497,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceGeneratedCommands) { enabledFeatureNames.emplace_back("deviceGeneratedCommands"); }
                 // clang-format on
                 break;
@@ -1375,7 +1506,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceInheritedViewportScissorFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceInheritedViewportScissorFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceInheritedViewportScissorFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->inheritedViewportScissor2D) { enabledFeatureNames.emplace_back("inheritedViewportScissor2D"); }
                 // clang-format on
                 break;
@@ -1383,7 +1515,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTexelBufferAlignmentFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->texelBufferAlignment) { enabledFeatureNames.emplace_back("texelBufferAlignment"); }
                 // clang-format on
                 break;
@@ -1391,7 +1524,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDepthBiasControlFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDepthBiasControlFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthBiasControlFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->depthBiasControl) { enabledFeatureNames.emplace_back("depthBiasControl"); }
                 if(pFeatures->leastRepresentableValueForceUnormRepresentation) { enabledFeatureNames.emplace_back("leastRepresentableValueForceUnormRepresentation"); }
                 if(pFeatures->floatRepresentation) { enabledFeatureNames.emplace_back("floatRepresentation"); }
@@ -1402,7 +1536,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDeviceMemoryReportFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDeviceMemoryReportFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceMemoryReportFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceMemoryReport) { enabledFeatureNames.emplace_back("deviceMemoryReport"); }
                 // clang-format on
                 break;
@@ -1410,7 +1545,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCustomBorderColorFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCustomBorderColorFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCustomBorderColorFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->customBorderColors) { enabledFeatureNames.emplace_back("customBorderColors"); }
                 if(pFeatures->customBorderColorWithoutFormat) { enabledFeatureNames.emplace_back("customBorderColorWithoutFormat"); }
                 // clang-format on
@@ -1419,7 +1555,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->textureCompressionASTC_3D) { enabledFeatureNames.emplace_back("textureCompressionASTC_3D"); }
                 // clang-format on
                 break;
@@ -1427,7 +1564,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentBarrierFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentBarrierFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentBarrierFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentBarrier) { enabledFeatureNames.emplace_back("presentBarrier"); }
                 // clang-format on
                 break;
@@ -1435,7 +1573,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDiagnosticsConfigFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDiagnosticsConfigFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDiagnosticsConfigFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->diagnosticsConfig) { enabledFeatureNames.emplace_back("diagnosticsConfig"); }
                 // clang-format on
                 break;
@@ -1443,7 +1582,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceQueuePerfHintFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceQueuePerfHintFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->queuePerfHint) { enabledFeatureNames.emplace_back("queuePerfHint"); }
                 // clang-format on
                 break;
@@ -1451,7 +1591,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageProcessing3FeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageProcessing3FeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessing3FeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imageGatherLinear) { enabledFeatureNames.emplace_back("imageGatherLinear"); }
                 if(pFeatures->imageGatherExtendedModes) { enabledFeatureNames.emplace_back("imageGatherExtendedModes"); }
                 if(pFeatures->blockMatchExtendedClampToEdge) { enabledFeatureNames.emplace_back("blockMatchExtendedClampToEdge"); }
@@ -1461,7 +1602,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderMultipleWaitQueues) { enabledFeatureNames.emplace_back("shaderMultipleWaitQueues"); }
                 // clang-format on
                 break;
@@ -1469,7 +1611,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSplitBarrierFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderSplitBarrierFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderSplitBarrier) { enabledFeatureNames.emplace_back("shaderSplitBarrier"); }
                 // clang-format on
                 break;
@@ -1477,7 +1620,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTileShadingFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTileShadingFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTileShadingFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->tileShading) { enabledFeatureNames.emplace_back("tileShading"); }
                 if(pFeatures->tileShadingFragmentStage) { enabledFeatureNames.emplace_back("tileShadingFragmentStage"); }
                 if(pFeatures->tileShadingColorAttachments) { enabledFeatureNames.emplace_back("tileShadingColorAttachments"); }
@@ -1498,7 +1642,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDescriptorBufferFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDescriptorBufferFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorBufferFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->descriptorBuffer) { enabledFeatureNames.emplace_back("descriptorBuffer"); }
                 if(pFeatures->descriptorBufferCaptureReplay) { enabledFeatureNames.emplace_back("descriptorBufferCaptureReplay"); }
                 if(pFeatures->descriptorBufferImageLayoutIgnored) { enabledFeatureNames.emplace_back("descriptorBufferImageLayoutIgnored"); }
@@ -1509,7 +1654,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceGraphicsPipelineLibraryFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->graphicsPipelineLibrary) { enabledFeatureNames.emplace_back("graphicsPipelineLibrary"); }
                 // clang-format on
                 break;
@@ -1517,7 +1663,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderEarlyAndLateFragmentTestsFeaturesAMD*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderEarlyAndLateFragmentTests) { enabledFeatureNames.emplace_back("shaderEarlyAndLateFragmentTests"); }
                 // clang-format on
                 break;
@@ -1525,7 +1672,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->fragmentShadingRateEnums) { enabledFeatureNames.emplace_back("fragmentShadingRateEnums"); }
                 if(pFeatures->supersampleFragmentShadingRates) { enabledFeatureNames.emplace_back("supersampleFragmentShadingRates"); }
                 if(pFeatures->noInvocationFragmentShadingRates) { enabledFeatureNames.emplace_back("noInvocationFragmentShadingRates"); }
@@ -1535,7 +1683,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingMotionBlurFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingMotionBlurFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingMotionBlurFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayTracingMotionBlur) { enabledFeatureNames.emplace_back("rayTracingMotionBlur"); }
                 if(pFeatures->rayTracingMotionBlurPipelineTraceRaysIndirect) { enabledFeatureNames.emplace_back("rayTracingMotionBlurPipelineTraceRaysIndirect"); }
                 // clang-format on
@@ -1544,7 +1693,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceYcbcr2Plane444FormatsFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->ycbcr2plane444Formats) { enabledFeatureNames.emplace_back("ycbcr2plane444Formats"); }
                 // clang-format on
                 break;
@@ -1552,7 +1702,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentDensityMap2FeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentDensityMap2FeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->fragmentDensityMapDeferred) { enabledFeatureNames.emplace_back("fragmentDensityMapDeferred"); }
                 // clang-format on
                 break;
@@ -1560,7 +1711,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageCompressionControlFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageCompressionControlFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageCompressionControlFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imageCompressionControl) { enabledFeatureNames.emplace_back("imageCompressionControl"); }
                 // clang-format on
                 break;
@@ -1568,7 +1720,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceAttachmentFeedbackLoopLayoutFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->attachmentFeedbackLoopLayout) { enabledFeatureNames.emplace_back("attachmentFeedbackLoopLayout"); }
                 // clang-format on
                 break;
@@ -1576,7 +1729,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevice4444FormatsFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevice4444FormatsFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevice4444FormatsFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->formatA4R4G4B4) { enabledFeatureNames.emplace_back("formatA4R4G4B4"); }
                 if(pFeatures->formatA4B4G4R4) { enabledFeatureNames.emplace_back("formatA4B4G4R4"); }
                 // clang-format on
@@ -1585,7 +1739,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFaultFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFaultFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFaultFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceFault) { enabledFeatureNames.emplace_back("deviceFault"); }
                 if(pFeatures->deviceFaultVendorBinary) { enabledFeatureNames.emplace_back("deviceFaultVendorBinary"); }
                 // clang-format on
@@ -1594,7 +1749,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRasterizationOrderAttachmentAccessFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rasterizationOrderColorAttachmentAccess) { enabledFeatureNames.emplace_back("rasterizationOrderColorAttachmentAccess"); }
                 if(pFeatures->rasterizationOrderDepthAttachmentAccess) { enabledFeatureNames.emplace_back("rasterizationOrderDepthAttachmentAccess"); }
                 if(pFeatures->rasterizationOrderStencilAttachmentAccess) { enabledFeatureNames.emplace_back("rasterizationOrderStencilAttachmentAccess"); }
@@ -1604,7 +1760,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->formatRgba10x6WithoutYCbCrSampler) { enabledFeatureNames.emplace_back("formatRgba10x6WithoutYCbCrSampler"); }
                 // clang-format on
                 break;
@@ -1612,7 +1769,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMutableDescriptorTypeFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->mutableDescriptorType) { enabledFeatureNames.emplace_back("mutableDescriptorType"); }
                 // clang-format on
                 break;
@@ -1620,7 +1778,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexInputDynamicStateFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->vertexInputDynamicState) { enabledFeatureNames.emplace_back("vertexInputDynamicState"); }
                 // clang-format on
                 break;
@@ -1628,7 +1787,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceAddressBindingReportFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceAddressBindingReportFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceAddressBindingReportFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->reportAddressBinding) { enabledFeatureNames.emplace_back("reportAddressBinding"); }
                 // clang-format on
                 break;
@@ -1636,7 +1796,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDepthClipControlFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDepthClipControlFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClipControlFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->depthClipControl) { enabledFeatureNames.emplace_back("depthClipControl"); }
                 // clang-format on
                 break;
@@ -1644,7 +1805,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->primitiveTopologyListRestart) { enabledFeatureNames.emplace_back("primitiveTopologyListRestart"); }
                 if(pFeatures->primitiveTopologyPatchListRestart) { enabledFeatureNames.emplace_back("primitiveTopologyPatchListRestart"); }
                 // clang-format on
@@ -1653,7 +1815,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceInvocationMaskFeaturesHUAWEI>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceInvocationMaskFeaturesHUAWEI*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceInvocationMaskFeaturesHUAWEI*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->invocationMask) { enabledFeatureNames.emplace_back("invocationMask"); }
                 // clang-format on
                 break;
@@ -1661,7 +1824,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExternalMemoryRDMAFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExternalMemoryRDMAFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExternalMemoryRDMAFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->externalMemoryRDMA) { enabledFeatureNames.emplace_back("externalMemoryRDMA"); }
                 // clang-format on
                 break;
@@ -1669,7 +1833,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFrameBoundaryFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFrameBoundaryFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFrameBoundaryFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->frameBoundary) { enabledFeatureNames.emplace_back("frameBoundary"); }
                 // clang-format on
                 break;
@@ -1677,7 +1842,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->multisampledRenderToSingleSampled) { enabledFeatureNames.emplace_back("multisampledRenderToSingleSampled"); }
                 // clang-format on
                 break;
@@ -1685,7 +1851,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExtendedDynamicState2FeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExtendedDynamicState2FeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->extendedDynamicState2) { enabledFeatureNames.emplace_back("extendedDynamicState2"); }
                 if(pFeatures->extendedDynamicState2LogicOp) { enabledFeatureNames.emplace_back("extendedDynamicState2LogicOp"); }
                 if(pFeatures->extendedDynamicState2PatchControlPoints) { enabledFeatureNames.emplace_back("extendedDynamicState2PatchControlPoints"); }
@@ -1695,7 +1862,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceColorWriteEnableFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceColorWriteEnableFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceColorWriteEnableFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->colorWriteEnable) { enabledFeatureNames.emplace_back("colorWriteEnable"); }
                 // clang-format on
                 break;
@@ -1703,7 +1871,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->primitivesGeneratedQuery) { enabledFeatureNames.emplace_back("primitivesGeneratedQuery"); }
                 if(pFeatures->primitivesGeneratedQueryWithRasterizerDiscard) { enabledFeatureNames.emplace_back("primitivesGeneratedQueryWithRasterizerDiscard"); }
                 if(pFeatures->primitivesGeneratedQueryWithNonZeroStreams) { enabledFeatureNames.emplace_back("primitivesGeneratedQueryWithNonZeroStreams"); }
@@ -1713,7 +1882,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->videoEncodeRgbConversion) { enabledFeatureNames.emplace_back("videoEncodeRgbConversion"); }
                 // clang-format on
                 break;
@@ -1721,7 +1891,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageViewMinLodFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageViewMinLodFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageViewMinLodFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->minLod) { enabledFeatureNames.emplace_back("minLod"); }
                 // clang-format on
                 break;
@@ -1729,7 +1900,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMultiDrawFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMultiDrawFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiDrawFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->multiDraw) { enabledFeatureNames.emplace_back("multiDraw"); }
                 // clang-format on
                 break;
@@ -1737,7 +1909,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImage2DViewOf3DFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImage2DViewOf3DFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImage2DViewOf3DFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->image2DViewOf3D) { enabledFeatureNames.emplace_back("image2DViewOf3D"); }
                 if(pFeatures->sampler2DViewOf3D) { enabledFeatureNames.emplace_back("sampler2DViewOf3D"); }
                 // clang-format on
@@ -1746,7 +1919,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderTileImageFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderTileImageFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderTileImageFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderTileImageColorReadAccess) { enabledFeatureNames.emplace_back("shaderTileImageColorReadAccess"); }
                 if(pFeatures->shaderTileImageDepthReadAccess) { enabledFeatureNames.emplace_back("shaderTileImageDepthReadAccess"); }
                 if(pFeatures->shaderTileImageStencilReadAccess) { enabledFeatureNames.emplace_back("shaderTileImageStencilReadAccess"); }
@@ -1756,7 +1930,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceOpacityMicromapFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceOpacityMicromapFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceOpacityMicromapFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->micromap) { enabledFeatureNames.emplace_back("micromap"); }
                 if(pFeatures->micromapCaptureReplay) { enabledFeatureNames.emplace_back("micromapCaptureReplay"); }
                 if(pFeatures->micromapHostCommands) { enabledFeatureNames.emplace_back("micromapHostCommands"); }
@@ -1766,7 +1941,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDisplacementMicromapFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDisplacementMicromapFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDisplacementMicromapFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->displacementMicromap) { enabledFeatureNames.emplace_back("displacementMicromap"); }
                 // clang-format on
                 break;
@@ -1774,7 +1950,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceClusterCullingShaderFeaturesHUAWEI*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->clustercullingShader) { enabledFeatureNames.emplace_back("clustercullingShader"); }
                 if(pFeatures->multiviewClusterCullingShader) { enabledFeatureNames.emplace_back("multiviewClusterCullingShader"); }
                 // clang-format on
@@ -1783,7 +1960,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceClusterCullingShaderVrsFeaturesHUAWEI*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->clusterShadingRate) { enabledFeatureNames.emplace_back("clusterShadingRate"); }
                 // clang-format on
                 break;
@@ -1791,7 +1969,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceBorderColorSwizzleFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceBorderColorSwizzleFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceBorderColorSwizzleFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->borderColorSwizzle) { enabledFeatureNames.emplace_back("borderColorSwizzle"); }
                 if(pFeatures->borderColorSwizzleFromImage) { enabledFeatureNames.emplace_back("borderColorSwizzleFromImage"); }
                 // clang-format on
@@ -1800,7 +1979,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePageableDeviceLocalMemoryFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pageableDeviceLocalMemory) { enabledFeatureNames.emplace_back("pageableDeviceLocalMemory"); }
                 // clang-format on
                 break;
@@ -1808,7 +1988,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceSchedulingControlsFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceSchedulingControlsFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceSchedulingControlsFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->schedulingControls) { enabledFeatureNames.emplace_back("schedulingControls"); }
                 // clang-format on
                 break;
@@ -1816,7 +1997,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageSlicedViewOf3DFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imageSlicedViewOf3D) { enabledFeatureNames.emplace_back("imageSlicedViewOf3D"); }
                 // clang-format on
                 break;
@@ -1824,7 +2006,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->descriptorSetHostMapping) { enabledFeatureNames.emplace_back("descriptorSetHostMapping"); }
                 // clang-format on
                 break;
@@ -1832,7 +2015,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceNonSeamlessCubeMapFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->nonSeamlessCubeMap) { enabledFeatureNames.emplace_back("nonSeamlessCubeMap"); }
                 // clang-format on
                 break;
@@ -1840,7 +2024,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRenderPassStripedFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRenderPassStripedFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRenderPassStripedFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->renderPassStriped) { enabledFeatureNames.emplace_back("renderPassStriped"); }
                 // clang-format on
                 break;
@@ -1848,7 +2033,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapOffsetFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->fragmentDensityMapOffset) { enabledFeatureNames.emplace_back("fragmentDensityMapOffset"); }
                 // clang-format on
                 break;
@@ -1856,7 +2042,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceGeneratedCompute) { enabledFeatureNames.emplace_back("deviceGeneratedCompute"); }
                 if(pFeatures->deviceGeneratedComputePipelines) { enabledFeatureNames.emplace_back("deviceGeneratedComputePipelines"); }
                 if(pFeatures->deviceGeneratedComputeCaptureReplay) { enabledFeatureNames.emplace_back("deviceGeneratedComputeCaptureReplay"); }
@@ -1866,7 +2053,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingLinearSweptSpheresFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->spheres) { enabledFeatureNames.emplace_back("spheres"); }
                 if(pFeatures->linearSweptSpheres) { enabledFeatureNames.emplace_back("linearSweptSpheres"); }
                 // clang-format on
@@ -1875,7 +2063,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceLinearColorAttachmentFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceLinearColorAttachmentFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceLinearColorAttachmentFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->linearColorAttachment) { enabledFeatureNames.emplace_back("linearColorAttachment"); }
                 // clang-format on
                 break;
@@ -1883,7 +2072,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageCompressionControlSwapchainFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imageCompressionControlSwapchain) { enabledFeatureNames.emplace_back("imageCompressionControlSwapchain"); }
                 // clang-format on
                 break;
@@ -1891,7 +2081,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageProcessingFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageProcessingFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessingFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->textureSampleWeighted) { enabledFeatureNames.emplace_back("textureSampleWeighted"); }
                 if(pFeatures->textureBoxFilter) { enabledFeatureNames.emplace_back("textureBoxFilter"); }
                 if(pFeatures->textureBlockMatch) { enabledFeatureNames.emplace_back("textureBlockMatch"); }
@@ -1901,7 +2092,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceNestedCommandBufferFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceNestedCommandBufferFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceNestedCommandBufferFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->nestedCommandBuffer) { enabledFeatureNames.emplace_back("nestedCommandBuffer"); }
                 if(pFeatures->nestedCommandBufferRendering) { enabledFeatureNames.emplace_back("nestedCommandBufferRendering"); }
                 if(pFeatures->nestedCommandBufferSimultaneousUse) { enabledFeatureNames.emplace_back("nestedCommandBufferSimultaneousUse"); }
@@ -1911,7 +2103,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExtendedDynamicState3FeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExtendedDynamicState3FeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->extendedDynamicState3TessellationDomainOrigin) { enabledFeatureNames.emplace_back("extendedDynamicState3TessellationDomainOrigin"); }
                 if(pFeatures->extendedDynamicState3DepthClampEnable) { enabledFeatureNames.emplace_back("extendedDynamicState3DepthClampEnable"); }
                 if(pFeatures->extendedDynamicState3PolygonMode) { enabledFeatureNames.emplace_back("extendedDynamicState3PolygonMode"); }
@@ -1949,7 +2142,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->subpassMergeFeedback) { enabledFeatureNames.emplace_back("subpassMergeFeedback"); }
                 // clang-format on
                 break;
@@ -1957,7 +2151,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTensorFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTensorFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTensorFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->tensorNonPacked) { enabledFeatureNames.emplace_back("tensorNonPacked"); }
                 if(pFeatures->shaderTensorAccess) { enabledFeatureNames.emplace_back("shaderTensorAccess"); }
                 if(pFeatures->shaderStorageTensorArrayDynamicIndexing) { enabledFeatureNames.emplace_back("shaderStorageTensorArrayDynamicIndexing"); }
@@ -1970,7 +2165,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDescriptorBufferTensorFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDescriptorBufferTensorFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorBufferTensorFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->descriptorBufferTensorDescriptors) { enabledFeatureNames.emplace_back("descriptorBufferTensorDescriptors"); }
                 // clang-format on
                 break;
@@ -1978,7 +2174,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderModuleIdentifierFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderModuleIdentifier) { enabledFeatureNames.emplace_back("shaderModuleIdentifier"); }
                 // clang-format on
                 break;
@@ -1986,7 +2183,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceOpticalFlowFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceOpticalFlowFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceOpticalFlowFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->opticalFlow) { enabledFeatureNames.emplace_back("opticalFlow"); }
                 // clang-format on
                 break;
@@ -1994,7 +2192,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceLegacyDitheringFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceLegacyDitheringFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceLegacyDitheringFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->legacyDithering) { enabledFeatureNames.emplace_back("legacyDithering"); }
                 // clang-format on
                 break;
@@ -2002,7 +2201,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExternalFormatResolveFeaturesANDROID>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExternalFormatResolveFeaturesANDROID*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExternalFormatResolveFeaturesANDROID*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->externalFormatResolve) { enabledFeatureNames.emplace_back("externalFormatResolve"); }
                 // clang-format on
                 break;
@@ -2010,7 +2210,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceAntiLagFeaturesAMD>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceAntiLagFeaturesAMD*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceAntiLagFeaturesAMD*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->antiLag) { enabledFeatureNames.emplace_back("antiLag"); }
                 // clang-format on
                 break;
@@ -2018,7 +2219,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderObjectFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderObjectFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderObjectFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderObject) { enabledFeatureNames.emplace_back("shaderObject"); }
                 // clang-format on
                 break;
@@ -2026,7 +2228,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTilePropertiesFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTilePropertiesFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTilePropertiesFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->tileProperties) { enabledFeatureNames.emplace_back("tileProperties"); }
                 // clang-format on
                 break;
@@ -2034,7 +2237,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceAmigoProfilingFeaturesSEC>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceAmigoProfilingFeaturesSEC*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceAmigoProfilingFeaturesSEC*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->amigoProfiling) { enabledFeatureNames.emplace_back("amigoProfiling"); }
                 // clang-format on
                 break;
@@ -2042,7 +2246,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewPerViewViewportsFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->multiviewPerViewViewports) { enabledFeatureNames.emplace_back("multiviewPerViewViewports"); }
                 // clang-format on
                 break;
@@ -2050,7 +2255,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingInvocationReorderFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayTracingInvocationReorder) { enabledFeatureNames.emplace_back("rayTracingInvocationReorder"); }
                 // clang-format on
                 break;
@@ -2058,7 +2264,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeVectorFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeVectorFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeVectorFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cooperativeVector) { enabledFeatureNames.emplace_back("cooperativeVector"); }
                 if(pFeatures->cooperativeVectorTraining) { enabledFeatureNames.emplace_back("cooperativeVectorTraining"); }
                 // clang-format on
@@ -2067,7 +2274,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceExtendedSparseAddressSpaceFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->extendedSparseAddressSpace) { enabledFeatureNames.emplace_back("extendedSparseAddressSpace"); }
                 // clang-format on
                 break;
@@ -2075,7 +2283,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceLegacyVertexAttributesFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->legacyVertexAttributes) { enabledFeatureNames.emplace_back("legacyVertexAttributes"); }
                 // clang-format on
                 break;
@@ -2083,7 +2292,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderCoreBuiltinsFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderCoreBuiltins) { enabledFeatureNames.emplace_back("shaderCoreBuiltins"); }
                 // clang-format on
                 break;
@@ -2091,7 +2301,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dynamicRenderingUnusedAttachments) { enabledFeatureNames.emplace_back("dynamicRenderingUnusedAttachments"); }
                 // clang-format on
                 break;
@@ -2099,7 +2310,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDataGraphFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDataGraphFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dataGraph) { enabledFeatureNames.emplace_back("dataGraph"); }
                 if(pFeatures->dataGraphUpdateAfterBind) { enabledFeatureNames.emplace_back("dataGraphUpdateAfterBind"); }
                 if(pFeatures->dataGraphSpecializationConstants) { enabledFeatureNames.emplace_back("dataGraphSpecializationConstants"); }
@@ -2111,7 +2323,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMultiviewPerViewRenderAreasFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->multiviewPerViewRenderAreas) { enabledFeatureNames.emplace_back("multiviewPerViewRenderAreas"); }
                 // clang-format on
                 break;
@@ -2119,7 +2332,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePerStageDescriptorSetFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePerStageDescriptorSetFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePerStageDescriptorSetFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->perStageDescriptorSet) { enabledFeatureNames.emplace_back("perStageDescriptorSet"); }
                 if(pFeatures->dynamicPipelineLayout) { enabledFeatureNames.emplace_back("dynamicPipelineLayout"); }
                 // clang-format on
@@ -2128,7 +2342,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageProcessing2FeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageProcessing2FeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageProcessing2FeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->textureBlockMatch2) { enabledFeatureNames.emplace_back("textureBlockMatch2"); }
                 // clang-format on
                 break;
@@ -2136,7 +2351,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCubicWeightsFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCubicWeightsFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCubicWeightsFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->selectableCubicWeights) { enabledFeatureNames.emplace_back("selectableCubicWeights"); }
                 // clang-format on
                 break;
@@ -2144,7 +2360,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceYcbcrDegammaFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceYcbcrDegammaFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceYcbcrDegammaFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->ycbcrDegamma) { enabledFeatureNames.emplace_back("ycbcrDegamma"); }
                 // clang-format on
                 break;
@@ -2152,7 +2369,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCubicClampFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCubicClampFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCubicClampFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cubicRangeClamp) { enabledFeatureNames.emplace_back("cubicRangeClamp"); }
                 // clang-format on
                 break;
@@ -2160,7 +2378,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceAttachmentFeedbackLoopDynamicStateFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->attachmentFeedbackLoopDynamicState) { enabledFeatureNames.emplace_back("attachmentFeedbackLoopDynamicState"); }
                 // clang-format on
                 break;
@@ -2168,7 +2387,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->descriptorPoolOverallocation) { enabledFeatureNames.emplace_back("descriptorPoolOverallocation"); }
                 // clang-format on
                 break;
@@ -2176,7 +2396,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceTileMemoryHeapFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceTileMemoryHeapFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceTileMemoryHeapFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->tileMemoryHeap) { enabledFeatureNames.emplace_back("tileMemoryHeap"); }
                 // clang-format on
                 break;
@@ -2184,7 +2405,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMemoryDecompressionFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMemoryDecompressionFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMemoryDecompressionFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->memoryDecompression) { enabledFeatureNames.emplace_back("memoryDecompression"); }
                 // clang-format on
                 break;
@@ -2192,7 +2414,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRawAccessChainsFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRawAccessChainsFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRawAccessChainsFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderRawAccessChains) { enabledFeatureNames.emplace_back("shaderRawAccessChains"); }
                 // clang-format on
                 break;
@@ -2200,7 +2423,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCommandBufferInheritanceFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCommandBufferInheritanceFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCommandBufferInheritanceFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->commandBufferInheritance) { enabledFeatureNames.emplace_back("commandBufferInheritance"); }
                 // clang-format on
                 break;
@@ -2208,7 +2432,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderAtomicFloat16VectorFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderFloat16VectorAtomics) { enabledFeatureNames.emplace_back("shaderFloat16VectorAtomics"); }
                 // clang-format on
                 break;
@@ -2216,7 +2441,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderReplicatedComposites) { enabledFeatureNames.emplace_back("shaderReplicatedComposites"); }
                 // clang-format on
                 break;
@@ -2224,7 +2450,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderFloat8FeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderFloat8FeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderFloat8FeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderFloat8) { enabledFeatureNames.emplace_back("shaderFloat8"); }
                 if(pFeatures->shaderFloat8CooperativeMatrix) { enabledFeatureNames.emplace_back("shaderFloat8CooperativeMatrix"); }
                 // clang-format on
@@ -2233,7 +2460,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingValidationFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingValidationFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingValidationFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayTracingValidation) { enabledFeatureNames.emplace_back("rayTracingValidation"); }
                 // clang-format on
                 break;
@@ -2241,7 +2469,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->partitionedAccelerationStructure) { enabledFeatureNames.emplace_back("partitionedAccelerationStructure"); }
                 // clang-format on
                 break;
@@ -2249,7 +2478,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->deviceGeneratedCommands) { enabledFeatureNames.emplace_back("deviceGeneratedCommands"); }
                 if(pFeatures->dynamicGeneratedPipelineLayout) { enabledFeatureNames.emplace_back("dynamicGeneratedPipelineLayout"); }
                 // clang-format on
@@ -2258,7 +2488,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageAlignmentControlFeaturesMESA>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageAlignmentControlFeaturesMESA*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageAlignmentControlFeaturesMESA*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imageAlignmentControl) { enabledFeatureNames.emplace_back("imageAlignmentControl"); }
                 // clang-format on
                 break;
@@ -2266,7 +2497,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePushConstantBankFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePushConstantBankFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePushConstantBankFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pushConstantBank) { enabledFeatureNames.emplace_back("pushConstantBank"); }
                 // clang-format on
                 break;
@@ -2274,7 +2506,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingInvocationReorderFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayTracingInvocationReorder) { enabledFeatureNames.emplace_back("rayTracingInvocationReorder"); }
                 // clang-format on
                 break;
@@ -2282,7 +2515,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDepthClampControlFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDepthClampControlFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDepthClampControlFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->depthClampControl) { enabledFeatureNames.emplace_back("depthClampControl"); }
                 // clang-format on
                 break;
@@ -2290,7 +2524,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceHdrVividFeaturesHUAWEI>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceHdrVividFeaturesHUAWEI*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceHdrVividFeaturesHUAWEI*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->hdrVivid) { enabledFeatureNames.emplace_back("hdrVivid"); }
                 // clang-format on
                 break;
@@ -2298,7 +2533,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrix2FeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrix2FeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrix2FeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cooperativeMatrixWorkgroupScope) { enabledFeatureNames.emplace_back("cooperativeMatrixWorkgroupScope"); }
                 if(pFeatures->cooperativeMatrixFlexibleDimensions) { enabledFeatureNames.emplace_back("cooperativeMatrixFlexibleDimensions"); }
                 if(pFeatures->cooperativeMatrixReductions) { enabledFeatureNames.emplace_back("cooperativeMatrixReductions"); }
@@ -2312,7 +2548,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineOpacityMicromapFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineOpacityMicromapFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineOpacityMicromapFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineOpacityMicromap) { enabledFeatureNames.emplace_back("pipelineOpacityMicromap"); }
                 // clang-format on
                 break;
@@ -2320,7 +2557,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePerformanceCountersByRegionFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->performanceCountersByRegion) { enabledFeatureNames.emplace_back("performanceCountersByRegion"); }
                 // clang-format on
                 break;
@@ -2328,7 +2566,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->vertexAttributeRobustness) { enabledFeatureNames.emplace_back("vertexAttributeRobustness"); }
                 // clang-format on
                 break;
@@ -2336,7 +2575,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFormatPackFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFormatPackFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFormatPackFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->formatPack) { enabledFeatureNames.emplace_back("formatPack"); }
                 // clang-format on
                 break;
@@ -2344,7 +2584,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceFragmentDensityMapLayeredFeaturesVALVE*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->fragmentDensityMapLayered) { enabledFeatureNames.emplace_back("fragmentDensityMapLayered"); }
                 // clang-format on
                 break;
@@ -2352,7 +2593,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePresentMeteringFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePresentMeteringFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePresentMeteringFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->presentMetering) { enabledFeatureNames.emplace_back("presentMetering"); }
                 // clang-format on
                 break;
@@ -2360,7 +2602,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->multisampledRenderToSwapchain) { enabledFeatureNames.emplace_back("multisampledRenderToSwapchain"); }
                 // clang-format on
                 break;
@@ -2368,7 +2611,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceZeroInitializeDeviceMemoryFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->zeroInitializeDeviceMemory) { enabledFeatureNames.emplace_back("zeroInitializeDeviceMemory"); }
                 // clang-format on
                 break;
@@ -2376,7 +2620,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShader64BitIndexingFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShader64BitIndexingFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shader64BitIndexing) { enabledFeatureNames.emplace_back("shader64BitIndexing"); }
                 // clang-format on
                 break;
@@ -2384,7 +2629,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCustomResolveFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCustomResolveFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCustomResolveFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->customResolve) { enabledFeatureNames.emplace_back("customResolve"); }
                 // clang-format on
                 break;
@@ -2392,7 +2638,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDataGraphModelFeaturesQCOM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphModelFeaturesQCOM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dataGraphModel) { enabledFeatureNames.emplace_back("dataGraphModel"); }
                 // clang-format on
                 break;
@@ -2400,7 +2647,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dataGraphOpticalFlow) { enabledFeatureNames.emplace_back("dataGraphOpticalFlow"); }
                 // clang-format on
                 break;
@@ -2408,7 +2656,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderLongVectorFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderLongVectorFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->longVector) { enabledFeatureNames.emplace_back("longVector"); }
                 // clang-format on
                 break;
@@ -2416,7 +2665,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePipelineCacheIncrementalModeFeaturesSEC*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->pipelineCacheIncrementalMode) { enabledFeatureNames.emplace_back("pipelineCacheIncrementalMode"); }
                 // clang-format on
                 break;
@@ -2424,7 +2674,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderUniformBufferUnsizedArray) { enabledFeatureNames.emplace_back("shaderUniformBufferUnsizedArray"); }
                 // clang-format on
                 break;
@@ -2432,7 +2683,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->computeOccupancyPriority) { enabledFeatureNames.emplace_back("computeOccupancyPriority"); }
                 // clang-format on
                 break;
@@ -2440,7 +2692,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cooperativeMatrixProperties2) { enabledFeatureNames.emplace_back("cooperativeMatrixProperties2"); }
                 if(pFeatures->cooperativeMatrixReductions) { enabledFeatureNames.emplace_back("cooperativeMatrixReductions"); }
                 if(pFeatures->cooperativeMatrixConversions) { enabledFeatureNames.emplace_back("cooperativeMatrixConversions"); }
@@ -2452,7 +2705,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderSubgroupPartitioned) { enabledFeatureNames.emplace_back("shaderSubgroupPartitioned"); }
                 // clang-format on
                 break;
@@ -2460,7 +2714,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderFloat4) { enabledFeatureNames.emplace_back("shaderFloat4"); }
                 if(pFeatures->shaderFloat6) { enabledFeatureNames.emplace_back("shaderFloat6"); }
                 if(pFeatures->shaderFloat8UnsignedE8M0) { enabledFeatureNames.emplace_back("shaderFloat8UnsignedE8M0"); }
@@ -2471,7 +2726,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->shaderMixedFloatDotProductFloat16AccFloat32) { enabledFeatureNames.emplace_back("shaderMixedFloatDotProductFloat16AccFloat32"); }
                 if(pFeatures->shaderMixedFloatDotProductFloat16AccFloat16) { enabledFeatureNames.emplace_back("shaderMixedFloatDotProductFloat16AccFloat16"); }
                 if(pFeatures->shaderMixedFloatDotProductBFloat16Acc) { enabledFeatureNames.emplace_back("shaderMixedFloatDotProductBFloat16Acc"); }
@@ -2482,7 +2738,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceThrottleHintFeaturesSEC>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceThrottleHintFeaturesSEC*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceThrottleHintFeaturesSEC*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->throttleHint) { enabledFeatureNames.emplace_back("throttleHint"); }
                 // clang-format on
                 break;
@@ -2490,7 +2747,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->dataGraphNeuralAcceleratorStatistics) { enabledFeatureNames.emplace_back("dataGraphNeuralAcceleratorStatistics"); }
                 // clang-format on
                 break;
@@ -2498,7 +2756,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->primitiveRestartIndex) { enabledFeatureNames.emplace_back("primitiveRestartIndex"); }
                 // clang-format on
                 break;
@@ -2506,7 +2765,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageTilingControlFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceImageTilingControlFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceImageTilingControlFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->imageTilingControl) { enabledFeatureNames.emplace_back("imageTilingControl"); }
                 // clang-format on
                 break;
@@ -2514,7 +2774,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->cooperativeMatrixDecodeVector) { enabledFeatureNames.emplace_back("cooperativeMatrixDecodeVector"); }
                 // clang-format on
                 break;
@@ -2522,7 +2783,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDevicePrivateDataBaseHandleFeaturesNV>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDevicePrivateDataBaseHandleFeaturesNV*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->privateDataBaseHandle) { enabledFeatureNames.emplace_back("privateDataBaseHandle"); }
                 // clang-format on
                 break;
@@ -2530,7 +2792,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->bufferDeviceAddressAllocationAlignment) { enabledFeatureNames.emplace_back("bufferDeviceAddressAllocationAlignment"); }
                 // clang-format on
                 break;
@@ -2538,7 +2801,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceAccelerationStructureFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceAccelerationStructureFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->accelerationStructure) { enabledFeatureNames.emplace_back("accelerationStructure"); }
                 if(pFeatures->accelerationStructureCaptureReplay) { enabledFeatureNames.emplace_back("accelerationStructureCaptureReplay"); }
                 if(pFeatures->accelerationStructureIndirectBuild) { enabledFeatureNames.emplace_back("accelerationStructureIndirectBuild"); }
@@ -2550,7 +2814,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayTracingPipelineFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayTracingPipelineFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayTracingPipelineFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayTracingPipeline) { enabledFeatureNames.emplace_back("rayTracingPipeline"); }
                 if(pFeatures->rayTracingPipelineShaderGroupHandleCaptureReplay) { enabledFeatureNames.emplace_back("rayTracingPipelineShaderGroupHandleCaptureReplay"); }
                 if(pFeatures->rayTracingPipelineShaderGroupHandleCaptureReplayMixed) { enabledFeatureNames.emplace_back("rayTracingPipelineShaderGroupHandleCaptureReplayMixed"); }
@@ -2562,7 +2827,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceRayQueryFeaturesKHR>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceRayQueryFeaturesKHR*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceRayQueryFeaturesKHR*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->rayQuery) { enabledFeatureNames.emplace_back("rayQuery"); }
                 // clang-format on
                 break;
@@ -2570,7 +2836,8 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
             case gfxrecon::util::GetSType<VkPhysicalDeviceMeshShaderFeaturesEXT>():
             {
                 // clang-format off
-                const auto* pFeatures = reinterpret_cast<const VkPhysicalDeviceMeshShaderFeaturesEXT*>(header);
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMeshShaderFeaturesEXT*>(header)->decoded_value;
+            if (pFeatures == nullptr) { break; }
                 if(pFeatures->taskShader) { enabledFeatureNames.emplace_back("taskShader"); }
                 if(pFeatures->meshShader) { enabledFeatureNames.emplace_back("meshShader"); }
                 if(pFeatures->multiviewMeshShader) { enabledFeatureNames.emplace_back("multiviewMeshShader"); }
