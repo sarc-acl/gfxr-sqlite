@@ -56,11 +56,18 @@ class ApiDumpMemberEncodingMixin:
         vkAllocateCommandBuffers where pCommandBuffers is sized by
         pAllocateInfo->commandBufferCount. Each -> step becomes a member lookup on the node.
         Trailing arithmetic such as codeSize / 4 is carried through unchanged.
+
+        A 2D array declares both dimensions, as in ppGeometries' "geometryCount,1". Only the outer
+        one is a count of elements in this node; the inner one counts what each element points to,
+        which the 2D encoders take from the elements themselves. Carried through whole, the comma
+        became C++'s comma operator and the hint was always the inner dimension.
         """
         if member.array_length is None:
             return None
 
         length = member.array_length
+        if self.is_array_2d(member):
+            length = length.split(',')[0].strip()
 
         if length.isdigit():
             return length
@@ -106,6 +113,10 @@ class ApiDumpMemberEncodingMixin:
 
         # Structs.
         if self.is_struct(base_type):
+            if self.is_array_2d(member):
+                if hint is not None:
+                    return 'StructArray2DFromApiDump<{0}>(ctx, {1}, {2})'.format(base_type, node, hint)
+                return 'StructArray2DFromApiDump<{0}>(ctx, {1})'.format(base_type, node)
             if member.is_array:
                 if hint is not None:
                     return 'StructArrayFromApiDump<{0}>(ctx, {1}, {2})'.format(base_type, node, hint)
@@ -113,6 +124,16 @@ class ApiDumpMemberEncodingMixin:
             if member.is_pointer:
                 return 'StructPtrFromApiDump<{0}>(ctx, {1})'.format(base_type, node)
             return 'StructFromApiDump<{0}>(ctx, {1})'.format(base_type, node)
+
+        # Only struct and plain scalar 2D arrays have an encoding here. Any other kind would fall
+        # through to a 1D encode that gfxreconstruct's decoder rejects, aborting the conversion of
+        # every api dump containing it, so stop the generator rather than emit one.
+        if self.is_array_2d(member) and (
+            self.is_handle(base_type) or self.is_enum(base_type) or self.is_flags(base_type) or base_type == 'void'
+        ):
+            raise ValueError(
+                '{0} {1}: no api dump encoding for a 2D array of {2}'.format(owner, member.name, base_type)
+            )
 
         # Handles.
         if self.is_handle(base_type):
@@ -197,6 +218,10 @@ class ApiDumpMemberEncodingMixin:
         if scalar is None:
             return 'ctx.UInt64Value({0}) /* unmapped type {1} */'.format(node, base_type)
 
+        if self.is_array_2d(member):
+            if hint is not None:
+                return 'ctx.{0}Array2D({1}, {2})'.format(scalar, node, hint)
+            return 'ctx.{0}Array2D({1})'.format(scalar, node)
         if member.is_array:
             if hint is not None:
                 return 'ctx.{0}Array({1}, {2})'.format(scalar, node, hint)
@@ -204,6 +229,17 @@ class ApiDumpMemberEncodingMixin:
         if member.is_pointer:
             return 'ctx.{0}Ptr({1})'.format(scalar, node)
         return 'ctx.{0}Value({1})'.format(scalar, node)
+
+    def is_array_2d(self, member):
+        """Whether a value is an array of pointers to arrays, such as ppGeometries or
+        ppMaxPrimitiveCounts, which gfxreconstruct encodes as a 2D array (kIsArray2D).
+
+        The same test gfxreconstruct's KhronosBaseGenerator.make_encoder_method_call applies before
+        choosing EncodeStructArray2D or Encode<Type>Array2D. Its decoders assert on kIsArray2D, so
+        encoding one of these as a 1D array aborts the conversion. Strings are excluded: an array
+        of strings is also a pointer to pointers, and gfxreconstruct encodes it as a string array.
+        """
+        return member.is_array and member.pointer_count > 1 and member.base_type not in ['char', 'wchar_t']
 
     def canonical_enum(self, enum):
         """Resolves an enum alias to the name the lookup tables were generated under.

@@ -115,6 +115,10 @@ class ApiDumpContext
     void NAME##Array(const ApiDumpNode& node, size_t length_hint = 0)                                        \
     {                                                                                                        \
         EncodeScalarArray<ENCODE_T>(node, length_hint);                                                      \
+    }                                                                                                        \
+    void NAME##Array2D(const ApiDumpNode& node, size_t length_hint = 0)                                      \
+    {                                                                                                        \
+        EncodeScalarArray2D<ENCODE_T>(node, length_hint);                                                    \
     }
 
     GFXRECON_APIDUMP_SCALAR(Int8, int8_t)
@@ -431,6 +435,57 @@ class ApiDumpContext
         // A present but unexpanded array still has to carry its length, so pad rather than shorten.
         values.resize(count);
         encoder_.EncodeArray<T>(values.data(), count, node.Address(), node.IsNullPointer(), node.HasData());
+    }
+
+    /** An array of pointers to scalar arrays, such as vkCmdBuildAccelerationStructuresIndirectKHR
+     * ppMaxPrimitiveCounts, which gfxreconstruct encodes as a 2D array (kIsArray2D) and its decoder
+     * asserts as one.
+     *
+     * The layer writes each element as a pointer: its elements when it dumped the array it points
+     * to, its value when it dumped only the first, or neither. As for StructArray2DFromApiDump, each
+     * inner array is encoded with the values actually recorded, never the count the registry
+     * declares, since the decoder reads exactly as many values as the count says.
+     */
+    template <typename T>
+    void EncodeScalarArray2D(const ApiDumpNode& node, size_t length_hint)
+    {
+        const bool   is_null  = node.IsNullPointer();
+        const bool   has_data = node.HasData();
+        const size_t count    = ArrayLength(node, length_hint);
+
+        encoder_.EncodeArray2DPreamble(count, node.Address(), is_null, has_data);
+
+        if (is_null || !has_data)
+        {
+            return;
+        }
+
+        for (size_t i = 0; i < count; ++i)
+        {
+            // Absent, and so a null pointer, past the elements the layer recorded.
+            const ApiDumpNode inner = node.ElementAt(i);
+            std::vector<T>    values;
+
+            if (inner.HasElements())
+            {
+                values.reserve(inner.ElementCount());
+                for (size_t j = 0; j < inner.ElementCount(); ++j)
+                {
+                    T value{};
+                    if (!ParseScalar<T>(inner.ElementScalar(j), value))
+                    {
+                        ++stats_.unparsable_scalars;
+                    }
+                    values.push_back(value);
+                }
+            }
+            else if (inner.HasValue())
+            {
+                values.push_back(ParseOr<T>(inner));
+            }
+
+            encoder_.EncodeArray2DInner<T>(values.data(), values.size(), inner.Address(), inner.IsNullPointer());
+        }
     }
 
     void EncodeHandleArray(const ApiDumpNode& node, VkObjectType type, size_t length_hint, bool created)

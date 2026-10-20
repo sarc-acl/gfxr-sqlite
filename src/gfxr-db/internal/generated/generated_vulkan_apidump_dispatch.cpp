@@ -5808,7 +5808,7 @@ void ApiDump_vkCmdBuildAccelerationStructuresKHR(ApiDumpContext& ctx, const ApiD
     ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
     ctx.UInt32Value(call.Arg("infoCount"));
     StructArrayFromApiDump<VkAccelerationStructureBuildGeometryInfoKHR>(ctx, call.Arg("pInfos"), ctx.Length(call.Arg("infoCount")));
-    StructArrayFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ctx, call.Arg("ppBuildRangeInfos"), ctx.Length(call.Arg("infoCount")));
+    StructArray2DFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ctx, call.Arg("ppBuildRangeInfos"), ctx.Length(call.Arg("infoCount")));
 }
 
 void ApiDump_vkCmdBuildAccelerationStructuresIndirectKHR(ApiDumpContext& ctx, const ApiDumpCall& call)
@@ -5818,7 +5818,7 @@ void ApiDump_vkCmdBuildAccelerationStructuresIndirectKHR(ApiDumpContext& ctx, co
     StructArrayFromApiDump<VkAccelerationStructureBuildGeometryInfoKHR>(ctx, call.Arg("pInfos"), ctx.Length(call.Arg("infoCount")));
     ctx.UInt64Array(call.Arg("pIndirectDeviceAddresses"), ctx.Length(call.Arg("infoCount")));
     ctx.UInt32Array(call.Arg("pIndirectStrides"), ctx.Length(call.Arg("infoCount")));
-    ctx.UInt32Array(call.Arg("ppMaxPrimitiveCounts"), ctx.Length(call.Arg("infoCount")));
+    ctx.UInt32Array2D(call.Arg("ppMaxPrimitiveCounts"), ctx.Length(call.Arg("infoCount")));
 }
 
 void ApiDump_vkCopyAccelerationStructureToMemoryKHR(ApiDumpContext& ctx, const ApiDumpCall& call)

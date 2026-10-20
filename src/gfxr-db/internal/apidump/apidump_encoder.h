@@ -164,6 +164,48 @@ class ApiDumpEncoder
     }
 
     //
+    // 2D arrays: an array of pointers to arrays, such as ppMaxPrimitiveCounts. The outer descriptor
+    // comes first, then, when it carries data, one inner array per element.
+    //
+
+    void EncodeArray2DPreamble(size_t len, uint64_t address, bool is_null, bool has_data)
+    {
+        const uint32_t attribs = MakeAttribs(format::PointerAttributes::kIsArray2D, is_null, address, has_data);
+        WriteValue(attribs);
+
+        if (!is_null)
+        {
+            WriteAddressIfPresent(attribs, address);
+            EncodeSizeTValue(len);
+        }
+    }
+
+    /** One inner array of a 2D array, in the layout PointerDecoder<T*> reads.
+     *
+     * The decoder reads a non-null inner array's length and then exactly that many values, without
+     * looking at kHasData, and nothing at all after the attributes of a null one. gfxreconstruct's
+     * own EncodeArray2D writes the length of a null inner array too, which its decoder would misread;
+     * matching the decoder is what keeps the buffer in step, so a null inner array gets no length.
+     */
+    template <typename EncodeT, typename T>
+    void EncodeArray2DInner(const T* values, size_t len, uint64_t address, bool is_null)
+    {
+        const uint32_t attribs = MakeAttribs(format::PointerAttributes::kIsArray, is_null, address, !is_null);
+        WriteValue(attribs);
+
+        if (!is_null)
+        {
+            WriteAddressIfPresent(attribs, address);
+            EncodeSizeTValue(len);
+
+            for (size_t i = 0; i < len; ++i)
+            {
+                WriteValue(static_cast<EncodeT>(values[i]));
+            }
+        }
+    }
+
+    //
     // Struct preambles. The struct body is written by the caller immediately afterwards.
     //
 
@@ -190,6 +232,8 @@ class ApiDumpEncoder
         }
     }
 
+    /** The outer descriptor of an array of pointers to structs; each element follows as an
+     * EncodeStructArrayPreamble and its structs, see StructArray2DFromApiDump. */
     void EncodeStructArray2DPreamble(size_t len, uint64_t address, bool is_null, bool has_data)
     {
         const uint32_t attribs = MakeAttribs(

@@ -36,6 +36,8 @@
 #include "generated_vulkan_struct_from_apidump.h"
 
 #include "decode/decode_allocator.h"
+#include "decode/pointer_decoder.h"
+#include "decode/struct_pointer_decoder.h"
 #include "generated/generated_vulkan_struct_decoders.h"
 
 // The structs on the shared blacklist are hand written on the decode side too, so validating the
@@ -422,6 +424,239 @@ void TestOversizedLengthHintClamped()
     Expect("hint was clamped rather than trusted", trip.Stats().oversized_length_hints == 1);
 }
 
+/** One triangles geometry, the body of a VkAccelerationStructureGeometryKHR as the layer writes it,
+ * shared by the ppGeometries tests below. Taken from an AnTuTu capture. */
+const char* const kTrianglesGeometryMembers = R"JSON("members": [
+    { "type": "VkStructureType", "name": "sType", "value": "1000150006" },
+    { "type": "const void*", "name": "pNext", "address": "address" },
+    { "type": "VkGeometryTypeKHR", "name": "geometryType", "value": "0" },
+    { "type": "VkAccelerationStructureGeometryDataKHR (Union)", "name": "geometry", "members": [
+        { "type": "VkAccelerationStructureGeometryTrianglesDataKHR", "name": "triangles", "members": [
+            { "type": "VkStructureType", "name": "sType", "value": "1000150005" },
+            { "type": "const void*", "name": "pNext", "address": "address" },
+            { "type": "VkFormat", "name": "vertexFormat", "value": "106" },
+            { "type": "VkDeviceOrHostAddressConstKHR (Union)", "name": "vertexData", "members": [
+                { "type": "VkDeviceAddress", "name": "deviceAddress", "value": "0x37b080000" },
+                { "type": "const void*", "name": "hostAddress", "address": "0x37b080000" } ] },
+            { "type": "VkDeviceSize", "name": "vertexStride", "value": "12" },
+            { "type": "uint32_t", "name": "maxVertex", "value": "1500" },
+            { "type": "VkIndexType", "name": "indexType", "value": "1000165000" },
+            { "type": "VkDeviceOrHostAddressConstKHR (Union)", "name": "indexData", "members": [
+                { "type": "VkDeviceAddress", "name": "deviceAddress", "value": "0x0" },
+                { "type": "const void*", "name": "hostAddress", "address": "address" } ] },
+            { "type": "VkDeviceOrHostAddressConstKHR (Union)", "name": "transformData", "members": [
+                { "type": "VkDeviceAddress", "name": "deviceAddress", "value": "0x0" },
+                { "type": "const void*", "name": "hostAddress", "address": "address" } ] } ] } ] },
+    { "type": "VkGeometryFlagsKHR", "name": "flags", "value": "0" }
+])JSON";
+
+/** A VkAccelerationStructureBuildGeometryInfoKHR with the given pGeometries and ppGeometries nodes. */
+std::string BuildGeometryInfoJson(const std::string& geometries, const std::string& pointer_geometries)
+{
+    return R"JSON({
+        "type": "const VkAccelerationStructureBuildGeometryInfoKHR*", "name": "pInfo", "address": "0x7191ff5690",
+        "members": [
+            { "type": "VkStructureType", "name": "sType", "value": "1000150000" },
+            { "type": "const void*", "name": "pNext", "address": "address" },
+            { "type": "VkAccelerationStructureTypeKHR", "name": "type", "value": "1" },
+            { "type": "VkBuildAccelerationStructureFlagsKHR", "name": "flags", "value": "8" },
+            { "type": "VkBuildAccelerationStructureModeKHR", "name": "mode", "value": "0" },
+            { "type": "VkAccelerationStructureKHR", "name": "srcAccelerationStructure", "value": "0x0" },
+            { "type": "VkAccelerationStructureKHR", "name": "dstAccelerationStructure", "value": "0xb4000072d48706f0" },
+            { "type": "uint32_t", "name": "geometryCount", "value": "1" },
+            )JSON" +
+           geometries + ",\n" + pointer_geometries + R"JSON(,
+            { "type": "VkDeviceOrHostAddressKHR (Union)", "name": "scratchData", "members": [
+                { "type": "VkDeviceAddress", "name": "deviceAddress", "value": "0x3796c6f00" },
+                { "type": "void*", "name": "hostAddress", "address": "0x3796c6f00" } ] }
+        ]
+    })JSON";
+}
+
+/** Checks the members of the build geometry info that every ppGeometries test shares. */
+void ExpectBuildGeometryInfo(const VkAccelerationStructureBuildGeometryInfoKHR* decoded)
+{
+    Expect("type", decoded->type == VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR);
+    Expect("geometryCount", decoded->geometryCount == 1);
+    // scratchData is the member after ppGeometries, so it only decodes right if ppGeometries
+    // consumed exactly the bytes it was encoded with.
+    Expect("scratchData after ppGeometries", decoded->scratchData.deviceAddress == 0x3796c6f00);
+}
+
+/** A build geometry info whose ppGeometries is null, which is how nearly every application fills it
+ * in, here exactly as an AnTuTu capture recorded it. ppGeometries is a 2D struct array
+ * (geometryCount pointers to one geometry each), and StructPointerDecoder<T*> asserts the kIsArray2D
+ * attribute even when the pointer is null; it used to be encoded as a plain struct array, so every
+ * api dump with a vkGetAccelerationStructureBuildSizesKHR or vkCmdBuildAccelerationStructuresKHR call
+ * aborted the conversion. */
+void TestBuildGeometryInfoNullPointerGeometries()
+{
+    std::printf("VkAccelerationStructureBuildGeometryInfoKHR with a null ppGeometries\n");
+
+    const std::string json = BuildGeometryInfoJson(
+        std::string(R"JSON({ "type": "const VkAccelerationStructureGeometryKHR*", "name": "pGeometries",
+            "address": "0x7191ff60a0", "elements": [ { "type": "const VkAccelerationStructureGeometryKHR",
+            "name": "[0]", "address": "0x7191ff60a0", )JSON") +
+            kTrianglesGeometryMembers + " } ] }",
+        R"JSON({ "type": "const VkAccelerationStructureGeometryKHR* const*", "name": "ppGeometries", "address": "address" })JSON"
+    );
+
+    DecoderAllocGuard<true> guard;
+    RoundTrip<VkAccelerationStructureBuildGeometryInfoKHR, Decoded_VkAccelerationStructureBuildGeometryInfoKHR> trip(
+        json
+    );
+
+    Expect("buffer consumed exactly", trip.ConsumedEverything());
+
+    const VkAccelerationStructureBuildGeometryInfoKHR* decoded = trip.Decoded();
+    Expect("decoded", decoded != nullptr);
+
+    if (decoded != nullptr)
+    {
+        ExpectBuildGeometryInfo(decoded);
+        Expect("ppGeometries null", decoded->ppGeometries == nullptr);
+        Expect("pGeometries decoded", decoded->pGeometries != nullptr);
+        if (decoded->pGeometries != nullptr)
+        {
+            Expect("pGeometries[0] maxVertex", decoded->pGeometries[0].geometry.triangles.maxVertex == 1500);
+        }
+    }
+}
+
+/** The same geometry passed through ppGeometries instead, which the layer writes as one struct pointer
+ * per element, each carrying the members of the one geometry it points to. */
+void TestBuildGeometryInfoPointerGeometries()
+{
+    std::printf("VkAccelerationStructureBuildGeometryInfoKHR with ppGeometries\n");
+
+    const std::string json = BuildGeometryInfoJson(
+        R"JSON({ "type": "const VkAccelerationStructureGeometryKHR*", "name": "pGeometries", "address": "address" })JSON",
+        std::string(R"JSON({ "type": "const VkAccelerationStructureGeometryKHR* const*", "name": "ppGeometries",
+            "address": "0x7191ff5000", "elements": [ { "type": "const VkAccelerationStructureGeometryKHR*",
+            "name": "[0]", "address": "0x7191ff60a0", )JSON") +
+            kTrianglesGeometryMembers + " } ] }"
+    );
+
+    DecoderAllocGuard<true> guard;
+    RoundTrip<VkAccelerationStructureBuildGeometryInfoKHR, Decoded_VkAccelerationStructureBuildGeometryInfoKHR> trip(
+        json
+    );
+
+    Expect("buffer consumed exactly", trip.ConsumedEverything());
+
+    const VkAccelerationStructureBuildGeometryInfoKHR* decoded = trip.Decoded();
+    Expect("decoded", decoded != nullptr);
+
+    if (decoded != nullptr)
+    {
+        ExpectBuildGeometryInfo(decoded);
+        Expect("pGeometries null", decoded->pGeometries == nullptr);
+        Expect("ppGeometries decoded", (decoded->ppGeometries != nullptr) && (decoded->ppGeometries[0] != nullptr));
+        if ((decoded->ppGeometries != nullptr) && (decoded->ppGeometries[0] != nullptr))
+        {
+            const VkAccelerationStructureGeometryKHR* geometry = decoded->ppGeometries[0];
+            Expect("ppGeometries[0] geometryType", geometry->geometryType == VK_GEOMETRY_TYPE_TRIANGLES_KHR);
+            Expect("ppGeometries[0] vertexFormat", geometry->geometry.triangles.vertexFormat == VK_FORMAT_R32G32B32_SFLOAT);
+            Expect("ppGeometries[0] maxVertex", geometry->geometry.triangles.maxVertex == 1500);
+        }
+    }
+}
+
+/** vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos, as an AnTuTu capture recorded it, plus a
+ * null element. The layer dumps only the first range info each element points to, not the
+ * pInfos[i].geometryCount the registry declares, so each inner array has to be encoded with the one
+ * struct actually recorded. */
+void TestBuildRangeInfos2D()
+{
+    std::printf("vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos\n");
+
+    const std::string json = R"JSON({
+        "type": "const VkAccelerationStructureBuildRangeInfoKHR* const*", "name": "ppBuildRangeInfos",
+        "address": "0x7191ff5580",
+        "elements": [
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[0]", "address": "0x7191ff6110",
+              "members": [
+                { "type": "uint32_t", "name": "primitiveCount", "value": "500" },
+                { "type": "uint32_t", "name": "primitiveOffset", "value": "0" },
+                { "type": "uint32_t", "name": "firstVertex", "value": "0" },
+                { "type": "uint32_t", "name": "transformOffset", "value": "0" } ] },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[1]", "address": "0x7191ff6218",
+              "members": [
+                { "type": "uint32_t", "name": "primitiveCount", "value": "240" },
+                { "type": "uint32_t", "name": "primitiveOffset", "value": "16" },
+                { "type": "uint32_t", "name": "firstVertex", "value": "3" },
+                { "type": "uint32_t", "name": "transformOffset", "value": "0" } ] },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[2]", "address": "address" }
+        ]
+    })JSON";
+
+    const nlohmann::json parsed = nlohmann::json::parse(json);
+    ApiDumpEncoder       encoder;
+    ApiDumpHandleMap     handles;
+    ApiDumpContext       ctx(encoder, handles);
+    StructArray2DFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ctx, ApiDumpNode(&parsed));
+
+    DecoderAllocGuard<true>                                                 guard;
+    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*> decoder;
+    const size_t bytes_read = decoder.Decode(encoder.GetData(), encoder.GetDataSize());
+
+    Expect("buffer consumed exactly", bytes_read == encoder.GetDataSize());
+    Expect("decoded as a 2D array", decoder.IsArray2D());
+    Expect("outer length", decoder.GetLength() == 3);
+
+    VkAccelerationStructureBuildRangeInfoKHR** ranges = decoder.GetPointer();
+    Expect("decoded", ranges != nullptr);
+    if ((ranges != nullptr) && (decoder.GetLength() == 3))
+    {
+        Expect("[0] holds the one recorded range", decoder.GetInnerLength(0) == 1);
+        Expect("[0] primitiveCount", (ranges[0] != nullptr) && (ranges[0][0].primitiveCount == 500));
+        Expect("[1] primitiveOffset", (ranges[1] != nullptr) && (ranges[1][0].primitiveOffset == 16));
+        Expect("[1] firstVertex", (ranges[1] != nullptr) && (ranges[1][0].firstVertex == 3));
+        Expect("[2] null", ranges[2] == nullptr);
+    }
+}
+
+/** vkCmdBuildAccelerationStructuresIndirectKHR ppMaxPrimitiveCounts, an array of pointers to uint32_t
+ * arrays, which PointerDecoder<T*> asserts as kIsArray2D just as StructPointerDecoder<T*> does for
+ * struct arrays. Covers each shape an element can take: a single value, an expanded array, and null. */
+void TestMaxPrimitiveCounts2D()
+{
+    std::printf("vkCmdBuildAccelerationStructuresIndirectKHR ppMaxPrimitiveCounts\n");
+
+    const std::string json = R"JSON({
+        "type": "const uint32_t* const*", "name": "ppMaxPrimitiveCounts", "address": "0x1000",
+        "elements": [
+            { "type": "const uint32_t*", "name": "[0]", "address": "0x2000", "value": "7" },
+            { "type": "const uint32_t*", "name": "[1]", "address": "0x3000", "elements": [ "3", "4" ] },
+            { "type": "const uint32_t*", "name": "[2]", "address": "address" }
+        ]
+    })JSON";
+
+    const nlohmann::json parsed = nlohmann::json::parse(json);
+    ApiDumpEncoder       encoder;
+    ApiDumpHandleMap     handles;
+    ApiDumpContext       ctx(encoder, handles);
+    ctx.UInt32Array2D(ApiDumpNode(&parsed));
+
+    DecoderAllocGuard<true>  guard;
+    PointerDecoder<uint32_t*> decoder;
+    const size_t              bytes_read = decoder.DecodeUInt32(encoder.GetData(), encoder.GetDataSize());
+
+    Expect("buffer consumed exactly", bytes_read == encoder.GetDataSize());
+    Expect("outer length", decoder.GetLength() == 3);
+
+    uint32_t** counts = decoder.GetPointer();
+    Expect("decoded", counts != nullptr);
+    if ((counts != nullptr) && (decoder.GetLength() == 3))
+    {
+        Expect("[0] single value", (decoder.GetInnerLength(0) == 1) && (counts[0] != nullptr) && (counts[0][0] == 7));
+        Expect("[1] expanded array",
+               (decoder.GetInnerLength(1) == 2) && (counts[1] != nullptr) && (counts[1][0] == 3) && (counts[1][1] == 4));
+        Expect("[2] null", counts[2] == nullptr);
+    }
+    Expect("no unparsable scalars", ctx.Stats().unparsable_scalars == 0);
+}
+
 } // namespace
 
 int main()
@@ -435,6 +670,10 @@ int main()
     TestShaderModuleDerivedLength();
     TestUnexpandedStringArray();
     TestOversizedLengthHintClamped();
+    TestBuildGeometryInfoNullPointerGeometries();
+    TestBuildGeometryInfoPointerGeometries();
+    TestBuildRangeInfos2D();
+    TestMaxPrimitiveCounts2D();
 
     if (g_failures == 0)
     {
