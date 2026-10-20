@@ -6609,7 +6609,7 @@ template <> void StructFromApiDump<VkAccelerationStructureGeometryMicromapDataKH
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["usageCountsCount"]);
     StructArrayFromApiDump<VkMicromapUsageKHR>(ctx, value["pUsageCounts"], ctx.Length(value["usageCountsCount"]));
-    StructArrayFromApiDump<VkMicromapUsageKHR>(ctx, value["ppUsageCounts"], (ctx.Length(value["usageCountsCount"]),1));
+    StructArray2DFromApiDump<VkMicromapUsageKHR>(ctx, value["ppUsageCounts"], ctx.Length(value["usageCountsCount"]));
     ctx.UInt64Value(value["data"]);
     ctx.UInt64Value(value["triangleArray"]);
     ctx.UInt64Value(value["triangleArrayStride"]);
@@ -9701,7 +9701,7 @@ template <> void StructFromApiDump<VkMicromapBuildInfoEXT>(ApiDumpContext& ctx, 
     ctx.VulkanHandleValue(value["dstMicromap"], VK_OBJECT_TYPE_MICROMAP_EXT);
     ctx.UInt32Value(value["usageCountsCount"]);
     StructArrayFromApiDump<VkMicromapUsageEXT>(ctx, value["pUsageCounts"], ctx.Length(value["usageCountsCount"]));
-    StructArrayFromApiDump<VkMicromapUsageEXT>(ctx, value["ppUsageCounts"], (ctx.Length(value["usageCountsCount"]),1));
+    StructArray2DFromApiDump<VkMicromapUsageEXT>(ctx, value["ppUsageCounts"], ctx.Length(value["usageCountsCount"]));
     StructFromApiDump<VkDeviceOrHostAddressConstKHR>(ctx, value["data"]);
     StructFromApiDump<VkDeviceOrHostAddressKHR>(ctx, value["scratchData"]);
     StructFromApiDump<VkDeviceOrHostAddressConstKHR>(ctx, value["triangleArray"]);
@@ -9790,7 +9790,7 @@ template <> void StructFromApiDump<VkAccelerationStructureTrianglesOpacityMicrom
     ctx.UInt32Value(value["baseTriangle"]);
     ctx.UInt32Value(value["usageCountsCount"]);
     StructArrayFromApiDump<VkMicromapUsageEXT>(ctx, value["pUsageCounts"], ctx.Length(value["usageCountsCount"]));
-    StructArrayFromApiDump<VkMicromapUsageEXT>(ctx, value["ppUsageCounts"], (ctx.Length(value["usageCountsCount"]),1));
+    StructArray2DFromApiDump<VkMicromapUsageEXT>(ctx, value["ppUsageCounts"], ctx.Length(value["usageCountsCount"]));
     ctx.VulkanHandleValue(value["micromap"], VK_OBJECT_TYPE_MICROMAP_EXT);
 }
 
@@ -9826,7 +9826,7 @@ template <> void StructFromApiDump<VkAccelerationStructureTrianglesDisplacementM
     ctx.UInt32Value(value["baseTriangle"]);
     ctx.UInt32Value(value["usageCountsCount"]);
     StructArrayFromApiDump<VkMicromapUsageEXT>(ctx, value["pUsageCounts"], ctx.Length(value["usageCountsCount"]));
-    StructArrayFromApiDump<VkMicromapUsageEXT>(ctx, value["ppUsageCounts"], (ctx.Length(value["usageCountsCount"]),1));
+    StructArray2DFromApiDump<VkMicromapUsageEXT>(ctx, value["ppUsageCounts"], ctx.Length(value["usageCountsCount"]));
     ctx.VulkanHandleValue(value["micromap"], VK_OBJECT_TYPE_MICROMAP_EXT);
 }
 
@@ -12300,7 +12300,7 @@ template <> void StructFromApiDump<VkAccelerationStructureBuildGeometryInfoKHR>(
     ctx.VulkanHandleValue(value["dstAccelerationStructure"], VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR);
     ctx.UInt32Value(value["geometryCount"]);
     StructArrayFromApiDump<VkAccelerationStructureGeometryKHR>(ctx, value["pGeometries"], ctx.Length(value["geometryCount"]));
-    StructArrayFromApiDump<VkAccelerationStructureGeometryKHR>(ctx, value["ppGeometries"], (ctx.Length(value["geometryCount"]),1));
+    StructArray2DFromApiDump<VkAccelerationStructureGeometryKHR>(ctx, value["ppGeometries"], ctx.Length(value["geometryCount"]));
     StructFromApiDump<VkDeviceOrHostAddressKHR>(ctx, value["scratchData"]);
 }
 

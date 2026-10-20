@@ -82,6 +82,60 @@ void StructArrayFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value, size_
     }
 }
 
+/** Mirrors gfxreconstruct's EncodeStructArray2D, for an array of pointers to structs such as
+ * VkAccelerationStructureBuildGeometryInfoKHR ppGeometries or vkCmdBuildAccelerationStructuresKHR
+ * ppBuildRangeInfos. StructPointerDecoder<T*> asserts the kIsArray2D attribute, so these must not be
+ * encoded as a plain struct array.
+ *
+ * The layer writes each element as a struct pointer: its address and, when it followed it, the
+ * members of the one struct it points to - or an elements list, should it ever write more. It never
+ * writes the inner count the registry declares (a range info array holds pInfos[i].geometryCount
+ * entries, but only the first is dumped). So each inner array is encoded with the number of structs
+ * actually recorded: StructPointerDecoder<T*> reads an inner array's count and then exactly that many
+ * structs, whatever kHasData says, and must never be told of more than are written.
+ */
+template <typename T>
+void StructArray2DFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value, size_t length_hint = 0)
+{
+    const bool   is_null  = value.IsNullPointer();
+    const bool   has_data = value.HasData();
+    const size_t expanded = value.ElementCount();
+    const size_t count    = (expanded > 0) ? expanded : length_hint;
+
+    ctx.Encoder().EncodeStructArray2DPreamble(count, value.Address(), is_null, has_data);
+
+    if (is_null || !has_data)
+    {
+        return;
+    }
+
+    for (size_t i = 0; i < count; ++i)
+    {
+        // Absent, and so a null pointer, past the elements the layer recorded.
+        const ApiDumpNode inner = value.ElementAt(i);
+
+        if (inner.HasElements())
+        {
+            const size_t inner_count = inner.ElementCount();
+            ctx.Encoder().EncodeStructArrayPreamble(inner_count, inner.Address(), false, true);
+            for (size_t j = 0; j < inner_count; ++j)
+            {
+                StructFromApiDump<T>(ctx, inner.ElementAt(j));
+            }
+        }
+        else if (inner.HasMembers())
+        {
+            ctx.Encoder().EncodeStructArrayPreamble(1, inner.Address(), false, true);
+            StructFromApiDump<T>(ctx, inner);
+        }
+        else
+        {
+            // Null, or a pointer the layer did not follow: no structs, so a count of zero.
+            ctx.Encoder().EncodeStructArrayPreamble(0, inner.Address(), inner.IsNullPointer(), false);
+        }
+    }
+}
+
 GFXRECON_END_NAMESPACE(decode)
 GFXRECON_END_NAMESPACE(gfxrecon)
 
