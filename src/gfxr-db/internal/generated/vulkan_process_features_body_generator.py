@@ -213,7 +213,8 @@ class VulkanProcessFeaturesBodyGenerator(VulkanBaseGenerator):
                     case gfxrecon::util::GetSType<{0}>():
                     {{
                         // clang-format off
-                        const auto* pFeatures = reinterpret_cast<const {0}*>(header);
+                        const auto* pFeatures = reinterpret_cast<const Decoded_{0}*>(header)->decoded_value;
+                    if (pFeatures == nullptr) {{ break; }}
                     '''.format(struct)))
                 body += '\n'
                 body += self.makeStructBody(struct,
