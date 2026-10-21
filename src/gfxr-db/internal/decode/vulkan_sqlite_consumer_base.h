@@ -123,6 +123,8 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
 
     void ProcessDisplayMessageCommand(const std::string& message) override;
 
+    void ProcessCaptureStartQueueSubmitIndexCommand(uint64_t queueSubmitIndex) override;
+
     void ProcessFillMemoryCommand(uint64_t memoryId, uint64_t offset, uint64_t size, const uint8_t* data) override;
 
     void ProcessResizeWindowCommand(format::HandleId surfaceId, uint32_t width, uint32_t height) override;

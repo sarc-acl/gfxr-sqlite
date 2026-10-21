@@ -267,6 +267,14 @@ void VulkanSqliteConsumerBase::ProcessDisplayMessageCommand(const std::string& m
     statements.InsertDisplayMessage(context.currentFrame, message);
 }
 
+void VulkanSqliteConsumerBase::ProcessCaptureStartQueueSubmitIndexCommand(uint64_t queueSubmitIndex)
+{
+    // This is stored as a capture property rather than an apiEvents row, so the command list doesn't change.
+    std::ostringstream metaDataSql;
+    metaDataSql << "INSERT INTO metaData VALUES ('capture start queue submit index', '" << queueSubmitIndex << "');";
+    ExecSQL(context.db, metaDataSql.str().c_str());
+}
+
 void VulkanSqliteConsumerBase::ProcessFillMemoryCommand(
     uint64_t memoryId, uint64_t offset, uint64_t size, const uint8_t* data
 )
