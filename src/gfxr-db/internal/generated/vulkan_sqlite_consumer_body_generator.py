@@ -437,13 +437,14 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
         # Add the following to the blacklist due to custom implementations in vulkan_sqlite_consumer_base
         # Custom implementations are needed due to generated code using uint64_t or void* for pData,
         # while actual code uses DescriptorUpdateTemplateDecoder* instead.
-        # The original black list also includes these functions (but also includes
-        # vkCmdPushDescriptorSetWithTemplate2/vkCmdPushDescriptorSetWithTemplate2KHR which are not
-        # affected by this issue).
+        # The push template 2 commands are custom too, because GFXR gives 2KHR the core args struct,
+        # which codegen would name args::CmdPushDescriptorSetWithTemplate2KHR.
         self.APICALL_BLACKLIST.append('vkUpdateDescriptorSetWithTemplate')
         self.APICALL_BLACKLIST.append('vkUpdateDescriptorSetWithTemplateKHR')
         self.APICALL_BLACKLIST.append('vkCmdPushDescriptorSetWithTemplate')
         self.APICALL_BLACKLIST.append('vkCmdPushDescriptorSetWithTemplateKHR')
+        self.APICALL_BLACKLIST.append('vkCmdPushDescriptorSetWithTemplate2')
+        self.APICALL_BLACKLIST.append('vkCmdPushDescriptorSetWithTemplate2KHR')
         # Add the following to the blacklist due to missing support issues, attempt to re-enable once feature is required
         self.APICALL_BLACKLIST.append('vkCreateIndirectExecutionSetEXT')
         # VK_NV_external_compute_queue: no args:: struct or consumer virtual exists anywhere upstream

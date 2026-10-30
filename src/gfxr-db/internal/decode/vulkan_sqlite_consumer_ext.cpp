@@ -7063,7 +7063,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplateKHR(
-    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplateKHR& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
 )
 {
     // generate the base apiEvents database entries
@@ -7112,7 +7112,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
-    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2KHR& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
 )
 {
     // generate the base apiEvents database entries

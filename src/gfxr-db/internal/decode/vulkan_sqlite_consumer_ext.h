@@ -317,7 +317,7 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
     ) override;
 
     virtual void Process_vkCmdPushDescriptorSetWithTemplateKHR(
-        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplateKHR& args
+        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
     ) override;
 
     virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
@@ -325,7 +325,7 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
     ) override;
 
     virtual void Process_vkCmdPushDescriptorSetWithTemplate2KHR(
-        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2KHR& args
+        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
     ) override;
 
     void Process_vkCreateBuffer(const ApiCallInfo& callInfo, args::CreateBuffer& args) override;
