@@ -78,7 +78,13 @@ static bool runSimpleQuery(sqlite3* const dbHandle)
     return true;
 }
 
-static std::unique_ptr<gfxrSqlite::CreateDBHelper> createDatabase(const std::filesystem::path& gfxrFile)
+struct DatabaseCloser
+{
+    void operator()(sqlite3* dbHandle) const { gfxrSqlite::checked_sqlite3_close(dbHandle); }
+};
+using DatabasePtr = std::unique_ptr<sqlite3, DatabaseCloser>;
+
+static DatabasePtr createDatabase(const std::filesystem::path& gfxrFile)
 {
     std::cout << "Loading gfxr file " << gfxrFile << '\n';
     std::string dbFilename = gfxrSqlite::createNewMemoryDbFilename();
@@ -91,21 +97,20 @@ static std::unique_ptr<gfxrSqlite::CreateDBHelper> createDatabase(const std::fil
     };
 
     bool enforceForeignKeys = true;
-    auto helper = std::make_unique<gfxrSqlite::CreateDBHelper>(
-        gfxrFile.string(), dbFilename, logFilename, enforceForeignKeys, reportError
-    );
-    helper->createDatabase();
+    gfxrSqlite::CreateDBHelper helper(gfxrFile.string(), dbFilename, logFilename, enforceForeignKeys, reportError);
+    helper.createDatabase();
+    DatabasePtr dbHandle(helper.getDB());
     if (errorReported)
     {
         std::cerr << "Failing due to reported error\n";
         return nullptr;
     }
-    if (helper->getDB() == nullptr)
+    if (dbHandle == nullptr)
     {
         std::cerr << "Failed to create database\n";
         return nullptr;
     }
-    return helper;
+    return dbHandle;
 }
 
 static std::optional<std::string> readCaptureStartQueueSubmitIndex(sqlite3* const dbHandle)
@@ -156,12 +161,12 @@ static bool runTest()
     }
 
     const auto test1 = createDatabase(getTestResourcesFolder() / "test1.gfxr");
-    if (!test1 || !runSimpleQuery(test1->getDB()))
+    if (!test1 || !runSimpleQuery(test1.get()))
     {
         std::cerr << "Simple query test failed\n";
         return false;
     }
-    if (readCaptureStartQueueSubmitIndex(test1->getDB()))
+    if (readCaptureStartQueueSubmitIndex(test1.get()))
     {
         std::cerr << "A file without the block got a capture start queue submit index\n";
         return false;
@@ -170,7 +175,7 @@ static bool runTest()
     const auto withIndexGfxr = writeGfxrWithQueueSubmitIndex(42);
     const auto withIndex = createDatabase(withIndexGfxr);
     std::filesystem::remove(withIndexGfxr);
-    if (!withIndex || readCaptureStartQueueSubmitIndex(withIndex->getDB()) != "42")
+    if (!withIndex || readCaptureStartQueueSubmitIndex(withIndex.get()) != "42")
     {
         std::cerr << "Capture start queue submit index was not stored\n";
         return false;
