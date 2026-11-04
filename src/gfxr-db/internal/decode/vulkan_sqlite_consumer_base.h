@@ -45,7 +45,6 @@ GFXRECON_BEGIN_NAMESPACE(args)
 // Hand-authored args structs for commands gfxreconstruct blacklists from its own Vulkan consumer
 // codegen (see external/gfxreconstruct's vulkan_generators/blacklists.json) but that gfxr-sqlite still
 // wants to track. They mirror the field lists codegen produced before each command was dropped upstream.
-
 struct BuildAccelerationStructuresKHR
 {
     VkResult result;
