@@ -4880,7 +4880,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateDescriptorSetLayout(
                 else if (flagsCount != 0)
                 {
                     // https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorSetLayoutBindingFlagsCreateInfo.html#VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-bindingCount-03002
-                    GFXRECON_LOG_WARNING(
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
                         "Unexpected bindingCount for flags (%" PRIu64 ") vs bindings (%" PRIu64
                         ") when creating descriptor set layout",
                         flagsCount,
@@ -6653,7 +6654,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
             if (entry.descriptorType == VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV)
             {
                 // TODO verify this and add reference link
-                GFXRECON_LOG_WARNING(
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
                     "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV with descriptor update templates is not supported by "
                     "GFXR; ignoring"
                 );
@@ -6664,7 +6666,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     // We should have read everything from the template.
     if (imageInfoCount != pData->GetImageInfoCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " image infos while template had %" PRIu64,
             imageInfoCount,
             pData->GetImageInfoCount()
@@ -6672,7 +6675,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     }
     if (bufferInfoCount != pData->GetBufferInfoCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " buffer infos while template had %" PRIu64,
             bufferInfoCount,
             pData->GetBufferInfoCount()
@@ -6680,7 +6684,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     }
     if (texelBufferViewCount != pData->GetTexelBufferViewCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " texel buffer views while template had %" PRIu64,
             texelBufferViewCount,
             pData->GetTexelBufferViewCount()
@@ -6688,7 +6693,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     }
     if (accelerationStructCount != pData->GetAccelerationStructureKHRCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " acceleration structures while template had %" PRIu64,
             accelerationStructCount,
             pData->GetAccelerationStructureKHRCount()
@@ -9621,7 +9627,8 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildGeometryInfo(
                 if (geometriesValid)
                 {
                     // The spec allows only one of the two, and storing both would write each idx twice.
-                    GFXRECON_LOG_WARNING(
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
                         "Acceleration structure build info %zu has both pGeometries and ppGeometries; ignoring "
                         "ppGeometries",
                         i
@@ -9658,7 +9665,8 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureGeometryPointers(
         const size_t innerCount = (geometries[j] != nullptr) ? ppGeometries->GetInnerLength(j) : 0;
         if (innerCount == 0)
         {
-            GFXRECON_LOG_WARNING(
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Acceleration structure build info %zu: ppGeometries[%zu] was not recorded; no geometry stored at "
                 "that index",
                 infoIndex,
@@ -9669,7 +9677,8 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureGeometryPointers(
         if (innerCount > 1)
         {
             // Each ppGeometries element points at exactly one geometry.
-            GFXRECON_LOG_WARNING(
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
                 "Acceleration structure build info %zu: ppGeometries[%zu] has %zu geometries; storing only the first",
                 infoIndex,
                 j,
