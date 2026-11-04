@@ -312,11 +312,36 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         return MetaStructArray<T>(true, (T*)decodedStruct, structPtr->GetLength());
     }
 
+    template <class T>
+    using MetaStructArray2DOuter = std::tuple<bool, T* const*, uint64_t>;
+
     // Helper for Array2D case (StructPointerDecoder<T*> where T is the decoded struct type)
-    // This version extracts a specific inner array by index from the 2D array structure
+    // This version validates the 2D array once and returns its outer array of pointers and the outer length, for
+    // callers that walk every outer element. Each outer element's inner length is structPtr->GetInnerLength(i), and
+    // a null element means the inner array was not recorded.
+    template <class T>
+    inline MetaStructArray2DOuter<T> GetMetaStructArray2DOuter(const gfxrecon::decode::StructPointerDecoder<T*>* structPtr)
+    {
+        if (!HasData(structPtr) || !structPtr->IsArray2D())
+        {
+            return std::make_tuple(false, (T* const*)nullptr, uint64_t(0));
+        }
+        // For Array2D, GetMetaStructPointer() returns T** (pointer to array of pointers).
+        auto decodedStruct = structPtr->GetMetaStructPointer();
+        if (!decodedStruct)
+        {
+            return std::make_tuple(false, (T* const*)nullptr, uint64_t(0));
+        }
+        return std::make_tuple(true, (T* const*)decodedStruct, uint64_t(structPtr->GetLength()));
+    }
+
+    // Helper for Array2D case (StructPointerDecoder<T*> where T is the decoded struct type)
+    // This version extracts the inner array of ONE outer element from the 2D array structure. outerIndex selects the
+    // outer element: for ppBuildRangeInfos that is the build info index, for ppGeometries it is the geometry index
+    // (the build info is already selected by the member's owner). The returned count is that element's inner length.
     template <class T>
     inline MetaStructArray<T> GetMetaStructArray2D(
-        const gfxrecon::decode::StructPointerDecoder<T*>* structPtr, size_t index
+        const gfxrecon::decode::StructPointerDecoder<T*>* structPtr, size_t outerIndex
     )
     {
         if (!HasData(structPtr))
@@ -333,10 +358,10 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
             return std::make_tuple(false, (const T*)nullptr, uint64_t(0));
         }
         // For Array2D, GetMetaStructPointer() returns T** (pointer to array of pointers).
-        // Extract the specific inner array at the given index.
-        if (index < structPtr->GetLength() && decodedStruct[index] != nullptr)
+        // Extract the specific inner array at the given outer index.
+        if (outerIndex < structPtr->GetLength() && decodedStruct[outerIndex] != nullptr)
         {
-            return std::make_tuple(true, decodedStruct[index], uint64_t(structPtr->GetInnerLength(index)));
+            return std::make_tuple(true, decodedStruct[outerIndex], uint64_t(structPtr->GetInnerLength(outerIndex)));
         }
         return std::make_tuple(false, (const T*)nullptr, uint64_t(0));
     }

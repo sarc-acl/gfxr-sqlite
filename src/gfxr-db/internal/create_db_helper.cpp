@@ -137,11 +137,16 @@ namespace gfxrSqlite
      *
      * Extension first, then a content sniff, because the profile folder names these .apidump while
      * the layer itself writes .json. DetectAPIs would reject either as a malformed gfxr, so the
-     * branch has to happen before it.
+     * branch has to happen before it. A .apidump.gz is a compressed api dump, which the reader detects
+     * by content, but the sniff below can't see through the compression, so it is named here.
      */
     bool isApiDumpFile(const std::string& filename)
     {
-        if (filename.size() >= 8 && filename.compare(filename.size() - 8, 8, ".apidump") == 0)
+        auto endsWith = [&filename](const std::string& suffix) {
+            return filename.size() >= suffix.size() &&
+                   filename.compare(filename.size() - suffix.size(), suffix.size(), suffix) == 0;
+        };
+        if (endsWith(".apidump") || endsWith(".apidump.gz"))
         {
             return true;
         }

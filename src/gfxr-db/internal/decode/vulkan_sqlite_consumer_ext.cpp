@@ -9604,22 +9604,67 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildGeometryInfo(
                 }
             }
 
-            // ppGeometries is an array of pointers to one geometry each, and this info is already
-            // selected, so the outer dimension counts geometries rather than build infos.
             if (HasData(info.ppGeometries))
             {
-                const size_t geometriesPCount = info.ppGeometries->GetLength();
-                for (size_t j = 0; j < geometriesPCount; ++j)
+                if (geometriesValid)
                 {
-                    auto [geometryPValid, geometryP, geometryPCount] = GetMetaStructArray2D(info.ppGeometries, j);
-                    if (geometryPValid && geometryPCount > 0)
-                    {
-                        ProcessVkAccelerationStructureGeometry(infoId, j, geometryP[0]);
-                    }
+                    // The spec allows only one of the two, and storing both would write each idx twice.
+                    GFXRECON_LOG_WARNING(
+                        "Acceleration structure build info %zu has both pGeometries and ppGeometries; ignoring "
+                        "ppGeometries",
+                        i
+                    );
+                }
+                else
+                {
+                    ProcessVkAccelerationStructureGeometryPointers(infoId, i, info.ppGeometries);
                 }
             }
             ProcessVkAccelerationStructureBuildRangeInfo(infoId, ppBuildRangeInfos, i);
         }
+    }
+}
+
+void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureGeometryPointers(
+    const int64_t infoId,
+    size_t infoIndex,
+    StructPointerDecoder<Decoded_VkAccelerationStructureGeometryKHR*>* ppGeometries
+)
+{
+    // ppGeometries is an array of pointers to one geometry each, and the build info is already selected, so
+    // the outer dimension counts geometries rather than build infos.
+    auto [geometriesValid, geometries, geometriesCount] = GetMetaStructArray2DOuter(ppGeometries);
+    if (!geometriesValid)
+    {
+        return;
+    }
+
+    for (size_t j = 0; j < geometriesCount; ++j)
+    {
+        // A geometry that was not recorded leaves a gap in idx rather than shifting the later ones down, so
+        // each stored geometry keeps its position in ppGeometries.
+        const size_t innerCount = (geometries[j] != nullptr) ? ppGeometries->GetInnerLength(j) : 0;
+        if (innerCount == 0)
+        {
+            GFXRECON_LOG_WARNING(
+                "Acceleration structure build info %zu: ppGeometries[%zu] was not recorded; no geometry stored at "
+                "that index",
+                infoIndex,
+                j
+            );
+            continue;
+        }
+        if (innerCount > 1)
+        {
+            // Each ppGeometries element points at exactly one geometry.
+            GFXRECON_LOG_WARNING(
+                "Acceleration structure build info %zu: ppGeometries[%zu] has %zu geometries; storing only the first",
+                infoIndex,
+                j,
+                innerCount
+            );
+        }
+        ProcessVkAccelerationStructureGeometry(infoId, j, geometries[j][0]);
     }
 }
 
