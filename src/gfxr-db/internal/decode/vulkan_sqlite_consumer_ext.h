@@ -1072,6 +1072,10 @@ class VulkanSqliteConsumerExt : public VulkanSqliteConsumer
         StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>* ppBuildRangeInfos
     );
 
+    void ProcessVkAccelerationStructureGeometry(
+        const int64_t infoId, size_t geometryIndex, const Decoded_VkAccelerationStructureGeometryKHR& geometry
+    );
+
     void ProcessVkAccelerationStructureBuildRangeInfo(
         const int64_t infoId,
         StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*>* ppRangeInfos,

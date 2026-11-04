@@ -9600,95 +9600,67 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildGeometryInfo(
             {
                 for (size_t j = 0; j < geometriesCount; ++j)
                 {
-                    auto& geometry = geometries[j];
-                    std::optional<int64_t> triangleDataId = std::nullopt;
-                    std::optional<int64_t> aabbDataId = std::nullopt;
-                    std::optional<int64_t> instanceDataId = std::nullopt;
-
-                    auto geometryType = geometry.decoded_value->geometryType;
-                    switch (geometryType)
-                    {
-                        case VK_GEOMETRY_TYPE_TRIANGLES_KHR:
-                        {
-                            triangleDataId = statements.InsertAccelerationStructureBuildTriangleData(
-                                geometry.decoded_value->geometry.triangles
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_AABBS_KHR:
-                        {
-                            aabbDataId = statements.InsertAccelerationStructureBuildAABBData(
-                                geometry.decoded_value->geometry.aabbs
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_INSTANCES_KHR:
-                        {
-                            instanceDataId = statements.InsertAccelerationStructureBuildInstanceData(
-                                geometry.decoded_value->geometry.instances
-                            );
-                            break;
-                        }
-                        default:
-                            // do nothing
-                            break;
-                    }
-
-                    auto geometryFlags = geometry.decoded_value->flags;
-                    statements.InsertAccelerationStructureBuildGeometry(
-                        infoId, j, geometryType, geometryFlags, triangleDataId, aabbDataId, instanceDataId
-                    );
+                    ProcessVkAccelerationStructureGeometry(infoId, j, geometries[j]);
                 }
             }
-            auto [geometriesPValid, geometriesP, geometriesPCount] = GetMetaStructArray2D(info.ppGeometries, i);
-            if (geometriesPValid)
+
+            // ppGeometries is an array of pointers to one geometry each, and this info is already
+            // selected, so the outer dimension counts geometries rather than build infos.
+            if (HasData(info.ppGeometries))
             {
+                const size_t geometriesPCount = info.ppGeometries->GetLength();
                 for (size_t j = 0; j < geometriesPCount; ++j)
                 {
-                    auto& geometry = geometriesP[j];
-                    std::optional<int64_t> triangleDataId = std::nullopt;
-                    std::optional<int64_t> aabbDataId = std::nullopt;
-                    std::optional<int64_t> instanceDataId = std::nullopt;
-                    // insert the triangle etc...
-
-                    auto geometryType = geometry.decoded_value->geometryType;
-                    switch (geometryType)
+                    auto [geometryPValid, geometryP, geometryPCount] = GetMetaStructArray2D(info.ppGeometries, j);
+                    if (geometryPValid && geometryPCount > 0)
                     {
-                        case VK_GEOMETRY_TYPE_TRIANGLES_KHR:
-                        {
-                            triangleDataId = statements.InsertAccelerationStructureBuildTriangleData(
-                                geometry.decoded_value->geometry.triangles
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_AABBS_KHR:
-                        {
-                            aabbDataId = statements.InsertAccelerationStructureBuildAABBData(
-                                geometry.decoded_value->geometry.aabbs
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_INSTANCES_KHR:
-                        {
-                            instanceDataId = statements.InsertAccelerationStructureBuildInstanceData(
-                                geometry.decoded_value->geometry.instances
-                            );
-                            break;
-                        }
-                        default:
-                            // do nothing
-                            break;
+                        ProcessVkAccelerationStructureGeometry(infoId, j, geometryP[0]);
                     }
-
-                    auto geometryFlags = geometry.decoded_value->flags;
-                    statements.InsertAccelerationStructureBuildGeometry(
-                        infoId, j, geometryType, geometryFlags, triangleDataId, aabbDataId, instanceDataId
-                    );
                 }
             }
             ProcessVkAccelerationStructureBuildRangeInfo(infoId, ppBuildRangeInfos, i);
         }
     }
+}
+
+void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureGeometry(
+    const int64_t infoId, size_t geometryIndex, const Decoded_VkAccelerationStructureGeometryKHR& geometry
+)
+{
+    std::optional<int64_t> triangleDataId = std::nullopt;
+    std::optional<int64_t> aabbDataId = std::nullopt;
+    std::optional<int64_t> instanceDataId = std::nullopt;
+
+    auto geometryType = geometry.decoded_value->geometryType;
+    switch (geometryType)
+    {
+        case VK_GEOMETRY_TYPE_TRIANGLES_KHR:
+        {
+            triangleDataId =
+                statements.InsertAccelerationStructureBuildTriangleData(geometry.decoded_value->geometry.triangles);
+            break;
+        }
+        case VK_GEOMETRY_TYPE_AABBS_KHR:
+        {
+            aabbDataId =
+                statements.InsertAccelerationStructureBuildAABBData(geometry.decoded_value->geometry.aabbs);
+            break;
+        }
+        case VK_GEOMETRY_TYPE_INSTANCES_KHR:
+        {
+            instanceDataId =
+                statements.InsertAccelerationStructureBuildInstanceData(geometry.decoded_value->geometry.instances);
+            break;
+        }
+        default:
+            // do nothing
+            break;
+    }
+
+    auto geometryFlags = geometry.decoded_value->flags;
+    statements.InsertAccelerationStructureBuildGeometry(
+        infoId, geometryIndex, geometryType, geometryFlags, triangleDataId, aabbDataId, instanceDataId
+    );
 }
 
 void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildRangeInfo(

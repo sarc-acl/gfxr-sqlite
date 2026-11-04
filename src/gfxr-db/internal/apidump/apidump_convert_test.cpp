@@ -368,6 +368,142 @@ void CheckDeviceFeaturePNext()
     Expect("exactly the enabled pNext features were recorded", actual == expected);
 }
 
+/** Checks the vertex data addresses, in geometry order, of the first build info whose geometry 0
+ * starts at firstAddress and which has geometryCount geometries. The addresses are printed in hex
+ * without a prefix. The subquery's ordering feeds group_concat, which sqlite honours in practice. */
+void ExpectVertexAddresses(
+    sqlite3* db, const char* what, int64_t firstAddress, int geometryCount, const std::string& expected
+)
+{
+    const std::string infoId =
+        "(select g0.accelerationStructureBuildGeometryInfoId from accelerationStructureBuildGeometries g0"
+        " join accelerationStructureBuildTriangleDatas t0 on t0.id = g0.triangleDataId"
+        " where g0.idx = 0 and t0.vertexDataAddress = " + std::to_string(firstAddress) +
+        " and (select count(*) from accelerationStructureBuildGeometries gc"
+        " where gc.accelerationStructureBuildGeometryInfoId = g0.accelerationStructureBuildGeometryInfoId) = " +
+        std::to_string(geometryCount) + " limit 1)";
+    const std::string sql =
+        "select group_concat(printf('%x', t.vertexDataAddress), ',') from ("
+        " select g.triangleDataId from accelerationStructureBuildGeometries g"
+        " where g.accelerationStructureBuildGeometryInfoId = " + infoId +
+        " order by g.idx) o join accelerationStructureBuildTriangleDatas t on t.id = o.triangleDataId";
+
+    const std::string actual = QueryText(db, sql.c_str());
+    Expect(what, actual == expected);
+    if (actual != expected)
+    {
+        std::printf("  info  expected %s, got %s\n", expected.c_str(), actual.c_str());
+    }
+}
+
+/** Converts the raytracing scene capture and checks every acceleration structure build geometry was stored.
+ *
+ * The capture holds 147 vkCmdBuildAccelerationStructuresKHR calls with 172 build infos. 18 of those
+ * infos pass their geometries through ppGeometries (2 or 3 each, the scene's test cases 22 to 25) and
+ * the rest through pGeometries. ppGeometries used to be indexed by build info rather than by
+ * geometry, so each ppGeometries info stored one geometry, and the wrong one.
+ *
+ * Range infos are deliberately not checked: the api dump records one range info per build info
+ * rather than one per geometry (sokatoa-internal#6698), so the dump has too few to match.
+ */
+void CheckRaytracingBuildGeometries()
+{
+    std::printf("converting the raytracing scene capture\n");
+
+    const auto database = std::filesystem::temp_directory_path() / "apidump_raytracing_test.sqlite3";
+    std::error_code ignored;
+    std::filesystem::remove(database, ignored);
+
+    std::filesystem::path fixture;
+    try
+    {
+        fixture = gfxrSqlite::getTestResourcesFolder() / "test_raytracing.apidump";
+    }
+    catch (const std::exception& e)
+    {
+        std::printf("  FAIL  %s\n", e.what());
+        ++g_failures;
+        return;
+    }
+
+    std::vector<std::string> errors;
+    gfxrSqlite::CreateDBHelper helper{ fixture.string(),
+                                       database.string(),
+                                       std::nullopt,
+                                       /*enforceForeignKeys=*/false,
+                                       [&errors](const std::string& error) { errors.push_back(error); } };
+    helper.createDatabase();
+
+    for (const auto& error : errors)
+    {
+        std::printf("  FAIL  conversion reported: %s\n", error.c_str());
+        ++g_failures;
+    }
+
+    sqlite3* db = helper.getDB();
+    Expect("raytracing: database was created", db != nullptr);
+    if (db == nullptr)
+    {
+        return;
+    }
+
+    Expect("every build info was recorded",
+           QueryScalar(db, "select count(*) from accelerationStructureBuildGeometryInfos") == 172);
+
+    // Build infos by how many geometries they stored. The capture has 103 single geometry infos, 54
+    // with two and 15 with three. Before the fix the 18 ppGeometries infos all landed in "1".
+    const std::string geometriesPerInfo = QueryText(
+        db,
+        "select group_concat(geometries || 'x' || infos, ',') from ("
+        " select geometries, count(*) as infos from ("
+        "  select i.id, count(g.idx) as geometries from accelerationStructureBuildGeometryInfos i"
+        "  left join accelerationStructureBuildGeometries g on g.accelerationStructureBuildGeometryInfoId = i.id"
+        "  group by i.id)"
+        " group by geometries order by geometries)"
+    );
+    Expect("every build info stored all of its geometries", geometriesPerInfo == "1x103,2x54,3x15");
+    if (geometriesPerInfo != "1x103,2x54,3x15")
+    {
+        std::printf("  info  geometries x build infos: %s\n", geometriesPerInfo.c_str());
+    }
+
+    Expect("geometry indices run from 0 with no gaps",
+           QueryScalar(db,
+                       "select count(*) from (select accelerationStructureBuildGeometryInfoId from"
+                       " accelerationStructureBuildGeometries group by accelerationStructureBuildGeometryInfoId"
+                       " having min(idx) != 0 or max(idx) != count(*) - 1)") == 0);
+
+    // The capture's geometries are 170 triangles and 86 instances (a TLAS build each), no AABBs.
+    // geometryType is 0 for triangles and 2 for instances.
+    const std::string geometryTypes = QueryText(
+        db,
+        "select group_concat(type || 'x' || geometries, ',') from ("
+        " select type, count(*) as geometries from accelerationStructureBuildGeometries"
+        " group by type order by type)"
+    );
+    Expect("geometry types were kept", geometryTypes == "0x170,2x86");
+    if (geometryTypes != "0x170,2x86")
+    {
+        std::printf("  info  geometry types x geometries: %s\n", geometryTypes.c_str());
+    }
+
+    // The stored order shows which pointer ended up at which index. Each sequence below is the
+    // vertex data addresses of one build info, picked out by its first address and geometry count.
+    //
+    // ppGeometries (test cases 24 and 25's build info 1): consecutive 36 byte triangles in one
+    // vertex buffer. Before the fix this stored only the second triangle.
+    ExpectVertexAddresses(db, "ppGeometries, 3 geometries", 0x306480000, 3, "306480000,306480024,306480048");
+
+    // pGeometries, from the other frames: the order must survive the move into the shared helper,
+    // including a build that points two geometries at the same vertex data and one that jumps
+    // between buffers.
+    ExpectVertexAddresses(db, "pGeometries, 2 geometries", 0x306280000, 2, "306280000,306280024");
+    ExpectVertexAddresses(db, "pGeometries, 3 geometries, repeated address", 0x306200000, 3,
+                          "306200000,306200000,306200024");
+    ExpectVertexAddresses(db, "pGeometries, 3 geometries, separate buffers", 0x306300000, 3,
+                          "306300000,304d80000,306300060");
+}
+
 } // namespace
 
 int main()
@@ -488,6 +624,7 @@ int main()
 
     CheckHandWrittenCommands();
     CheckDeviceFeaturePNext();
+    CheckRaytracingBuildGeometries();
 
     if (g_failures == 0)
     {
