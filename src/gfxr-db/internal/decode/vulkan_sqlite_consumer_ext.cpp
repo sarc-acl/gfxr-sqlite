@@ -965,6 +965,12 @@ void VulkanSqliteConsumerExt::Process_vkEnumeratePhysicalDevices(
     {
         auto physicalDevice = physicalDevices[i];
         auto physicalDeviceHandle = ToInt64(physicalDevice);
+        if (context.physicalDeviceHandleToId.find(physicalDeviceHandle) != context.physicalDeviceHandleToId.end())
+        {
+            // vkEnumeratePhysicalDevices can be called repeatedly (e.g. by validation layers) and returns the
+            // same handles each time, so only insert a physical device the first time its handle is seen
+            continue;
+        }
         statements.InsertPhysicalDevice(physicalDeviceHandle, instanceId, this->block_index_);
     }
 }
@@ -7528,31 +7534,37 @@ void VulkanSqliteConsumerExt::GetDisplay(
     VkResult returnValue, format::HandleId physicalDevice, HandlePointerDecoder<VkDisplayKHR>* pDisplay
 )
 {
-    auto [displayValid, display] = GetHandle(pDisplay);
-    if (!display)
+    if (returnValue != VK_SUCCESS)
     {
-        if (returnValue == VK_SUCCESS)
-        {
-            GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create display, invalid pDisplay handle");
-        }
+        return;
+    }
+
+    auto [displayValid, display] = GetHandle(pDisplay);
+    if (!displayValid)
+    {
+        GFXRECON_SQLITE_LOG_WARNING_AT(this->block_index_, "Failed to create display, invalid pDisplay handle");
         return;
     }
 
     auto physicalDeviceIter = context.physicalDeviceHandleToId.find(ToInt64(physicalDevice));
     if (physicalDeviceIter == context.physicalDeviceHandleToId.end())
     {
-        if (returnValue == VK_SUCCESS)
-        {
-            GFXRECON_SQLITE_LOG_WARNING_AT(
-                this->block_index_,
-                "Failed to create display, failed to find physical device with handle %" PRIu64,
-                physicalDevice
-            );
-        }
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
+            "Failed to create display, failed to find physical device with handle %" PRIu64,
+            physicalDevice
+        );
         return;
     }
 
     auto displayHandle = ToInt64(display);
+    if (context.displayHandleToId.contains(displayHandle))
+    {
+        // The display was already acquired and not yet released (vkReleaseDisplayEXT erases the handle), and
+        // repeated get calls for the same output return the same handle; we don't need to record it a second time.
+        return;
+    }
+
     statements.InsertDisplay(displayHandle, physicalDeviceIter->second, this->block_index_);
 }
 
@@ -7589,46 +7601,45 @@ void VulkanSqliteConsumerExt::Process_vkCreateDisplayModeKHR(
     // generate the base apiEvents database entries
     VulkanSqliteConsumer::Process_vkCreateDisplayModeKHR(callInfo, args);
 
+    // Creating a display mode that already exists fails, so a non-success result never adds a new mode
+    if (args.result != VK_SUCCESS)
+    {
+        return;
+    }
+
     auto [modeValid, mode] = GetHandle(&args.pMode);
     if (!modeValid)
     {
-        if (args.result == VK_SUCCESS)
-        {
-            LOG_CMD_WARNING("Failed to create display mode, invalid pMode handle");
-        }
+        LOG_CMD_WARNING("Failed to create display mode, invalid pMode handle");
+        return;
+    }
+
+    if (context.displayModeHandleToId.contains(ToInt64(mode)))
+    {
+        // failsafe: the mode was already recorded, we don't need to record it a second time.
         return;
     }
 
     auto physicalDeviceIter = context.physicalDeviceHandleToId.find(ToInt64(args.physicalDevice));
     if (physicalDeviceIter == context.physicalDeviceHandleToId.end())
     {
-        if (args.result == VK_SUCCESS)
-        {
-            LOG_CMD_WARNING(
-                "Failed to create display mode, failed to find physical device with handle %" PRIu64,
-                args.physicalDevice
-            );
-        }
+        LOG_CMD_WARNING(
+            "Failed to create display mode, failed to find physical device with handle %" PRIu64, args.physicalDevice
+        );
         return;
     }
 
     auto displayIter = context.displayHandleToId.find(ToInt64(args.display));
     if (displayIter == context.displayHandleToId.end())
     {
-        if (args.result == VK_SUCCESS)
-        {
-            LOG_CMD_WARNING("Failed to create display mode,failed to find display with handle %" PRIu64, args.display);
-        }
+        LOG_CMD_WARNING("Failed to create display mode,failed to find display with handle %" PRIu64, args.display);
         return;
     }
 
     auto [createInfoValid, createInfo] = GetMetaStructPointer(&args.pCreateInfo);
     if (!createInfoValid)
     {
-        if (args.result == VK_SUCCESS)
-        {
-            LOG_CMD_WARNING("Failed to create display mode, invalid pCreateInfo");
-        }
+        LOG_CMD_WARNING("Failed to create display mode, invalid pCreateInfo");
         return;
     }
 
@@ -7660,7 +7671,8 @@ void VulkanSqliteConsumerExt::Process_vkReleaseDisplayEXT(const ApiCallInfo& cal
     // Deliberately does not cascade to displayModes: those remain valid Vulkan objects
     // after a release (they'd only be closed if the display's instance is destroyed -
     // see ReleasePhysicalDeviceDependents).
-    if (auto id = context.GetDisplayId(args.display))
+    // erases the handle so that a later get of the same display is recorded as a new acquisition
+    if (auto id = context.ExtractId(args.display, context.displayHandleToId, "display", this->block_index_))
     {
         statements.DestroyObject(statements.releaseDisplayUpdateStatement, this->block_index_, *id);
     }
