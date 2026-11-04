@@ -368,6 +368,335 @@ void CheckDeviceFeaturePNext()
     Expect("exactly the enabled pNext features were recorded", actual == expected);
 }
 
+/** Checks how many acceleration structure build infos stored exactly the given geometries, in
+ * geometry order. column is what to read from each geometry (joined to its triangle data as t), such
+ * as the vertex data address printed in hex without a prefix, and expected is those values joined by
+ * commas. Counting every matching info rather than picking one keeps the check independent of row
+ * order, and shows when repeats of the same build stored different things. */
+void ExpectGeometryInfos(
+    sqlite3* db, const char* what, const char* column, const std::string& expected, int64_t expectedInfos
+)
+{
+    const std::string sql =
+        std::string("select count(*) from (select group_concat(") + column +
+        ", ',' order by g.idx) as geometries from accelerationStructureBuildGeometries g"
+        " join accelerationStructureBuildTriangleDatas t on t.id = g.triangleDataId"
+        " group by g.accelerationStructureBuildGeometryInfoId) where geometries = '" + expected + "'";
+
+    const int64_t actual = QueryScalar(db, sql.c_str());
+    Expect(what, actual == expectedInfos);
+    if (actual != expectedInfos)
+    {
+        std::printf("  info  %s: expected %lld build infos, got %lld\n",
+                    expected.c_str(),
+                    static_cast<long long>(expectedInfos),
+                    static_cast<long long>(actual));
+    }
+}
+
+/** ExpectGeometryInfos on the vertex data addresses. */
+void ExpectVertexAddresses(sqlite3* db, const char* what, const std::string& expected, int64_t expectedInfos)
+{
+    ExpectGeometryInfos(db, what, "printf('%x', t.vertexDataAddress)", expected, expectedInfos);
+}
+
+/** Converts the raytracing scene capture and checks every acceleration structure build geometry was stored.
+ *
+ * The capture holds 147 vkCmdBuildAccelerationStructuresKHR calls with 172 build infos. 18 of those
+ * infos pass their geometries through ppGeometries (2 or 3 each, the scene's test cases 22 to 25) and
+ * the rest through pGeometries. ppGeometries used to be indexed by build info rather than by
+ * geometry, so each ppGeometries info stored one geometry, and the wrong one.
+ *
+ * Range infos are deliberately not checked: the api dump records one range info per build info
+ * rather than one per geometry (sokatoa-internal#6698), so the dump has too few to match.
+ */
+void CheckRaytracingBuildGeometries()
+{
+    std::printf("converting the raytracing scene capture\n");
+
+    const auto database = std::filesystem::temp_directory_path() / "apidump_raytracing_test.sqlite3";
+    std::error_code ignored;
+    std::filesystem::remove(database, ignored);
+
+    std::filesystem::path fixture;
+    try
+    {
+        fixture = gfxrSqlite::getTestResourcesFolder() / "test_raytracing.apidump.gz";
+    }
+    catch (const std::exception& e)
+    {
+        std::printf("  FAIL  %s\n", e.what());
+        ++g_failures;
+        return;
+    }
+
+    std::vector<std::string> errors;
+    gfxrSqlite::CreateDBHelper helper{ fixture.string(),
+                                       database.string(),
+                                       std::nullopt,
+                                       /*enforceForeignKeys=*/false,
+                                       [&errors](const std::string& error) { errors.push_back(error); } };
+    helper.createDatabase();
+
+    for (const auto& error : errors)
+    {
+        std::printf("  FAIL  conversion reported: %s\n", error.c_str());
+        ++g_failures;
+    }
+
+    sqlite3* db = helper.getDB();
+    Expect("raytracing: database was created", db != nullptr);
+    if (db == nullptr)
+    {
+        return;
+    }
+
+    Expect("every build info was recorded",
+           QueryScalar(db, "select count(*) from accelerationStructureBuildGeometryInfos") == 172);
+
+    // Build infos by how many geometries they stored. The capture has 103 single geometry infos, 54
+    // with two and 15 with three. Before the fix the 18 ppGeometries infos all landed in "1".
+    const std::string geometriesPerInfo = QueryText(
+        db,
+        "select group_concat(geometries || 'x' || infos, ',') from ("
+        " select geometries, count(*) as infos from ("
+        "  select i.id, count(g.idx) as geometries from accelerationStructureBuildGeometryInfos i"
+        "  left join accelerationStructureBuildGeometries g on g.accelerationStructureBuildGeometryInfoId = i.id"
+        "  group by i.id)"
+        " group by geometries order by geometries)"
+    );
+    Expect("every build info stored all of its geometries", geometriesPerInfo == "1x103,2x54,3x15");
+    if (geometriesPerInfo != "1x103,2x54,3x15")
+    {
+        std::printf("  info  geometries x build infos: %s\n", geometriesPerInfo.c_str());
+    }
+
+    Expect("geometry indices run from 0 with no gaps",
+           QueryScalar(db,
+                       "select count(*) from (select accelerationStructureBuildGeometryInfoId from"
+                       " accelerationStructureBuildGeometries group by accelerationStructureBuildGeometryInfoId"
+                       " having min(idx) != 0 or max(idx) != count(*) - 1)") == 0);
+
+    // The capture's geometries are 170 triangles and 86 instances (a TLAS build each), no AABBs.
+    // geometryType is 0 for triangles and 2 for instances.
+    const std::string geometryTypes = QueryText(
+        db,
+        "select group_concat(type || 'x' || geometries, ',') from ("
+        " select type, count(*) as geometries from accelerationStructureBuildGeometries"
+        " group by type order by type)"
+    );
+    Expect("geometry types were kept", geometryTypes == "0x170,2x86");
+    if (geometryTypes != "0x170,2x86")
+    {
+        std::printf("  info  geometry types x geometries: %s\n", geometryTypes.c_str());
+    }
+
+    // The stored order shows which pointer ended up at which index. Each sequence below is the
+    // vertex data addresses of one build info, and the count is how many build infos in the capture
+    // stored exactly that sequence (the scene's 24 frame cycle repeats three times).
+    //
+    // ppGeometries (test cases 22 to 25) point at consecutive 36 byte triangles in one vertex buffer.
+    // Before the fix this stored only one triangle per build info, and for the 3 geometry build info
+    // it was the second triangle.
+    ExpectVertexAddresses(db, "ppGeometries, 3 geometries", "306480000,306480024,306480048", 6);
+
+    // The 2 geometry sequence is shared with pGeometries builds: 12 ppGeometries and 36 pGeometries.
+    ExpectVertexAddresses(db, "ppGeometries and pGeometries, 2 geometries", "306200000,306200024", 48);
+
+    // pGeometries, from the other frames: the order must survive the move into the shared helper,
+    // including a build that points two geometries at the same vertex data and one that jumps
+    // between buffers.
+    ExpectVertexAddresses(db, "pGeometries, 2 geometries", "306280000,306280024", 6);
+    ExpectVertexAddresses(db, "pGeometries, 3 geometries, repeated address", "306200000,306200000,306200024", 6);
+    ExpectVertexAddresses(db, "pGeometries, 3 geometries, separate buffers", "306300000,304d80000,306300060", 3);
+}
+
+/** The members of one triangles geometry as the layer writes them. */
+std::string TriangleGeometryMembers(const char* vertexAddress)
+{
+    auto addressUnion = [](const char* name, const std::string& deviceAddress, const char* hostAddress) {
+        return std::string("{\"type\":\"VkDeviceOrHostAddressConstKHR (Union)\",\"name\":\"") + name + "\",\"members\":[" +
+               Value("VkDeviceAddress", "deviceAddress", deviceAddress.c_str()) + "," +
+               Address("const void*", "hostAddress", hostAddress) + "]}";
+    };
+
+    const std::string triangles =
+        "{\"type\":\"VkAccelerationStructureGeometryTrianglesDataKHR\",\"name\":\"triangles\",\"members\":[" +
+        Value("VkStructureType", "sType", "1000150005") + "," + Address("const void*", "pNext", "address") + "," +
+        Value("VkFormat", "vertexFormat", "106") + "," + addressUnion("vertexData", vertexAddress, "address") + "," +
+        Value("VkDeviceSize", "vertexStride", "12") + "," + Value("uint32_t", "maxVertex", "2") + "," +
+        Value("VkIndexType", "indexType", "1000165000") + "," + addressUnion("indexData", "0x0", "address") + "," +
+        addressUnion("transformData", "0x0", "address") + "]}";
+
+    const std::string aabbs =
+        "{\"type\":\"VkAccelerationStructureGeometryAabbsDataKHR\",\"name\":\"aabbs\",\"members\":[" +
+        Value("VkStructureType", "sType", "1000150005") + "," + Address("const void*", "pNext", "address") + "," +
+        addressUnion("data", "0x0", "address") + "," + Value("VkDeviceSize", "stride", "0") + "]}";
+
+    const std::string instances =
+        "{\"type\":\"VkAccelerationStructureGeometryInstancesDataKHR\",\"name\":\"instances\",\"members\":[" +
+        Value("VkStructureType", "sType", "1000150005") + "," + Address("const void*", "pNext", "address") + "," +
+        Value("VkBool32", "arrayOfPointers", "0") + "," + addressUnion("data", "0x0", "address") + "]}";
+
+    return "\"members\":[" + Value("VkStructureType", "sType", "1000150006") + "," +
+           Address("const void*", "pNext", "address") + "," + Value("VkGeometryTypeKHR", "geometryType", "0") +
+           ",{\"type\":\"VkAccelerationStructureGeometryDataKHR (Union)\",\"name\":\"geometry\",\"members\":[" + triangles +
+           "," + aabbs + "," + instances + "]}," + Value("VkGeometryFlagsKHR", "flags", "1") + "]";
+}
+
+/** One element of a geometry array: a triangles geometry the layer followed. */
+std::string GeometryElement(const char* type, const char* name, const char* vertexAddress)
+{
+    return std::string("{\"type\":\"") + type + "\",\"name\":\"" + name + "\",\"address\":\"0x9000\"," +
+           TriangleGeometryMembers(vertexAddress) + "}";
+}
+
+/** A ppGeometries element the layer did not follow, which is how a null pointer is written. */
+std::string UnrecordedGeometryElement(const char* name)
+{
+    return Address("const VkAccelerationStructureGeometryKHR*", name, "address");
+}
+
+/** A VkAccelerationStructureBuildGeometryInfoKHR with the given pGeometries and ppGeometries nodes. */
+std::string BuildInfoElement(
+    const char* name, int geometryCount, const std::string& geometries, const std::string& pointerGeometries
+)
+{
+    return std::string("{\"type\":\"const VkAccelerationStructureBuildGeometryInfoKHR\",\"name\":\"") + name +
+           "\",\"address\":\"0x8000\",\"members\":[" + Value("VkStructureType", "sType", "1000150000") + "," +
+           Address("const void*", "pNext", "address") + "," + Value("VkAccelerationStructureTypeKHR", "type", "1") + "," +
+           Value("VkBuildAccelerationStructureFlagsKHR", "flags", "4") + "," +
+           Value("VkBuildAccelerationStructureModeKHR", "mode", "0") + "," +
+           Value("VkAccelerationStructureKHR", "srcAccelerationStructure", "0x0") + "," +
+           Value("VkAccelerationStructureKHR", "dstAccelerationStructure", "0x70") + "," +
+           Value("uint32_t", "geometryCount", std::to_string(geometryCount).c_str()) + "," + geometries + "," +
+           pointerGeometries +
+           ",{\"type\":\"VkDeviceOrHostAddressKHR (Union)\",\"name\":\"scratchData\",\"members\":[" +
+           Value("VkDeviceAddress", "deviceAddress", "0x5000") + "," + Address("void*", "hostAddress", "address") + "]}]}";
+}
+
+/** A vkCmdBuildAccelerationStructuresKHR with two build infos holding the invalid geometry arrays
+ * CheckPointerGeometryEdgeCases describes: the first sets both pGeometries (0x1000, 0x1024) and
+ * ppGeometries (0x2000, 0x2024), and the second has a ppGeometries whose middle element was not
+ * recorded (0x3000, none, 0x3048).
+ */
+std::string PointerGeometryEdgeCasesDump()
+{
+    const char* const geometryType        = "const VkAccelerationStructureGeometryKHR";
+    const char* const geometryPointerType = "const VkAccelerationStructureGeometryKHR*";
+
+    const std::string both = BuildInfoElement(
+        "[0]",
+        2,
+        std::string("{\"type\":\"const VkAccelerationStructureGeometryKHR*\",\"name\":\"pGeometries\",\"address\":\"0x9000\","
+                    "\"elements\":[") +
+            GeometryElement(geometryType, "[0]", "0x1000") + "," + GeometryElement(geometryType, "[1]", "0x1024") + "]}",
+        std::string("{\"type\":\"const VkAccelerationStructureGeometryKHR* const*\",\"name\":\"ppGeometries\","
+                    "\"address\":\"0x9100\",\"elements\":[") +
+            GeometryElement(geometryPointerType, "[0]", "0x2000") + "," +
+            GeometryElement(geometryPointerType, "[1]", "0x2024") + "]}"
+    );
+
+    const std::string gap = BuildInfoElement(
+        "[1]",
+        3,
+        Address("const VkAccelerationStructureGeometryKHR*", "pGeometries", "address"),
+        std::string("{\"type\":\"const VkAccelerationStructureGeometryKHR* const*\",\"name\":\"ppGeometries\","
+                    "\"address\":\"0x9200\",\"elements\":[") +
+            GeometryElement(geometryPointerType, "[0]", "0x3000") + "," + UnrecordedGeometryElement("[1]") + "," +
+            GeometryElement(geometryPointerType, "[2]", "0x3048") + "]}"
+    );
+
+    auto rangeInfo = [](const char* name) {
+        return std::string("{\"type\":\"const VkAccelerationStructureBuildRangeInfoKHR*\",\"name\":\"") + name +
+               "\",\"address\":\"0x9300\",\"members\":[" + Value("uint32_t", "primitiveCount", "1") + "," +
+               Value("uint32_t", "primitiveOffset", "0") + "," + Value("uint32_t", "firstVertex", "0") + "," +
+               Value("uint32_t", "transformOffset", "0") + "]}";
+    };
+
+    const std::string build = Call(
+        "vkCmdBuildAccelerationStructuresKHR",
+        Value("VkCommandBuffer", "commandBuffer", "0x10") + "," + Value("uint32_t", "infoCount", "2") +
+            ",{\"type\":\"const VkAccelerationStructureBuildGeometryInfoKHR*\",\"name\":\"pInfos\",\"address\":\"0x8000\","
+            "\"elements\":[" + both + "," + gap + "]}" +
+            ",{\"type\":\"const VkAccelerationStructureBuildRangeInfoKHR* const*\",\"name\":\"ppBuildRangeInfos\","
+            "\"address\":\"0x9400\",\"elements\":[" + rangeInfo("[0]") + "," + rangeInfo("[1]") + "]}"
+    );
+
+    // The build infos' destination, which the build info table requires.
+    const std::string createInfo =
+        "{\"type\":\"const VkAccelerationStructureCreateInfoKHR*\",\"name\":\"pCreateInfo\",\"address\":\"0x7000\","
+        "\"members\":[" + Value("VkStructureType", "sType", "1000150017") + "," +
+        Address("const void*", "pNext", "address") + "," +
+        Value("VkAccelerationStructureCreateFlagsKHR", "createFlags", "0") + "," + Value("VkBuffer", "buffer", "0x20") +
+        "," + Value("VkDeviceSize", "offset", "0") + "," + Value("VkDeviceSize", "size", "400") + "," +
+        Value("VkAccelerationStructureTypeKHR", "type", "1") + "," + Value("VkDeviceAddress", "deviceAddress", "0x0") +
+        "]}";
+    const std::string create = Call(
+        "vkCreateAccelerationStructureKHR",
+        Value("VkDevice", "device", "0x10") + "," + createInfo + "," +
+            Address("const VkAllocationCallbacks*", "pAllocator", "address") +
+            ",{\"type\":\"VkAccelerationStructureKHR*\",\"name\":\"pAccelerationStructure\",\"address\":\"0x7100\","
+            "\"value\":\"0x70\"}",
+        "VK_SUCCESS"
+    );
+
+    return "[{\"frameNumber\":\"0\",\"apiCalls\":[" + create + "," + build + "]}]";
+}
+
+/** Converts PointerGeometryEdgeCasesDump and checks what the consumer stores for invalid geometry arrays.
+ *
+ * Neither case is valid Vulkan, but a capture of a broken app, or a synthetic one, can hold them, and
+ * they must not corrupt the build info: storing both arrays wrote every idx twice, and a geometry that
+ * was not recorded must leave a gap rather than shift the later geometries down.
+ */
+void CheckPointerGeometryEdgeCases()
+{
+    std::printf("converting a build with invalid pGeometries and ppGeometries\n");
+
+    const auto dump     = std::filesystem::temp_directory_path() / "apidump_pointer_geometries_test.apidump";
+    const auto database = std::filesystem::temp_directory_path() / "apidump_pointer_geometries_test.sqlite3";
+    std::error_code ignored;
+    std::filesystem::remove(database, ignored);
+
+    {
+        std::ofstream out(dump, std::ios::binary | std::ios::trunc);
+        out << PointerGeometryEdgeCasesDump();
+    }
+
+    std::vector<std::string> errors;
+    gfxrSqlite::CreateDBHelper helper{ dump.string(),
+                                       database.string(),
+                                       std::nullopt,
+                                       /*enforceForeignKeys=*/false,
+                                       [&errors](const std::string& error) { errors.push_back(error); } };
+    helper.createDatabase();
+
+    for (const auto& error : errors)
+    {
+        std::printf("  FAIL  conversion reported: %s\n", error.c_str());
+        ++g_failures;
+    }
+
+    sqlite3* db = helper.getDB();
+    Expect("pointer geometries: database was created", db != nullptr);
+    if (db == nullptr)
+    {
+        return;
+    }
+
+    Expect("both build infos were recorded",
+           QueryScalar(db, "select count(*) from accelerationStructureBuildGeometryInfos") == 2);
+
+    // pGeometries wins when both are set, and ppGeometries is ignored rather than stored a second time.
+    ExpectVertexAddresses(db, "both set: only pGeometries was stored", "1000,1024", 1);
+    ExpectVertexAddresses(db, "both set: ppGeometries was ignored", "2000,2024", 0);
+
+    // The geometry that was not recorded leaves idx 1 empty and the others where they were.
+    ExpectGeometryInfos(db, "unrecorded geometry: the others kept their idx", "g.idx", "0,2", 1);
+    ExpectVertexAddresses(db, "unrecorded geometry: the others kept their data", "3000,3048", 1);
+}
+
 } // namespace
 
 int main()
@@ -488,6 +817,8 @@ int main()
 
     CheckHandWrittenCommands();
     CheckDeviceFeaturePNext();
+    CheckRaytracingBuildGeometries();
+    CheckPointerGeometryEdgeCases();
 
     if (g_failures == 0)
     {
