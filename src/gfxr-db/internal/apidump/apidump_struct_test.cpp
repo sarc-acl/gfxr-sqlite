@@ -786,6 +786,71 @@ void TestBuildRangeInfos2DMixedShapes()
     }
 }
 
+/** A vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos exactly as the sarc-acl VulkanTools api_dump layer
+ * (v1.4.363.3) recorded it on an Android device: two pInfos, whose geometryCounts of 2 and 3 give the two
+ * elements different inner lengths. The values the application passed are all the same, so it is the
+ * inner lengths and the buffer being consumed exactly that pin down the alignment here. */
+void TestBuildRangeInfos2DRecorded()
+{
+    std::printf("vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos, as recorded on a device\n");
+
+    const std::string json =
+        std::string(R"JSON({
+        "type": "const VkAccelerationStructureBuildRangeInfoKHR* const*", "name": "ppBuildRangeInfos",
+        "address": "0xb400006e4985bc50",
+        "elements": [
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[0]", "address": "0xb400006e898a43a0",
+              "elements": [ )JSON") +
+        RangeInfoJson(0, "0xb400006e898a43a0", 1, 0, 0, 0) + ",\n" + RangeInfoJson(1, "0xb400006e898a43b0", 1, 0, 0, 0) +
+        R"JSON( ] },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[1]", "address": "0xb400006e099052d0",
+              "elements": [ )JSON" +
+        RangeInfoJson(0, "0xb400006e099052d0", 1, 0, 0, 0) + ",\n" + RangeInfoJson(1, "0xb400006e099052e0", 1, 0, 0, 0) +
+        ",\n" + RangeInfoJson(2, "0xb400006e099052f0", 1, 0, 0, 0) +
+        R"JSON( ] }
+        ]
+    })JSON";
+
+    const nlohmann::json parsed = nlohmann::json::parse(json);
+    ApiDumpEncoder       encoder;
+    ApiDumpHandleMap     handles;
+    ApiDumpContext       ctx(encoder, handles);
+    // The length hint is the call's infoCount, as the generated dispatch passes it.
+    StructArray2DFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ctx, ApiDumpNode(&parsed), 2);
+
+    DecoderAllocGuard<true>                                                 guard;
+    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*> decoder;
+    const size_t bytes_read = decoder.Decode(encoder.GetData(), encoder.GetDataSize());
+
+    Expect("buffer consumed exactly", bytes_read == encoder.GetDataSize());
+    Expect("outer length is infoCount", decoder.GetLength() == 2);
+
+    VkAccelerationStructureBuildRangeInfoKHR** ranges = decoder.GetPointer();
+    Expect("decoded", ranges != nullptr);
+    if ((ranges != nullptr) && (decoder.GetLength() == 2))
+    {
+        Expect("[0] holds geometryCount 2", decoder.GetInnerLength(0) == 2);
+        Expect("[1] holds geometryCount 3", decoder.GetInnerLength(1) == 3);
+
+        if ((ranges[0] != nullptr) && (ranges[1] != nullptr) && (decoder.GetInnerLength(0) == 2) &&
+            (decoder.GetInnerLength(1) == 3))
+        {
+            for (size_t j = 0; j < 2; ++j)
+            {
+                ExpectRangeInfo("[0][j]", ranges[0][j], 1, 0, 0, 0);
+            }
+            for (size_t j = 0; j < 3; ++j)
+            {
+                ExpectRangeInfo("[1][j]", ranges[1][j], 1, 0, 0, 0);
+            }
+        }
+        else
+        {
+            Expect("every element decoded", false);
+        }
+    }
+}
+
 /** vkCmdBuildAccelerationStructuresIndirectKHR ppMaxPrimitiveCounts, an array of pointers to uint32_t
  * arrays, which PointerDecoder<T*> asserts as kIsArray2D just as StructPointerDecoder<T*> does for
  * struct arrays. Covers each shape an element can take: a single value, an expanded array, and null. */
@@ -845,6 +910,7 @@ int main()
     TestBuildRangeInfos2D();
     TestBuildRangeInfos2DArrays();
     TestBuildRangeInfos2DMixedShapes();
+    TestBuildRangeInfos2DRecorded();
     TestMaxPrimitiveCounts2D();
 
     if (g_failures == 0)
