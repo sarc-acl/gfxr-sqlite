@@ -82,53 +82,30 @@ void StructArrayFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value, size_
     }
 }
 
-/** How the layer wrote one element of an array of struct pointers (the outer array of a T* const*). */
-enum class ApiDumpStructPointerShape
-{
-    /** Null, or a pointer the layer did not follow: no structs were recorded. */
-    kNotFollowed,
-    /** A pointer to one struct, written as `{ address, "members": [...] }`. Every element of an array of
-     * struct pointers was written this way by older layers, which dumped only the first struct each
-     * pointer refers to. */
-    kSingleStruct,
-    /** A pointer to an array of structs, written as `{ address, "elements": [ { "members": [...] }, ... ] }`.
-     * Newer layers write this for the parameters whose inner arrays have a length of their own
-     * (vkCmdBuildAccelerationStructuresKHR and vkBuildAccelerationStructuresKHR ppBuildRangeInfos, whose
-     * ppBuildRangeInfos[i] holds pInfos[i].geometryCount entries). */
-    kStructArray,
-};
-
-/** Tells which of the two schemas the layer used for one element of an array of struct pointers, from
- * the JSON object itself rather than from the parameter, so captures from both an older and a newer
- * layer decode. "elements" is checked first: it is only ever written for the newer shape, and an
- * element carrying both is read as the larger one rather than silently dropping structs. */
-inline ApiDumpStructPointerShape ClassifyStructPointer(const ApiDumpNode& inner)
-{
-    if (inner.HasElements())
-    {
-        return ApiDumpStructPointerShape::kStructArray;
-    }
-
-    if (inner.HasMembers())
-    {
-        return ApiDumpStructPointerShape::kSingleStruct;
-    }
-
-    return ApiDumpStructPointerShape::kNotFollowed;
-}
-
 /** Mirrors gfxreconstruct's EncodeStructArray2D, for an array of pointers to structs such as
  * VkAccelerationStructureBuildGeometryInfoKHR ppGeometries or vkCmdBuildAccelerationStructuresKHR
  * ppBuildRangeInfos. StructPointerDecoder<T*> asserts the kIsArray2D attribute, so these must not be
  * encoded as a plain struct array.
  *
- * Each element is read according to ClassifyStructPointer, so both schemas the layer has written are
- * accepted: a single struct (older layers, and parameters whose inner arrays hold exactly one struct,
- * such as ppGeometries and ppUsageCounts) and an array of structs (newer layers, for ppBuildRangeInfos).
+ * The layer has written each element, a pointer, in one of two shapes, told apart by which field the
+ * element object carries:
+ *  - "elements": the array the pointer refers to, one object per struct. Newer layers write this for
+ *    ppBuildRangeInfos, whose ppBuildRangeInfos[i] holds pInfos[i].geometryCount range infos.
+ *  - "members": the one struct the pointer refers to. Older layers wrote this for every element, so
+ *    only the first range info of each was recorded, and parameters whose inner arrays hold exactly one
+ *    struct (ppGeometries, ppUsageCounts) still do.
+ * "elements" always wins: an element carrying both is read as the array, and its "members" is ignored.
+ * A layer never writes both.
+ *
  * The layer never writes the inner count the registry declares (a range info array holds
  * pInfos[i].geometryCount entries), so each inner array is encoded with the number of structs actually
  * recorded: StructPointerDecoder<T*> reads an inner array's count and then exactly that many structs,
- * whatever kHasData says, and must never be told of more than are written.
+ * and must never be told of more than are written.
+ *
+ * A non-null pointer with nothing recorded behind it, such as ppBuildRangeInfos[i] when
+ * pInfos[i].geometryCount is 0, is encoded as an empty array. gfxreconstruct encodes the same call with
+ * kHasData set where this leaves it clear, but StructPointerDecoder<T*> only reads an inner element's
+ * kIsNull, so both decode as a count of zero and produce the same rows.
  */
 template <typename T>
 void StructArray2DFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value, size_t length_hint = 0)
@@ -150,31 +127,24 @@ void StructArray2DFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value, siz
         // Absent, and so a null pointer, past the elements the layer recorded.
         const ApiDumpNode inner = value.ElementAt(i);
 
-        switch (ClassifyStructPointer(inner))
+        if (inner.HasElements())
         {
-            case ApiDumpStructPointerShape::kStructArray:
+            const size_t inner_count = inner.ElementCount();
+            ctx.Encoder().EncodeStructArrayPreamble(inner_count, inner.Address(), false, true);
+            for (size_t j = 0; j < inner_count; ++j)
             {
-                const size_t inner_count = inner.ElementCount();
-                ctx.Encoder().EncodeStructArrayPreamble(inner_count, inner.Address(), false, true);
-                for (size_t j = 0; j < inner_count; ++j)
-                {
-                    StructFromApiDump<T>(ctx, inner.ElementAt(j));
-                }
-                break;
+                StructFromApiDump<T>(ctx, inner.ElementAt(j));
             }
-            case ApiDumpStructPointerShape::kSingleStruct:
-            {
-                ctx.Encoder().EncodeStructArrayPreamble(1, inner.Address(), false, true);
-                StructFromApiDump<T>(ctx, inner);
-                break;
-            }
-            case ApiDumpStructPointerShape::kNotFollowed:
-            default:
-            {
-                // Null, or a pointer the layer did not follow: no structs, so a count of zero.
-                ctx.Encoder().EncodeStructArrayPreamble(0, inner.Address(), inner.IsNullPointer(), false);
-                break;
-            }
+        }
+        else if (inner.HasMembers())
+        {
+            ctx.Encoder().EncodeStructArrayPreamble(1, inner.Address(), false, true);
+            StructFromApiDump<T>(ctx, inner);
+        }
+        else
+        {
+            // Null, or a pointer the layer did not follow: no structs, so a count of zero.
+            ctx.Encoder().EncodeStructArrayPreamble(0, inner.Address(), inner.IsNullPointer(), false);
         }
     }
 }

@@ -562,10 +562,11 @@ void TestBuildGeometryInfoPointerGeometries()
     }
 }
 
-/** vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos, as an AnTuTu capture recorded it, plus a
- * null element. The layer dumps only the first range info each element points to, not the
- * pInfos[i].geometryCount the registry declares, so each inner array has to be encoded with the one
- * struct actually recorded. */
+/** vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos in the shape older layers wrote, as an AnTuTu
+ * capture recorded it, plus a null element. Each element is a pointer carrying "members" - the first range
+ * info it points to, not the pInfos[i].geometryCount the registry declares - so each inner array has to be
+ * encoded with the one struct actually recorded. Newer layers write "elements" instead, see
+ * TestBuildRangeInfos2DArrays. */
 void TestBuildRangeInfos2D()
 {
     std::printf("vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos\n");
@@ -613,6 +614,175 @@ void TestBuildRangeInfos2D()
         Expect("[1] primitiveOffset", (ranges[1] != nullptr) && (ranges[1][0].primitiveOffset == 16));
         Expect("[1] firstVertex", (ranges[1] != nullptr) && (ranges[1][0].firstVertex == 3));
         Expect("[2] null", ranges[2] == nullptr);
+    }
+}
+
+/** One range info as the layer writes an element of a ppBuildRangeInfos[i] array: an object with "members". */
+std::string RangeInfoJson(
+    size_t index, const char* address, uint32_t count, uint32_t offset, uint32_t vertex, uint32_t transform)
+{
+    return std::string(R"JSON({ "type": "const VkAccelerationStructureBuildRangeInfoKHR", "name": "[)JSON") +
+           std::to_string(index) + R"JSON(]", "address": ")JSON" + address + R"JSON(",
+                  "members": [
+                    { "type": "uint32_t", "name": "primitiveCount", "value": ")JSON" +
+           std::to_string(count) + R"JSON(" },
+                    { "type": "uint32_t", "name": "primitiveOffset", "value": ")JSON" +
+           std::to_string(offset) + R"JSON(" },
+                    { "type": "uint32_t", "name": "firstVertex", "value": ")JSON" +
+           std::to_string(vertex) + R"JSON(" },
+                    { "type": "uint32_t", "name": "transformOffset", "value": ")JSON" +
+           std::to_string(transform) + R"JSON(" } ] })JSON";
+}
+
+void ExpectRangeInfo(const char*                                     label,
+                     const VkAccelerationStructureBuildRangeInfoKHR& range,
+                     uint32_t                                        count,
+                     uint32_t                                        offset,
+                     uint32_t                                        vertex,
+                     uint32_t                                        transform)
+{
+    Expect(label,
+           (range.primitiveCount == count) && (range.primitiveOffset == offset) && (range.firstVertex == vertex) &&
+               (range.transformOffset == transform));
+}
+
+/** vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos in the shape newer layers write: each
+ * ppBuildRangeInfos[i] is an object carrying "elements", one range info per pInfos[i].geometryCount, rather
+ * than the one struct "members" of older layers. Covers several range infos per element, a single one, a
+ * non-null pointer with a geometryCount of 0 (an object with an address and nothing else), and a null
+ * pointer. Every range info is checked, because a wrong inner count misaligns the buffer and leaves
+ * StructPointerDecoder reading the next element's bytes as structs. */
+void TestBuildRangeInfos2DArrays()
+{
+    std::printf("vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos, one array per element\n");
+
+    const std::string json =
+        std::string(R"JSON({
+        "type": "const VkAccelerationStructureBuildRangeInfoKHR* const*", "name": "ppBuildRangeInfos",
+        "address": "0x7191ff5580",
+        "elements": [
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[0]", "address": "0x7191ff6110",
+              "elements": [ )JSON") +
+        RangeInfoJson(0, "0x7191ff6110", 500, 0, 0, 0) + ",\n" + RangeInfoJson(1, "0x7191ff6120", 240, 16, 3, 0) + ",\n" +
+        RangeInfoJson(2, "0x7191ff6130", 7, 32, 9, 4) +
+        R"JSON( ] },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[1]", "address": "0x7191ff6218",
+              "elements": [ )JSON" +
+        RangeInfoJson(0, "0x7191ff6218", 11, 1, 2, 3) +
+        R"JSON( ] },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[2]", "address": "0x7191ff6300" },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[3]", "address": "address" }
+        ]
+    })JSON";
+
+    const nlohmann::json parsed = nlohmann::json::parse(json);
+    ApiDumpEncoder       encoder;
+    ApiDumpHandleMap     handles;
+    ApiDumpContext       ctx(encoder, handles);
+    StructArray2DFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ctx, ApiDumpNode(&parsed));
+
+    DecoderAllocGuard<true>                                                 guard;
+    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*> decoder;
+    const size_t bytes_read = decoder.Decode(encoder.GetData(), encoder.GetDataSize());
+
+    Expect("buffer consumed exactly", bytes_read == encoder.GetDataSize());
+    Expect("decoded as a 2D array", decoder.IsArray2D());
+    Expect("outer length", decoder.GetLength() == 4);
+
+    VkAccelerationStructureBuildRangeInfoKHR** ranges = decoder.GetPointer();
+    Expect("decoded", ranges != nullptr);
+    if ((ranges != nullptr) && (decoder.GetLength() == 4))
+    {
+        Expect("[0] holds every range", decoder.GetInnerLength(0) == 3);
+        Expect("[1] holds its one range", decoder.GetInnerLength(1) == 1);
+        Expect("[2] non-null with no ranges", decoder.GetInnerLength(2) == 0);
+        Expect("[3] null", (decoder.GetInnerLength(3) == 0) && (ranges[3] == nullptr));
+
+        if ((ranges[0] != nullptr) && (decoder.GetInnerLength(0) == 3))
+        {
+            ExpectRangeInfo("[0][0]", ranges[0][0], 500, 0, 0, 0);
+            ExpectRangeInfo("[0][1]", ranges[0][1], 240, 16, 3, 0);
+            ExpectRangeInfo("[0][2]", ranges[0][2], 7, 32, 9, 4);
+        }
+        else
+        {
+            Expect("[0] decoded", false);
+        }
+
+        if ((ranges[1] != nullptr) && (decoder.GetInnerLength(1) == 1))
+        {
+            ExpectRangeInfo("[1][0]", ranges[1][0], 11, 1, 2, 3);
+        }
+        else
+        {
+            Expect("[1] decoded", false);
+        }
+    }
+}
+
+/** An array holding both shapes at once - "elements" and "members" - which is what decoding a capture
+ * made with an older layer next to one made with a newer layer has to cope with, and also what a
+ * single call looks like for the parameters that still write one struct per pointer. Each element is
+ * told apart by its own fields, not by the layer or the parameter. */
+void TestBuildRangeInfos2DMixedShapes()
+{
+    std::printf("vkCmdBuildAccelerationStructuresKHR ppBuildRangeInfos, both shapes in one array\n");
+
+    const std::string json =
+        std::string(R"JSON({
+        "type": "const VkAccelerationStructureBuildRangeInfoKHR* const*", "name": "ppBuildRangeInfos",
+        "address": "0x7191ff5580",
+        "elements": [
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[0]", "address": "0x7191ff6110",
+              "elements": [ )JSON") +
+        RangeInfoJson(0, "0x7191ff6110", 500, 0, 0, 0) + ",\n" + RangeInfoJson(1, "0x7191ff6120", 240, 16, 3, 0) +
+        R"JSON( ] },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[1]", "address": "0x7191ff6218",
+              "members": [
+                { "type": "uint32_t", "name": "primitiveCount", "value": "11" },
+                { "type": "uint32_t", "name": "primitiveOffset", "value": "1" },
+                { "type": "uint32_t", "name": "firstVertex", "value": "2" },
+                { "type": "uint32_t", "name": "transformOffset", "value": "3" } ] },
+            { "type": "const VkAccelerationStructureBuildRangeInfoKHR*", "name": "[2]", "address": "0x7191ff6300",
+              "elements": [ )JSON" +
+        RangeInfoJson(0, "0x7191ff6300", 99, 8, 7, 6) +
+        R"JSON( ] }
+        ]
+    })JSON";
+
+    const nlohmann::json parsed = nlohmann::json::parse(json);
+    ApiDumpEncoder       encoder;
+    ApiDumpHandleMap     handles;
+    ApiDumpContext       ctx(encoder, handles);
+    StructArray2DFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ctx, ApiDumpNode(&parsed));
+
+    DecoderAllocGuard<true>                                                 guard;
+    StructPointerDecoder<Decoded_VkAccelerationStructureBuildRangeInfoKHR*> decoder;
+    const size_t bytes_read = decoder.Decode(encoder.GetData(), encoder.GetDataSize());
+
+    Expect("buffer consumed exactly", bytes_read == encoder.GetDataSize());
+    Expect("outer length", decoder.GetLength() == 3);
+
+    VkAccelerationStructureBuildRangeInfoKHR** ranges = decoder.GetPointer();
+    Expect("decoded", ranges != nullptr);
+    if ((ranges != nullptr) && (decoder.GetLength() == 3))
+    {
+        Expect("[0] is an array of two", decoder.GetInnerLength(0) == 2);
+        Expect("[1] is one struct", decoder.GetInnerLength(1) == 1);
+        Expect("[2] is an array of one", decoder.GetInnerLength(2) == 1);
+
+        if ((ranges[0] != nullptr) && (ranges[1] != nullptr) && (ranges[2] != nullptr) &&
+            (decoder.GetInnerLength(0) == 2) && (decoder.GetInnerLength(1) == 1) && (decoder.GetInnerLength(2) == 1))
+        {
+            ExpectRangeInfo("[0][0]", ranges[0][0], 500, 0, 0, 0);
+            ExpectRangeInfo("[0][1]", ranges[0][1], 240, 16, 3, 0);
+            ExpectRangeInfo("[1][0]", ranges[1][0], 11, 1, 2, 3);
+            ExpectRangeInfo("[2][0]", ranges[2][0], 99, 8, 7, 6);
+        }
+        else
+        {
+            Expect("every element decoded", false);
+        }
     }
 }
 
@@ -673,6 +843,8 @@ int main()
     TestBuildGeometryInfoNullPointerGeometries();
     TestBuildGeometryInfoPointerGeometries();
     TestBuildRangeInfos2D();
+    TestBuildRangeInfos2DArrays();
+    TestBuildRangeInfos2DMixedShapes();
     TestMaxPrimitiveCounts2D();
 
     if (g_failures == 0)
