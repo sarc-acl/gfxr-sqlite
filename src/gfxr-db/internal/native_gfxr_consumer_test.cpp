@@ -16,11 +16,17 @@
 
 #include "run_query.h"
 
+#include <cstring>
+#include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <iterator>
+#include <memory>
 #include <stdexcept>
+#include <vector>
 
 #include "create_db_helper.h"
+#include "format/format.h"
 #include "test_resources_path.h"
 
 using gfxrSqlite::getTestResourcesFolder;
@@ -72,16 +78,15 @@ static bool runSimpleQuery(sqlite3* const dbHandle)
     return true;
 }
 
-static bool runTest()
+struct DatabaseCloser
 {
-    if (!gfxrSqlite::configSqLite3())
-    {
-        std::cerr << "Failed to configure sqlite3\n";
-        return false;
-    }
+    void operator()(sqlite3* dbHandle) const { gfxrSqlite::checked_sqlite3_close(dbHandle); }
+};
+using DatabasePtr = std::unique_ptr<sqlite3, DatabaseCloser>;
 
-    auto test1Gfxr = getTestResourcesFolder() / "test1.gfxr";
-    std::cout << "Loading gfxr file " << test1Gfxr << '\n';
+static DatabasePtr createDatabase(const std::filesystem::path& gfxrFile)
+{
+    std::cout << "Loading gfxr file " << gfxrFile << '\n';
     std::string dbFilename = gfxrSqlite::createNewMemoryDbFilename();
     std::optional<std::string> logFilename;
 
@@ -92,24 +97,90 @@ static bool runTest()
     };
 
     bool enforceForeignKeys = true;
-    gfxrSqlite::CreateDBHelper helper(test1Gfxr.string(), dbFilename, logFilename, enforceForeignKeys, reportError);
+    gfxrSqlite::CreateDBHelper helper(gfxrFile.string(), dbFilename, logFilename, enforceForeignKeys, reportError);
     helper.createDatabase();
+    DatabasePtr dbHandle(helper.getDB());
     if (errorReported)
     {
         std::cerr << "Failing due to reported error\n";
-        return false;
+        return nullptr;
     }
-    const auto dbHandle = helper.getDB();
     if (dbHandle == nullptr)
     {
         std::cerr << "Failed to create database\n";
+        return nullptr;
+    }
+    return dbHandle;
+}
+
+static std::optional<std::string> readCaptureStartQueueSubmitIndex(sqlite3* const dbHandle)
+{
+    gfxrSqlite::RunQuery query(dbHandle, "SELECT value FROM metaData WHERE key = 'capture start queue submit index'");
+    std::string err;
+    if (!query.run(&err) || query.Rows().empty())
+    {
+        return std::nullopt;
+    }
+    return std::get<std::string>(query.Rows()[0][0]);
+}
+
+// Copies test1.gfxr with a capture start queue submit index block right after the file header.
+static std::filesystem::path writeGfxrWithQueueSubmitIndex(uint64_t queueSubmitIndex)
+{
+    std::ifstream in(getTestResourcesFolder() / "test1.gfxr", std::ios::binary);
+    const std::vector<char> bytes{ std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>() };
+
+    gfxrecon::format::FileHeader header;
+    std::memcpy(&header, bytes.data(), sizeof(header));
+    const size_t headerSize = sizeof(header) + header.num_options * sizeof(gfxrecon::format::FileOptionPair);
+
+    gfxrecon::format::CaptureStartQueueSubmitIndexCommand command = {};
+    command.meta_header.block_header.type = gfxrecon::format::BlockType::kMetaDataBlock;
+    command.meta_header.block_header.size = sizeof(command) - sizeof(command.meta_header.block_header);
+    command.meta_header.meta_data_id = gfxrecon::format::MakeMetaDataId(
+        gfxrecon::format::ApiFamilyId::ApiFamily_Vulkan,
+        gfxrecon::format::MetaDataType::kCaptureStartQueueSubmitIndexCommand
+    );
+    command.thread_id = 1;
+    command.queue_submit_index = queueSubmitIndex;
+
+    const auto path = std::filesystem::temp_directory_path() / "gfxr-sqlite-queue-submit-index.gfxr";
+    std::ofstream out(path, std::ios::binary);
+    out.write(bytes.data(), headerSize);
+    out.write(reinterpret_cast<const char*>(&command), sizeof(command));
+    out.write(bytes.data() + headerSize, bytes.size() - headerSize);
+    return path;
+}
+
+static bool runTest()
+{
+    if (!gfxrSqlite::configSqLite3())
+    {
+        std::cerr << "Failed to configure sqlite3\n";
         return false;
     }
-    if (!runSimpleQuery(dbHandle))
+
+    const auto test1 = createDatabase(getTestResourcesFolder() / "test1.gfxr");
+    if (!test1 || !runSimpleQuery(test1.get()))
     {
         std::cerr << "Simple query test failed\n";
         return false;
     }
+    if (readCaptureStartQueueSubmitIndex(test1.get()))
+    {
+        std::cerr << "A file without the block got a capture start queue submit index\n";
+        return false;
+    }
+
+    const auto withIndexGfxr = writeGfxrWithQueueSubmitIndex(42);
+    const auto withIndex = createDatabase(withIndexGfxr);
+    std::filesystem::remove(withIndexGfxr);
+    if (!withIndex || readCaptureStartQueueSubmitIndex(withIndex.get()) != "42")
+    {
+        std::cerr << "Capture start queue submit index was not stored\n";
+        return false;
+    }
+    std::cout << "capture start queue submit index passed\n";
     return true;
 }
 

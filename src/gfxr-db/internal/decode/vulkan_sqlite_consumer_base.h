@@ -44,25 +44,7 @@ GFXRECON_BEGIN_NAMESPACE(args)
 
 // Hand-authored args structs for commands gfxreconstruct blacklists from its own Vulkan consumer
 // codegen (see external/gfxreconstruct's vulkan_generators/blacklists.json) but that gfxr-sqlite still
-// wants to track. These mirror the field lists the codegen produced the last time gfxr-sqlite's
-// generated consumer was regenerated before each command was dropped upstream — see the matching
-// "TODO: missing from upstream GFXR" declarations in VulkanSqliteConsumerBase below.
-
-struct CmdPushDescriptorSetWithTemplate
-{
-    format::HandleId commandBuffer;
-    format::HandleId descriptorUpdateTemplate;
-    format::HandleId layout;
-    uint32_t set;
-    DescriptorUpdateTemplateDecoder pData;
-};
-
-struct CmdPushDescriptorSetWithTemplate2
-{
-    format::HandleId commandBuffer;
-    StructPointerDecoder<Decoded_VkPushDescriptorSetWithTemplateInfo> pPushDescriptorSetWithTemplateInfo;
-};
-
+// wants to track. They mirror the field lists codegen produced before each command was dropped upstream.
 struct BuildAccelerationStructuresKHR
 {
     VkResult result;
@@ -122,6 +104,8 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
     void ProcessFrameEndMarker(uint64_t frameNumber) override;
 
     void ProcessDisplayMessageCommand(const std::string& message) override;
+
+    void ProcessCaptureStartQueueSubmitIndexCommand(uint64_t queueSubmitIndex) override;
 
     void ProcessFillMemoryCommand(uint64_t memoryId, uint64_t offset, uint64_t size, const uint8_t* data) override;
 
@@ -198,25 +182,25 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         const uint8_t* data
     ) override;
 
-    // TODO: missing from upstream GFXR (and thus never will be called)
-    // This function is here because pData gets the wrong type when generated
+    // This pair is here because pData gets the wrong type when generated
     // (https://github.com/android-graphics/sokatoa/issues/1582)
-    virtual void Process_vkCmdPushDescriptorSetWithTemplate(
+    void Process_vkCmdPushDescriptorSetWithTemplate(
         const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
-    );
-
-    // This function is here because pData gets the wrong type when generated
-    // (https://github.com/android-graphics/sokatoa/issues/1582)
-    void Process_vkCmdPushDescriptorSetWithTemplateKHR(
-        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplateKHR& args
     ) override;
 
-    // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
-    // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
-    // (its normal auto-generated logging body) to hook into.
-    virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
+    void Process_vkCmdPushDescriptorSetWithTemplateKHR(
+        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
+    ) override;
+
+    // This pair is here because GFXR gives 2KHR the core args struct, and codegen would name
+    // args::CmdPushDescriptorSetWithTemplate2KHR instead.
+    void Process_vkCmdPushDescriptorSetWithTemplate2(
         const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
-    );
+    ) override;
+
+    void Process_vkCmdPushDescriptorSetWithTemplate2KHR(
+        const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
+    ) override;
 
     // gfxreconstruct's own VulkanConsumer doesn't declare a virtual for this command (blacklisted
     // upstream), so this provides the virtual slot for VulkanSqliteConsumer's generated override
@@ -312,11 +296,36 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
         return MetaStructArray<T>(true, (T*)decodedStruct, structPtr->GetLength());
     }
 
+    template <class T>
+    using MetaStructArray2DOuter = std::tuple<bool, T* const*, uint64_t>;
+
     // Helper for Array2D case (StructPointerDecoder<T*> where T is the decoded struct type)
-    // This version extracts a specific inner array by index from the 2D array structure
+    // This version validates the 2D array once and returns its outer array of pointers and the outer length, for
+    // callers that walk every outer element. Each outer element's inner length is structPtr->GetInnerLength(i), and
+    // a null element means the inner array was not recorded.
+    template <class T>
+    inline MetaStructArray2DOuter<T> GetMetaStructArray2DOuter(const gfxrecon::decode::StructPointerDecoder<T*>* structPtr)
+    {
+        if (!HasData(structPtr) || !structPtr->IsArray2D())
+        {
+            return std::make_tuple(false, (T* const*)nullptr, uint64_t(0));
+        }
+        // For Array2D, GetMetaStructPointer() returns T** (pointer to array of pointers).
+        auto decodedStruct = structPtr->GetMetaStructPointer();
+        if (!decodedStruct)
+        {
+            return std::make_tuple(false, (T* const*)nullptr, uint64_t(0));
+        }
+        return std::make_tuple(true, (T* const*)decodedStruct, uint64_t(structPtr->GetLength()));
+    }
+
+    // Helper for Array2D case (StructPointerDecoder<T*> where T is the decoded struct type)
+    // This version extracts the inner array of ONE outer element from the 2D array structure. outerIndex selects the
+    // outer element: for ppBuildRangeInfos that is the build info index, for ppGeometries it is the geometry index
+    // (the build info is already selected by the member's owner). The returned count is that element's inner length.
     template <class T>
     inline MetaStructArray<T> GetMetaStructArray2D(
-        const gfxrecon::decode::StructPointerDecoder<T*>* structPtr, size_t index
+        const gfxrecon::decode::StructPointerDecoder<T*>* structPtr, size_t outerIndex
     )
     {
         if (!HasData(structPtr))
@@ -333,10 +342,10 @@ class VulkanSqliteConsumerBase : public VulkanConsumer, public AnnotationHandler
             return std::make_tuple(false, (const T*)nullptr, uint64_t(0));
         }
         // For Array2D, GetMetaStructPointer() returns T** (pointer to array of pointers).
-        // Extract the specific inner array at the given index.
-        if (index < structPtr->GetLength() && decodedStruct[index] != nullptr)
+        // Extract the specific inner array at the given outer index.
+        if (outerIndex < structPtr->GetLength() && decodedStruct[outerIndex] != nullptr)
         {
-            return std::make_tuple(true, decodedStruct[index], uint64_t(structPtr->GetInnerLength(index)));
+            return std::make_tuple(true, decodedStruct[outerIndex], uint64_t(structPtr->GetInnerLength(outerIndex)));
         }
         return std::make_tuple(false, (const T*)nullptr, uint64_t(0));
     }

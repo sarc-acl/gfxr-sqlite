@@ -4880,7 +4880,8 @@ void VulkanSqliteConsumerExt::Process_vkCreateDescriptorSetLayout(
                 else if (flagsCount != 0)
                 {
                     // https://registry.khronos.org/vulkan/specs/latest/man/html/VkDescriptorSetLayoutBindingFlagsCreateInfo.html#VUID-VkDescriptorSetLayoutBindingFlagsCreateInfo-bindingCount-03002
-                    GFXRECON_LOG_WARNING(
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
                         "Unexpected bindingCount for flags (%" PRIu64 ") vs bindings (%" PRIu64
                         ") when creating descriptor set layout",
                         flagsCount,
@@ -6653,7 +6654,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
             if (entry.descriptorType == VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV)
             {
                 // TODO verify this and add reference link
-                GFXRECON_LOG_WARNING(
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    this->block_index_,
                     "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV with descriptor update templates is not supported by "
                     "GFXR; ignoring"
                 );
@@ -6664,7 +6666,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     // We should have read everything from the template.
     if (imageInfoCount != pData->GetImageInfoCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " image infos while template had %" PRIu64,
             imageInfoCount,
             pData->GetImageInfoCount()
@@ -6672,7 +6675,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     }
     if (bufferInfoCount != pData->GetBufferInfoCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " buffer infos while template had %" PRIu64,
             bufferInfoCount,
             pData->GetBufferInfoCount()
@@ -6680,7 +6684,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     }
     if (texelBufferViewCount != pData->GetTexelBufferViewCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " texel buffer views while template had %" PRIu64,
             texelBufferViewCount,
             pData->GetTexelBufferViewCount()
@@ -6688,7 +6693,8 @@ void VulkanSqliteConsumerExt::WriteOrPushDescriptorSetWithTemplate(
     }
     if (accelerationStructCount != pData->GetAccelerationStructureKHRCount())
     {
-        GFXRECON_LOG_WARNING(
+        GFXRECON_SQLITE_LOG_WARNING_AT(
+            this->block_index_,
             "Descriptor update had %" PRIu64 " acceleration structures while template had %" PRIu64,
             accelerationStructCount,
             pData->GetAccelerationStructureKHRCount()
@@ -7069,7 +7075,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplateKHR(
-    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplateKHR& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
 )
 {
     // generate the base apiEvents database entries
@@ -7118,7 +7124,7 @@ void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2(
 }
 
 void VulkanSqliteConsumerExt::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
-    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2KHR& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
 )
 {
     // generate the base apiEvents database entries
@@ -9612,95 +9618,115 @@ void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildGeometryInfo(
             {
                 for (size_t j = 0; j < geometriesCount; ++j)
                 {
-                    auto& geometry = geometries[j];
-                    std::optional<int64_t> triangleDataId = std::nullopt;
-                    std::optional<int64_t> aabbDataId = std::nullopt;
-                    std::optional<int64_t> instanceDataId = std::nullopt;
-
-                    auto geometryType = geometry.decoded_value->geometryType;
-                    switch (geometryType)
-                    {
-                        case VK_GEOMETRY_TYPE_TRIANGLES_KHR:
-                        {
-                            triangleDataId = statements.InsertAccelerationStructureBuildTriangleData(
-                                geometry.decoded_value->geometry.triangles
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_AABBS_KHR:
-                        {
-                            aabbDataId = statements.InsertAccelerationStructureBuildAABBData(
-                                geometry.decoded_value->geometry.aabbs
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_INSTANCES_KHR:
-                        {
-                            instanceDataId = statements.InsertAccelerationStructureBuildInstanceData(
-                                geometry.decoded_value->geometry.instances
-                            );
-                            break;
-                        }
-                        default:
-                            // do nothing
-                            break;
-                    }
-
-                    auto geometryFlags = geometry.decoded_value->flags;
-                    statements.InsertAccelerationStructureBuildGeometry(
-                        infoId, j, geometryType, geometryFlags, triangleDataId, aabbDataId, instanceDataId
-                    );
+                    ProcessVkAccelerationStructureGeometry(infoId, j, geometries[j]);
                 }
             }
-            auto [geometriesPValid, geometriesP, geometriesPCount] = GetMetaStructArray2D(info.ppGeometries, i);
-            if (geometriesPValid)
+
+            if (HasData(info.ppGeometries))
             {
-                for (size_t j = 0; j < geometriesPCount; ++j)
+                if (geometriesValid)
                 {
-                    auto& geometry = geometriesP[j];
-                    std::optional<int64_t> triangleDataId = std::nullopt;
-                    std::optional<int64_t> aabbDataId = std::nullopt;
-                    std::optional<int64_t> instanceDataId = std::nullopt;
-                    // insert the triangle etc...
-
-                    auto geometryType = geometry.decoded_value->geometryType;
-                    switch (geometryType)
-                    {
-                        case VK_GEOMETRY_TYPE_TRIANGLES_KHR:
-                        {
-                            triangleDataId = statements.InsertAccelerationStructureBuildTriangleData(
-                                geometry.decoded_value->geometry.triangles
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_AABBS_KHR:
-                        {
-                            aabbDataId = statements.InsertAccelerationStructureBuildAABBData(
-                                geometry.decoded_value->geometry.aabbs
-                            );
-                            break;
-                        }
-                        case VK_GEOMETRY_TYPE_INSTANCES_KHR:
-                        {
-                            instanceDataId = statements.InsertAccelerationStructureBuildInstanceData(
-                                geometry.decoded_value->geometry.instances
-                            );
-                            break;
-                        }
-                        default:
-                            // do nothing
-                            break;
-                    }
-
-                    auto geometryFlags = geometry.decoded_value->flags;
-                    statements.InsertAccelerationStructureBuildGeometry(
-                        infoId, j, geometryType, geometryFlags, triangleDataId, aabbDataId, instanceDataId
+                    // The spec allows only one of the two, and storing both would write each idx twice.
+                    GFXRECON_SQLITE_LOG_WARNING_AT(
+                        this->block_index_,
+                        "Acceleration structure build info %zu has both pGeometries and ppGeometries; ignoring "
+                        "ppGeometries",
+                        i
                     );
+                }
+                else
+                {
+                    ProcessVkAccelerationStructureGeometryPointers(infoId, i, info.ppGeometries);
                 }
             }
             ProcessVkAccelerationStructureBuildRangeInfo(infoId, ppBuildRangeInfos, i);
         }
     }
+}
+
+void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureGeometryPointers(
+    const int64_t infoId,
+    size_t infoIndex,
+    StructPointerDecoder<Decoded_VkAccelerationStructureGeometryKHR*>* ppGeometries
+)
+{
+    // ppGeometries is an array of pointers to one geometry each, and the build info is already selected, so
+    // the outer dimension counts geometries rather than build infos.
+    auto [geometriesValid, geometries, geometriesCount] = GetMetaStructArray2DOuter(ppGeometries);
+    if (!geometriesValid)
+    {
+        return;
+    }
+
+    for (size_t j = 0; j < geometriesCount; ++j)
+    {
+        // A geometry that was not recorded leaves a gap in idx rather than shifting the later ones down, so
+        // each stored geometry keeps its position in ppGeometries.
+        const size_t innerCount = (geometries[j] != nullptr) ? ppGeometries->GetInnerLength(j) : 0;
+        if (innerCount == 0)
+        {
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
+                "Acceleration structure build info %zu: ppGeometries[%zu] was not recorded; no geometry stored at "
+                "that index",
+                infoIndex,
+                j
+            );
+            continue;
+        }
+        if (innerCount > 1)
+        {
+            // Each ppGeometries element points at exactly one geometry.
+            GFXRECON_SQLITE_LOG_WARNING_AT(
+                this->block_index_,
+                "Acceleration structure build info %zu: ppGeometries[%zu] has %zu geometries; storing only the first",
+                infoIndex,
+                j,
+                innerCount
+            );
+        }
+        ProcessVkAccelerationStructureGeometry(infoId, j, geometries[j][0]);
+    }
+}
+
+void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureGeometry(
+    const int64_t infoId, size_t geometryIndex, const Decoded_VkAccelerationStructureGeometryKHR& geometry
+)
+{
+    std::optional<int64_t> triangleDataId = std::nullopt;
+    std::optional<int64_t> aabbDataId = std::nullopt;
+    std::optional<int64_t> instanceDataId = std::nullopt;
+
+    auto geometryType = geometry.decoded_value->geometryType;
+    switch (geometryType)
+    {
+        case VK_GEOMETRY_TYPE_TRIANGLES_KHR:
+        {
+            triangleDataId =
+                statements.InsertAccelerationStructureBuildTriangleData(geometry.decoded_value->geometry.triangles);
+            break;
+        }
+        case VK_GEOMETRY_TYPE_AABBS_KHR:
+        {
+            aabbDataId =
+                statements.InsertAccelerationStructureBuildAABBData(geometry.decoded_value->geometry.aabbs);
+            break;
+        }
+        case VK_GEOMETRY_TYPE_INSTANCES_KHR:
+        {
+            instanceDataId =
+                statements.InsertAccelerationStructureBuildInstanceData(geometry.decoded_value->geometry.instances);
+            break;
+        }
+        default:
+            // do nothing
+            break;
+    }
+
+    auto geometryFlags = geometry.decoded_value->flags;
+    statements.InsertAccelerationStructureBuildGeometry(
+        infoId, geometryIndex, geometryType, geometryFlags, triangleDataId, aabbDataId, instanceDataId
+    );
 }
 
 void VulkanSqliteConsumerExt::ProcessVkAccelerationStructureBuildRangeInfo(
