@@ -87,12 +87,25 @@ void StructArrayFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value, size_
  * ppBuildRangeInfos. StructPointerDecoder<T*> asserts the kIsArray2D attribute, so these must not be
  * encoded as a plain struct array.
  *
- * The layer writes each element as a struct pointer: its address and, when it followed it, the
- * members of the one struct it points to - or an elements list, should it ever write more. It never
- * writes the inner count the registry declares (a range info array holds pInfos[i].geometryCount
- * entries, but only the first is dumped). So each inner array is encoded with the number of structs
- * actually recorded: StructPointerDecoder<T*> reads an inner array's count and then exactly that many
- * structs, whatever kHasData says, and must never be told of more than are written.
+ * The layer has written each element, a pointer, in one of two shapes, told apart by which field the
+ * element object carries:
+ *  - "elements": the array the pointer refers to, one object per struct. Newer layers write this for
+ *    ppBuildRangeInfos, whose ppBuildRangeInfos[i] holds pInfos[i].geometryCount range infos.
+ *  - "members": the one struct the pointer refers to. Older layers wrote this for every element, so
+ *    only the first range info of each was recorded, and parameters whose inner arrays hold exactly one
+ *    struct (ppGeometries, ppUsageCounts) still do.
+ * "elements" always wins: an element carrying both is read as the array, and its "members" is ignored.
+ * A layer never writes both.
+ *
+ * The layer never writes the inner count the registry declares (a range info array holds
+ * pInfos[i].geometryCount entries), so each inner array is encoded with the number of structs actually
+ * recorded: StructPointerDecoder<T*> reads an inner array's count and then exactly that many structs,
+ * and must never be told of more than are written.
+ *
+ * A non-null pointer with nothing recorded behind it, such as ppBuildRangeInfos[i] when
+ * pInfos[i].geometryCount is 0, is encoded as an empty array. gfxreconstruct encodes the same call with
+ * kHasData set where this leaves it clear, but StructPointerDecoder<T*> only reads an inner element's
+ * kIsNull, so both decode as a count of zero and produce the same rows.
  */
 template <typename T>
 void StructArray2DFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value, size_t length_hint = 0)
