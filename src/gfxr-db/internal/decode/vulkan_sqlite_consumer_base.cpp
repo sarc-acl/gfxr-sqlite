@@ -1,5 +1,5 @@
 /********************************************************************************
-    Copyright 2024-2025 The Sokatoa Project Authors
+    Copyright 2024-2026 The Sokatoa Project Authors
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -265,6 +265,14 @@ void VulkanSqliteConsumerBase::ProcessDisplayMessageCommand(const std::string& m
     statements.InsertAPIEventArgument(this->block_index_, 1, "frameNumber", "TEXT", message);
 
     statements.InsertDisplayMessage(context.currentFrame, message);
+}
+
+void VulkanSqliteConsumerBase::ProcessCaptureStartQueueSubmitIndexCommand(uint64_t queueSubmitIndex)
+{
+    // This is stored as a capture property rather than an apiEvents row, so the command list doesn't change.
+    std::ostringstream metaDataSql;
+    metaDataSql << "INSERT INTO metaData VALUES ('capture start queue submit index', '" << queueSubmitIndex << "');";
+    ExecSQL(context.db, metaDataSql.str().c_str());
 }
 
 void VulkanSqliteConsumerBase::ProcessFillMemoryCommand(
@@ -647,7 +655,7 @@ void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate(
 }
 
 void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplateKHR(
-    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplateKHR& args
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate& args
 )
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
@@ -678,6 +686,28 @@ void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate2(
 {
     FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
     const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate2");
+    statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
+
+    RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
+    FieldToSqlite(
+        statements,
+        fieldInfo,
+        2,
+        "pPushDescriptorSetWithTemplateInfo",
+        &args.pPushDescriptorSetWithTemplateInfo,
+        "const VkPushDescriptorSetWithTemplateInfo*"
+    );
+
+    statements.InsertApiEventReturns(this->block_index_, "void", "void");
+    UpdateCommandBufferCommands(callInfo, args.commandBuffer);
+}
+
+void VulkanSqliteConsumerBase::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
+    const ApiCallInfo& callInfo, args::CmdPushDescriptorSetWithTemplate2& args
+)
+{
+    FieldInfo fieldInfo = { this->block_index_, 0, 0, 0 };
+    const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate2KHR");
     statements.InsertApiEvent(this->block_index_, functionId, callInfo.thread_id);
 
     RecordField(statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);

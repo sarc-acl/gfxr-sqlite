@@ -921,10 +921,6 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
         const ApiCallInfo&                          call_info,
         args::CmdPushDescriptorSet2&                args) override;
 
-    virtual void Process_vkCmdPushDescriptorSetWithTemplate2(
-        const ApiCallInfo&                          call_info,
-        args::CmdPushDescriptorSetWithTemplate2&    args) override;
-
     virtual void Process_vkCmdSetLineStipple(
         const ApiCallInfo&                          call_info,
         args::CmdSetLineStipple&                    args) override;
@@ -1668,10 +1664,6 @@ class VulkanSqliteConsumer : public VulkanSqliteConsumerBase
     virtual void Process_vkCmdPushDescriptorSet2KHR(
         const ApiCallInfo&                          call_info,
         args::CmdPushDescriptorSet2KHR&             args) override;
-
-    virtual void Process_vkCmdPushDescriptorSetWithTemplate2KHR(
-        const ApiCallInfo&                          call_info,
-        args::CmdPushDescriptorSetWithTemplate2KHR& args) override;
 
     virtual void Process_vkCmdCopyMemoryIndirectKHR(
         const ApiCallInfo&                          call_info,

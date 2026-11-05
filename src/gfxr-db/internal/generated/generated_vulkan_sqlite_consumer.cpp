@@ -5874,22 +5874,6 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2(
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
 }
 
-void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2(
-    const ApiCallInfo&                          call_info,
-    args::CmdPushDescriptorSetWithTemplate2&    args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate2");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    RecordField(
-        statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetWithTemplateInfo", &args.pPushDescriptorSetWithTemplateInfo, "const VkPushDescriptorSetWithTemplateInfo*");
-
-    statements.InsertApiEventReturns(this->block_index_, "void", "void");
-    UpdateCommandBufferCommands(call_info, args.commandBuffer);
-}
-
 void VulkanSqliteConsumer::Process_vkCmdSetLineStipple(
     const ApiCallInfo&                          call_info,
     args::CmdSetLineStipple&                    args)
@@ -9758,22 +9742,6 @@ void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSet2KHR(
     RecordField(
         statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
     FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetInfo", &args.pPushDescriptorSetInfo, "const VkPushDescriptorSetInfo*");
-
-    statements.InsertApiEventReturns(this->block_index_, "void", "void");
-    UpdateCommandBufferCommands(call_info, args.commandBuffer);
-}
-
-void VulkanSqliteConsumer::Process_vkCmdPushDescriptorSetWithTemplate2KHR(
-    const ApiCallInfo&                          call_info,
-    args::CmdPushDescriptorSetWithTemplate2KHR& args)
-{
-    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
-    const auto functionId = statements.InsertFunctionName("vkCmdPushDescriptorSetWithTemplate2KHR");
-    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
-
-    RecordField(
-        statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
-    FieldToSqlite(statements, fieldInfo, 2, "pPushDescriptorSetWithTemplateInfo", &args.pPushDescriptorSetWithTemplateInfo, "const VkPushDescriptorSetWithTemplateInfo*");
 
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
