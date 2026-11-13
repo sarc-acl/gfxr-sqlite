@@ -97,8 +97,8 @@ if __name__ == '__main__':
         raise Exception(f'Error: gfxreconstruct dir {gfxr_dir} does not exist')
     SCRIPT_DIR = os.path.join(gfxr_dir, 'framework', 'generated')
     KHRONOS_REGISTRY_DIR = os.path.join(gfxr_dir, 'external', 'Vulkan-Headers', 'registry')
+    COMMON_GENERATOR_DIR = os.path.join(SCRIPT_DIR, 'common_generators')
     KHRONOS_GENERATOR_DIR = os.path.join(SCRIPT_DIR, 'khronos_generators')
-    BASE_GENERATOR_DIR = os.path.join(SCRIPT_DIR, 'khronos_generators', 'base_generators')
     GENERATOR_DIR = os.path.join(SCRIPT_DIR, 'khronos_generators', 'vulkan_generators')
     VK_HEADERS_DIR = os.path.join(gfxr_dir, 'external', 'Vulkan-Headers')
 
@@ -117,11 +117,10 @@ if __name__ == '__main__':
     if not 'PYTHONPATH' in env:
         env['PYTHONPATH'] = ''
 
-    # Note: order matters, base_generator.py exists twice.
     env['PYTHONPATH'] = os.pathsep.join(
         [
+            COMMON_GENERATOR_DIR,
             KHRONOS_GENERATOR_DIR,
-            BASE_GENERATOR_DIR,
             GENERATOR_DIR,
             KHRONOS_REGISTRY_DIR,
             VK_HEADERS_DIR,
