@@ -233,6 +233,7 @@ target_link_libraries(gfxr-sqlite-library
     gfxrecon_graphics gfxrecon_decode gfxrecon_format gfxrecon_util project_version
     platform_specific
     $<$<BOOL:${WIN32}>:version.lib>
+    $<$<BOOL:${WIN32}>:ws2_32.lib>
     LZ4::LZ4 ZLIB::ZLIB)
 if (TARGET ZSTD::ZSTD)
     target_link_libraries(gfxr-sqlite-library ZSTD::ZSTD)
