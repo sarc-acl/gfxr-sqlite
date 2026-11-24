@@ -1155,6 +1155,15 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceMaintenance12FeaturesKHR>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceMaintenance12FeaturesKHR*>(header)->decoded_value;
+                if (pFeatures == nullptr) { break; }
+                if(pFeatures->maintenance12) { enabledFeatureNames.emplace_back("maintenance12"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceTransformFeedbackFeaturesEXT>():
             {
                 // clang-format off
@@ -1220,6 +1229,16 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 if(pFeatures->streamingPerfCounters) { enabledFeatureNames.emplace_back("streamingPerfCounters"); }
                 if(pFeatures->sqThreadTracing) { enabledFeatureNames.emplace_back("sqThreadTracing"); }
                 if(pFeatures->clockModes) { enabledFeatureNames.emplace_back("clockModes"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceDescriptorHeapFeaturesEXT>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceDescriptorHeapFeaturesEXT*>(header)->decoded_value;
+                if (pFeatures == nullptr) { break; }
+                if(pFeatures->descriptorHeap) { enabledFeatureNames.emplace_back("descriptorHeap"); }
+                if(pFeatures->descriptorHeapCaptureReplay) { enabledFeatureNames.emplace_back("descriptorHeapCaptureReplay"); }
                 // clang-format on
                 break;
             }
@@ -2711,6 +2730,15 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM*>(header)->decoded_value;
+                if (pFeatures == nullptr) { break; }
+                if(pFeatures->cooperativeMatrixArmLayouts) { enabledFeatureNames.emplace_back("cooperativeMatrixArmLayouts"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT>():
             {
                 // clang-format off
@@ -2762,6 +2790,15 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 // clang-format on
                 break;
             }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT*>(header)->decoded_value;
+                if (pFeatures == nullptr) { break; }
+                if(pFeatures->vertexAddressBindingUnrestricted) { enabledFeatureNames.emplace_back("vertexAddressBindingUnrestricted"); }
+                // clang-format on
+                break;
+            }
             case gfxrecon::util::GetSType<VkPhysicalDeviceImageTilingControlFeaturesEXT>():
             {
                 // clang-format off
@@ -2795,6 +2832,15 @@ void VulkanSqliteConsumerExt::ProcessVkDeviceCreateInfoPNext(
                 const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceBufferDeviceAddressAllocationAlignmentFeaturesVALVE*>(header)->decoded_value;
                 if (pFeatures == nullptr) { break; }
                 if(pFeatures->bufferDeviceAddressAllocationAlignment) { enabledFeatureNames.emplace_back("bufferDeviceAddressAllocationAlignment"); }
+                // clang-format on
+                break;
+            }
+            case gfxrecon::util::GetSType<VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE>():
+            {
+                // clang-format off
+                const auto* pFeatures = reinterpret_cast<const Decoded_VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE*>(header)->decoded_value;
+                if (pFeatures == nullptr) { break; }
+                if(pFeatures->hdrSmpteSt209450) { enabledFeatureNames.emplace_back("hdrSmpteSt209450"); }
                 // clang-format on
                 break;
             }

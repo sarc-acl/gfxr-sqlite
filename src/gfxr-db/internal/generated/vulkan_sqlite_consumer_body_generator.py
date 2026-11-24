@@ -2212,8 +2212,8 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
         return body
     # yapf: enable
 
-    def genType(self, typeinfo, name, alias):
-        super().genType(typeinfo, name, alias)
+    def genType(self, typeinfo, name, alias, protect=None):
+        super().genType(typeinfo, name, alias, protect)
         if self.is_flags(name):
             if alias is None:
                 self.flagsType[name] = self.flags_types[name]

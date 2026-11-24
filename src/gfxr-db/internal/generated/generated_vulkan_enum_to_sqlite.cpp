@@ -1678,6 +1678,25 @@ void RecordEnums(sqlite3* db)
         sqlite3_finalize(stmt);
     }
 
+    CreateEnumTable(db, "VkDescriptorMappingSourceEXT");
+    {
+        sqlite3_stmt* stmt = nullptr;
+        sqlite3_prepare_v3(db, "INSERT INTO VkDescriptorMappingSourceEXT VALUES (?, ?, ?);", -1, 0, &stmt, nullptr);
+
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "HEAP WITH CONSTANT OFFSET", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "HEAP WITH PUSH INDEX", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "HEAP WITH INDIRECT INDEX", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "HEAP WITH INDIRECT INDEX ARRAY", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "RESOURCE HEAP DATA", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PUSH DATA", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PUSH ADDRESS", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "INDIRECT ADDRESS", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "HEAP WITH SHADER RECORD INDEX", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "SHADER RECORD DATA", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT)); sqlite3_bind_text(stmt, 2, "VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "SHADER RECORD ADDRESS", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+    }
+
     CreateEnumTable(db, "VkDescriptorPoolCreateFlagBits");
     {
         sqlite3_stmt* stmt = nullptr;
@@ -1967,6 +1986,10 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DRIVER_ID_MESA_GFXSTREAM)); sqlite3_bind_text(stmt, 2, "VK_DRIVER_ID_MESA_GFXSTREAM", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "MESA GFXSTREAM", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DRIVER_ID_APE_SOFT)); sqlite3_bind_text(stmt, 2, "VK_DRIVER_ID_APE_SOFT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "APE SOFT", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DRIVER_ID_RESERVED_31)); sqlite3_bind_text(stmt, 2, "VK_DRIVER_ID_RESERVED_31", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "RESERVED 31", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DRIVER_ID_APEX)); sqlite3_bind_text(stmt, 2, "VK_DRIVER_ID_APEX", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "APEX", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DRIVER_ID_NIKKI)); sqlite3_bind_text(stmt, 2, "VK_DRIVER_ID_NIKKI", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "NIKKI", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DRIVER_ID_MOMOTEN)); sqlite3_bind_text(stmt, 2, "VK_DRIVER_ID_MOMOTEN", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "MOMOTEN", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_DRIVER_ID_AURORA_BOREALIS)); sqlite3_bind_text(stmt, 2, "VK_DRIVER_ID_AURORA_BOREALIS", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "AURORA BOREALIS", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
 
@@ -2843,6 +2866,16 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PRE RASTERIZATION SHADERS", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "FRAGMENT SHADER", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "FRAGMENT OUTPUT INTERFACE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+    }
+
+    CreateEnumTable(db, "VkHdrSmpteSt209450PowerPreferenceGOOGLE");
+    {
+        sqlite3_stmt* stmt = nullptr;
+        sqlite3_prepare_v3(db, "INSERT INTO VkHdrSmpteSt209450PowerPreferenceGOOGLE VALUES (?, ?, ?);", -1, 0, &stmt, nullptr);
+
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_COLOR_ACCURACY_GOOGLE)); sqlite3_bind_text(stmt, 2, "VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_COLOR_ACCURACY_GOOGLE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "209450 POWER PREFERENCE COLOR ACCURACY GOOGLE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_LOW_POWER_GOOGLE)); sqlite3_bind_text(stmt, 2, "VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_LOW_POWER_GOOGLE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "209450 POWER PREFERENCE LOW POWER GOOGLE", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
 
@@ -4833,6 +4866,25 @@ void RecordEnums(sqlite3* db)
         sqlite3_finalize(stmt);
     }
 
+    CreateEnumTable(db, "VkSpirvResourceTypeFlagBitsEXT");
+    {
+        sqlite3_stmt* stmt = nullptr;
+        sqlite3_prepare_v3(db, "INSERT INTO VkSpirvResourceTypeFlagBitsEXT VALUES (?, ?, ?);", -1, 0, &stmt, nullptr);
+
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_ALL_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_ALL_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "ALL", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "SAMPLER", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "SAMPLED IMAGE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "READ ONLY IMAGE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "READ WRITE IMAGE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "COMBINED SAMPLED IMAGE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "UNIFORM BUFFER", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "READ ONLY STORAGE BUFFER", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "READ WRITE STORAGE BUFFER", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "ACCELERATION STRUCTURE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM)); sqlite3_bind_text(stmt, 2, "VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "TENSOR", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_finalize(stmt);
+    }
+
     CreateEnumTable(db, "VkStencilFaceFlagBits");
     {
         sqlite3_stmt* stmt = nullptr;
@@ -6109,6 +6161,7 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE EXTENDED FLAGS FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "IMAGE STENCIL USAGE 2 CREATE INFO", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "SHARED PRESENT SURFACE CAPABILITIES 2", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_LAYOUTS_FEATURES_ARM)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_LAYOUTS_FEATURES_ARM", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE COOPERATIVE MATRIX LAYOUTS FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE SHADER OCP MICROSCALING TYPES FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE SHADER MIXED FLOAT DOT PRODUCT FEATURES VALVE", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE THROTTLE HINT FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
@@ -6117,6 +6170,9 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "DATA GRAPH PIPELINE SESSION NEURAL STATISTICS CREATE INFO", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE DATA GRAPH NEURAL ACCELERATOR STATISTICS FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE PRIMITIVE RESTART INDEX FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE VERTEX ADDRESS BINDING UNRESTRICTED FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE MAINTENANCE 12 FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_PROPERTIES_KHR)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_PROPERTIES_KHR", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE MAINTENANCE 12 PROPERTIES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE IMAGE TILING CONTROL FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_IMAGE_TILING_CONTROL_CREATE_INFO_EXT", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "IMAGE TILING CONTROL CREATE INFO", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE COOPERATIVE MATRIX DECODE VECTOR FEATURES", -1, SQLITE_STATIC); sqlite3_step(stmt);
@@ -6125,6 +6181,9 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_FEATURES_VALVE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE BUFFER DEVICE ADDRESS ALLOCATION ALIGNMENT FEATURES VALVE", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_PROPERTIES_VALVE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_ALLOCATION_ALIGNMENT_PROPERTIES_VALVE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE BUFFER DEVICE ADDRESS ALLOCATION ALIGNMENT PROPERTIES VALVE", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "BUFFER DEVICE ADDRESS ALIGNMENT ALLOCATE INFO VALVE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "PHYSICAL DEVICE HDR SMPTE ST 209450 FEATURES GOOGLE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_HDR_SMPTE_ST_209450_GOOGLE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_HDR_SMPTE_ST_209450_GOOGLE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "HDR SMPTE ST 209450 GOOGLE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_HDR_SMPTE_ST_209450_GOOGLE)); sqlite3_bind_text(stmt, 2, "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_HDR_SMPTE_ST_209450_GOOGLE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "SURFACE CAPABILITIES HDR SMPTE ST 209450 GOOGLE", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
 
@@ -6432,6 +6491,7 @@ void RecordEnums(sqlite3* db)
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_VENDOR_ID_POCL)); sqlite3_bind_text(stmt, 2, "VK_VENDOR_ID_POCL", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "POCL", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_VENDOR_ID_MOBILEYE)); sqlite3_bind_text(stmt, 2, "VK_VENDOR_ID_MOBILEYE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "MOBILEYE", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_VENDOR_ID_APE)); sqlite3_bind_text(stmt, 2, "VK_VENDOR_ID_APE", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "APE", -1, SQLITE_STATIC); sqlite3_step(stmt);
+        sqlite3_reset(stmt); sqlite3_bind_int64(stmt, 1, static_cast<sqlite3_int64>(VK_VENDOR_ID_APEX)); sqlite3_bind_text(stmt, 2, "VK_VENDOR_ID_APEX", -1, SQLITE_STATIC); sqlite3_bind_text(stmt, 3, "APEX", -1, SQLITE_STATIC); sqlite3_step(stmt);
         sqlite3_finalize(stmt);
     }
 
@@ -10112,6 +10172,48 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
     }
 }
 
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDescriptorMappingSourceEXT& value, std::string_view typeName)
+{
+    switch (value) {
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT");
+            break;
+        case VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", "VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT");
+            break;
+        default:
+            RecordFieldAsHexFixedWidth<VkDescriptorMappingSourceEXT>(statements, fieldInfo, fieldIndex, fieldName, "VkDescriptorMappingSourceEXT", value);
+            break;
+    }
+}
+
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDescriptorPoolCreateFlagBits& value, std::string_view typeName)
 {
     switch (value) {
@@ -10651,6 +10753,18 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
             break;
         case VK_DRIVER_ID_RESERVED_31:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDriverId", "VK_DRIVER_ID_RESERVED_31");
+            break;
+        case VK_DRIVER_ID_APEX:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDriverId", "VK_DRIVER_ID_APEX");
+            break;
+        case VK_DRIVER_ID_NIKKI:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDriverId", "VK_DRIVER_ID_NIKKI");
+            break;
+        case VK_DRIVER_ID_MOMOTEN:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDriverId", "VK_DRIVER_ID_MOMOTEN");
+            break;
+        case VK_DRIVER_ID_AURORA_BOREALIS:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkDriverId", "VK_DRIVER_ID_AURORA_BOREALIS");
             break;
         default:
             RecordFieldAsHexFixedWidth<VkDriverId>(statements, fieldInfo, fieldIndex, fieldName, "VkDriverId", value);
@@ -12822,6 +12936,21 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
             break;
         default:
             RecordFieldAsHexFixedWidth<VkGraphicsPipelineLibraryFlagBitsEXT>(statements, fieldInfo, fieldIndex, fieldName, "VkGraphicsPipelineLibraryFlagBitsEXT", value);
+            break;
+    }
+}
+
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkHdrSmpteSt209450PowerPreferenceGOOGLE& value, std::string_view typeName)
+{
+    switch (value) {
+        case VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_COLOR_ACCURACY_GOOGLE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkHdrSmpteSt209450PowerPreferenceGOOGLE", "VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_COLOR_ACCURACY_GOOGLE");
+            break;
+        case VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_LOW_POWER_GOOGLE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkHdrSmpteSt209450PowerPreferenceGOOGLE", "VK_HDR_SMPTE_ST_209450_POWER_PREFERENCE_LOW_POWER_GOOGLE");
+            break;
+        default:
+            RecordFieldAsHexFixedWidth<VkHdrSmpteSt209450PowerPreferenceGOOGLE>(statements, fieldInfo, fieldIndex, fieldName, "VkHdrSmpteSt209450PowerPreferenceGOOGLE", value);
             break;
     }
 }
@@ -16808,6 +16937,48 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
     }
 }
 
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkSpirvResourceTypeFlagBitsEXT& value, std::string_view typeName)
+{
+    switch (value) {
+        case VK_SPIRV_RESOURCE_TYPE_ALL_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_ALL_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT");
+            break;
+        case VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", "VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM");
+            break;
+        default:
+            RecordFieldAsHexFixedWidth<VkSpirvResourceTypeFlagBitsEXT>(statements, fieldInfo, fieldIndex, fieldName, "VkSpirvResourceTypeFlagBitsEXT", value);
+            break;
+    }
+}
+
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkStencilFaceFlagBits& value, std::string_view typeName)
 {
     switch (value) {
@@ -20594,6 +20765,9 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
         case VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR");
             break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_LAYOUTS_FEATURES_ARM:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_LAYOUTS_FEATURES_ARM");
+            break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT");
             break;
@@ -20618,6 +20792,15 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT");
             break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT");
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR");
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_PROPERTIES_KHR:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_PROPERTIES_KHR");
+            break;
         case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_TILING_CONTROL_FEATURES_EXT");
             break;
@@ -20641,6 +20824,15 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
             break;
         case VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_ALIGNMENT_ALLOCATE_INFO_VALVE");
+            break;
+        case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE");
+            break;
+        case VK_STRUCTURE_TYPE_HDR_SMPTE_ST_209450_GOOGLE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_HDR_SMPTE_ST_209450_GOOGLE");
+            break;
+        case VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_HDR_SMPTE_ST_209450_GOOGLE:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_HDR_SMPTE_ST_209450_GOOGLE");
             break;
         default:
             RecordFieldAsHexFixedWidth<VkStructureType>(statements, fieldInfo, fieldIndex, fieldName, "VkStructureType", value);
@@ -21217,6 +21409,9 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
             break;
         case VK_VENDOR_ID_APE:
             RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkVendorId", "VK_VENDOR_ID_APE");
+            break;
+        case VK_VENDOR_ID_APEX:
+            RecordField<std::string_view>(statements, fieldInfo, fieldIndex, fieldName, "VkVendorId", "VK_VENDOR_ID_APEX");
             break;
         default:
             RecordFieldAsHexFixedWidth<VkVendorId>(statements, fieldInfo, fieldIndex, fieldName, "VkVendorId", value);
@@ -22849,6 +23044,11 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, VkSparseMemoryBindFlags_t, const VkFlags flags, std::string_view typeName)
 {
     RecordFieldAsHexFixedWidth<VkSparseMemoryBindFlags>(statements, fieldInfo, fieldIndex, fieldName, typeName, flags);
+}
+
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, VkSpirvResourceTypeFlagsEXT_t, const VkFlags flags, std::string_view typeName)
+{
+    RecordFieldAsHexFixedWidth<VkSpirvResourceTypeFlagsEXT>(statements, fieldInfo, fieldIndex, fieldName, typeName, flags);
 }
 
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo &fieldInfo, size_t fieldIndex, std::string_view fieldName, VkStencilFaceFlags_t, const VkFlags flags, std::string_view typeName)

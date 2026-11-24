@@ -106,8 +106,8 @@ class VulkanEnumFromStringBodyGenerator(VulkanBaseGenerator):
     def need_feature_generation(self):
         return bool(self.feature_struct_members)
 
-    def genGroup(self, groupinfo, group_name, alias):
-        VulkanBaseGenerator.genGroup(self, groupinfo, group_name, alias)
+    def genGroup(self, groupinfo, group_name, alias, protect=None):
+        VulkanBaseGenerator.genGroup(self, groupinfo, group_name, alias, protect)
 
         if alias:
             return

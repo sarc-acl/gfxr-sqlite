@@ -258,8 +258,8 @@ class VulkanStructToSqliteBodyGenerator(VulkanBaseGenerator):
         return body
     # yapf: enable
 
-    def genStruct(self, typeinfo, typename, alias):
-        super().genStruct(typeinfo, typename, alias)
+    def genStruct(self, typeinfo, typename, alias, protect=None):
+        super().genStruct(typeinfo, typename, alias, protect)
 
         if not alias:
             if typeinfo.elem.get('structextends'):
@@ -268,8 +268,8 @@ class VulkanStructToSqliteBodyGenerator(VulkanBaseGenerator):
                 if pnext_extension_struct:
                     self.pnext_extension_structs[typename] = pnext_extension_struct
 
-    def genType(self, typeinfo, name, alias):
-        super().genType(typeinfo, name, alias)
+    def genType(self, typeinfo, name, alias, protect=None):
+        super().genType(typeinfo, name, alias, protect)
         if self.is_flags(name):
             if alias is None:
                 self.flagsType[name] = self.flags_types[name]

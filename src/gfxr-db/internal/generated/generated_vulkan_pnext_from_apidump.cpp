@@ -222,6 +222,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO:
         StructPtrFromApiDump<VkBindDescriptorSetsInfo>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_BIND_HEAP_INFO_EXT:
+        StructPtrFromApiDump<VkBindHeapInfoEXT>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO:
         StructPtrFromApiDump<VkBindImageMemoryDeviceGroupInfo>(ctx, value);
         break;
@@ -320,6 +323,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT:
         StructPtrFromApiDump<VkCommandBufferInheritanceConditionalRenderingInfoEXT>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT:
+        StructPtrFromApiDump<VkCommandBufferInheritanceDescriptorHeapInfoEXT>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO:
         StructPtrFromApiDump<VkCommandBufferInheritanceInfo>(ctx, value);
@@ -572,6 +578,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO:
         StructPtrFromApiDump<VkDescriptorSetAllocateInfo>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT:
+        StructPtrFromApiDump<VkDescriptorSetAndBindingMappingEXT>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE:
         StructPtrFromApiDump<VkDescriptorSetBindingReferenceVALVE>(ctx, value);
@@ -924,6 +933,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_HDR_METADATA_EXT:
         StructPtrFromApiDump<VkHdrMetadataEXT>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_HDR_SMPTE_ST_209450_GOOGLE:
+        StructPtrFromApiDump<VkHdrSmpteSt209450GOOGLE>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_HDR_VIVID_DYNAMIC_METADATA_HUAWEI:
         StructPtrFromApiDump<VkHdrVividDynamicMetadataHUAWEI>(ctx, value);
         break;
@@ -962,6 +974,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO:
         StructPtrFromApiDump<VkImageCreateInfo>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT:
+        StructPtrFromApiDump<VkImageDescriptorInfoEXT>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT:
         StructPtrFromApiDump<VkImageDrmFormatModifierExplicitCreateInfoEXT>(ctx, value);
@@ -1089,8 +1104,17 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NV:
         StructPtrFromApiDump<VkIndirectCommandsLayoutCreateInfoNV>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV:
+        StructPtrFromApiDump<VkIndirectCommandsLayoutPushDataTokenNV>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_EXT:
+        StructPtrFromApiDump<VkIndirectCommandsLayoutTokenEXT>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_TOKEN_NV:
         StructPtrFromApiDump<VkIndirectCommandsLayoutTokenNV>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_CREATE_INFO_EXT:
+        StructPtrFromApiDump<VkIndirectExecutionSetCreateInfoEXT>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_INDIRECT_EXECUTION_SET_PIPELINE_INFO_EXT:
         StructPtrFromApiDump<VkIndirectExecutionSetPipelineInfoEXT>(ctx, value);
@@ -1244,6 +1268,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_MUTABLE_DESCRIPTOR_TYPE_CREATE_INFO_EXT:
         StructPtrFromApiDump<VkMutableDescriptorTypeCreateInfoEXT>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT:
+        StructPtrFromApiDump<VkOpaqueCaptureDataCreateInfoEXT>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT:
         StructPtrFromApiDump<VkOpaqueCaptureDescriptorDataCreateInfoEXT>(ctx, value);
@@ -1425,6 +1452,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_INFO_2_EXT:
         StructPtrFromApiDump<VkPhysicalDeviceCooperativeMatrixInfo2EXT>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_LAYOUTS_FEATURES_ARM:
+        StructPtrFromApiDump<VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_MAINTENANCE_1_FEATURES_EXT:
         StructPtrFromApiDump<VkPhysicalDeviceCooperativeMatrixMaintenance1FeaturesEXT>(ctx, value);
         break;
@@ -1514,6 +1544,15 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM:
         StructPtrFromApiDump<VkPhysicalDeviceDescriptorBufferTensorPropertiesARM>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT:
+        StructPtrFromApiDump<VkPhysicalDeviceDescriptorHeapFeaturesEXT>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT:
+        StructPtrFromApiDump<VkPhysicalDeviceDescriptorHeapPropertiesEXT>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM:
+        StructPtrFromApiDump<VkPhysicalDeviceDescriptorHeapTensorPropertiesARM>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES:
         StructPtrFromApiDump<VkPhysicalDeviceDescriptorIndexingFeatures>(ctx, value);
@@ -1719,6 +1758,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES:
         StructPtrFromApiDump<VkPhysicalDeviceGroupProperties>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_SMPTE_ST_209450_FEATURES_GOOGLE:
+        StructPtrFromApiDump<VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI:
         StructPtrFromApiDump<VkPhysicalDeviceHdrVividFeaturesHUAWEI>(ctx, value);
         break;
@@ -1847,6 +1889,12 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR:
         StructPtrFromApiDump<VkPhysicalDeviceMaintenance11FeaturesKHR>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_FEATURES_KHR:
+        StructPtrFromApiDump<VkPhysicalDeviceMaintenance12FeaturesKHR>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_12_PROPERTIES_KHR:
+        StructPtrFromApiDump<VkPhysicalDeviceMaintenance12PropertiesKHR>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES:
         StructPtrFromApiDump<VkPhysicalDeviceMaintenance3Properties>(ctx, value);
@@ -2457,6 +2505,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES:
         StructPtrFromApiDump<VkPhysicalDeviceVariablePointersFeatures>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ADDRESS_BINDING_UNRESTRICTED_FEATURES_EXT:
+        StructPtrFromApiDump<VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES:
         StructPtrFromApiDump<VkPhysicalDeviceVertexAttributeDivisorFeatures>(ctx, value);
         break;
@@ -2760,6 +2811,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_PUSH_CONSTANTS_INFO:
         StructPtrFromApiDump<VkPushConstantsInfo>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_PUSH_DATA_INFO_EXT:
+        StructPtrFromApiDump<VkPushDataInfoEXT>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO:
         StructPtrFromApiDump<VkPushDescriptorSetInfo>(ctx, value);
         break;
@@ -2919,6 +2973,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR:
         StructPtrFromApiDump<VkResolveImageModeInfoKHR>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT:
+        StructPtrFromApiDump<VkResourceDescriptorInfoEXT>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT:
         StructPtrFromApiDump<VkSampleLocationsInfoEXT>(ctx, value);
         break;
@@ -2939,6 +2996,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT:
         StructPtrFromApiDump<VkSamplerCustomBorderColorCreateInfoEXT>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT:
+        StructPtrFromApiDump<VkSamplerCustomBorderColorIndexCreateInfoEXT>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO:
         StructPtrFromApiDump<VkSamplerReductionModeCreateInfo>(ctx, value);
@@ -2994,6 +3054,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_SHADER_CREATE_INFO_EXT:
         StructPtrFromApiDump<VkShaderCreateInfoEXT>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT:
+        StructPtrFromApiDump<VkShaderDescriptorSetAndBindingMappingInfoEXT>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO:
         StructPtrFromApiDump<VkShaderModuleCreateInfo>(ctx, value);
         break;
@@ -3048,6 +3111,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
     case VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2:
         StructPtrFromApiDump<VkSubresourceLayout2>(ctx, value);
         break;
+    case VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT:
+        StructPtrFromApiDump<VkSubsampledImageFormatPropertiesEXT>(ctx, value);
+        break;
     case VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT:
         StructPtrFromApiDump<VkSurfaceCapabilities2EXT>(ctx, value);
         break;
@@ -3056,6 +3122,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT:
         StructPtrFromApiDump<VkSurfaceCapabilitiesFullScreenExclusiveEXT>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_HDR_SMPTE_ST_209450_GOOGLE:
+        StructPtrFromApiDump<VkSurfaceCapabilitiesHdrSmpteSt209450GOOGLE>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_BARRIER_NV:
         StructPtrFromApiDump<VkSurfaceCapabilitiesPresentBarrierNV>(ctx, value);
@@ -3161,6 +3230,9 @@ void PNextFromApiDump(ApiDumpContext& ctx, const ApiDumpNode& value)
         break;
     case VK_STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM:
         StructPtrFromApiDump<VkTensorViewCreateInfoARM>(ctx, value);
+        break;
+    case VK_STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT:
+        StructPtrFromApiDump<VkTexelBufferDescriptorInfoEXT>(ctx, value);
         break;
     case VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD:
         StructPtrFromApiDump<VkTextureLODGatherFormatPropertiesAMD>(ctx, value);

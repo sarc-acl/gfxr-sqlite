@@ -11374,6 +11374,175 @@ void VulkanSqliteConsumer::Process_vkCmdCopyGpaSessionResultsAMD(
     statements.InsertApiEventReturns(this->block_index_, "void", "void");
     UpdateCommandBufferCommands(call_info, args.commandBuffer);
 }
+void VulkanSqliteConsumer::Process_vkWriteSamplerDescriptorsEXT(
+    const ApiCallInfo&                          call_info,
+    args::WriteSamplerDescriptorsEXT&           args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkWriteSamplerDescriptorsEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(
+        statements, fieldInfo, 2, "samplerCount", "uint32_t", args.samplerCount);
+    FieldToSqlite(statements, fieldInfo, 3, "pSamplers", &args.pSamplers, "const VkSamplerCreateInfo*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDescriptors", &args.pDescriptors, "const VkHostAddressRangeEXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
+}
+
+void VulkanSqliteConsumer::Process_vkWriteResourceDescriptorsEXT(
+    const ApiCallInfo&                          call_info,
+    args::WriteResourceDescriptorsEXT&          args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkWriteResourceDescriptorsEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(
+        statements, fieldInfo, 2, "resourceCount", "uint32_t", args.resourceCount);
+    FieldToSqlite(statements, fieldInfo, 3, "pResources", &args.pResources, "const VkResourceDescriptorInfoEXT*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDescriptors", &args.pDescriptors, "const VkHostAddressRangeEXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
+}
+
+void VulkanSqliteConsumer::Process_vkCmdBindSamplerHeapEXT(
+    const ApiCallInfo&                          call_info,
+    args::CmdBindSamplerHeapEXT&                args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkCmdBindSamplerHeapEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
+    FieldToSqlite(statements, fieldInfo, 2, "pBindInfo", &args.pBindInfo, "const VkBindHeapInfoEXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "void", "void");
+    UpdateCommandBufferCommands(call_info, args.commandBuffer);
+}
+
+void VulkanSqliteConsumer::Process_vkCmdBindResourceHeapEXT(
+    const ApiCallInfo&                          call_info,
+    args::CmdBindResourceHeapEXT&               args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkCmdBindResourceHeapEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
+    FieldToSqlite(statements, fieldInfo, 2, "pBindInfo", &args.pBindInfo, "const VkBindHeapInfoEXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "void", "void");
+    UpdateCommandBufferCommands(call_info, args.commandBuffer);
+}
+
+void VulkanSqliteConsumer::Process_vkCmdPushDataEXT(
+    const ApiCallInfo&                          call_info,
+    args::CmdPushDataEXT&                       args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkCmdPushDataEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "commandBuffer", "VkCommandBuffer", args.commandBuffer);
+    FieldToSqlite(statements, fieldInfo, 2, "pPushDataInfo", &args.pPushDataInfo, "const VkPushDataInfoEXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "void", "void");
+    UpdateCommandBufferCommands(call_info, args.commandBuffer);
+}
+
+void VulkanSqliteConsumer::Process_vkGetImageOpaqueCaptureDataEXT(
+    const ApiCallInfo&                          call_info,
+    args::GetImageOpaqueCaptureDataEXT&         args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkGetImageOpaqueCaptureDataEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(
+        statements, fieldInfo, 2, "imageCount", "uint32_t", args.imageCount);
+    FieldToSqlite(statements, fieldInfo, 3, "pImages", &args.pImages, "const VkImage*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDatas", &args.pDatas, "VkHostAddressRangeEXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
+}
+
+void VulkanSqliteConsumer::Process_vkGetPhysicalDeviceDescriptorSizeEXT(
+    const ApiCallInfo&                          call_info,
+    args::GetPhysicalDeviceDescriptorSizeEXT&   args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkGetPhysicalDeviceDescriptorSizeEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "physicalDevice", "VkPhysicalDevice", args.physicalDevice);
+    RecordField(
+        statements, fieldInfo, 2, "descriptorType", "VkDescriptorType", args.descriptorType);
+
+    statements.InsertApiEventReturns(this->block_index_, "VkDeviceSize", args.result);
+}
+
+void VulkanSqliteConsumer::Process_vkRegisterCustomBorderColorEXT(
+    const ApiCallInfo&                          call_info,
+    args::RegisterCustomBorderColorEXT&         args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkRegisterCustomBorderColorEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    FieldToSqlite(statements, fieldInfo, 2, "pBorderColor", &args.pBorderColor, "const VkSamplerCustomBorderColorCreateInfoEXT*");
+    RecordField(
+        statements, fieldInfo, 3, "requestIndex", "VkBool32", args.requestIndex);
+    FieldToSqlite(statements, fieldInfo, 4, "pIndex", args.pIndex, "uint32_t*");
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
+}
+
+void VulkanSqliteConsumer::Process_vkUnregisterCustomBorderColorEXT(
+    const ApiCallInfo&                          call_info,
+    args::UnregisterCustomBorderColorEXT&       args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkUnregisterCustomBorderColorEXT");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(
+        statements, fieldInfo, 2, "index", "uint32_t", args.index);
+
+    statements.InsertApiEventReturns(this->block_index_, "void", "void");
+}
+
+void VulkanSqliteConsumer::Process_vkGetTensorOpaqueCaptureDataARM(
+    const ApiCallInfo&                          call_info,
+    args::GetTensorOpaqueCaptureDataARM&        args)
+{
+    FieldInfo fieldInfo = {this->block_index_, 0, 0, 0};
+    const auto functionId = statements.InsertFunctionName("vkGetTensorOpaqueCaptureDataARM");
+    statements.InsertApiEvent(this->block_index_, functionId, call_info.thread_id);
+
+    RecordField(
+        statements, fieldInfo, 1, "device", "VkDevice", args.device);
+    RecordField(
+        statements, fieldInfo, 2, "tensorCount", "uint32_t", args.tensorCount);
+    FieldToSqlite(statements, fieldInfo, 3, "pTensors", &args.pTensors, "const VkTensorARM*");
+    FieldToSqlite(statements, fieldInfo, 4, "pDatas", &args.pDatas, "VkHostAddressRangeEXT*");
+
+    statements.InsertApiEventReturns(this->block_index_, "VkResult", args.result);
+}
 void VulkanSqliteConsumer::Process_vkCmdSetSampleLocationsEXT(
     const ApiCallInfo&                          call_info,
     args::CmdSetSampleLocationsEXT&             args)

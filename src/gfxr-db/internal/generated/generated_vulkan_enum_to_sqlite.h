@@ -236,6 +236,7 @@ struct VkShaderModuleCreateFlags_t { };
 struct VkShaderStageFlags_t { };
 struct VkSparseImageFormatFlags_t { };
 struct VkSparseMemoryBindFlags_t { };
+struct VkSpirvResourceTypeFlagsEXT_t { };
 struct VkStencilFaceFlags_t { };
 struct VkStreamDescriptorSurfaceCreateFlagsGGP_t { };
 struct VkSubgroupFeatureFlags_t { };
@@ -412,6 +413,7 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDepthBiasRepresentationEXT& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDepthClampModeEXT& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDescriptorBindingFlagBits& value, std::string_view typeName);
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDescriptorMappingSourceEXT& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDescriptorPoolCreateFlagBits& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDescriptorSetLayoutCreateFlagBits& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkDescriptorType& value, std::string_view typeName);
@@ -466,6 +468,7 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkGpaSampleTypeAMD& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkGpaSqShaderStageFlagBitsAMD& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkGraphicsPipelineLibraryFlagBitsEXT& value, std::string_view typeName);
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkHdrSmpteSt209450PowerPreferenceGOOGLE& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkHostImageCopyFlagBits& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkImageAspectFlagBits& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkImageCompressionFixedRateFlagBitsEXT& value, std::string_view typeName);
@@ -601,6 +604,7 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkSharingMode& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkSparseImageFormatFlagBits& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkSparseMemoryBindFlagBits& value, std::string_view typeName);
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkSpirvResourceTypeFlagBitsEXT& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkStencilFaceFlagBits& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkStencilOp& value, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, const VkStructureType& value, std::string_view typeName);
@@ -828,6 +832,7 @@ void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& 
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, VkShaderStageFlags_t, const VkFlags flags, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, VkSparseImageFormatFlags_t, const VkFlags flags, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, VkSparseMemoryBindFlags_t, const VkFlags flags, std::string_view typeName);
+void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, VkSpirvResourceTypeFlagsEXT_t, const VkFlags flags, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, VkStencilFaceFlags_t, const VkFlags flags, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, VkStreamDescriptorSurfaceCreateFlagsGGP_t, const VkFlags flags, std::string_view typeName);
 void FieldToSqlite(VulkanSqlitePreparedStatements& statements, const FieldInfo& fieldInfo, size_t fieldIndex, std::string_view fieldName, VkSubgroupFeatureFlags_t, const VkFlags flags, std::string_view typeName);
