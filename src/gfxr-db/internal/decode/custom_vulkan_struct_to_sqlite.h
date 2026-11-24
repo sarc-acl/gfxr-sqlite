@@ -354,6 +354,53 @@ void FieldToSqlite(
     std::string_view typeName
 );
 
+// Unions: the parent struct's decoder allocates only the member its discriminant selects, so
+// these record whichever member is non-null.
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkAccelerationStructureMotionInstanceDataNV* data,
+    std::string_view typeName
+);
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkIndirectExecutionSetInfoEXT* data,
+    std::string_view typeName
+);
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkIndirectCommandsTokenDataEXT* data,
+    std::string_view typeName
+);
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkResourceDescriptorDataEXT* data,
+    std::string_view typeName
+);
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkDescriptorMappingSourceDataEXT* data,
+    std::string_view typeName
+);
+
 // VkBaseOutStructure is used as a generic extensible out-parameter (e.g. for the ARM data graph
 // queue family property queries), where the concrete struct type is determined by the caller-provided
 // pNext chain rather than by this generic header, so only its own sType/pNext fields are recorded.
@@ -363,15 +410,6 @@ void FieldToSqlite(
     size_t fieldIndex,
     std::string_view fieldName,
     const Decoded_VkBaseOutStructure* data,
-    std::string_view typeName
-);
-
-void FieldToSqlite(
-    VulkanSqlitePreparedStatements& statements,
-    const FieldInfo& fieldInfo,
-    size_t fieldIndex,
-    std::string_view fieldName,
-    const Decoded_VkAccelerationStructureMotionInstanceNV* data,
     std::string_view typeName
 );
 
@@ -653,15 +691,6 @@ void FieldToSqlite(
     size_t fieldIndex,
     std::string_view fieldName,
     const Decoded_VkPushDescriptorSetWithTemplateInfoKHR* data,
-    std::string_view typeName
-);
-
-void FieldToSqlite(
-    VulkanSqlitePreparedStatements& statements,
-    const FieldInfo& fieldInfo,
-    size_t fieldIndex,
-    std::string_view fieldName,
-    const Decoded_VkIndirectCommandsLayoutTokenEXT* data,
     std::string_view typeName
 );
 

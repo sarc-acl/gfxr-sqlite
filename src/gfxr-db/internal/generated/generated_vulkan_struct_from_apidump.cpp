@@ -7508,7 +7508,40 @@ template <> void StructFromApiDump<VkResourceDescriptorInfoEXT>(ApiDumpContext& 
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.EnumValue(value["type"], EnumFromString_VkDescriptorType);
-    StructFromApiDump<VkResourceDescriptorDataEXT>(ctx, value["data"]);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkDescriptorType))
+    {
+        case VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE:
+        case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+        case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
+        case VK_DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM:
+        case VK_DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM:
+        {
+            StructPtrFromApiDump<VkImageDescriptorInfoEXT>(ctx, value["data"]["pImage"]);
+            break;
+        }
+        case VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER:
+        case VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER:
+        {
+            StructPtrFromApiDump<VkTexelBufferDescriptorInfoEXT>(ctx, value["data"]["pTexelBuffer"]);
+            break;
+        }
+        case VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR:
+        case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
+        case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER:
+        case VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV:
+        case VK_DESCRIPTOR_TYPE_PARTITIONED_ACCELERATION_STRUCTURE_NV:
+        {
+            StructPtrFromApiDump<VkDeviceAddressRangeEXT>(ctx, value["data"]["pAddressRange"]);
+            break;
+        }
+        case VK_DESCRIPTOR_TYPE_TENSOR_ARM:
+        {
+            StructPtrFromApiDump<VkTensorViewCreateInfoARM>(ctx, value["data"]["pTensorARM"]);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 template <> void StructFromApiDump<VkBindHeapInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -7616,7 +7649,66 @@ template <> void StructFromApiDump<VkDescriptorSetAndBindingMappingEXT>(ApiDumpC
     ctx.UInt32Value(value["bindingCount"]);
     ctx.FlagsValue(value["resourceMask"], EnumFromString_VkSpirvResourceTypeFlagBitsEXT);
     ctx.EnumValue(value["source"], EnumFromString_VkDescriptorMappingSourceEXT);
-    StructFromApiDump<VkDescriptorMappingSourceDataEXT>(ctx, value["sourceData"]);
+    switch (ctx.ResolveEnum(value["source"], EnumFromString_VkDescriptorMappingSourceEXT))
+    {
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceConstantOffsetEXT>(ctx, value["sourceData"]["constantOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourcePushIndexEXT>(ctx, value["sourceData"]["pushIndex"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceIndirectIndexEXT>(ctx, value["sourceData"]["indirectIndex"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceIndirectIndexArrayEXT>(ctx, value["sourceData"]["indirectIndexArray"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceHeapDataEXT>(ctx, value["sourceData"]["heapData"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["pushDataOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["pushAddressOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceIndirectAddressEXT>(ctx, value["sourceData"]["indirectAddress"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceShaderRecordIndexEXT>(ctx, value["sourceData"]["shaderRecordIndex"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["shaderRecordDataOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["shaderRecordAddressOffset"]);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 template <> void StructFromApiDump<VkShaderDescriptorSetAndBindingMappingInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -9463,7 +9555,26 @@ template <> void StructFromApiDump<VkAccelerationStructureMotionInstanceNV>(ApiD
 {
     ctx.EnumValue(value["type"], EnumFromString_VkAccelerationStructureMotionInstanceTypeNV);
     ctx.FlagsValue(value["flags"]);
-    StructFromApiDump<VkAccelerationStructureMotionInstanceDataNV>(ctx, value["data"]);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkAccelerationStructureMotionInstanceTypeNV))
+    {
+        case VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV:
+        {
+            StructFromApiDump<VkAccelerationStructureInstanceKHR>(ctx, value["data"]["staticInstance"]);
+            break;
+        }
+        case VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV:
+        {
+            StructFromApiDump<VkAccelerationStructureMatrixMotionInstanceNV>(ctx, value["data"]["matrixMotionInstance"]);
+            break;
+        }
+        case VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV:
+        {
+            StructFromApiDump<VkAccelerationStructureSRTMotionInstanceNV>(ctx, value["data"]["srtMotionInstance"]);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceRayTracingMotionBlurFeaturesNV>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -11794,7 +11905,21 @@ template <> void StructFromApiDump<VkIndirectExecutionSetCreateInfoEXT>(ApiDumpC
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.EnumValue(value["type"], EnumFromString_VkIndirectExecutionSetInfoTypeEXT);
-    StructFromApiDump<VkIndirectExecutionSetInfoEXT>(ctx, value["info"]);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkIndirectExecutionSetInfoTypeEXT))
+    {
+        case VK_INDIRECT_EXECUTION_SET_INFO_TYPE_PIPELINES_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectExecutionSetPipelineInfoEXT>(ctx, value["info"]["pPipelineInfo"]);
+            break;
+        }
+        case VK_INDIRECT_EXECUTION_SET_INFO_TYPE_SHADER_OBJECTS_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectExecutionSetShaderInfoEXT>(ctx, value["info"]["pShaderInfo"]);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 template <> void StructFromApiDump<VkGeneratedCommandsInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -11847,7 +11972,34 @@ template <> void StructFromApiDump<VkIndirectCommandsLayoutTokenEXT>(ApiDumpCont
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.EnumValue(value["type"], EnumFromString_VkIndirectCommandsTokenTypeEXT);
-    StructFromApiDump<VkIndirectCommandsTokenDataEXT>(ctx, value["data"]);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkIndirectCommandsTokenTypeEXT))
+    {
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_EXT:
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_SEQUENCE_INDEX_EXT:
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_EXT:
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_SEQUENCE_INDEX_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsPushConstantTokenEXT>(ctx, value["data"]["pPushConstant"]);
+            break;
+        }
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsVertexBufferTokenEXT>(ctx, value["data"]["pVertexBuffer"]);
+            break;
+        }
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsIndexBufferTokenEXT>(ctx, value["data"]["pIndexBuffer"]);
+            break;
+        }
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_EXECUTION_SET_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsExecutionSetTokenEXT>(ctx, value["data"]["pExecutionSet"]);
+            break;
+        }
+        default:
+            break;
+    }
     ctx.UInt32Value(value["offset"]);
 }
 

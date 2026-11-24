@@ -464,6 +464,9 @@ class VulkanSqliteConsumerBodyGenerator(VulkanBaseGenerator):
         # struct exists to generate against.
         self.APICALL_BLACKLIST.append('vkGetTensorOpaqueCaptureDescriptorDataARM')
         self.APICALL_BLACKLIST.append('vkGetTensorViewOpaqueCaptureDescriptorDataARM')
+        # Opaque capture data queries: blacklisted upstream ("functions-all"), no args:: struct.
+        self.APICALL_BLACKLIST.append('vkGetImageOpaqueCaptureDataEXT')
+        self.APICALL_BLACKLIST.append('vkGetTensorOpaqueCaptureDataARM')
         self.APICALL_BLACKLIST.append('vkGetDescriptorSetLayoutSizeEXT')
         self.APICALL_BLACKLIST.append('vkGetDescriptorSetLayoutBindingOffsetEXT')
         self.APICALL_BLACKLIST.append('vkGetDescriptorEXT')
