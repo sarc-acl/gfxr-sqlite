@@ -3860,6 +3860,64 @@ void ApiDump_vkCmdCopyGpaSessionResultsAMD(ApiDumpContext& ctx, const ApiDumpCal
     ctx.VulkanHandleValue(call.Arg("gpaSession"), VK_OBJECT_TYPE_GPA_SESSION_AMD);
 }
 
+void ApiDump_vkWriteSamplerDescriptorsEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    ctx.UInt32Value(call.Arg("samplerCount"));
+    StructArrayFromApiDump<VkSamplerCreateInfo>(ctx, call.Arg("pSamplers"), ctx.Length(call.Arg("samplerCount")));
+    StructArrayFromApiDump<VkHostAddressRangeEXT>(ctx, call.Arg("pDescriptors"), ctx.Length(call.Arg("samplerCount")));
+    ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
+}
+
+void ApiDump_vkWriteResourceDescriptorsEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    ctx.UInt32Value(call.Arg("resourceCount"));
+    StructArrayFromApiDump<VkResourceDescriptorInfoEXT>(ctx, call.Arg("pResources"), ctx.Length(call.Arg("resourceCount")));
+    StructArrayFromApiDump<VkHostAddressRangeEXT>(ctx, call.Arg("pDescriptors"), ctx.Length(call.Arg("resourceCount")));
+    ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
+}
+
+void ApiDump_vkCmdBindSamplerHeapEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
+    StructPtrFromApiDump<VkBindHeapInfoEXT>(ctx, call.Arg("pBindInfo"));
+}
+
+void ApiDump_vkCmdBindResourceHeapEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
+    StructPtrFromApiDump<VkBindHeapInfoEXT>(ctx, call.Arg("pBindInfo"));
+}
+
+void ApiDump_vkCmdPushDataEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
+    StructPtrFromApiDump<VkPushDataInfoEXT>(ctx, call.Arg("pPushDataInfo"));
+}
+
+void ApiDump_vkGetPhysicalDeviceDescriptorSizeEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("physicalDevice"), VK_OBJECT_TYPE_PHYSICAL_DEVICE);
+    ctx.EnumValue(call.Arg("descriptorType"), EnumFromString_VkDescriptorType);
+    ctx.UInt64Value(call.ReturnValue());
+}
+
+void ApiDump_vkRegisterCustomBorderColorEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    StructPtrFromApiDump<VkSamplerCustomBorderColorCreateInfoEXT>(ctx, call.Arg("pBorderColor"));
+    ctx.UInt32Value(call.Arg("requestIndex"));
+    ctx.UInt32Ptr(call.Arg("pIndex"));
+    ctx.EnumValue(call.ReturnValue(), EnumFromString_VkResult);
+}
+
+void ApiDump_vkUnregisterCustomBorderColorEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
+{
+    ctx.VulkanHandleValue(call.Arg("device"), VK_OBJECT_TYPE_DEVICE);
+    ctx.UInt32Value(call.Arg("index"));
+}
+
 void ApiDump_vkCmdSetSampleLocationsEXT(ApiDumpContext& ctx, const ApiDumpCall& call)
 {
     ctx.VulkanHandleValue(call.Arg("commandBuffer"), VK_OBJECT_TYPE_COMMAND_BUFFER);
@@ -6479,6 +6537,14 @@ const ApiDumpCommandTable& GetApiDumpCommandTable()
         { "vkGetGpaSessionResultsAMD", { format::ApiCallId::ApiCall_vkGetGpaSessionResultsAMD, ApiDump_vkGetGpaSessionResultsAMD } },
         { "vkResetGpaSessionAMD", { format::ApiCallId::ApiCall_vkResetGpaSessionAMD, ApiDump_vkResetGpaSessionAMD } },
         { "vkCmdCopyGpaSessionResultsAMD", { format::ApiCallId::ApiCall_vkCmdCopyGpaSessionResultsAMD, ApiDump_vkCmdCopyGpaSessionResultsAMD } },
+        { "vkWriteSamplerDescriptorsEXT", { format::ApiCallId::ApiCall_vkWriteSamplerDescriptorsEXT, ApiDump_vkWriteSamplerDescriptorsEXT } },
+        { "vkWriteResourceDescriptorsEXT", { format::ApiCallId::ApiCall_vkWriteResourceDescriptorsEXT, ApiDump_vkWriteResourceDescriptorsEXT } },
+        { "vkCmdBindSamplerHeapEXT", { format::ApiCallId::ApiCall_vkCmdBindSamplerHeapEXT, ApiDump_vkCmdBindSamplerHeapEXT } },
+        { "vkCmdBindResourceHeapEXT", { format::ApiCallId::ApiCall_vkCmdBindResourceHeapEXT, ApiDump_vkCmdBindResourceHeapEXT } },
+        { "vkCmdPushDataEXT", { format::ApiCallId::ApiCall_vkCmdPushDataEXT, ApiDump_vkCmdPushDataEXT } },
+        { "vkGetPhysicalDeviceDescriptorSizeEXT", { format::ApiCallId::ApiCall_vkGetPhysicalDeviceDescriptorSizeEXT, ApiDump_vkGetPhysicalDeviceDescriptorSizeEXT } },
+        { "vkRegisterCustomBorderColorEXT", { format::ApiCallId::ApiCall_vkRegisterCustomBorderColorEXT, ApiDump_vkRegisterCustomBorderColorEXT } },
+        { "vkUnregisterCustomBorderColorEXT", { format::ApiCallId::ApiCall_vkUnregisterCustomBorderColorEXT, ApiDump_vkUnregisterCustomBorderColorEXT } },
         { "vkCmdSetSampleLocationsEXT", { format::ApiCallId::ApiCall_vkCmdSetSampleLocationsEXT, ApiDump_vkCmdSetSampleLocationsEXT } },
         { "vkGetPhysicalDeviceMultisamplePropertiesEXT", { format::ApiCallId::ApiCall_vkGetPhysicalDeviceMultisamplePropertiesEXT, ApiDump_vkGetPhysicalDeviceMultisamplePropertiesEXT } },
         { "vkGetImageDrmFormatModifierPropertiesEXT", { format::ApiCallId::ApiCall_vkGetImageDrmFormatModifierPropertiesEXT, ApiDump_vkGetImageDrmFormatModifierPropertiesEXT } },

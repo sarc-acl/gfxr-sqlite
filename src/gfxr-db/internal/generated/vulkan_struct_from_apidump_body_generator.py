@@ -120,10 +120,27 @@ class VulkanStructFromApiDumpBodyGenerator(VulkanBaseGenerator, ApiDumpMemberEnc
             write('    GFXRECON_UNREFERENCED_PARAMETER(value);', file=self.outFile)
         else:
             for member in members:
-                write('    {};'.format(self.make_member_call(struct, member, members)), file=self.outFile)
+                if self.is_selected_union(member):
+                    write(self.make_selected_union(struct, member, members), file=self.outFile, end='')
+                else:
+                    write('    {};'.format(self.make_member_call(struct, member, members)), file=self.outFile)
 
         write('}', file=self.outFile)
         write('', file=self.outFile)
+
+    def make_selected_union(self, struct, value, members):
+        """Encode only the union member the selector picks, as gfxreconstruct's encoder does."""
+        selector = next(m for m in members if m.name == value.selector)
+        selector_expr = 'ctx.ResolveEnum({0}, EnumFromString_{1})'.format(
+            self.node_expr(selector), self.canonical_enum(selector.base_type)
+        )
+        union_members = self.all_union_members[value.base_type]
+
+        def make_case(member):
+            call = self.make_member_call(struct, member, union_members)
+            return [call.replace(self.node_expr(member), 'value["{0}"]["{1}"]'.format(value.name, member.name)) + ';']
+
+        return self.make_union_switch(selector_expr, value, make_case)
 
     def node_expr_by_name(self, name):
         return 'value["{0}"]'.format(name)

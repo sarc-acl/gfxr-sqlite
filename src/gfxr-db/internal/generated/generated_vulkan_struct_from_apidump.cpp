@@ -6760,6 +6760,20 @@ template <> void StructFromApiDump<VkSharedPresentSurfaceCapabilities2KHR>(ApiDu
     ctx.Flags64Value(value["sharedPresentSupportedUsageFlags"], EnumFromString_VkImageUsageFlagBits2KHR);
 }
 
+template <> void StructFromApiDump<VkPhysicalDeviceMaintenance12FeaturesKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["maintenance12"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceMaintenance12PropertiesKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["maxInputAttachmentIndex"]);
+}
+
 template <> void StructFromApiDump<VkDebugReportCallbackCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
 {
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
@@ -7450,6 +7464,346 @@ template <> void StructFromApiDump<VkGpaSessionCreateInfoAMD>(ApiDumpContext& ct
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.VulkanHandleValue(value["secondaryCopySource"], VK_OBJECT_TYPE_GPA_SESSION_AMD);
+}
+
+template <> void StructFromApiDump<VkHostAddressRangeEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt8Array(value["address"], ctx.Length(value["size"]));
+    ctx.SizeTValue(value["size"]);
+}
+
+template <> void StructFromApiDump<VkHostAddressRangeConstEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt8Array(value["address"], ctx.Length(value["size"]));
+    ctx.SizeTValue(value["size"]);
+}
+
+template <> void StructFromApiDump<VkTexelBufferDescriptorInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.EnumValue(value["format"], EnumFromString_VkFormat);
+    StructFromApiDump<VkDeviceAddressRangeEXT>(ctx, value["addressRange"]);
+}
+
+template <> void StructFromApiDump<VkImageDescriptorInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    StructPtrFromApiDump<VkImageViewCreateInfo>(ctx, value["pView"]);
+    ctx.EnumValue(value["layout"], EnumFromString_VkImageLayout);
+}
+
+template <> void StructFromApiDump<VkTensorViewCreateInfoARM>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.Flags64Value(value["flags"], EnumFromString_VkTensorViewCreateFlagBitsARM);
+    ctx.VulkanHandleValue(value["tensor"], VK_OBJECT_TYPE_TENSOR_ARM);
+    ctx.EnumValue(value["format"], EnumFromString_VkFormat);
+}
+
+template <> void StructFromApiDump<VkResourceDescriptorInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.EnumValue(value["type"], EnumFromString_VkDescriptorType);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkDescriptorType))
+    {
+        case VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE:
+        case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+        case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
+        case VK_DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM:
+        case VK_DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM:
+        {
+            StructPtrFromApiDump<VkImageDescriptorInfoEXT>(ctx, value["data"]["pImage"]);
+            break;
+        }
+        case VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER:
+        case VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER:
+        {
+            StructPtrFromApiDump<VkTexelBufferDescriptorInfoEXT>(ctx, value["data"]["pTexelBuffer"]);
+            break;
+        }
+        case VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR:
+        case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
+        case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER:
+        case VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV:
+        case VK_DESCRIPTOR_TYPE_PARTITIONED_ACCELERATION_STRUCTURE_NV:
+        {
+            StructPtrFromApiDump<VkDeviceAddressRangeEXT>(ctx, value["data"]["pAddressRange"]);
+            break;
+        }
+        case VK_DESCRIPTOR_TYPE_TENSOR_ARM:
+        {
+            StructPtrFromApiDump<VkTensorViewCreateInfoARM>(ctx, value["data"]["pTensorARM"]);
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+template <> void StructFromApiDump<VkBindHeapInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    StructFromApiDump<VkDeviceAddressRangeEXT>(ctx, value["heapRange"]);
+    ctx.UInt64Value(value["reservedRangeOffset"]);
+    ctx.UInt64Value(value["reservedRangeSize"]);
+}
+
+template <> void StructFromApiDump<VkPushDataInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["offset"]);
+    StructFromApiDump<VkHostAddressRangeConstEXT>(ctx, value["data"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorMappingSourceConstantOffsetEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt32Value(value["heapOffset"]);
+    ctx.UInt32Value(value["heapArrayStride"]);
+    StructPtrFromApiDump<VkSamplerCreateInfo>(ctx, value["pEmbeddedSampler"]);
+    ctx.UInt32Value(value["samplerHeapOffset"]);
+    ctx.UInt32Value(value["samplerHeapArrayStride"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorMappingSourcePushIndexEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt32Value(value["heapOffset"]);
+    ctx.UInt32Value(value["pushOffset"]);
+    ctx.UInt32Value(value["heapIndexStride"]);
+    ctx.UInt32Value(value["heapArrayStride"]);
+    StructPtrFromApiDump<VkSamplerCreateInfo>(ctx, value["pEmbeddedSampler"]);
+    ctx.UInt32Value(value["useCombinedImageSamplerIndex"]);
+    ctx.UInt32Value(value["samplerHeapOffset"]);
+    ctx.UInt32Value(value["samplerPushOffset"]);
+    ctx.UInt32Value(value["samplerHeapIndexStride"]);
+    ctx.UInt32Value(value["samplerHeapArrayStride"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorMappingSourceIndirectIndexEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt32Value(value["heapOffset"]);
+    ctx.UInt32Value(value["pushOffset"]);
+    ctx.UInt32Value(value["addressOffset"]);
+    ctx.UInt32Value(value["heapIndexStride"]);
+    ctx.UInt32Value(value["heapArrayStride"]);
+    StructPtrFromApiDump<VkSamplerCreateInfo>(ctx, value["pEmbeddedSampler"]);
+    ctx.UInt32Value(value["useCombinedImageSamplerIndex"]);
+    ctx.UInt32Value(value["samplerHeapOffset"]);
+    ctx.UInt32Value(value["samplerPushOffset"]);
+    ctx.UInt32Value(value["samplerAddressOffset"]);
+    ctx.UInt32Value(value["samplerHeapIndexStride"]);
+    ctx.UInt32Value(value["samplerHeapArrayStride"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorMappingSourceHeapDataEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt32Value(value["heapOffset"]);
+    ctx.UInt32Value(value["pushOffset"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorMappingSourceIndirectAddressEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt32Value(value["pushOffset"]);
+    ctx.UInt32Value(value["addressOffset"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorMappingSourceShaderRecordIndexEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt32Value(value["heapOffset"]);
+    ctx.UInt32Value(value["shaderRecordOffset"]);
+    ctx.UInt32Value(value["heapIndexStride"]);
+    ctx.UInt32Value(value["heapArrayStride"]);
+    StructPtrFromApiDump<VkSamplerCreateInfo>(ctx, value["pEmbeddedSampler"]);
+    ctx.UInt32Value(value["useCombinedImageSamplerIndex"]);
+    ctx.UInt32Value(value["samplerHeapOffset"]);
+    ctx.UInt32Value(value["samplerShaderRecordOffset"]);
+    ctx.UInt32Value(value["samplerHeapIndexStride"]);
+    ctx.UInt32Value(value["samplerHeapArrayStride"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorMappingSourceIndirectIndexArrayEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.UInt32Value(value["heapOffset"]);
+    ctx.UInt32Value(value["pushOffset"]);
+    ctx.UInt32Value(value["addressOffset"]);
+    ctx.UInt32Value(value["heapIndexStride"]);
+    StructPtrFromApiDump<VkSamplerCreateInfo>(ctx, value["pEmbeddedSampler"]);
+    ctx.UInt32Value(value["useCombinedImageSamplerIndex"]);
+    ctx.UInt32Value(value["samplerHeapOffset"]);
+    ctx.UInt32Value(value["samplerPushOffset"]);
+    ctx.UInt32Value(value["samplerAddressOffset"]);
+    ctx.UInt32Value(value["samplerHeapIndexStride"]);
+}
+
+template <> void StructFromApiDump<VkDescriptorSetAndBindingMappingEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["descriptorSet"]);
+    ctx.UInt32Value(value["firstBinding"]);
+    ctx.UInt32Value(value["bindingCount"]);
+    ctx.FlagsValue(value["resourceMask"], EnumFromString_VkSpirvResourceTypeFlagBitsEXT);
+    ctx.EnumValue(value["source"], EnumFromString_VkDescriptorMappingSourceEXT);
+    switch (ctx.ResolveEnum(value["source"], EnumFromString_VkDescriptorMappingSourceEXT))
+    {
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceConstantOffsetEXT>(ctx, value["sourceData"]["constantOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourcePushIndexEXT>(ctx, value["sourceData"]["pushIndex"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceIndirectIndexEXT>(ctx, value["sourceData"]["indirectIndex"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceIndirectIndexArrayEXT>(ctx, value["sourceData"]["indirectIndexArray"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceHeapDataEXT>(ctx, value["sourceData"]["heapData"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["pushDataOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["pushAddressOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceIndirectAddressEXT>(ctx, value["sourceData"]["indirectAddress"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT:
+        {
+            StructFromApiDump<VkDescriptorMappingSourceShaderRecordIndexEXT>(ctx, value["sourceData"]["shaderRecordIndex"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["shaderRecordDataOffset"]);
+            break;
+        }
+        case VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT:
+        {
+            ctx.UInt32Value(value["sourceData"]["shaderRecordAddressOffset"]);
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+template <> void StructFromApiDump<VkShaderDescriptorSetAndBindingMappingInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["mappingCount"]);
+    StructArrayFromApiDump<VkDescriptorSetAndBindingMappingEXT>(ctx, value["pMappings"], ctx.Length(value["mappingCount"]));
+}
+
+template <> void StructFromApiDump<VkOpaqueCaptureDataCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    StructPtrFromApiDump<VkHostAddressRangeConstEXT>(ctx, value["pData"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceDescriptorHeapFeaturesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["descriptorHeap"]);
+    ctx.UInt32Value(value["descriptorHeapCaptureReplay"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceDescriptorHeapPropertiesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt64Value(value["samplerHeapAlignment"]);
+    ctx.UInt64Value(value["resourceHeapAlignment"]);
+    ctx.UInt64Value(value["maxSamplerHeapSize"]);
+    ctx.UInt64Value(value["maxResourceHeapSize"]);
+    ctx.UInt64Value(value["minSamplerHeapReservedRange"]);
+    ctx.UInt64Value(value["minSamplerHeapReservedRangeWithEmbedded"]);
+    ctx.UInt64Value(value["minResourceHeapReservedRange"]);
+    ctx.UInt64Value(value["samplerDescriptorSize"]);
+    ctx.UInt64Value(value["imageDescriptorSize"]);
+    ctx.UInt64Value(value["bufferDescriptorSize"]);
+    ctx.UInt64Value(value["samplerDescriptorAlignment"]);
+    ctx.UInt64Value(value["imageDescriptorAlignment"]);
+    ctx.UInt64Value(value["bufferDescriptorAlignment"]);
+    ctx.UInt64Value(value["maxPushDataSize"]);
+    ctx.SizeTValue(value["imageCaptureReplayOpaqueDataSize"]);
+    ctx.UInt32Value(value["maxDescriptorHeapEmbeddedSamplers"]);
+    ctx.UInt32Value(value["samplerYcbcrConversionCount"]);
+    ctx.UInt32Value(value["sparseDescriptorHeaps"]);
+    ctx.UInt32Value(value["protectedDescriptorHeaps"]);
+}
+
+template <> void StructFromApiDump<VkCommandBufferInheritanceDescriptorHeapInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    StructPtrFromApiDump<VkBindHeapInfoEXT>(ctx, value["pSamplerHeapBindInfo"]);
+    StructPtrFromApiDump<VkBindHeapInfoEXT>(ctx, value["pResourceHeapBindInfo"]);
+}
+
+template <> void StructFromApiDump<VkSamplerCustomBorderColorIndexCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["index"]);
+}
+
+template <> void StructFromApiDump<VkSamplerCustomBorderColorCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    StructFromApiDump<VkClearColorValue>(ctx, value["customBorderColor"]);
+    ctx.EnumValue(value["format"], EnumFromString_VkFormat);
+}
+
+template <> void StructFromApiDump<VkIndirectCommandsLayoutPushDataTokenNV>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["pushDataOffset"]);
+    ctx.UInt32Value(value["pushDataSize"]);
+}
+
+template <> void StructFromApiDump<VkSubsampledImageFormatPropertiesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["subsampledImageDescriptorCount"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceDescriptorHeapTensorPropertiesARM>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt64Value(value["tensorDescriptorSize"]);
+    ctx.UInt64Value(value["tensorDescriptorAlignment"]);
+    ctx.SizeTValue(value["tensorCaptureReplayOpaqueDataSize"]);
 }
 
 template <> void StructFromApiDump<VkAttachmentSampleCountInfoAMD>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -8791,14 +9145,6 @@ template <> void StructFromApiDump<VkDeviceDeviceMemoryReportCreateInfoEXT>(ApiD
     ctx.VoidPtrValue(value["pUserData"]);
 }
 
-template <> void StructFromApiDump<VkSamplerCustomBorderColorCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
-{
-    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
-    PNextFromApiDump(ctx, value["pNext"]);
-    StructFromApiDump<VkClearColorValue>(ctx, value["customBorderColor"]);
-    ctx.EnumValue(value["format"], EnumFromString_VkFormat);
-}
-
 template <> void StructFromApiDump<VkPhysicalDeviceCustomBorderColorPropertiesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
 {
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
@@ -9203,6 +9549,32 @@ template <> void StructFromApiDump<VkAccelerationStructureSRTMotionInstanceNV>(A
     ctx.UInt32Value(value["instanceShaderBindingTableRecordOffset"]);
     ctx.FlagsValue(value["flags"], EnumFromString_VkGeometryInstanceFlagBitsKHR);
     ctx.UInt64Value(value["accelerationStructureReference"]);
+}
+
+template <> void StructFromApiDump<VkAccelerationStructureMotionInstanceNV>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["type"], EnumFromString_VkAccelerationStructureMotionInstanceTypeNV);
+    ctx.FlagsValue(value["flags"]);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkAccelerationStructureMotionInstanceTypeNV))
+    {
+        case VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_STATIC_NV:
+        {
+            StructFromApiDump<VkAccelerationStructureInstanceKHR>(ctx, value["data"]["staticInstance"]);
+            break;
+        }
+        case VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_MATRIX_MOTION_NV:
+        {
+            StructFromApiDump<VkAccelerationStructureMatrixMotionInstanceNV>(ctx, value["data"]["matrixMotionInstance"]);
+            break;
+        }
+        case VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV:
+        {
+            StructFromApiDump<VkAccelerationStructureSRTMotionInstanceNV>(ctx, value["data"]["srtMotionInstance"]);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 template <> void StructFromApiDump<VkPhysicalDeviceRayTracingMotionBlurFeaturesNV>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -10308,15 +10680,6 @@ template <> void StructFromApiDump<VkTensorCreateInfoARM>(ApiDumpContext& ctx, c
     ctx.EnumValue(value["sharingMode"], EnumFromString_VkSharingMode);
     ctx.UInt32Value(value["queueFamilyIndexCount"]);
     ctx.UInt32Array(value["pQueueFamilyIndices"], ctx.Length(value["queueFamilyIndexCount"]));
-}
-
-template <> void StructFromApiDump<VkTensorViewCreateInfoARM>(ApiDumpContext& ctx, const ApiDumpNode& value)
-{
-    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
-    PNextFromApiDump(ctx, value["pNext"]);
-    ctx.Flags64Value(value["flags"], EnumFromString_VkTensorViewCreateFlagBitsARM);
-    ctx.VulkanHandleValue(value["tensor"], VK_OBJECT_TYPE_TENSOR_ARM);
-    ctx.EnumValue(value["format"], EnumFromString_VkFormat);
 }
 
 template <> void StructFromApiDump<VkTensorMemoryRequirementsInfoARM>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -11537,6 +11900,28 @@ template <> void StructFromApiDump<VkIndirectExecutionSetShaderInfoEXT>(ApiDumpC
     StructArrayFromApiDump<VkPushConstantRange>(ctx, value["pPushConstantRanges"], ctx.Length(value["pushConstantRangeCount"]));
 }
 
+template <> void StructFromApiDump<VkIndirectExecutionSetCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.EnumValue(value["type"], EnumFromString_VkIndirectExecutionSetInfoTypeEXT);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkIndirectExecutionSetInfoTypeEXT))
+    {
+        case VK_INDIRECT_EXECUTION_SET_INFO_TYPE_PIPELINES_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectExecutionSetPipelineInfoEXT>(ctx, value["info"]["pPipelineInfo"]);
+            break;
+        }
+        case VK_INDIRECT_EXECUTION_SET_INFO_TYPE_SHADER_OBJECTS_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectExecutionSetShaderInfoEXT>(ctx, value["info"]["pShaderInfo"]);
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 template <> void StructFromApiDump<VkGeneratedCommandsInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
 {
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
@@ -11580,6 +11965,42 @@ template <> void StructFromApiDump<VkIndirectCommandsExecutionSetTokenEXT>(ApiDu
 {
     ctx.EnumValue(value["type"], EnumFromString_VkIndirectExecutionSetInfoTypeEXT);
     ctx.FlagsValue(value["shaderStages"], EnumFromString_VkShaderStageFlagBits);
+}
+
+template <> void StructFromApiDump<VkIndirectCommandsLayoutTokenEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.EnumValue(value["type"], EnumFromString_VkIndirectCommandsTokenTypeEXT);
+    switch (ctx.ResolveEnum(value["type"], EnumFromString_VkIndirectCommandsTokenTypeEXT))
+    {
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_EXT:
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_SEQUENCE_INDEX_EXT:
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_EXT:
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_SEQUENCE_INDEX_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsPushConstantTokenEXT>(ctx, value["data"]["pPushConstant"]);
+            break;
+        }
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsVertexBufferTokenEXT>(ctx, value["data"]["pVertexBuffer"]);
+            break;
+        }
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsIndexBufferTokenEXT>(ctx, value["data"]["pIndexBuffer"]);
+            break;
+        }
+        case VK_INDIRECT_COMMANDS_TOKEN_TYPE_EXECUTION_SET_EXT:
+        {
+            StructPtrFromApiDump<VkIndirectCommandsExecutionSetTokenEXT>(ctx, value["data"]["pExecutionSet"]);
+            break;
+        }
+        default:
+            break;
+    }
+    ctx.UInt32Value(value["offset"]);
 }
 
 template <> void StructFromApiDump<VkIndirectCommandsLayoutCreateInfoEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
@@ -12132,6 +12553,13 @@ template <> void StructFromApiDump<VkPhysicalDeviceShaderSubgroupPartitionedFeat
     ctx.UInt32Value(value["shaderSubgroupPartitioned"]);
 }
 
+template <> void StructFromApiDump<VkPhysicalDeviceCooperativeMatrixLayoutsFeaturesARM>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["cooperativeMatrixArmLayouts"]);
+}
+
 template <> void StructFromApiDump<VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
 {
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
@@ -12194,6 +12622,13 @@ template <> void StructFromApiDump<VkPhysicalDevicePrimitiveRestartIndexFeatures
     ctx.UInt32Value(value["primitiveRestartIndex"]);
 }
 
+template <> void StructFromApiDump<VkPhysicalDeviceVertexAddressBindingUnrestrictedFeaturesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["vertexAddressBindingUnrestricted"]);
+}
+
 template <> void StructFromApiDump<VkPhysicalDeviceImageTilingControlFeaturesEXT>(ApiDumpContext& ctx, const ApiDumpNode& value)
 {
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
@@ -12250,6 +12685,29 @@ template <> void StructFromApiDump<VkBufferDeviceAddressAlignmentAllocateInfoVAL
     ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
     PNextFromApiDump(ctx, value["pNext"]);
     ctx.UInt32Value(value["alignment"]);
+}
+
+template <> void StructFromApiDump<VkPhysicalDeviceHdrSmpteSt209450FeaturesGOOGLE>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["hdrSmpteSt209450"]);
+}
+
+template <> void StructFromApiDump<VkHdrSmpteSt209450GOOGLE>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.SizeTValue(value["metadataSize"]);
+    ctx.UInt8Array(value["pMetadata"], ctx.Length(value["metadataSize"]));
+    ctx.EnumValue(value["powerPreference"], EnumFromString_VkHdrSmpteSt209450PowerPreferenceGOOGLE);
+}
+
+template <> void StructFromApiDump<VkSurfaceCapabilitiesHdrSmpteSt209450GOOGLE>(ApiDumpContext& ctx, const ApiDumpNode& value)
+{
+    ctx.EnumValue(value["sType"], EnumFromString_VkStructureType);
+    PNextFromApiDump(ctx, value["pNext"]);
+    ctx.UInt32Value(value["hdrSmpteSt209450Supported"]);
 }
 
 template <> void StructFromApiDump<VkAccelerationStructureBuildRangeInfoKHR>(ApiDumpContext& ctx, const ApiDumpNode& value)

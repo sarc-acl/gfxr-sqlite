@@ -151,8 +151,8 @@ class VulkanEnumToSqliteBodyGenerator(VulkanBaseGenerator):
             return True
         return False
 
-    def genGroup(self, groupinfo, group_name, alias):
-        VulkanBaseGenerator.genGroup(self, groupinfo, group_name, alias)
+    def genGroup(self, groupinfo, group_name, alias, protect=None):
+        VulkanBaseGenerator.genGroup(self, groupinfo, group_name, alias, protect)
         type_elem = groupinfo.elem
         if type_elem.get('bitwidth') == '64':
             self.enumType[group_name] = 'VkFlags64'
@@ -160,8 +160,8 @@ class VulkanEnumToSqliteBodyGenerator(VulkanBaseGenerator):
             self.enumType[group_name] = 'VkFlags'
 
 
-    def genType(self, typeinfo, name, alias):
-        super().genType(typeinfo, name, alias)
+    def genType(self, typeinfo, name, alias, protect=None):
+        super().genType(typeinfo, name, alias, protect)
         if self.is_flags(name) and alias is None:
             self.flagsType[name] = self.flags_types[name]
             bittype = typeinfo.elem.get('requires')

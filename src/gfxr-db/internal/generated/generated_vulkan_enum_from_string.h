@@ -150,6 +150,7 @@ bool EnumFromString_VkDependencyFlagBits(std::string_view name, VkDependencyFlag
 bool EnumFromString_VkDepthBiasRepresentationEXT(std::string_view name, VkDepthBiasRepresentationEXT& out);
 bool EnumFromString_VkDepthClampModeEXT(std::string_view name, VkDepthClampModeEXT& out);
 bool EnumFromString_VkDescriptorBindingFlagBits(std::string_view name, VkDescriptorBindingFlagBits& out);
+bool EnumFromString_VkDescriptorMappingSourceEXT(std::string_view name, VkDescriptorMappingSourceEXT& out);
 bool EnumFromString_VkDescriptorPoolCreateFlagBits(std::string_view name, VkDescriptorPoolCreateFlagBits& out);
 bool EnumFromString_VkDescriptorSetLayoutCreateFlagBits(std::string_view name, VkDescriptorSetLayoutCreateFlagBits& out);
 bool EnumFromString_VkDescriptorType(std::string_view name, VkDescriptorType& out);
@@ -204,6 +205,7 @@ bool EnumFromString_VkGpaPerfBlockAMD(std::string_view name, VkGpaPerfBlockAMD& 
 bool EnumFromString_VkGpaSampleTypeAMD(std::string_view name, VkGpaSampleTypeAMD& out);
 bool EnumFromString_VkGpaSqShaderStageFlagBitsAMD(std::string_view name, VkGpaSqShaderStageFlagBitsAMD& out);
 bool EnumFromString_VkGraphicsPipelineLibraryFlagBitsEXT(std::string_view name, VkGraphicsPipelineLibraryFlagBitsEXT& out);
+bool EnumFromString_VkHdrSmpteSt209450PowerPreferenceGOOGLE(std::string_view name, VkHdrSmpteSt209450PowerPreferenceGOOGLE& out);
 bool EnumFromString_VkHostImageCopyFlagBits(std::string_view name, VkHostImageCopyFlagBits& out);
 bool EnumFromString_VkImageAspectFlagBits(std::string_view name, VkImageAspectFlagBits& out);
 bool EnumFromString_VkImageCompressionFixedRateFlagBitsEXT(std::string_view name, VkImageCompressionFixedRateFlagBitsEXT& out);
@@ -339,6 +341,7 @@ bool EnumFromString_VkShadingRatePaletteEntryNV(std::string_view name, VkShading
 bool EnumFromString_VkSharingMode(std::string_view name, VkSharingMode& out);
 bool EnumFromString_VkSparseImageFormatFlagBits(std::string_view name, VkSparseImageFormatFlagBits& out);
 bool EnumFromString_VkSparseMemoryBindFlagBits(std::string_view name, VkSparseMemoryBindFlagBits& out);
+bool EnumFromString_VkSpirvResourceTypeFlagBitsEXT(std::string_view name, VkSpirvResourceTypeFlagBitsEXT& out);
 bool EnumFromString_VkStencilFaceFlagBits(std::string_view name, VkStencilFaceFlagBits& out);
 bool EnumFromString_VkStencilOp(std::string_view name, VkStencilOp& out);
 bool EnumFromString_VkStructureType(std::string_view name, VkStructureType& out);

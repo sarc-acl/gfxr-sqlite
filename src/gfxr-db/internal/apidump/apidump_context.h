@@ -102,23 +102,21 @@ class ApiDumpContext
     // what keeps size_t and the Vk basetypes correct.
     //
 
-#define GFXRECON_APIDUMP_SCALAR(NAME, ENCODE_T)                                                              \
-    void NAME##Value(const ApiDumpNode& node)                                                                \
-    {                                                                                                        \
-        encoder_.Encode##NAME##Value(ParseOr<ENCODE_T>(node));                                                \
-    }                                                                                                        \
-    void NAME##Ptr(const ApiDumpNode& node)                                                                  \
-    {                                                                                                        \
-        encoder_.EncodePointer<ENCODE_T>(ParseOr<ENCODE_T>(node), node.Address(), node.IsNullPointer(),       \
-                                         node.HasData());                                                    \
-    }                                                                                                        \
-    void NAME##Array(const ApiDumpNode& node, size_t length_hint = 0)                                        \
-    {                                                                                                        \
-        EncodeScalarArray<ENCODE_T>(node, length_hint);                                                      \
-    }                                                                                                        \
-    void NAME##Array2D(const ApiDumpNode& node, size_t length_hint = 0)                                      \
-    {                                                                                                        \
-        EncodeScalarArray2D<ENCODE_T>(node, length_hint);                                                    \
+#define GFXRECON_APIDUMP_SCALAR(NAME, ENCODE_T)                                                          \
+    void NAME##Value(const ApiDumpNode& node) { encoder_.Encode##NAME##Value(ParseOr<ENCODE_T>(node)); } \
+    void NAME##Ptr(const ApiDumpNode& node)                                                              \
+    {                                                                                                    \
+        encoder_.EncodePointer<ENCODE_T>(                                                                \
+            ParseOr<ENCODE_T>(node), node.Address(), node.IsNullPointer(), node.HasData()                \
+        );                                                                                               \
+    }                                                                                                    \
+    void NAME##Array(const ApiDumpNode& node, size_t length_hint = 0)                                    \
+    {                                                                                                    \
+        EncodeScalarArray<ENCODE_T>(node, length_hint);                                                  \
+    }                                                                                                    \
+    void NAME##Array2D(const ApiDumpNode& node, size_t length_hint = 0)                                  \
+    {                                                                                                    \
+        EncodeScalarArray2D<ENCODE_T>(node, length_hint);                                                \
     }
 
     GFXRECON_APIDUMP_SCALAR(Int8, int8_t)
@@ -237,7 +235,7 @@ class ApiDumpContext
     template <typename BitsT>
     void FlagsArray(const ApiDumpNode& node, bool (*parse)(std::string_view, BitsT&), size_t length_hint = 0)
     {
-        const size_t                         count = ArrayLength(node, length_hint);
+        const size_t count = ArrayLength(node, length_hint);
         std::vector<format::FlagsEncodeType> values;
         values.reserve(count);
 
@@ -331,9 +329,9 @@ class ApiDumpContext
 
     void StringArray(const ApiDumpNode& node, size_t length_hint = 0)
     {
-        const bool   is_null  = node.IsNullPointer();
-        const bool   has_data = node.HasData();
-        const size_t count    = ArrayLength(node, length_hint);
+        const bool is_null = node.IsNullPointer();
+        const bool has_data = node.HasData();
+        const size_t count = ArrayLength(node, length_hint);
 
         encoder_.EncodeStringArrayPreamble(count, node.Address(), is_null, has_data);
 
@@ -348,12 +346,19 @@ class ApiDumpContext
 
         for (size_t i = 0; i < count; ++i)
         {
-            const ApiDumpNode      element = node.ElementAt(i);
-            const std::string_view text    = element.IsPresent() ? node.ElementScalar(i) : std::string_view{};
+            const ApiDumpNode element = node.ElementAt(i);
+            const std::string_view text = element.IsPresent() ? node.ElementScalar(i) : std::string_view{};
             encoder_.EncodeString(
                 text.data(), text.size(), element.Address(), !element.IsPresent(), element.IsPresent()
             );
         }
+    }
+
+    /** Reads an enum without encoding it, e.g. a union selector. Accepts the name or the number. */
+    template <typename T>
+    T ResolveEnum(const ApiDumpNode& node, bool (*parse)(std::string_view, T&))
+    {
+        return ResolveEnumText(node.ValueString(), parse);
     }
 
   private:
@@ -377,10 +382,12 @@ class ApiDumpContext
         if (length_hint > kMaxUnexpandedArrayLength)
         {
             ++stats_.oversized_length_hints;
-            GFXRECON_LOG_WARNING("ApiDumpContext: declared array length %zu exceeds sanity limit, "
-                                  "clamping to %zu",
-                                  length_hint,
-                                  kMaxUnexpandedArrayLength);
+            GFXRECON_LOG_WARNING(
+                "ApiDumpContext: declared array length %zu exceeds sanity limit, "
+                "clamping to %zu",
+                length_hint,
+                kMaxUnexpandedArrayLength
+            );
             return kMaxUnexpandedArrayLength;
         }
 
@@ -418,7 +425,7 @@ class ApiDumpContext
     template <typename T>
     void EncodeScalarArray(const ApiDumpNode& node, size_t length_hint)
     {
-        const size_t   count = ArrayLength(node, length_hint);
+        const size_t count = ArrayLength(node, length_hint);
         std::vector<T> values;
         values.reserve(count);
 
@@ -449,9 +456,9 @@ class ApiDumpContext
     template <typename T>
     void EncodeScalarArray2D(const ApiDumpNode& node, size_t length_hint)
     {
-        const bool   is_null  = node.IsNullPointer();
-        const bool   has_data = node.HasData();
-        const size_t count    = ArrayLength(node, length_hint);
+        const bool is_null = node.IsNullPointer();
+        const bool has_data = node.HasData();
+        const size_t count = ArrayLength(node, length_hint);
 
         encoder_.EncodeArray2DPreamble(count, node.Address(), is_null, has_data);
 
@@ -464,7 +471,7 @@ class ApiDumpContext
         {
             // Absent, and so a null pointer, past the elements the layer recorded.
             const ApiDumpNode inner = node.ElementAt(i);
-            std::vector<T>    values;
+            std::vector<T> values;
 
             if (inner.HasElements())
             {
@@ -490,7 +497,7 @@ class ApiDumpContext
 
     void EncodeHandleArray(const ApiDumpNode& node, VkObjectType type, size_t length_hint, bool created)
     {
-        const size_t                  count = ArrayLength(node, length_hint);
+        const size_t count = ArrayLength(node, length_hint);
         std::vector<format::HandleId> ids;
         ids.reserve(count);
 
@@ -502,12 +509,6 @@ class ApiDumpContext
 
         ids.resize(count);
         encoder_.EncodeHandleIdArray(ids.data(), count, node.Address(), node.IsNullPointer(), node.HasData());
-    }
-
-    template <typename T>
-    T ResolveEnum(const ApiDumpNode& node, bool (*parse)(std::string_view, T&))
-    {
-        return ResolveEnumText(node.ValueString(), parse);
     }
 
     template <typename T>
@@ -557,7 +558,7 @@ class ApiDumpContext
         }
 
         uint64_t combined = 0;
-        size_t   start    = 0;
+        size_t start = 0;
 
         while (start <= text.size())
         {
@@ -601,8 +602,8 @@ class ApiDumpContext
         return combined;
     }
 
-    ApiDumpEncoder&        encoder_;
-    ApiDumpHandleMap&      handles_;
+    ApiDumpEncoder& encoder_;
+    ApiDumpHandleMap& handles_;
     ApiDumpConversionStats stats_;
 };
 

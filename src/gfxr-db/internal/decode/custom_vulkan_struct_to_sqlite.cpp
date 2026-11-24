@@ -325,40 +325,235 @@ void FieldToSqlite(
     }
 }
 
+namespace
+{
+    template <typename Member>
+    void UnionMemberToSqlite(
+        VulkanSqlitePreparedStatements& statements,
+        const FieldInfo& fieldInfo,
+        size_t fieldIndex,
+        std::string_view fieldName,
+        const Member* member,
+        std::string_view typeName
+    )
+    {
+        if (member)
+        {
+            FieldToSqlite(statements, fieldInfo, fieldIndex, fieldName, member, typeName);
+        }
+    }
+} // namespace
+
 void FieldToSqlite(
     VulkanSqlitePreparedStatements& statements,
     const FieldInfo& fieldInfo,
     size_t fieldIndex,
     std::string_view fieldName,
-    const Decoded_VkAccelerationStructureMotionInstanceNV* data,
+    const Decoded_VkAccelerationStructureMotionInstanceDataNV* data,
     std::string_view typeName
 )
 {
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
-
     if (data && data->decoded_value)
     {
-        const VkAccelerationStructureMotionInstanceNV& decoded_value = *data->decoded_value;
+        const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
         FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
-        FieldToSqlite(
-            statements, memberInfo, 1, "type", decoded_value.type, "VkAccelerationStructureMotionInstanceTypeNV"
+        UnionMemberToSqlite(
+            statements, memberInfo, 1, "staticInstance", data->staticInstance, "VkAccelerationStructureInstanceKHR"
         );
-        FieldToSqlite(
+        UnionMemberToSqlite(
             statements,
             memberInfo,
             2,
-            "flags",
-            VkAccelerationStructureMotionInstanceFlagsNV_t(),
-            decoded_value.flags,
-            "VkAccelerationStructureMotionInstanceFlagsNV"
+            "matrixMotionInstance",
+            data->matrixMotionInstance,
+            "VkAccelerationStructureMatrixMotionInstanceNV"
         );
-        // generated when included in the generator, error states there is no data field, so skip it
-        // FieldToSqlite(statements, memberInfo, 3, "data", meta_struct.data,
-        // "VkAccelerationStructureMotionInstanceDataNV");
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            3,
+            "srtMotionInstance",
+            data->srtMotionInstance,
+            "VkAccelerationStructureSRTMotionInstanceNV"
+        );
     }
     else
     {
-        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, "vkAccelerationStructureMotionInstanceNV");
+        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    }
+}
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkIndirectExecutionSetInfoEXT* data,
+    std::string_view typeName
+)
+{
+    if (data && data->decoded_value)
+    {
+        const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+        FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            1,
+            "pPipelineInfo",
+            data->pPipelineInfo,
+            "const VkIndirectExecutionSetPipelineInfoEXT*"
+        );
+        UnionMemberToSqlite(
+            statements, memberInfo, 2, "pShaderInfo", data->pShaderInfo, "const VkIndirectExecutionSetShaderInfoEXT*"
+        );
+    }
+    else
+    {
+        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    }
+}
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkIndirectCommandsTokenDataEXT* data,
+    std::string_view typeName
+)
+{
+    if (data && data->decoded_value)
+    {
+        const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+        FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            1,
+            "pPushConstant",
+            data->pPushConstant,
+            "const VkIndirectCommandsPushConstantTokenEXT*"
+        );
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            2,
+            "pVertexBuffer",
+            data->pVertexBuffer,
+            "const VkIndirectCommandsVertexBufferTokenEXT*"
+        );
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            3,
+            "pIndexBuffer",
+            data->pIndexBuffer,
+            "const VkIndirectCommandsIndexBufferTokenEXT*"
+        );
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            4,
+            "pExecutionSet",
+            data->pExecutionSet,
+            "const VkIndirectCommandsExecutionSetTokenEXT*"
+        );
+    }
+    else
+    {
+        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    }
+}
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkResourceDescriptorDataEXT* data,
+    std::string_view typeName
+)
+{
+    if (data && data->decoded_value)
+    {
+        const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+        FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
+        UnionMemberToSqlite(statements, memberInfo, 1, "pImage", data->pImage, "const VkImageDescriptorInfoEXT*");
+        UnionMemberToSqlite(
+            statements, memberInfo, 2, "pTexelBuffer", data->pTexelBuffer, "const VkTexelBufferDescriptorInfoEXT*"
+        );
+        UnionMemberToSqlite(
+            statements, memberInfo, 3, "pAddressRange", data->pAddressRange, "const VkDeviceAddressRangeKHR*"
+        );
+        UnionMemberToSqlite(
+            statements, memberInfo, 4, "pTensorARM", data->pTensorARM, "const VkTensorViewCreateInfoARM*"
+        );
+    }
+    else
+    {
+        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, typeName);
+    }
+}
+
+void FieldToSqlite(
+    VulkanSqlitePreparedStatements& statements,
+    const FieldInfo& fieldInfo,
+    size_t fieldIndex,
+    std::string_view fieldName,
+    const Decoded_VkDescriptorMappingSourceDataEXT* data,
+    std::string_view typeName
+)
+{
+    if (data && data->decoded_value)
+    {
+        const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
+        FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            1,
+            "constantOffset",
+            data->constantOffset,
+            "VkDescriptorMappingSourceConstantOffsetEXT"
+        );
+        UnionMemberToSqlite(
+            statements, memberInfo, 2, "pushIndex", data->pushIndex, "VkDescriptorMappingSourcePushIndexEXT"
+        );
+        UnionMemberToSqlite(
+            statements, memberInfo, 3, "indirectIndex", data->indirectIndex, "VkDescriptorMappingSourceIndirectIndexEXT"
+        );
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            4,
+            "indirectIndexArray",
+            data->indirectIndexArray,
+            "VkDescriptorMappingSourceIndirectIndexArrayEXT"
+        );
+        UnionMemberToSqlite(
+            statements, memberInfo, 5, "heapData", data->heapData, "VkDescriptorMappingSourceHeapDataEXT"
+        );
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            6,
+            "indirectAddress",
+            data->indirectAddress,
+            "VkDescriptorMappingSourceIndirectAddressEXT"
+        );
+        UnionMemberToSqlite(
+            statements,
+            memberInfo,
+            7,
+            "shaderRecordIndex",
+            data->shaderRecordIndex,
+            "VkDescriptorMappingSourceShaderRecordIndexEXT"
+        );
+    }
+    else
+    {
+        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, typeName);
     }
 }
 
@@ -736,7 +931,9 @@ void FieldToSqlite(
                 break;
 
             case VK_DESCRIPTOR_TYPE_MAX_ENUM:
-                GFXRECON_SQLITE_LOG_WARNING_AT(memberInfo.eventId, "Invalid descriptor type: VK_DESCRIPTOR_TYPE_MAX_ENUM");
+                GFXRECON_SQLITE_LOG_WARNING_AT(
+                    memberInfo.eventId, "Invalid descriptor type: VK_DESCRIPTOR_TYPE_MAX_ENUM"
+                );
                 break;
         }
         FieldToSqlite(statements, memberInfo, 8, "pNext", meta_struct.pNext);
@@ -1015,35 +1212,6 @@ void FieldToSqlite(
     const FieldInfo& fieldInfo,
     size_t fieldIndex,
     std::string_view fieldName,
-    const Decoded_VkIndirectCommandsLayoutTokenEXT* data,
-    std::string_view typeName
-)
-{
-    const uint64_t structId = RecordStruct(statements, fieldInfo, fieldIndex, fieldName, typeName);
-
-    if (data && data->decoded_value)
-    {
-        const VkIndirectCommandsLayoutTokenEXT& decoded_value = *data->decoded_value;
-        const Decoded_VkIndirectCommandsLayoutTokenEXT& meta_struct = *data;
-        FieldInfo memberInfo = { fieldInfo.eventId, structId, 0, 0 };
-        FieldToSqlite(statements, memberInfo, 1, "sType", decoded_value.sType, "VkStructureType");
-        FieldToSqlite(statements, memberInfo, 2, "type", decoded_value.type, "VkIndirectCommandsTokenTypeEXT");
-        // TODO figure out how to decode the data member
-        // FieldToSqlite(statements, memberInfo, 3, "data", decoded_value.data, "VkIndirectCommandsTokenDataEXT");
-        FieldToSqlite(statements, memberInfo, 4, "offset", decoded_value.offset, "uint32_t");
-        FieldToSqlite(statements, memberInfo, 5, "pNext", meta_struct.pNext);
-    }
-    else
-    {
-        RecordNullMember(statements, fieldInfo, fieldIndex, fieldName, "vkIndirectCommandsLayoutTokenEXT");
-    }
-}
-
-void FieldToSqlite(
-    VulkanSqlitePreparedStatements& statements,
-    const FieldInfo& fieldInfo,
-    size_t fieldIndex,
-    std::string_view fieldName,
     const Decoded_VkImageToMemoryCopy* data,
     std::string_view typeName
 )
@@ -1197,8 +1365,9 @@ void FieldToSqlite(
         // The actual data interpretation would require decoding based on VkLayerSettingTypeEXT
         if (decoded_value.pValues)
         {
-            RecordField(statements, memberInfo, 5, "pValues", "const void*",
-                        reinterpret_cast<uint64_t>(decoded_value.pValues));
+            RecordField(
+                statements, memberInfo, 5, "pValues", "const void*", reinterpret_cast<uint64_t>(decoded_value.pValues)
+            );
         }
         else
         {

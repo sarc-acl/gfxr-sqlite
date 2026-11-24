@@ -112,8 +112,8 @@ class VulkanEnumFromStringHeaderGenerator(VulkanBaseGenerator):
     def need_feature_generation(self):
         return bool(self.feature_struct_members)
 
-    def genGroup(self, groupinfo, group_name, alias):
-        VulkanBaseGenerator.genGroup(self, groupinfo, group_name, alias)
+    def genGroup(self, groupinfo, group_name, alias, protect=None):
+        VulkanBaseGenerator.genGroup(self, groupinfo, group_name, alias, protect)
         if groupinfo.elem.get('bitwidth') == '64':
             self.enum_bitwidth[group_name] = 'VkFlags64'
         else:
