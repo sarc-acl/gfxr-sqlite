@@ -193,6 +193,21 @@ namespace gfxrSqlite
             ~CloseLogHelper() { gfxrecon::util::Log::Release(); }
         } closeLog;
 
+        if (!m_inputFilename.has_value() && fileExists(m_dbFilename.c_str()))
+        {
+            gfxrSqlite::debugLog("OpenWorker::Open existing database");
+            // a database an earlier open built: use it as it is
+            int err = sqlite3_open(m_dbFilename.c_str(), &m_db);
+            if (err)
+            {
+                std::ostringstream errMsg;
+                errMsg << "Failed to open database: " << sqlite3_errmsg(m_db);
+
+                SetError(errMsg.str());
+            }
+            return;
+        }
+
         if (!m_inputFilename.has_value())
         {
             gfxrSqlite::debugLog("OpenWorker::Generate empty schema database");
