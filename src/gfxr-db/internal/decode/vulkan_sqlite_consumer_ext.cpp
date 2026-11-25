@@ -3981,7 +3981,7 @@ void VulkanSqliteConsumerExt::Process_vkCreateGraphicsPipelines(
             auto renderingCreateInfo = pipelineRenderingCreateInfo->decoded_value;
             viewMask = renderingCreateInfo->viewMask;
             depthAttachmentFormat = renderingCreateInfo->depthAttachmentFormat;
-            stencilAttachmentFormat = renderingCreateInfo->depthAttachmentFormat;
+            stencilAttachmentFormat = renderingCreateInfo->stencilAttachmentFormat;
         }
 
         auto pipeline = pipelines[i];
@@ -10057,10 +10057,13 @@ void VulkanSqliteConsumerExt::Process_vkCreatePipelineBinariesKHR(
 
     // pipeline can be NULL
     std::optional<int64_t> sourcePipelineId = std::nullopt;
-    auto pipelineIter = context.pipelineHandleToId.find(ToInt64(args.device));
-    if (pipelineIter != context.pipelineHandleToId.end())
+    if (createInfo->pipeline != format::kNullHandleId)
     {
-        sourcePipelineId = pipelineIter->second;
+        auto pipelineIter = context.pipelineHandleToId.find(ToInt64(createInfo->pipeline));
+        if (pipelineIter != context.pipelineHandleToId.end())
+        {
+            sourcePipelineId = pipelineIter->second;
+        }
     }
 
     auto [pipelineBinariesValid, pipelineBinaries, pipelineBinaryCount] = GetHandleArray(&binaries->pPipelineBinaries);
